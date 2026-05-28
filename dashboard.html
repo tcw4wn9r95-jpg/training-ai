@@ -312,6 +312,11 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   .scroll-area,.topbar,.bottom-nav,.setup-drawer{max-width:430px;left:50%;right:auto;transform:translateX(-50%)}
   body::before{content:'';position:fixed;inset:0;background:var(--bg2);z-index:-1}
 }
+
+#comp-list{display:flex;flex-direction:column;gap:8px;width:100%}
+#comp-list .comp-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);width:100%}
+#comp-list .comp-item:last-child{border-bottom:none}
+
 </style>
 </head>
 <body>
@@ -414,7 +419,7 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
     <div class="chart-wrap-xs"><canvas id="weekTssChart"></canvas></div>
   </div>
 
-  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+  <div style="display:flex;flex-direction:column;gap:10px">
     <div class="card" style="margin-bottom:0">
       <div class="card-title">Mix · 30d</div>
       <div class="chart-wrap-xs"><canvas id="mixChart"></canvas></div>
