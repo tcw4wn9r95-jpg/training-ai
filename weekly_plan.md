@@ -42,6 +42,7 @@
 - This is a foundation session to build aerobic base without stress.
 - Keep effort easy and conversational.
 - Use this to prime your system for the week ahead.
+- Last week's data shows only one hiking activity (149 min at low intensity), so we're returning to structured running with modest volume.
 
 ---
 
@@ -59,112 +60,90 @@
 - **Main Set (18 min):** Two blocks of Sweet Spot intervals
   - **Block 1:** 6 min @ 142–156W (80–88% FTP, high Z3)
     - RPE: 6–7/10
-    - Cadence: 95–105 rpm
-  - **Recovery:** 2 min @ <106W (Z1)
+    - Cadence: 90–95 rpm
+    - Focus: Sustained aerobic power, build muscular endurance
+  
+  - **Rest:** 2 min easy spin @ <106W
+    - RPE: 2/10
+    - Cadence: 95–100 rpm
+  
   - **Block 2:** 6 min @ 142–156W (80–88% FTP, high Z3)
     - RPE: 6–7/10
-    - Cadence: 95–105 rpm
+    - Cadence: 90–95 rpm
+  
+  - **Final Rest:** 2 min easy spin @ <106W
 
-- **Cooldown (2 min):** Easy spin
-  - Target power: <106W (Z1)
+- **Cooldown (2 min):** Easy spin-down
+  - Target power: <106W
   - RPE: 1–2/10
 
 #### Garmin Alerts:
-- Set power alerts for 142–156W (main intervals)
-- Monitor cadence zone (95–105 rpm)
+- Set power alerts for 142–156W (Sweet Spot band)
+- Monitor cadence: aim for 90–95 rpm during intervals
 
 #### Coaching Notes:
-- Sweet Spot work builds lactate threshold without hitting hard threshold effort.
-- Maintain steady cadence and breathing rhythm.
-- Focus on smooth pedal stroke under moderate load.
+- Sweet Spot work is highly efficient for building FTP without excessive fatigue.
+- Maintain steady cadence—avoid grinding or spinning too fast.
+- This complements Monday's aerobic running with a different energy system stimulus.
+- Last week had minimal cycling data, so we're introducing structured indoor work at moderate intensity.
 
 ---
 
-### **WEDNESDAY, JUNE 3 — REST DAY**
-**Recovery protocol:** 
-- Light mobility/stretching (optional, 10–15 min)
-- Sleep prioritization (8+ hours)
-- Hydration and nutrition focus
-- Monitor resting HR (should be ~60 bpm)
-
----
-
-### **THURSDAY, JUNE 4 — Strength & Power: Lower Body Circuit**
+### **THURSDAY, JUNE 4 — Running + Strength Circuit Combo**
 **Available time:** 60 minutes max  
-**Sport:** Strength  
-**Total duration:** 45 minutes
+**Sport:** Mixed (Running + Strength)  
+**Total duration:** 60 minutes
 
-#### Structure:
-- **Dynamic Warmup (8 min):**
-  - Leg swings (forward/back, lateral) × 10 each side
-  - Hip circles × 10 each direction
-  - Bodyweight squats × 15
-  - Glute bridges × 15
-  - Inchworms × 10
-  - Light band pull-throughs × 15
+#### Part A: Running (25 minutes)
 
-- **Main Circuit (32 min):** 4 rounds, 75 sec rest between rounds
-  - **Exercise 1:** Goblet squat (22kg) × 12 reps
-    - Focus: Full depth, chest up, knees tracking toes
-    - RPE: 7–8/10 per round
-    - Rest: 45 sec
-  
-  - **Exercise 2:** Romanian deadlift (22kg dumbbells) × 10 reps
-    - Focus: Hip hinge, slight knee bend, hamstring stretch
-    - RPE: 7–8/10
-    - Rest: 45 sec
-  
-  - **Exercise 3:** TRX single-leg split squat × 12 reps per leg
-    - Focus: Controlled descent, back knee nearly to ground
-    - RPE: 8–9/10
-    - Rest: 45 sec
-  
-  - **Exercise 4:** Resistance band glute bridge × 20 reps
-    - Focus: Hip extension, glute activation, band around knees
-    - RPE: 6–7/10
-    - Rest: 75 sec between rounds
+- **Warmup (5 min):** Easy jog
+  - Target HR: 130–145 bpm (Z1 Recovery)
+  - Pace: ~7:15/km
+  - RPE: 2–3/10
 
-- **Cool-Down & Mobility (5 min):**
-  - Hip flexor stretch (90/90 position) × 30 sec each side
-  - Hamstring stretch (forward fold) × 30 sec
-  - Pigeon pose (glute stretch) × 30 sec each side
-  - Child's pose × 20 sec
+- **Main Set (15 min):** Tempo-paced aerobic run
+  - Target HR: 163–172 bpm (Z3 Tempo)
+  - Pace: 5:30–6:00/km
+  - RPE: 6–7/10
+  - Focus: Raise lactate threshold gradually, controlled effort
 
-#### Garmin Alerts:
-- Optional: Record in strength profile; no HR zone alerts needed
-- Monitor perceived exertion and rest times
+- **Cooldown (5 min):** Easy jog
+  - Target HR: 100–130 bpm (Z1 Recovery)
+  - Pace: >7:00/km
+  - RPE: 1–2/10
+
+#### Part B: Strength Circuit (30 minutes)
+
+**Setup:** Superset format for metabolic efficiency. Perform all exercises back-to-back with minimal rest between movements; rest 60–75 seconds between rounds. Complete 3 full rounds.
+
+**Exercise Circuit:**
+1. **Goblet Squat (22kg dumbbell)** — 12 reps
+   - Form: Full depth, chest up, controlled tempo
+   - Rest: 0 sec (move to next exercise)
+
+2. **TRX Suspension Row** — 10 reps
+   - Form: Full body tension, scapular retraction
+   - Rest: 0 sec (move to next exercise)
+
+3. **Romanian Deadlift (16kg dumbbell, each hand)** — 10 reps
+   - Form: Hinge at hips, neutral spine, minimal knee bend
+   - Rest: 0 sec (move to next exercise)
+
+4. **Push-ups (bodyweight or modified)** — 12 reps
+   - Form: Chest to deck, core tight
+   - Rest: 60–75 sec, then repeat from exercise 1
+
+#### Garmin Alerts (Running portion):
+- Set HR alerts for Z3 band (163–172 bpm)
+- Monitor pace zone for 5:30–6:00/km
 
 #### Coaching Notes:
-- This session builds leg strength and power while maintaining work capacity.
-- The 4-round circuit taxes the metabolic system—focus on form over speed.
-- By round 4, expect to feel fatigued; maintain movement quality regardless.
-- TRX split squats are quad/glute dominant; feel the burn.
-- Band glute bridges finish the legs and activate posterior chain.
-
----
-
-### **FRIDAY, JUNE 5 — REST DAY**
-**Recovery protocol:**
-- Active recovery optional: 15–20 min easy walk
-- Deep stretching/foam rolling (10–15 min)
-- Meal prep and hydration
-- Sleep and stress management
-
----
-
-### **SATURDAY, JUNE 6 — REST DAY**
-**Recovery protocol:**
-- Complete rest or very light activity (easy walk if desired)
-- Nutrition focus: carb/protein replenishment
-- Sleep prioritization
-
----
-
-### **SUNDAY, JUNE 7 — REST DAY**
-**Recovery protocol:**
-- Mental recovery and preparation for next training block
-- Review training week performance
-- Plan next week's goals
+- This session combines aerobic-threshold stimulus with full-body strength work.
+- The tempo run elevates HR and primes the nervous system before strength work.
+- Strength circuit uses heavier loads (22kg, 16kg) with compound movements to build power and muscular endurance.
+- Circuit format keeps HR elevated, creating a conditioning effect.
+- Thursday's longer availability (1 hour) allows for this combined stimulus without rushing.
+- Progression from Monday (Z2 aerobic) → Tuesday (Z3 Sweet Spot) → Thursday (Z3 Tempo + strength) creates a build-up without exceeding recovery capacity given sparse training history.
 
 ---
 
