@@ -1018,18 +1018,18 @@ async function sendCoachMessage(){
   const tss=recentW.reduce((s,w)=>s+getTSS(w),0);
   const km=recentW.reduce((s,w)=>s+(w.distance_km||0),0);
   
-  const context=\`## Your Training This Week
-- Total TSS: \${Math.round(tss)}
-- Total distance: \${km.toFixed(1)} km
-- Workouts: \${recentW.length} sessions
+  const context=`## Your Training This Week
+- Total TSS: ${Math.round(tss)}
+- Total distance: ${km.toFixed(1)} km
+- Workouts: ${recentW.length} sessions
 
 ## Your Profile
-- FTP: \${profile.cycling?.ftp_watts||"?"}W
-- LTHR: \${profile.running?.threshold_hr||"?"} bpm
-- Max HR: \${profile.running?.max_hr||"?"} bpm
+- FTP: ${profile.cycling?.ftp_watts||"?"}W
+- LTHR: ${profile.running?.threshold_hr||"?"} bpm
+- Max HR: ${profile.running?.max_hr||"?"} bpm
 
 ## This Week's Plan
-\${planText?planText.substring(0,300)+"...":"Not yet generated"}\`;
+${planText?planText.substring(0,300)+"...":"Not yet generated"}`;
 
   coachHistory.push({role:"user",content:msg});
   
