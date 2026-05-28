@@ -1,13 +1,34 @@
 {
-  "week_of": "",
+  "week_of": "2026-05-31",
   "days": {
-    "Monday":    {"available": false, "hours": 1.0},
-    "Tuesday":   {"available": false, "hours": 1.0},
-    "Wednesday": {"available": false, "hours": 1.0},
-    "Thursday":  {"available": false, "hours": 1.0},
-    "Friday":    {"available": false, "hours": 1.0},
-    "Saturday":  {"available": false, "hours": 1.5},
-    "Sunday":    {"available": false, "hours": 2.0}
+    "Monday": {
+      "available": true,
+      "hours": 0.5
+    },
+    "Tuesday": {
+      "available": true,
+      "hours": 0.5
+    },
+    "Wednesday": {
+      "available": false,
+      "hours": 1
+    },
+    "Thursday": {
+      "available": true,
+      "hours": 1
+    },
+    "Friday": {
+      "available": false,
+      "hours": 1
+    },
+    "Saturday": {
+      "available": false,
+      "hours": 1.5
+    },
+    "Sunday": {
+      "available": false,
+      "hours": 2
+    }
   },
   "notes": ""
 }
