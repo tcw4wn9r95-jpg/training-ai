@@ -347,9 +347,10 @@ else:
         try:
             # Build steps — simple duration-only, no complex targets
             steps = []
-            for step in steps_data:
+            for i, step in enumerate(steps_data):
                 step_type = step.get("type", "interval")
                 duration = float(step.get("duration_secs", 600))
+                step_order = i + 1
                 
                 if step_type == "warmup":
                     steps.append(create_warmup_step(duration))
@@ -358,7 +359,7 @@ else:
                 elif step_type == "recovery":
                     steps.append(create_recovery_step(duration))
                 else:
-                    steps.append(create_interval_step(duration))
+                    steps.append(create_interval_step(duration, step_order))
 
             if sport == "running":
                 segment = WorkoutSegment(
