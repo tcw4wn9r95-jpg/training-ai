@@ -329,9 +329,6 @@ print("Plans saved.")
 # ── Push workouts to Garmin Connect ──────────────────────────────────────────
 if not plan_json:
     print(f"\nJSON plan contains {len(plan_json)} sessions to upload.")
-    print("WARNING: No sessions in JSON plan — this usually means:")
-    print("  1. No availability was set (all days off), OR")
-    print("  2. Claude did not output valid JSON")
     print("Skipping Garmin upload.")
 else:
     print(f"\nPushing {len(plan_json)} workouts to Garmin Connect...")
@@ -343,25 +340,34 @@ else:
         session_date = session.get("date", "")
         total_secs   = session.get("total_duration_secs", 3600)
         steps_data   = session.get("steps", [])
-
+        
         try:
-            # Build steps — simple duration-only, no complex targets
+            # Build steps from Claude's structured plan
             steps = []
-            for i, step in enumerate(steps_data):
+            for step in steps_data:
                 step_type = step.get("type", "interval")
                 duration = float(step.get("duration_secs", 600))
-                step_order = i + 1
                 
-                if step_type == "warmup":
-                    steps.append(create_warmup_step(duration))
-                elif step_type == "cooldown":
-                    steps.append(create_cooldown_step(duration))
-                elif step_type == "recovery":
-                    steps.append(create_recovery_step(duration))
-                else:
-                    steps.append(create_interval_step(duration, step_order))
-
+                try:
+                    if step_type == "warmup":
+                        steps.append(create_warmup_step(duration))
+                    elif step_type == "cooldown":
+                        steps.append(create_cooldown_step(duration))
+                    elif step_type == "recovery":
+                        steps.append(create_recovery_step(duration))
+                    else:  # interval or main set
+                        steps.append(create_interval_step(duration))
+                except TypeError as te:
+                    # If step function doesn't like just duration, try without params
+                    print(f"    Warning: Step creation failed ({step_type}): {str(te)[:50]}")
+                    continue
+            
+            if not steps:
+                # Fallback: create one interval step for entire workout
+                steps = [create_interval_step(float(total_secs))]
+            
             if sport == "running":
+                from garminconnect import RunningWorkout
                 segment = WorkoutSegment(
                     segmentOrder=1,
                     sportType={"sportTypeId": 1, "sportTypeKey": "running"},
@@ -375,6 +381,7 @@ else:
                 result = client.upload_running_workout(workout)
 
             elif sport in ("cycling_indoor", "cycling_outdoor", "cycling"):
+                from garminconnect import CyclingWorkout
                 segment = WorkoutSegment(
                     segmentOrder=1,
                     sportType={"sportTypeId": 2, "sportTypeKey": "cycling"},
@@ -391,20 +398,26 @@ else:
                 print(f"  Skipping {name} ({sport}) — unsupported sport type.")
                 continue
 
+            # Extract workout ID
             workout_id = result.get("workoutId") if isinstance(result, dict) else None
+            
             if workout_id and session_date:
                 client.schedule_workout(workout_id, session_date)
-                print(f"  ✓ {name} ({sport}) → uploaded and scheduled for {session_date}")
+                print(f"  ✓ {name} ({sport}) → uploaded with {len(steps)} steps, scheduled for {session_date}")
+                uploaded += 1
             elif workout_id:
-                print(f"  ✓ {name} ({sport}) → uploaded")
+                print(f"  ✓ {name} ({sport}) → uploaded with {len(steps)} steps")
                 uploaded += 1
             else:
-                print(f"  ⚠️  {name}: no workoutId returned")
+                print(f"  ⚠️  {name}: unclear response from Garmin")
 
         except Exception as e:
-            print(f"  ❌ {name}: {str(e)[:80]}")
+            error_msg = str(e)
+            print(f"  ❌ {name}: {error_msg[:100]}")
 
     print(f"\nGarmin: {uploaded}/{len(plan_json)} workouts pushed.")
+    if uploaded > 0:
+        print("Sync your Fenix in Garmin Connect to see the workouts on your watch.")
 
 print("\n" + "="*60)
 print(plan_md[:1000] + "..." if len(plan_md) > 1000 else plan_md)
