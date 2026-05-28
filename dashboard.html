@@ -317,6 +317,17 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
 #comp-list .comp-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);width:100%}
 #comp-list .comp-item:last-child{border-bottom:none}
 
+
+/* ── Plan step cards ─────────────────────────────────── */
+.plan-step{background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:8px}
+.plan-step-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+.plan-step-icon{font-size:16px;line-height:1}
+.plan-step-title{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px}
+.plan-step-bullets{display:flex;flex-direction:column;gap:4px}
+.plan-bullet{font-size:13px;color:var(--text2);line-height:1.4;padding-left:10px;border-left:2px solid rgba(255,255,255,0.08)}
+.plan-coach-note{background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:13px;color:var(--text2);line-height:1.5}
+.plan-garmin-note{background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.2);border-radius:8px;padding:10px 12px;margin-top:6px;font-size:13px;color:var(--text2);line-height:1.5}
+
 </style>
 </head>
 <body>
@@ -804,31 +815,112 @@ function pillLabel(type){return{run:"Run",cycle:"Cycling",strength:"Strength",re
 
 function renderPlan(md){
   if(!md){
-    document.getElementById("plan-days").innerHTML='<div style="color:var(--text3);padding:40px 0;text-align:center;font-size:13px">No plan yet \u2014 run the workflow first.</div>';
+    document.getElementById("plan-days").innerHTML='<div style="color:var(--text3);padding:40px 0;text-align:center;font-size:13px">No plan yet — run the workflow first.</div>';
     return;
   }
   var gen=md.match(/\*\*Generated:\*\* (.+)/);
   if(gen)document.getElementById("plan-date").textContent=gen[1].trim();
+
+  // Split by day sections
   var sections=md.split(/(?=###\s)/);
   var container=document.getElementById("plan-days");
   container.innerHTML="";
-  var summaryHTML="";
+
   sections.forEach(function(sec){
     var s=sec.trim();
-    if(!s)return;
-    if(s.match(/^###\s+\w+day/i)){
-      var dayLine=s.match(/^###\s+(.+)/)[1];
-      var sportMatch=s.match(/\*\*Sport:\*\*\s*([^\n]+)/i);
-      var durMatch=s.match(/\*\*Total duration:\*\*\s*([^\n]+)/i);
-      var sportText=sportMatch?sportMatch[1].trim():"";
-      var dur=durMatch?durMatch[1].trim():"";
-      var st=sportFromText(sportText);
-      var colors=sportColors(st);
-      var bg=colors[0],col=colors[1];
-      var body=renderBody(s.replace(/^###.+\n/,""));
-      var el=document.createElement("div");
-      el.className="plan-day";
-      el.innerHTML='<div class="plan-day-header" onclick="togglePlanDay(this)">'+
+    if(!s||!s.match(/^###\s+\w+day/i))return;
+
+    var dayLine=s.match(/^###\s+(.+)/)[1].trim();
+    var sportMatch=s.match(/\*\*Sport:\*\*\s*([^
+|]+)/i);
+    var durMatch=s.match(/\*\*Total duration:\*\*\s*([^
+]+)/i);
+    var sportText=sportMatch?sportMatch[1].trim():"";
+    var dur=durMatch?durMatch[1].trim():"";
+    var st=sportFromText(sportText);
+    var colors=sportColors(st);
+    var bg=colors[0],col=colors[1];
+
+    // Parse sections within the day
+    var body=s.replace(/^###.+
+/,"");
+
+    // Extract structured info
+    var overview="";
+    var stepSections=[];
+    var coachNotes="";
+    var garminNotes="";
+
+    // Extract coach notes / garmin alerts
+    var coachMatch=body.match(/\*\*Coach(?:ing)? notes?:\*\*([^
+*]+(?:
+(?!####|\*\*)[^
+]+)*)/i);
+    if(coachMatch)coachNotes=coachMatch[1].trim();
+    var garminMatch=body.match(/\*\*Garmin alerts?:\*\*([^
+*]+(?:
+(?!####|\*\*)[^
+]+)*)/i);
+    if(garminMatch)garminNotes=garminMatch[1].trim();
+
+    // Split into step sections (#### headers)
+    var parts=body.split(/(?=####\s)/);
+    parts.forEach(function(part){
+      var p=part.trim();
+      if(!p)return;
+      if(p.match(/^####/)){
+        var titleMatch=p.match(/^####\s+(.+)/);
+        var title=titleMatch?titleMatch[1].trim():"";
+        var lines=p.replace(/^####.+
+/,"").trim();
+        // Parse bullet points
+        var bullets=[];
+        lines.split("
+").forEach(function(line){
+          var l=line.trim();
+          if(l.startsWith("- "))bullets.push(l.slice(2));
+          else if(l&&!l.startsWith("#"))bullets.push(l);
+        });
+        if(title)stepSections.push({title:title,bullets:bullets});
+      }
+    });
+
+    // Build the card HTML
+    var stepsHTML="";
+    stepSections.forEach(function(section){
+      var icon="⏱";
+      var t=section.title.toLowerCase();
+      if(t.indexOf("warm")>-1)icon="🔥";
+      else if(t.indexOf("cool")>-1)icon="❄️";
+      else if(t.indexOf("main")>-1||t.indexOf("interval")>-1||t.indexOf("threshold")>-1)icon="💪";
+      else if(t.indexOf("strength")>-1||t.indexOf("circuit")>-1)icon="🏋️";
+      else if(t.indexOf("recovery")>-1)icon="🔄";
+
+      stepsHTML+='<div class="plan-step">'+
+        '<div class="plan-step-header">'+
+          '<span class="plan-step-icon">'+icon+'</span>'+
+          '<span class="plan-step-title">'+section.title+'</span>'+
+        '</div>'+
+        '<div class="plan-step-bullets">'+
+          section.bullets.filter(function(b){return b.length>0;}).map(function(b){
+            return '<div class="plan-bullet">'+b.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")+'</div>';
+          }).join("")+
+        '</div>'+
+      '</div>';
+    });
+
+    var notesHTML="";
+    if(coachNotes){
+      notesHTML+='<div class="plan-coach-note"><span style="opacity:0.6;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Coach</span><br>'+coachNotes.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")+'</div>';
+    }
+    if(garminNotes){
+      notesHTML+='<div class="plan-garmin-note"><span style="opacity:0.6;font-size:11px;text-transform:uppercase;letter-spacing:.5px">⌚ Garmin alert</span><br>'+garminNotes.replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")+'</div>';
+    }
+
+    var el=document.createElement("div");
+    el.className="plan-day";
+    el.innerHTML=
+      '<div class="plan-day-header" onclick="togglePlanDay(this)">'+
         '<div class="day-icon" style="background:'+bg+';color:'+col+'">'+sportIcon(st)+'</div>'+
         '<div class="day-info">'+
           '<div class="day-name">'+dayLine+' <span class="day-pill '+pillClass(st)+'">'+pillLabel(st)+'</span></div>'+
@@ -836,17 +928,15 @@ function renderPlan(md){
         '</div>'+
         '<div class="day-chevron"><svg viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
       '</div>'+
-      '<div class="plan-day-body">'+body+'</div>';
-      container.appendChild(el);
-    } else if(s.toLowerCase().indexOf("week summary")>-1||s.toLowerCase().indexOf("summary")>-1){
-      summaryHTML=renderBody(s.replace(/^##.+\n/,""));
-    }
+      '<div class="plan-day-body">'+
+        (stepsHTML?stepsHTML:'<div style="color:var(--text3);font-size:13px;padding:8px 0">Rest day</div>')+
+        notesHTML+
+      '</div>';
+
+    container.appendChild(el);
   });
-  if(summaryHTML){
-    document.getElementById("plan-summary").style.display="block";
-    document.getElementById("plan-summary-text").innerHTML=summaryHTML;
-  }
 }
+
 function togglePlanDay(h){
   h.classList.toggle("open");
   h.nextElementSibling.classList.toggle("open");

@@ -206,6 +206,13 @@ with warmup/main set/cooldown, HR zones, pace or power targets, RPE, Garmin aler
 After the markdown, output a JSON block wrapped in ```json ... ``` containing ONLY training days (skip rest days).
 Each session must follow this exact schema:
 
+IMPORTANT target_type rules:
+- Running: use "pace" with target_low/target_high in SECONDS PER KM (e.g. easy pace 390 = 6:30/km, threshold 330 = 5:30/km)
+- Cycling indoor: use "power" with target_low/target_high in WATTS
+- Cycling outdoor: use "heart_rate" with target_low/target_high in BPM
+- Strength: use "notes" string field (no target_type needed), also add top-level "notes" with full exercise list
+- Always include both target_low and target_high
+
 ```json
 [
   {{
@@ -280,6 +287,31 @@ Each session must follow this exact schema:
         "target_high": 88
       }}
     ]
+  }},
+  {{
+    "day": "Thursday",
+    "date": "2026-06-05",
+    "sport": "strength",
+    "name": "Lower body strength circuit",
+    "total_duration_secs": 2700,
+    "notes": "3 rounds: 12x goblet squat 22kg, 10x Romanian deadlift 22kg, 15x TRX split squat each leg, 20x resistance band glute bridge. Rest 60s between rounds.",
+    "steps": [
+      {{
+        "type": "warmup",
+        "duration_secs": 300,
+        "notes": "Dynamic warm-up: leg swings, hip circles, bodyweight squats"
+      }},
+      {{
+        "type": "interval",
+        "duration_secs": 1800,
+        "notes": "Main circuit: 3 rounds of goblet squat, RDL, TRX split squat, glute bridge"
+      }},
+      {{
+        "type": "cooldown",
+        "duration_secs": 600,
+        "notes": "Stretch: hip flexors, hamstrings, glutes"
+      }}
+    ]
   }}
 ]
 ```
@@ -328,6 +360,80 @@ with open("weekly_plan.json", "w") as f:
 print("Plans saved.")
 
 # ── Push workouts to Garmin Connect ──────────────────────────────────────────
+from garminconnect.workout import TargetType
+
+def make_target(step):
+    """Build a Garmin target_type dict from a Claude step."""
+    tt   = step.get("target_type", "")
+    low  = step.get("target_low", 0)
+    high = step.get("target_high", 0)
+
+    if tt == "pace" and low and high:
+        # Garmin speed target is in m/s; Claude gives sec/km
+        # Convert: sec/km → m/s = 1000 / sec_per_km
+        speed_low  = round(1000 / high, 4)   # slower pace = lower speed
+        speed_high = round(1000 / low, 4)    # faster pace = higher speed
+        return {
+            "workoutTargetTypeId": TargetType.SPEED,
+            "workoutTargetTypeKey": "speed.zone",
+            "targetValueOne": speed_low,
+            "targetValueTwo": speed_high,
+        }
+    elif tt == "heart_rate" and low and high:
+        return {
+            "workoutTargetTypeId": TargetType.HEART_RATE,
+            "workoutTargetTypeKey": "heart.rate.zone",
+            "targetValueOne": low,
+            "targetValueTwo": high,
+        }
+    elif tt == "power" and low and high:
+        return {
+            "workoutTargetTypeId": TargetType.POWER,
+            "workoutTargetTypeKey": "power.zone",
+            "targetValueOne": low,
+            "targetValueTwo": high,
+        }
+    else:
+        return {
+            "workoutTargetTypeId": TargetType.NO_TARGET,
+            "workoutTargetTypeKey": "no.target",
+        }
+
+def make_strength_workout_json(name, steps_data, session_date, notes=""):
+    """Build a strength workout as a plain JSON dict for upload_workout()."""
+    steps = []
+    for i, step in enumerate(steps_data):
+        duration = step.get("duration_secs", 600)
+        label    = step.get("notes", step.get("type", "Work").capitalize())
+        steps.append({
+            "stepOrder": i + 1,
+            "stepType": {"stepTypeId": 3, "stepTypeKey": "interval"},
+            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time"},
+            "endConditionValue": float(duration),
+            "targetType": {"workoutTargetTypeId": 1, "workoutTargetTypeKey": "no.target"},
+            "description": label[:100] if label else "",
+        })
+    if not steps:
+        steps = [{
+            "stepOrder": 1,
+            "stepType": {"stepTypeId": 3, "stepTypeKey": "interval"},
+            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time"},
+            "endConditionValue": 2700.0,
+            "targetType": {"workoutTargetTypeId": 1, "workoutTargetTypeKey": "no.target"},
+            "description": notes[:100] if notes else "Strength session",
+        }]
+    return {
+        "workoutName": name,
+        "description": notes[:500] if notes else "",
+        "sportType": {"sportTypeId": 5, "sportTypeKey": "strength_training"},
+        "estimatedDurationInSecs": sum(s.get("duration_secs", 600) for s in steps_data) or 2700,
+        "workoutSegments": [{
+            "segmentOrder": 1,
+            "sportType": {"sportTypeId": 5, "sportTypeKey": "strength_training"},
+            "workoutSteps": steps,
+        }],
+    }
+
 if not plan_json:
     print(f"\nNo sessions to upload. Check weekly_plan.json.")
 else:
@@ -340,35 +446,51 @@ else:
         session_date = session.get("date", "")
         total_secs   = session.get("total_duration_secs", 3600)
         steps_data   = session.get("steps", [])
+        notes        = session.get("notes", "")
 
         try:
-            # Build steps with correct signatures
+            # ── Strength ────────────────────────────────────────────────────
+            if sport == "strength":
+                workout_json = make_strength_workout_json(name, steps_data, session_date, notes)
+                result = client.upload_workout(workout_json)
+                workout_id = result.get("workoutId") if isinstance(result, dict) else None
+                if workout_id and session_date:
+                    client.schedule_workout(workout_id, session_date)
+                    print(f"  ✓ {name} (strength) → uploaded with notes, scheduled {session_date}")
+                    uploaded += 1
+                elif workout_id:
+                    print(f"  ✓ {name} (strength) → uploaded with notes")
+                    uploaded += 1
+                else:
+                    print(f"  ⚠️  {name}: unclear response")
+                continue
+
+            # ── Running / Cycling ────────────────────────────────────────────
             steps = []
             for i, step in enumerate(steps_data):
                 step_type = step.get("type", "interval")
                 duration  = float(step.get("duration_secs", 600))
                 order     = i + 1
+                target    = make_target(step)
 
                 if step_type == "warmup":
-                    steps.append(create_warmup_step(duration, order))
+                    steps.append(create_warmup_step(duration, order, target))
                 elif step_type == "cooldown":
-                    steps.append(create_cooldown_step(duration, order))
+                    steps.append(create_cooldown_step(duration, order, target))
                 elif step_type == "recovery":
-                    steps.append(create_recovery_step(duration, order))
+                    steps.append(create_recovery_step(duration, order, target))
                 else:
-                    steps.append(create_interval_step(duration, order))
+                    steps.append(create_interval_step(duration, order, target))
 
             if not steps:
                 steps = [create_interval_step(float(total_secs), 1)]
 
-            segment = WorkoutSegment(
-                segmentOrder=1,
-                sportType={"sportTypeId": 1, "sportTypeKey": "running"} if sport == "running"
-                          else {"sportTypeId": 2, "sportTypeKey": "cycling"},
-                workoutSteps=steps
-            )
-
             if sport == "running":
+                segment = WorkoutSegment(
+                    segmentOrder=1,
+                    sportType={"sportTypeId": 1, "sportTypeKey": "running"},
+                    workoutSteps=steps
+                )
                 workout = RunningWorkout(
                     workoutName=name,
                     estimatedDurationInSecs=total_secs,
@@ -377,6 +499,11 @@ else:
                 result = client.upload_running_workout(workout)
 
             elif sport in ("cycling_indoor", "cycling_outdoor", "cycling"):
+                segment = WorkoutSegment(
+                    segmentOrder=1,
+                    sportType={"sportTypeId": 2, "sportTypeKey": "cycling"},
+                    workoutSteps=steps
+                )
                 workout = CyclingWorkout(
                     workoutName=name,
                     estimatedDurationInSecs=total_secs,
@@ -391,10 +518,10 @@ else:
             workout_id = result.get("workoutId") if isinstance(result, dict) else None
             if workout_id and session_date:
                 client.schedule_workout(workout_id, session_date)
-                print(f"  ✓ {name} ({sport}) → {len(steps)} steps, scheduled {session_date}")
+                print(f"  ✓ {name} ({sport}) → {len(steps)} steps with targets, scheduled {session_date}")
                 uploaded += 1
             elif workout_id:
-                print(f"  ✓ {name} ({sport}) → {len(steps)} steps, uploaded")
+                print(f"  ✓ {name} ({sport}) → {len(steps)} steps with targets, uploaded")
                 uploaded += 1
             else:
                 print(f"  ⚠️  {name}: unclear response: {result}")
