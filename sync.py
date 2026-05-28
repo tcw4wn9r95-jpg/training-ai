@@ -327,57 +327,11 @@ with open("weekly_plan.json", "w") as f:
 print("Plans saved.")
 
 # ── Push workouts to Garmin Connect ──────────────────────────────────────────
-def build_step(step, step_order):
-    """Convert a Claude step dict into a garminconnect step object."""
-    t    = step.get("type")
-    dur  = step.get("duration_secs", 600)
-    tt   = step.get("target_type", "heart_rate")
-    low  = step.get("target_low", 0)
-    high = step.get("target_high", 999)
-
-    # Map target type to Garmin format
-    if tt == "power":
-        target = {"targetType": {"workoutTargetTypeId": 2, "workoutTargetTypeKey": "power.zone"},
-                  "targetValueOne": low, "targetValueTwo": high}
-    elif tt == "pace":
-        # Garmin uses m/s internally — convert from sec/km
-        target = {"targetType": {"workoutTargetTypeId": 6, "workoutTargetTypeKey": "pace.zone"},
-                  "targetValueOne": round(1000/high, 3) if high else 0,
-                  "targetValueTwo": round(1000/low, 3) if low else 0}
-    else:  # heart_rate
-        target = {"targetType": {"workoutTargetTypeId": 4, "workoutTargetTypeKey": "heart.rate.zone"},
-                  "targetValueOne": low, "targetValueTwo": high}
-
-    end_cond = {"conditionTypeKey": "time", "conditionTypeId": 2, "conditionValue": dur}
-
-    if t == "warmup":
-        return create_warmup_step(float(dur), **{"workoutStepTarget": target})
-    elif t == "cooldown":
-        return create_cooldown_step(float(dur), **{"workoutStepTarget": target})
-    elif t == "recovery":
-        return create_recovery_step(float(dur), **{"workoutStepTarget": target})
-    else:  # interval
-        return create_interval_step(float(dur), **{"workoutStepTarget": target})
-
-def build_steps(steps_list):
-    """Recursively build steps including repeat groups."""
-    built = []
-    order = 1
-    for step in steps_list:
-        if step.get("type") == "repeat":
-            inner = build_steps(step.get("steps", []))
-            built.append(create_repeat_group(step.get("repeat_count", 1), inner))
-        else:
-            built.append(build_step(step, order))
-        order += 1
-    return built
-
-print(f"\nJSON plan contains {len(plan_json)} sessions to upload.")
 if not plan_json:
+    print(f"\nJSON plan contains {len(plan_json)} sessions to upload.")
     print("WARNING: No sessions in JSON plan — this usually means:")
     print("  1. No availability was set (all days off), OR")
     print("  2. Claude did not output valid JSON")
-    print("  Check weekly_plan.json to see what Claude returned.")
     print("Skipping Garmin upload.")
 else:
     print(f"\nPushing {len(plan_json)} workouts to Garmin Connect...")
@@ -391,7 +345,20 @@ else:
         steps_data   = session.get("steps", [])
 
         try:
-            steps = build_steps(steps_data)
+            # Build steps — simple duration-only, no complex targets
+            steps = []
+            for step in steps_data:
+                step_type = step.get("type", "interval")
+                duration = float(step.get("duration_secs", 600))
+                
+                if step_type == "warmup":
+                    steps.append(create_warmup_step(duration))
+                elif step_type == "cooldown":
+                    steps.append(create_cooldown_step(duration))
+                elif step_type == "recovery":
+                    steps.append(create_recovery_step(duration))
+                else:
+                    steps.append(create_interval_step(duration))
 
             if sport == "running":
                 segment = WorkoutSegment(
@@ -420,25 +387,23 @@ else:
                 result = client.upload_cycling_workout(workout)
 
             else:
-                print(f"  Skipping {name} ({sport}) — strength sessions not auto-uploaded.")
+                print(f"  Skipping {name} ({sport}) — unsupported sport type.")
                 continue
 
             workout_id = result.get("workoutId") if isinstance(result, dict) else None
             if workout_id and session_date:
                 client.schedule_workout(workout_id, session_date)
-                print(f"  ✅ {name} ({sport}) → uploaded and scheduled for {session_date}")
+                print(f"  ✓ {name} ({sport}) → uploaded and scheduled for {session_date}")
             elif workout_id:
-                print(f"  ✅ {name} ({sport}) → uploaded (no date scheduled)")
+                print(f"  ✓ {name} ({sport}) → uploaded")
+                uploaded += 1
             else:
-                print(f"  ⚠️  {name} uploaded but no workoutId returned: {result}")
-
-            uploaded += 1
+                print(f"  ⚠️  {name}: no workoutId returned")
 
         except Exception as e:
-            print(f"  ❌ Failed to upload {name}: {e}")
+            print(f"  ❌ {name}: {str(e)[:80]}")
 
-    print(f"\nGarmin upload complete: {uploaded}/{len(plan_json)} sessions pushed.")
-    print("Sync your Fenix in Garmin Connect to see the workouts on your watch.")
+    print(f"\nGarmin: {uploaded}/{len(plan_json)} workouts pushed.")
 
 print("\n" + "="*60)
 print(plan_md[:1000] + "..." if len(plan_md) > 1000 else plan_md)
