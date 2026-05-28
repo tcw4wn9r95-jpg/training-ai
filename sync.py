@@ -437,6 +437,44 @@ def make_strength_workout_json(name, steps_data, session_date, notes=""):
 if not plan_json:
     print(f"\nNo sessions to upload. Check weekly_plan.json.")
 else:
+    # ── Clean up any existing workouts for this week ───────────────────────
+    # Prevents duplicates if the workflow runs multiple times
+    print("\nChecking for existing workouts to clean up...")
+    try:
+        existing = client.get_workouts(0, 100)
+        plan_names = {s.get("name", "") for s in plan_json}
+        
+        # Also get scheduled workouts for this month and unschedule them
+        from datetime import date
+        today = date.today()
+        scheduled = client.get_scheduled_workouts(today.year, today.month)
+        scheduled_items = scheduled.get("calendarItems", []) if isinstance(scheduled, dict) else []
+        
+        removed = 0
+        for item in scheduled_items:
+            item_name = item.get("title", "")
+            if item_name in plan_names:
+                try:
+                    client.unschedule_workout(item["id"])
+                    removed += 1
+                except Exception:
+                    pass
+        
+        for workout in existing:
+            if workout.get("workoutName", "") in plan_names:
+                try:
+                    client.delete_workout(workout["workoutId"])
+                    removed += 1
+                except Exception:
+                    pass
+        
+        if removed:
+            print(f"  Removed {removed} existing workout(s) for this week.")
+        else:
+            print("  No existing workouts found for this week.")
+    except Exception as e:
+        print(f"  Warning: cleanup failed ({str(e)[:60]}), continuing anyway.")
+
     print(f"\nPushing {len(plan_json)} workouts to Garmin Connect...")
     uploaded = 0
 
