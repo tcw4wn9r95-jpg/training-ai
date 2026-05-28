@@ -258,15 +258,12 @@ html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--f
   padding:12px 0;border-bottom:1px solid var(--border);
 }
 .comp-item:last-child{border-bottom:none}
-.comp-icon-wrap{
-  width:36px;height:36px;border-radius:10px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
+.comp-icon-wrap{width:38px;height:38px;min-width:38px;display:flex;align-items:center;justify-content:center;border-radius:8px;flex-shrink:0;}
 .comp-icon-wrap svg{width:18px;height:18px}
 .comp-info{flex:1;min-width:0}
 .comp-title{font-size:13px;font-weight:600}
 .comp-sub{font-size:11px;color:var(--text3);margin-top:2px}
-.comp-bar-track{width:56px;height:3px;background:var(--bg3);border-radius:2px;flex-shrink:0}
+.comp-bar-track{flex:0.7;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;flex-shrink:0}
 .comp-bar-fill{height:100%;border-radius:2px;transition:width .4s}
 .comp-check{width:18px;font-size:12px;font-weight:700;text-align:right;flex-shrink:0}
 
