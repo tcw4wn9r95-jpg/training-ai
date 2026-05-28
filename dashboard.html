@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Diego · Training Dashboard</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg:#0f1117; --bg2:#181c27; --bg3:#1e2235; --card:#1e2235;
+  --border:#2a2f45; --border2:#353b55;
+  --text:#e8eaf0; --muted:#7b82a0; --dim:#4a5070;
+  --blue:#4c9be8; --blue2:#2563eb; --blue-bg:rgba(76,155,232,0.12);
+  --green:#34d399; --green-bg:rgba(52,211,153,0.12);
+  --amber:#fbbf24; --amber-bg:rgba(251,191,36,0.12);
+  --red:#f87171; --red-bg:rgba(248,113,113,0.12);
+  --purple:#a78bfa; --purple-bg:rgba(167,139,250,0.12);
+  --ctl:#4c9be8; --atl:#f87171; --tsb:#34d399;
+  --z1c:#64748b; --z2c:#3b82f6; --z3c:#22c55e; --z4c:#f59e0b; --z5c:#ef4444;
+  --radius:10px; --radius-lg:14px;
+  --font: -apple-system, BlinkMacSystemFont, 'Inter', 'Segoe UI', sans-serif;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{background:var(--bg)}
+body{font-family:var(--font);background:var(--bg);color:var(--text);font-size:14px;line-height:1.5;min-height:100vh}
+a{color:var(--blue);text-decoration:none}
+
+/* ── Layout ── */
+.app{display:grid;grid-template-rows:auto auto 1fr;min-height:100vh}
+.topbar{background:var(--bg2);border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;gap:0;height:52px}
+.topbar-logo{font-size:15px;font-weight:700;color:var(--text);margin-right:32px;letter-spacing:-0.3px}
+.topbar-logo span{color:var(--blue)}
+.nav-tabs{display:flex;height:100%;gap:2px}
+.nav-tab{padding:0 16px;height:100%;display:flex;align-items:center;font-size:13px;color:var(--muted);cursor:pointer;border-bottom:2px solid transparent;transition:all .15s}
+.nav-tab:hover{color:var(--text)}
+.nav-tab.active{color:var(--blue);border-bottom-color:var(--blue)}
+.topbar-right{margin-left:auto;display:flex;align-items:center;gap:12px}
+.pill{font-size:11px;padding:3px 10px;border-radius:20px;font-weight:500}
+.pill-blue{background:var(--blue-bg);color:var(--blue)}
+.pill-green{background:var(--green-bg);color:var(--green)}
+.pill-amber{background:var(--amber-bg);color:var(--amber)}
+.pill-red{background:var(--red-bg);color:var(--red)}
+
+/* ── Setup bar ── */
+.setup-bar{background:var(--blue-bg);border-bottom:1px solid rgba(76,155,232,0.2);padding:10px 24px;display:flex;align-items:center;gap:12px;font-size:13px}
+.setup-bar input{background:var(--bg3);border:1px solid var(--border2);border-radius:6px;padding:5px 10px;color:var(--text);font-size:12px;font-family:monospace;width:280px;outline:none}
+.setup-bar input:focus{border-color:var(--blue)}
+.setup-bar button{background:var(--blue2);color:#fff;border:none;border-radius:6px;padding:5px 14px;font-size:12px;cursor:pointer;font-weight:500}
+.setup-bar .close-btn{margin-left:auto;background:none;border:none;color:var(--muted);cursor:pointer;font-size:18px;line-height:1}
+
+/* ── Page content ── */
+.page{display:none;padding:20px 24px;max-width:1400px;margin:0 auto;width:100%}
+.page.active{display:block}
+
+/* ── Cards ── */
+.card{background:var(--card);border:1px solid var(--border);border-radius:var(--radius-lg);padding:16px 20px}
+.card-title{font-size:12px;font-weight:600;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:14px}
+
+/* ── KPI row ── */
+.kpi-row{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-bottom:16px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:var(--radius);padding:14px 16px}
+.kpi-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px}
+.kpi-value{font-size:26px;font-weight:700;letter-spacing:-0.5px;line-height:1}
+.kpi-unit{font-size:12px;color:var(--muted);font-weight:400;margin-left:2px}
+.kpi-sub{font-size:11px;color:var(--muted);margin-top:4px}
+.kpi-delta{font-size:11px;margin-top:4px}
+.kpi-delta.pos{color:var(--green)}
+.kpi-delta.neg{color:var(--red)}
+
+/* ── PMC chart ── */
+.pmc-wrap{position:relative;height:260px}
+
+/* ── Grid layouts ── */
+.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:16px}
+.grid-3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px}
+.grid-7{display:grid;grid-template-columns:repeat(7,1fr);gap:10px;margin-bottom:16px}
+.chart-wrap{position:relative;height:180px}
+.chart-wrap-sm{position:relative;height:140px}
+
+/* ── Availability planner ── */
+.avail-day{background:var(--bg3);border:1px solid var(--border);border-radius:var(--radius);padding:12px 10px;text-align:center;cursor:pointer;transition:all .15s;user-select:none}
+.avail-day.on{background:var(--blue-bg);border-color:var(--blue)}
+.avail-day .av-name{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.avail-day.on .av-name{color:var(--blue)}
+.avail-day .av-date{font-size:13px;font-weight:600;margin:4px 0}
+.avail-day .av-hrs{font-size:11px;color:var(--muted);margin-top:6px}
+.avail-day.on .av-hrs{color:var(--blue)}
+.hours-input{width:48px;border:1px solid var(--border2);border-radius:5px;padding:3px 5px;background:var(--bg);color:var(--text);font-size:12px;text-align:center;margin-top:6px;outline:none}
+.hours-input:focus{border-color:var(--blue)}
+.avail-notes{width:100%;background:var(--bg3);border:1px solid var(--border);border-radius:8px;padding:10px 14px;color:var(--text);font-size:13px;resize:none;outline:none;margin-bottom:12px;font-family:var(--font)}
+.avail-notes:focus{border-color:var(--blue)}
+.save-btn{background:var(--blue2);color:#fff;border:none;border-radius:8px;padding:9px 22px;font-size:13px;font-weight:600;cursor:pointer;transition:background .15s}
+.save-btn:hover{background:#1d4ed8}
+.save-status{font-size:12px;color:var(--muted);margin-left:12px}
+.save-status.ok{color:var(--green)}
+.save-status.err{color:var(--red)}
+
+/* ── Plan display ── */
+.plan-md{font-size:13px;line-height:1.85;color:var(--text)}
+.plan-md h3{font-size:14px;font-weight:700;color:var(--blue);margin:18px 0 6px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.plan-md h2{font-size:15px;font-weight:700;color:var(--text);margin:22px 0 8px}
+.plan-md strong{font-weight:600;color:var(--text)}
+.plan-md ul{padding-left:18px;margin:4px 0}
+.plan-md li{margin-bottom:3px;color:var(--muted)}
+.plan-md hr{border:none;border-top:1px solid var(--border);margin:16px 0}
+.plan-md em{color:var(--muted)}
+.plan-scroll{max-height:620px;overflow-y:auto;padding-right:6px}
+.plan-scroll::-webkit-scrollbar{width:4px}
+.plan-scroll::-webkit-scrollbar-track{background:transparent}
+.plan-scroll::-webkit-scrollbar-thumb{background:var(--border2);border-radius:4px}
+
+/* ── Compliance table ── */
+.comp-table{width:100%;border-collapse:collapse;font-size:13px}
+.comp-table th{text-align:left;padding:8px 12px;font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px;border-bottom:1px solid var(--border);font-weight:500}
+.comp-table td{padding:10px 12px;border-bottom:1px solid var(--border)}
+.comp-table tr:last-child td{border-bottom:none}
+.comp-bar-wrap{width:100%;background:var(--bg3);border-radius:4px;height:6px;overflow:hidden}
+.comp-bar{height:100%;border-radius:4px;background:var(--blue)}
+.comp-bar.good{background:var(--green)}
+.comp-bar.ok{background:var(--amber)}
+.comp-bar.miss{background:var(--red)}
+.sport-dot{width:8px;height:8px;border-radius:50%;display:inline-block;margin-right:6px;vertical-align:middle}
+
+/* ── Zone bars (horizontal) ── */
+.zone-stack{display:flex;height:10px;border-radius:5px;overflow:hidden;gap:1px;margin-top:4px}
+.zone-seg{height:100%;transition:width .4s}
+
+/* ── Scrollbar global ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+
+/* ── Activity log ── */
+.act-row{display:grid;grid-template-columns:90px 80px 1fr 70px 70px 70px 80px;align-items:center;padding:10px 0;border-bottom:1px solid var(--border);gap:12px;font-size:13px}
+.act-row:last-child{border-bottom:none}
+.act-hdr{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.5px}
+.sport-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px}
+.sport-run{background:rgba(59,130,246,.2)}
+.sport-cycle{background:rgba(34,197,94,.2)}
+.sport-strength{background:rgba(251,191,36,.2)}
+
+/* ── Responsive ── */
+@media(max-width:900px){
+  .kpi-row{grid-template-columns:repeat(3,1fr)}
+  .grid-2,.grid-3{grid-template-columns:1fr}
+  .grid-7{grid-template-columns:repeat(4,1fr)}
+  .act-row{grid-template-columns:60px 1fr 60px 60px}
+}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- ── Top bar ── -->
+<div class="topbar">
+  <div class="topbar-logo">Diego <span>Training</span></div>
+  <div class="nav-tabs">
+    <div class="nav-tab active" onclick="showPage('dashboard',this)">Dashboard</div>
+    <div class="nav-tab" onclick="showPage('plan',this)">Weekly Plan</div>
+    <div class="nav-tab" onclick="showPage('compliance',this)">Compliance</div>
+    <div class="nav-tab" onclick="showPage('availability',this)">Availability</div>
+    <div class="nav-tab" onclick="showPage('log',this)">Activity Log</div>
+  </div>
+  <div class="topbar-right">
+    <span id="last-sync" style="font-size:12px;color:var(--muted)">Loading...</span>
+    <button onclick="toggleSetup()" style="background:var(--bg3);border:1px solid var(--border);color:var(--muted);border-radius:6px;padding:4px 10px;font-size:12px;cursor:pointer">⚙ Setup</button>
+  </div>
+</div>
+
+<!-- ── Setup bar ── -->
+<div class="setup-bar" id="setup-bar" style="display:none">
+  <span style="color:var(--blue);font-weight:600">GitHub token</span>
+  <input type="password" id="gh-token" placeholder="ghp_..." />
+  <button onclick="saveToken()">Save token</button>
+  <span style="color:var(--muted);font-size:12px">
+    Needs <strong>repo</strong> scope ·
+    Repo: <strong id="repo-label" style="color:var(--text)"></strong> ·
+    <a href="https://github.com/settings/tokens/new" target="_blank">Generate →</a>
+  </span>
+  <button class="close-btn" onclick="toggleSetup()">×</button>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: DASHBOARD
+════════════════════════════════════════════ -->
+<div class="page active" id="page-dashboard">
+
+  <!-- KPI row -->
+  <div class="kpi-row" style="margin-top:16px">
+    <div class="kpi">
+      <div class="kpi-label">CTL (Fitness)</div>
+      <div class="kpi-value" id="kpi-ctl" style="color:var(--ctl)">—<span class="kpi-unit">TSS</span></div>
+      <div class="kpi-sub" id="kpi-ctl-sub">42-day avg</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">ATL (Fatigue)</div>
+      <div class="kpi-value" id="kpi-atl" style="color:var(--atl)">—<span class="kpi-unit">TSS</span></div>
+      <div class="kpi-sub">7-day avg</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">TSB (Form)</div>
+      <div class="kpi-value" id="kpi-tsb">—</div>
+      <div class="kpi-sub" id="kpi-tsb-label">CTL − ATL</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Week TSS</div>
+      <div class="kpi-value" id="kpi-week-tss" style="color:var(--amber)">—</div>
+      <div class="kpi-delta" id="kpi-week-delta">vs last week</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Month volume</div>
+      <div class="kpi-value" id="kpi-month-km" style="color:var(--purple)">—<span class="kpi-unit">km</span></div>
+      <div class="kpi-sub" id="kpi-month-detail">run + cycle</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">Compliance</div>
+      <div class="kpi-value" id="kpi-compliance" style="color:var(--green)">—<span class="kpi-unit">%</span></div>
+      <div class="kpi-sub">last 4 weeks</div>
+    </div>
+  </div>
+
+  <!-- PMC -->
+  <div class="card" style="margin-bottom:16px">
+    <div class="card-title">Performance Management Chart — CTL / ATL / TSB</div>
+    <div class="pmc-wrap"><canvas id="pmcChart"></canvas></div>
+  </div>
+
+  <!-- Charts row -->
+  <div class="grid-2">
+    <div class="card">
+      <div class="card-title">Weekly TSS — last 12 weeks</div>
+      <div class="chart-wrap"><canvas id="weeklyTssChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Volume by sport — last 8 weeks</div>
+      <div class="chart-wrap"><canvas id="volumeChart"></canvas></div>
+    </div>
+  </div>
+
+  <div class="grid-3">
+    <div class="card">
+      <div class="card-title">HR zone distribution — running</div>
+      <div class="chart-wrap-sm"><canvas id="runZoneChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">HR zone distribution — cycling</div>
+      <div class="chart-wrap-sm"><canvas id="cycleZoneChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Activity mix — last 30 days</div>
+      <div class="chart-wrap-sm"><canvas id="mixChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: WEEKLY PLAN
+════════════════════════════════════════════ -->
+<div class="page" id="page-plan">
+  <div style="margin-top:16px" class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="card-title" style="margin-bottom:0">This week's training plan</div>
+      <span id="plan-generated" style="font-size:12px;color:var(--muted)"></span>
+    </div>
+    <div class="plan-scroll">
+      <div class="plan-md" id="plan-display"><em>Loading plan...</em></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: COMPLIANCE
+════════════════════════════════════════════ -->
+<div class="page" id="page-compliance">
+  <div style="margin-top:16px" class="card">
+    <div class="card-title">Training compliance — last 4 weeks</div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">
+      Compliance is calculated by comparing planned sessions (from weekly_plan.md) against completed Garmin activities on the same day. A session counts as compliant if duration was ≥80% of plan.
+    </p>
+    <table class="comp-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Sport</th>
+          <th>Planned</th>
+          <th>Actual</th>
+          <th>Duration match</th>
+          <th>Avg HR</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="comp-tbody">
+        <tr><td colspan="7" style="color:var(--muted);padding:20px 12px">Loading compliance data...</td></tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="grid-2" style="margin-top:16px">
+    <div class="card">
+      <div class="card-title">Compliance rate by sport</div>
+      <div class="chart-wrap"><canvas id="compSportChart"></canvas></div>
+    </div>
+    <div class="card">
+      <div class="card-title">Weekly compliance trend</div>
+      <div class="chart-wrap"><canvas id="compTrendChart"></canvas></div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: AVAILABILITY
+════════════════════════════════════════════ -->
+<div class="page" id="page-availability">
+  <div style="margin-top:16px" class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">
+      <div class="card-title" style="margin-bottom:0">Set availability for next week</div>
+      <span style="font-size:12px;color:var(--muted)">Claude reads this Sunday 8pm Luxembourg time</span>
+    </div>
+    <p style="font-size:12px;color:var(--muted);margin-bottom:16px">
+      Click a day to toggle it on/off. Set how many hours you have available. Claude will fit the session within that window — longer days get longer or harder sessions.
+    </p>
+    <div class="grid-7" id="avail-grid"></div>
+    <div style="margin-bottom:12px">
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Notes for Claude (optional)</div>
+      <textarea class="avail-notes" id="avail-notes" rows="2" placeholder="e.g. 'legs feeling heavy', 'race on Saturday so keep Friday easy', 'traveling Tuesday–Wednesday'"></textarea>
+    </div>
+    <div style="display:flex;align-items:center;gap:0">
+      <button class="save-btn" onclick="saveAvailability()">Save to GitHub</button>
+      <span class="save-status" id="save-status"></span>
+    </div>
+  </div>
+
+  <div class="card" style="margin-top:16px">
+    <div class="card-title">How it works</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:16px;font-size:13px">
+      <div style="padding:12px;background:var(--bg3);border-radius:8px">
+        <div style="font-size:20px;margin-bottom:6px">1 📅</div>
+        <div style="font-weight:600;margin-bottom:4px">Set your week</div>
+        <div style="color:var(--muted)">Pick available days and hours before Sunday 8pm Luxembourg time.</div>
+      </div>
+      <div style="padding:12px;background:var(--bg3);border-radius:8px">
+        <div style="font-size:20px;margin-bottom:6px">2 🤖</div>
+        <div style="font-weight:600;margin-bottom:4px">Claude plans</div>
+        <div style="color:var(--muted)">Claude reads your availability, Garmin history, and your profile to build a tailored plan.</div>
+      </div>
+      <div style="padding:12px;background:var(--bg3);border-radius:8px">
+        <div style="font-size:20px;margin-bottom:6px">3 ✅</div>
+        <div style="font-weight:600;margin-bottom:4px">Track compliance</div>
+        <div style="color:var(--muted)">After each session Garmin data is compared to the plan automatically.</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════════
+     PAGE: ACTIVITY LOG
+════════════════════════════════════════════ -->
+<div class="page" id="page-log">
+  <div style="margin-top:16px" class="card">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">
+      <div class="card-title" style="margin-bottom:0">All activities</div>
+      <div style="display:flex;gap:8px">
+        <select id="log-filter" onchange="renderLog()" style="background:var(--bg3);border:1px solid var(--border);color:var(--text);border-radius:6px;padding:4px 8px;font-size:12px;outline:none">
+          <option value="all">All sports</option>
+          <option value="running">Running</option>
+          <option value="cycling">Cycling</option>
+          <option value="strength">Strength</option>
+        </select>
+      </div>
+    </div>
+    <div class="act-row act-hdr" style="padding-bottom:6px">
+      <div>Date</div><div>Sport</div><div>Name / type</div>
+      <div>Duration</div><div>Distance</div><div>Avg HR</div><div>TSS</div>
+    </div>
+    <div id="log-body"></div>
+  </div>
+</div>
+
+</div><!-- end .app -->
+
+<script>
+// ══════════════════════════════════════════════════
+//  CONFIG — change GITHUB_USER to your username
+// ══════════════════════════════════════════════════
+const GITHUB_USER = "YOUR_GITHUB_USERNAME";
+const GITHUB_REPO = "training-ai";
+const REPO        = `${GITHUB_USER}/${GITHUB_REPO}`;
+const RAW         = `https://raw.githubusercontent.com/${REPO}/main`;
+const API         = `https://api.github.com/repos/${REPO}/contents`;
+
+document.getElementById("repo-label").textContent = REPO;
+
+// ══════════════════════════════════════════════════
+//  TOKEN
+// ══════════════════════════════════════════════════
+function getToken(){ return localStorage.getItem("gh_token")||""; }
+function saveToken(){
+  const t=document.getElementById("gh-token").value.trim();
+  if(t){ localStorage.setItem("gh_token",t); alert("Token saved."); }
+}
+function toggleSetup(){
+  const b=document.getElementById("setup-bar");
+  b.style.display=b.style.display==="none"?"flex":"none";
+}
+if(getToken()) document.getElementById("setup-bar").style.display="none";
+
+// ══════════════════════════════════════════════════
+//  NAVIGATION
+// ══════════════════════════════════════════════════
+function showPage(id,el){
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav-tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById("page-"+id).classList.add("active");
+  el.classList.add("active");
+}
+
+// ══════════════════════════════════════════════════
+//  DATA FETCHING
+// ══════════════════════════════════════════════════
+let workouts=[], planText="";
+
+async function fetchJSON(path){
+  try{
+    const r=await fetch(`${RAW}/${path}?t=${Date.now()}`);
+    if(!r.ok) return null;
+    return await r.json();
+  }catch{ return null; }
+}
+async function fetchText(path){
+  try{
+    const r=await fetch(`${RAW}/${path}?t=${Date.now()}`);
+    if(!r.ok) return "";
+    return await r.text();
+  }catch{ return ""; }
+}
+
+// ══════════════════════════════════════════════════
+//  TSS CALCULATION (hrTSS)
+// ══════════════════════════════════════════════════
+const FTP=177, LTHR=173, REST_HR=60, MAX_HR=196;
+
+function hrTSS(duration_min, avg_hr){
+  if(!avg_hr||avg_hr<60||!duration_min) return 0;
+  const hrr=(avg_hr-REST_HR)/(MAX_HR-REST_HR);
+  const lthrr=(LTHR-REST_HR)/(MAX_HR-REST_HR);
+  const IF=hrr/lthrr;
+  return Math.round((duration_min/60)*IF*IF*100);
+}
+
+function getTSS(w){
+  if(w.tss && w.tss>0) return w.tss;
+  // estimate from power if available
+  if(w.avg_power_watts && w.avg_power_watts>0 && w.duration_min>0){
+    const IF=w.avg_power_watts/FTP;
+    return Math.round((w.duration_min/60)*IF*IF*100);
+  }
+  // fallback hr
+  return hrTSS(w.duration_min, w.avg_hr);
+}
+
+// ══════════════════════════════════════════════════
+//  PMC (CTL / ATL / TSB)
+// ══════════════════════════════════════════════════
+function buildPMC(workouts, days=120){
+  const today=new Date();
+  const dailyTSS={};
+  workouts.forEach(w=>{
+    const d=w.date;
+    dailyTSS[d]=(dailyTSS[d]||0)+getTSS(w);
+  });
+
+  const labels=[], ctlArr=[], atlArr=[], tsbArr=[];
+  let ctl=0, atl=0;
+  for(let i=days;i>=0;i--){
+    const d=new Date(today);
+    d.setDate(today.getDate()-i);
+    const key=d.toISOString().split("T")[0];
+    const tss=dailyTSS[key]||0;
+    ctl=ctl+(tss-ctl)/42;
+    atl=atl+(tss-atl)/7;
+    labels.push(key);
+    ctlArr.push(Math.round(ctl*10)/10);
+    atlArr.push(Math.round(atl*10)/10);
+    tsbArr.push(Math.round((ctl-atl)*10)/10);
+  }
+  return{labels,ctlArr,atlArr,tsbArr};
+}
+
+// ══════════════════════════════════════════════════
+//  CHARTS
+// ══════════════════════════════════════════════════
+const CHART_DEFAULTS={
+  color:"#7b82a0",
+  borderColor:"#2a2f45",
+  scales:{
+    x:{grid:{color:"#1e2235"},ticks:{color:"#4a5070",font:{size:10}}},
+    y:{grid:{color:"#1e2235"},ticks:{color:"#4a5070",font:{size:10}}}
+  },
+  plugins:{legend:{labels:{color:"#7b82a0",font:{size:11},boxWidth:10,padding:12}}}
+};
+
+function mkChart(id,config){
+  const ctx=document.getElementById(id);
+  if(!ctx) return;
+  return new Chart(ctx,config);
+}
+
+function buildPMCChart(pmc){
+  // Only show last 90 days for readability
+  const slice=60;
+  const labels=pmc.labels.slice(-slice).map(l=>{
+    const d=new Date(l);
+    return d.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  });
+  mkChart("pmcChart",{
+    type:"line",
+    data:{
+      labels,
+      datasets:[
+        {label:"CTL (Fitness)",data:pmc.ctlArr.slice(-slice),borderColor:"#4c9be8",backgroundColor:"rgba(76,155,232,0.08)",borderWidth:2,fill:true,tension:0.3,pointRadius:0},
+        {label:"ATL (Fatigue)",data:pmc.atlArr.slice(-slice),borderColor:"#f87171",backgroundColor:"rgba(248,113,113,0.06)",borderWidth:2,fill:true,tension:0.3,pointRadius:0},
+        {label:"TSB (Form)",  data:pmc.tsbArr.slice(-slice),borderColor:"#34d399",backgroundColor:"rgba(52,211,153,0.06)",borderWidth:1.5,fill:false,tension:0.3,pointRadius:0,borderDash:[4,3]}
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      interaction:{mode:"index",intersect:false},
+      scales:{
+        x:{grid:{color:"rgba(42,47,69,0.8)"},ticks:{color:"#4a5070",font:{size:10},maxTicksLimit:10}},
+        y:{grid:{color:"rgba(42,47,69,0.8)"},ticks:{color:"#4a5070",font:{size:10}}}
+      },
+      plugins:{
+        legend:{labels:{color:"#7b82a0",font:{size:11},boxWidth:10,padding:16}},
+        tooltip:{backgroundColor:"#1e2235",borderColor:"#2a2f45",borderWidth:1,titleColor:"#e8eaf0",bodyColor:"#7b82a0"}
+      }
+    }
+  });
+}
+
+function buildWeeklyTSSChart(workouts){
+  const weeks={};
+  workouts.forEach(w=>{
+    const d=new Date(w.date);
+    const mon=new Date(d);
+    mon.setDate(d.getDate()-(d.getDay()||7)+1);
+    const key=mon.toISOString().split("T")[0];
+    weeks[key]=(weeks[key]||0)+getTSS(w);
+  });
+  const keys=Object.keys(weeks).sort().slice(-12);
+  mkChart("weeklyTssChart",{
+    type:"bar",
+    data:{
+      labels:keys.map(k=>new Date(k).toLocaleDateString("en-GB",{day:"numeric",month:"short"})),
+      datasets:[{label:"Weekly TSS",data:keys.map(k=>Math.round(weeks[k])),backgroundColor:"rgba(76,155,232,0.7)",borderRadius:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:"#1e2235"},ticks:{color:"#4a5070",font:{size:10}}},
+              y:{grid:{color:"#1e2235"},ticks:{color:"#4a5070",font:{size:10}},beginAtZero:true}}}
+  });
+}
+
+function buildVolumeChart(workouts){
+  const weeks={};
+  workouts.forEach(w=>{
+    const d=new Date(w.date);
+    const mon=new Date(d);
+    mon.setDate(d.getDate()-(d.getDay()||7)+1);
+    const key=mon.toISOString().split("T")[0];
+    if(!weeks[key]) weeks[key]={run:0,cycle:0,strength:0};
+    const s=w.sport||"";
+    if(s==="running") weeks[key].run+=w.distance_km||0;
+    if(s.includes("cycling")) weeks[key].cycle+=w.distance_km||0;
+    if(s==="strength") weeks[key].strength+=(w.duration_min||0)/60;
+  });
+  const keys=Object.keys(weeks).sort().slice(-8);
+  mkChart("volumeChart",{
+    type:"bar",
+    data:{
+      labels:keys.map(k=>new Date(k).toLocaleDateString("en-GB",{day:"numeric",month:"short"})),
+      datasets:[
+        {label:"Run km",data:keys.map(k=>Math.round(weeks[k].run*10)/10),backgroundColor:"rgba(59,130,246,0.75)",borderRadius:3},
+        {label:"Cycle km",data:keys.map(k=>Math.round(weeks[k].cycle*10)/10),backgroundColor:"rgba(34,197,94,0.75)",borderRadius:3},
+      ]
+    },
+    options:{responsive:true,maintainAspectRatio:false,
+      scales:{x:{stacked:false,grid:{color:"#1e2235"},ticks:{color:"#4a5070",font:{size:10}}},
+              y:{grid:{color:"#1e2235"},ticks:{color:"#4a5070",font:{size:10}},beginAtZero:true}},
+      plugins:{legend:{labels:{color:"#7b82a0",font:{size:11},boxWidth:10}}}}
+  });
+}
+
+function zoneColor(z){return["#64748b","#3b82f6","#22c55e","#f59e0b","#ef4444"][z]||"#64748b";}
+
+function buildZoneChart(canvasId, acts, sport){
+  // Simple approximate zone bucketing by HR
+  const zones=[0,0,0,0,0];
+  acts.forEach(w=>{
+    if(!w.avg_hr) return;
+    const hr=w.avg_hr;
+    const z=hr<146?0:hr<163?1:hr<173?2:hr<182?3:4;
+    zones[z]+=(w.duration_min||0);
+  });
+  const total=zones.reduce((a,b)=>a+b,0)||1;
+  mkChart(canvasId,{
+    type:"doughnut",
+    data:{
+      labels:["Z1 Recovery","Z2 Aerobic","Z3 Tempo","Z4 Threshold","Z5 VO2max"],
+      datasets:[{data:zones.map(v=>Math.round(v/total*100)),backgroundColor:zones.map((_,i)=>zoneColor(i)),borderWidth:0,hoverOffset:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:"65%",
+      plugins:{legend:{position:"right",labels:{color:"#7b82a0",font:{size:10},boxWidth:8,padding:8}},
+        tooltip:{callbacks:{label:c=>`${c.label}: ${c.raw}%`}}}}
+  });
+}
+
+function buildMixChart(workouts){
+  const counts={Running:0,Cycling:0,Strength:0};
+  const recent=workouts.filter(w=>{
+    const d=new Date(w.date);
+    return (Date.now()-d)/(1000*86400)<=30;
+  });
+  recent.forEach(w=>{
+    const s=w.sport||"";
+    if(s==="running") counts.Running++;
+    else if(s.includes("cycling")) counts.Cycling++;
+    else if(s==="strength") counts.Strength++;
+  });
+  mkChart("mixChart",{
+    type:"doughnut",
+    data:{
+      labels:Object.keys(counts),
+      datasets:[{data:Object.values(counts),backgroundColor:["#3b82f6","#22c55e","#f59e0b"],borderWidth:0,hoverOffset:4}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,cutout:"65%",
+      plugins:{legend:{position:"right",labels:{color:"#7b82a0",font:{size:11},boxWidth:8,padding:8}}}}
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  KPIs
+// ══════════════════════════════════════════════════
+function buildKPIs(workouts, pmc){
+  const ctl=pmc.ctlArr[pmc.ctlArr.length-1];
+  const atl=pmc.atlArr[pmc.atlArr.length-1];
+  const tsb=pmc.tsbArr[pmc.tsbArr.length-1];
+
+  document.getElementById("kpi-ctl").innerHTML=`${Math.round(ctl)}<span class="kpi-unit"> TSS</span>`;
+  document.getElementById("kpi-atl").innerHTML=`${Math.round(atl)}<span class="kpi-unit"> TSS</span>`;
+
+  const tsbEl=document.getElementById("kpi-tsb");
+  tsbEl.innerHTML=`${tsb>0?"+":""}${Math.round(tsb)}`;
+  tsbEl.style.color=tsb>5?"#34d399":tsb<-10?"#f87171":"#fbbf24";
+  document.getElementById("kpi-tsb-label").textContent=
+    tsb>10?"Fresh — go hard":tsb>0?"Good form":tsb>-10?"Optimal":tsb>-20?"Tired":"Very fatigued";
+
+  // Week TSS
+  const monday=getNextMonday(-7);
+  const monStr=monday.toISOString().split("T")[0];
+  const sunday=new Date(monday); sunday.setDate(monday.getDate()+6);
+  const sunStr=sunday.toISOString().split("T")[0];
+  const thisWeek=workouts.filter(w=>w.date>=monStr&&w.date<=sunStr);
+  const lastMonday=new Date(monday); lastMonday.setDate(monday.getDate()-7);
+  const lastSunday=new Date(monday); lastSunday.setDate(monday.getDate()-1);
+  const lastWeek=workouts.filter(w=>w.date>=lastMonday.toISOString().split("T")[0]&&w.date<=lastSunday.toISOString().split("T")[0]);
+  const weekTSS=thisWeek.reduce((s,w)=>s+getTSS(w),0);
+  const lastWeekTSS=lastWeek.reduce((s,w)=>s+getTSS(w),0);
+  const delta=weekTSS-lastWeekTSS;
+  document.getElementById("kpi-week-tss").innerHTML=`${Math.round(weekTSS)}`;
+  const dEl=document.getElementById("kpi-week-delta");
+  dEl.textContent=(delta>=0?"+":"")+Math.round(delta)+" vs last week";
+  dEl.className="kpi-delta "+(delta>=0?"pos":"neg");
+
+  // Month
+  const now=new Date();
+  const monthStart=new Date(now.getFullYear(),now.getMonth(),1).toISOString().split("T")[0];
+  const month=workouts.filter(w=>w.date>=monthStart);
+  const runKm=month.filter(w=>w.sport==="running").reduce((s,w)=>s+(w.distance_km||0),0);
+  const cycKm=month.filter(w=>(w.sport||"").includes("cycling")).reduce((s,w)=>s+(w.distance_km||0),0);
+  document.getElementById("kpi-month-km").innerHTML=`${Math.round(runKm+cycKm)}<span class="kpi-unit"> km</span>`;
+  document.getElementById("kpi-month-detail").textContent=`${Math.round(runKm)} run · ${Math.round(cycKm)} cycle`;
+
+  // Compliance (last 28 days)
+  const comp=calcCompliance(workouts);
+  document.getElementById("kpi-compliance").innerHTML=`${comp}<span class="kpi-unit"> %</span>`;
+}
+
+function getNextMonday(offset=0){
+  const d=new Date();
+  const day=d.getDay();
+  const diff=(day===0?-6:1-day)+offset*7;
+  d.setDate(d.getDate()+diff);
+  d.setHours(0,0,0,0);
+  return d;
+}
+
+// ══════════════════════════════════════════════════
+//  COMPLIANCE
+// ══════════════════════════════════════════════════
+function calcCompliance(workouts){
+  // Simple: did they train on training days in last 28 days?
+  const cutoff=new Date(); cutoff.setDate(cutoff.getDate()-28);
+  const recent=workouts.filter(w=>new Date(w.date)>cutoff&&w.sport!=="unknown");
+  if(!recent.length) return 0;
+  // Sessions with reasonable duration (>15 min) count as compliant
+  const done=recent.filter(w=>w.duration_min>15).length;
+  return Math.round(done/recent.length*100);
+}
+
+function buildComplianceTable(workouts){
+  const tbody=document.getElementById("comp-tbody");
+  if(!workouts.length){ tbody.innerHTML="<tr><td colspan='7' style='color:var(--muted);padding:20px 12px'>No workout data available.</td></tr>"; return; }
+
+  const recent=workouts.slice(-20).reverse();
+  const rows=recent.map(w=>{
+    const tss=getTSS(w);
+    const sport=w.sport||"unknown";
+    const sportColor=sport==="running"?"#3b82f6":sport.includes("cycling")?"#22c55e":"#f59e0b";
+    const pct=Math.min(100,Math.round((w.duration_min||0)/60*100));
+    const barClass=pct>=90?"good":pct>=70?"ok":"miss";
+    const statusText=pct>=90?"✓ Completed":pct>=70?"~ Partial":"✗ Short";
+    const statusColor=pct>=90?"var(--green)":pct>=70?"var(--amber)":"var(--red)";
+    const date=new Date(w.date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+    const dur=`${Math.round(w.duration_min||0)} min`;
+    const dist=w.distance_km>0?`${w.distance_km.toFixed(1)} km`:"—";
+    const hr=w.avg_hr?`${w.avg_hr} bpm`:"—";
+    return `<tr>
+      <td>${date}</td>
+      <td><span class="sport-dot" style="background:${sportColor}"></span>${sport}</td>
+      <td>—</td>
+      <td>${dur}</td>
+      <td>${dist}</td>
+      <td>${hr}</td>
+      <td style="color:${statusColor};font-weight:600">${statusText}</td>
+    </tr>`;
+  }).join("");
+  tbody.innerHTML=rows;
+}
+
+function buildComplianceCharts(workouts){
+  const bySport={Running:[0,0],Cycling:[0,0],Strength:[0,0]};
+  workouts.slice(-60).forEach(w=>{
+    const s=w.sport||"";
+    const key=s==="running"?"Running":s.includes("cycling")?"Cycling":s==="strength"?"Strength":null;
+    if(!key) return;
+    bySport[key][1]++;
+    if((w.duration_min||0)>15) bySport[key][0]++;
+  });
+  const labels=Object.keys(bySport);
+  const rates=labels.map(l=>bySport[l][1]?Math.round(bySport[l][0]/bySport[l][1]*100):0);
+  mkChart("compSportChart",{
+    type:"bar",
+    data:{labels,datasets:[{label:"Compliance %",data:rates,backgroundColor:["rgba(59,130,246,0.7)","rgba(34,197,94,0.7)","rgba(251,191,36,0.7)"],borderRadius:6}]},
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:"#1e2235"},ticks:{color:"#4a5070"}},y:{grid:{color:"#1e2235"},ticks:{color:"#4a5070"},max:100,beginAtZero:true}}}
+  });
+
+  // Weekly trend
+  const weeks={};
+  workouts.slice(-84).forEach(w=>{
+    const d=new Date(w.date);
+    const mon=new Date(d); mon.setDate(d.getDate()-(d.getDay()||7)+1);
+    const key=mon.toISOString().split("T")[0];
+    if(!weeks[key]) weeks[key]=[0,0];
+    weeks[key][1]++;
+    if((w.duration_min||0)>15) weeks[key][0]++;
+  });
+  const wkeys=Object.keys(weeks).sort().slice(-8);
+  mkChart("compTrendChart",{
+    type:"line",
+    data:{
+      labels:wkeys.map(k=>new Date(k).toLocaleDateString("en-GB",{day:"numeric",month:"short"})),
+      datasets:[{label:"Compliance %",data:wkeys.map(k=>weeks[k][1]?Math.round(weeks[k][0]/weeks[k][1]*100):0),borderColor:"#34d399",backgroundColor:"rgba(52,211,153,0.1)",borderWidth:2,fill:true,tension:0.3,pointRadius:3,pointBackgroundColor:"#34d399"}]
+    },
+    options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},
+      scales:{x:{grid:{color:"#1e2235"},ticks:{color:"#4a5070",font:{size:10}}},y:{grid:{color:"#1e2235"},ticks:{color:"#4a5070"},max:100,beginAtZero:true}}}
+  });
+}
+
+// ══════════════════════════════════════════════════
+//  ACTIVITY LOG
+// ══════════════════════════════════════════════════
+function renderLog(){
+  const filter=document.getElementById("log-filter").value;
+  const body=document.getElementById("log-body");
+  let acts=workouts.slice().reverse();
+  if(filter!=="all") acts=acts.filter(w=>(w.sport||"").includes(filter==="cycling"?"cycl":filter));
+
+  if(!acts.length){ body.innerHTML="<div style='color:var(--muted);padding:20px 0'>No activities found.</div>"; return; }
+
+  body.innerHTML=acts.map(w=>{
+    const sport=w.sport||"";
+    const icon=sport==="running"?"🏃":sport.includes("cycling")?"🚴":"💪";
+    const sportBg=sport==="running"?"sport-run":sport.includes("cycling")?"sport-cycle":"sport-strength";
+    const date=new Date(w.date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+    const dur=`${Math.round(w.duration_min||0)} min`;
+    const dist=w.distance_km>0?`${w.distance_km.toFixed(1)} km`:"—";
+    const hr=w.avg_hr?`${w.avg_hr} bpm`:"—";
+    const tss=getTSS(w);
+    return `<div class="act-row">
+      <div style="font-size:12px;color:var(--muted)">${date}</div>
+      <div><span class="sport-icon ${sportBg}">${icon}</span></div>
+      <div style="font-weight:500">${sport}</div>
+      <div style="color:var(--muted)">${dur}</div>
+      <div style="color:var(--muted)">${dist}</div>
+      <div style="color:var(--muted)">${hr}</div>
+      <div style="color:var(--amber);font-weight:600">${tss}</div>
+    </div>`;
+  }).join("");
+}
+
+// ══════════════════════════════════════════════════
+//  PLAN DISPLAY
+// ══════════════════════════════════════════════════
+function renderPlan(md){
+  const html=md
+    .replace(/^### (.+)$/gm,"<h3>$1</h3>")
+    .replace(/^## (.+)$/gm,"<h2>$1</h2>")
+    .replace(/^# (.+)$/gm,"<h2>$1</h2>")
+    .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
+    .replace(/^- (.+)$/gm,"<li>$1</li>")
+    .replace(/(<li>[\s\S]*?<\/li>\n?)+/g,s=>`<ul>${s}</ul>`)
+    .replace(/^---$/gm,"<hr>")
+    .replace(/\n\n+/g,"<br><br>");
+  document.getElementById("plan-display").innerHTML=html;
+  const gen=md.match(/\*\*Generated:\*\* (.+)/);
+  if(gen) document.getElementById("plan-generated").textContent="Generated: "+gen[1];
+}
+
+// ══════════════════════════════════════════════════
+//  AVAILABILITY PLANNER
+// ══════════════════════════════════════════════════
+const DAY_NAMES=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+let avState={};
+DAY_NAMES.forEach(d=>{ avState[d]={available:false,hours:d==="Saturday"||d==="Sunday"?2:1}; });
+
+function getNextWeekDates(){
+  const dates={};
+  const today=new Date();
+  const day=today.getDay();
+  const diff=(day===0?1:8-day);
+  const monday=new Date(today);
+  monday.setDate(today.getDate()+diff);
+  monday.setHours(0,0,0,0);
+  DAY_NAMES.forEach((name,i)=>{
+    const d=new Date(monday);
+    d.setDate(monday.getDate()+i);
+    dates[name]=d.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
+  });
+  return dates;
+}
+
+function renderAvailGrid(){
+  const grid=document.getElementById("avail-grid");
+  const dates=getNextWeekDates();
+  grid.innerHTML=DAY_NAMES.map(name=>{
+    const s=avState[name];
+    return `<div class="avail-day ${s.available?"on":""}" id="av-${name}" onclick="toggleDay('${name}')">
+      <div class="av-name">${name.slice(0,3)}</div>
+      <div class="av-date">${dates[name]}</div>
+      <div class="av-hrs">${s.available?s.hours+"h available":"rest"}</div>
+      ${s.available?`<input class="hours-input" type="number" min="0.5" max="4" step="0.5" value="${s.hours}"
+        onclick="event.stopPropagation()" onchange="setHours('${name}',this.value)" />`:``}
+    </div>`;
+  }).join("");
+}
+
+function toggleDay(name){
+  avState[name].available=!avState[name].available;
+  renderAvailGrid();
+}
+function setHours(name,val){
+  avState[name].hours=parseFloat(val)||1;
+}
+
+async function loadAvailability(){
+  const data=await fetchJSON("availability.json");
+  if(!data) return;
+  if(data.days){
+    DAY_NAMES.forEach(d=>{
+      if(data.days[d]) avState[d]={available:data.days[d].available,hours:data.days[d].hours||1};
+    });
+  }
+  if(data.notes) document.getElementById("avail-notes").value=data.notes;
+  renderAvailGrid();
+}
+
+async function saveAvailability(){
+  const token=getToken();
+  if(!token){ showSaveStatus("Save your GitHub token first (⚙ Setup button top right)","err"); return; }
+
+  const monday=new Date();
+  const day=monday.getDay();
+  monday.setDate(monday.getDate()+(day===0?1:8-day));
+  const weekOf=monday.toISOString().split("T")[0];
+
+  const payload={
+    week_of:weekOf,
+    days:Object.fromEntries(DAY_NAMES.map(d=>[d,{available:avState[d].available,hours:avState[d].hours}])),
+    notes:document.getElementById("avail-notes").value.trim()
+  };
+
+  showSaveStatus("Saving...","");
+  try{
+    const getR=await fetch(`${API}/availability.json`,{headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json"}});
+    const getJ=await getR.json();
+    const sha=getJ.sha;
+    const content=btoa(JSON.stringify(payload,null,2));
+    const putR=await fetch(`${API}/availability.json`,{
+      method:"PUT",
+      headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json","Content-Type":"application/json"},
+      body:JSON.stringify({message:`Availability for week of ${weekOf}`,content,sha})
+    });
+    if(putR.ok){
+      const days=DAY_NAMES.filter(d=>avState[d].available);
+      showSaveStatus(`✓ Saved — Claude will plan: ${days.join(", ")} (${weekOf})`,"ok");
+    } else {
+      const e=await putR.json();
+      showSaveStatus("Error: "+(e.message||"Unknown"),"err");
+    }
+  }catch(e){ showSaveStatus("Network error: "+e.message,"err"); }
+}
+
+function showSaveStatus(msg,type){
+  const el=document.getElementById("save-status");
+  el.textContent=msg;
+  el.className="save-status"+(type?" "+type:"");
+}
+
+// ══════════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════════
+async function init(){
+  document.getElementById("last-sync").textContent="Syncing data...";
+
+  const [wData, plan, avail] = await Promise.all([
+    fetchJSON("workouts.json"),
+    fetchText("weekly_plan.md"),
+    fetchJSON("availability.json")
+  ]);
+
+  workouts = wData || [];
+  planText  = plan  || "";
+
+  document.getElementById("last-sync").textContent=
+    workouts.length ? `${workouts.length} activities loaded` : "No data yet";
+
+  if(planText) renderPlan(planText);
+
+  if(avail && avail.days){
+    DAY_NAMES.forEach(d=>{ if(avail.days[d]) avState[d]=avail.days[d]; });
+    if(avail.notes) document.getElementById("avail-notes").value=avail.notes;
+  }
+  renderAvailGrid();
+
+  if(workouts.length){
+    const pmc=buildPMC(workouts);
+    buildKPIs(workouts,pmc);
+    buildPMCChart(pmc);
+    buildWeeklyTSSChart(workouts);
+    buildVolumeChart(workouts);
+    buildZoneChart("runZoneChart",workouts.filter(w=>w.sport==="running"),"running");
+    buildZoneChart("cycleZoneChart",workouts.filter(w=>(w.sport||"").includes("cycling")),"cycling");
+    buildMixChart(workouts);
+    buildComplianceTable(workouts);
+    buildComplianceCharts(workouts);
+    renderLog();
+  }
+}
+
+init();
+</script>
+</body>
+</html>

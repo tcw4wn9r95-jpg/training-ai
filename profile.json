@@ -1,0 +1,39 @@
+{
+  "name": "Diego",
+  "garmin_device": "Fenix",
+  "running": {
+    "easy_pace_min_km": 6.5,
+    "tempo_pace_min_km": 5.45,
+    "threshold_pace_min_km": 5.0,
+    "max_hr": 196,
+    "resting_hr": 60,
+    "threshold_hr": 173,
+    "zones": {
+      "z1": {"name": "Recovery",  "hr_min": 0,   "hr_max": 145, "pace_slow": "7:30", "pace_fast": "7:00"},
+      "z2": {"name": "Aerobic",   "hr_min": 146, "hr_max": 162, "pace_slow": "6:45", "pace_fast": "6:15"},
+      "z3": {"name": "Tempo",     "hr_min": 163, "hr_max": 172, "pace_slow": "6:00", "pace_fast": "5:30"},
+      "z4": {"name": "Threshold", "hr_min": 173, "hr_max": 181, "pace_slow": "5:20", "pace_fast": "4:45"},
+      "z5": {"name": "VO2max",    "hr_min": 182, "hr_max": 196, "pace_slow": "4:30", "pace_fast": "4:00"}
+    }
+  },
+  "cycling": {
+    "ftp_watts": 177,
+    "max_hr": 196,
+    "resting_hr": 60,
+    "threshold_hr": 173,
+    "has_power_meter_indoor": true,
+    "has_power_meter_outdoor": false,
+    "zones": {
+      "z1": {"name": "Recovery",  "hr_min": 0,   "hr_max": 145, "power_min": 0,   "power_max": 105,  "pct_ftp_min": 0,   "pct_ftp_max": 55},
+      "z2": {"name": "Aerobic",   "hr_min": 146, "hr_max": 162, "power_min": 106,  "power_max": 141,  "pct_ftp_min": 56,  "pct_ftp_max": 75},
+      "z3": {"name": "Tempo",     "hr_min": 163, "hr_max": 172, "power_min": 142,  "power_max": 168,  "pct_ftp_min": 76,  "pct_ftp_max": 90},
+      "z4": {"name": "Threshold", "hr_min": 173, "hr_max": 181, "power_min": 169,  "power_max": 195,  "pct_ftp_min": 91,  "pct_ftp_max": 105},
+      "z5": {"name": "VO2max",    "hr_min": 182, "hr_max": 196, "power_min": 196,  "power_max": 239,  "pct_ftp_min": 106, "pct_ftp_max": 120}
+    }
+  },
+  "strength": {
+    "equipment": ["TRX", "resistance bands", "dumbbells"],
+    "dumbbell_weights_kg": [6, 11, 16, 22],
+    "sessions_per_week_target": 2
+  }
+}

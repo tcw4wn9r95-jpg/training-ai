@@ -1,0 +1,13 @@
+{
+  "week_of": "",
+  "days": {
+    "Monday":    {"available": false, "hours": 1.0},
+    "Tuesday":   {"available": false, "hours": 1.0},
+    "Wednesday": {"available": false, "hours": 1.0},
+    "Thursday":  {"available": false, "hours": 1.0},
+    "Friday":    {"available": false, "hours": 1.0},
+    "Saturday":  {"available": false, "hours": 1.5},
+    "Sunday":    {"available": false, "hours": 2.0}
+  },
+  "notes": ""
+}
