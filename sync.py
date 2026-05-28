@@ -24,6 +24,19 @@ with open("profile.json") as f:
 with open("availability.json") as f:
     availability = json.load(f)
 
+# Load last week's plan for continuity
+last_plan_md = ""
+last_plan_json = []
+if os.path.exists("weekly_plan.md"):
+    with open("weekly_plan.md") as f:
+        last_plan_md = f.read()
+if os.path.exists("weekly_plan.json"):
+    try:
+        with open("weekly_plan.json") as f:
+            last_plan_json = json.load(f)
+    except Exception:
+        last_plan_json = []
+
 availability_notes = availability.get("notes", "")
 days_data = availability.get("days", {})
 
@@ -186,6 +199,17 @@ prompt = f"""You are Diego's personal trainer. Build a detailed weekly training 
 ## STRENGTH EQUIPMENT
 TRX, resistance bands, dumbbells: 6kg, 11kg, 16kg, 22kg
 
+## LAST WEEK'S PLAN & CONTINUITY
+{f'''Last week's plan (build progressively on this — do NOT repeat the same sessions):
+{last_plan_md[:1500]}
+
+Compliance: compare last week's plan above against the training data below to see what was completed.
+- If all sessions completed → increase load 5-10% this week
+- If sessions were missed → maintain similar load, don't add extra
+- Vary stimulus: rotate between aerobic base, threshold, VO2max, strength focus
+- Follow a 4-week arc: Week 1 base → Week 2 build → Week 3 peak → Week 4 recovery
+''' if last_plan_md else 'No previous plan — this is week 1. Start with a moderate base week.'}
+
 ## NEXT WEEK AVAILABILITY
 {week_schedule}
 Respect available hours strictly. Longer availability = longer or harder session.
@@ -207,11 +231,11 @@ After the markdown, output a JSON block wrapped in ```json ... ``` containing ON
 Each session must follow this exact schema:
 
 IMPORTANT target_type rules:
-- Running: use "pace" with target_low/target_high in SECONDS PER KM (e.g. easy pace 390 = 6:30/km, threshold 330 = 5:30/km)
+- Running: ALWAYS use "pace" as the primary target. target_low/target_high in SECONDS PER KM (e.g. easy=390=6:30/km, tempo=330=5:30/km, threshold=315=5:15/km). Also add a "notes" field with the HR zone as reference (e.g. "HR Z2 146-162 bpm").
 - Cycling indoor: use "power" with target_low/target_high in WATTS
 - Cycling outdoor: use "heart_rate" with target_low/target_high in BPM
-- Strength: use "notes" string field (no target_type needed), also add top-level "notes" with full exercise list
-- Always include both target_low and target_high
+- Strength: add top-level "notes" with full exercise list; individual steps use "notes" field describing the exercises
+- Always include both target_low and target_high for all non-strength sports
 
 ```json
 [
@@ -362,29 +386,69 @@ print("Plans saved.")
 # ── Push workouts to Garmin Connect ──────────────────────────────────────────
 from garminconnect.workout import TargetType
 
-def make_target(step):
-    """Build a Garmin target_type dict from a Claude step."""
+def make_target(step, sport="running"):
+    """Build a Garmin target_type dict from a Claude step.
+    
+    For running: pace (speed) is always the primary target.
+    For indoor cycling: power is the primary target.
+    For outdoor cycling: heart rate is the primary target.
+    """
     tt   = step.get("target_type", "")
     low  = step.get("target_low", 0)
     high = step.get("target_high", 0)
 
+    # Running: always prefer pace target
+    if sport == "running":
+        if tt == "pace" and low and high:
+            # Garmin speed in m/s; Claude gives sec/km
+            # Slower pace = lower speed, faster pace = higher speed
+            speed_low  = round(1000 / high, 4)
+            speed_high = round(1000 / low, 4)
+            return {
+                "workoutTargetTypeId": TargetType.SPEED,
+                "workoutTargetTypeKey": "speed.zone",
+                "targetValueOne": speed_low,
+                "targetValueTwo": speed_high,
+            }
+        elif tt == "heart_rate" and low and high:
+            # Claude sent HR for running — still use it but this shouldn't happen
+            # after prompt update
+            return {
+                "workoutTargetTypeId": TargetType.HEART_RATE,
+                "workoutTargetTypeKey": "heart.rate.zone",
+                "targetValueOne": low,
+                "targetValueTwo": high,
+            }
+
+    # Indoor cycling: always power
+    elif sport == "cycling_indoor":
+        if tt == "power" and low and high:
+            return {
+                "workoutTargetTypeId": TargetType.POWER,
+                "workoutTargetTypeKey": "power.zone",
+                "targetValueOne": low,
+                "targetValueTwo": high,
+            }
+
+    # Outdoor cycling: always HR
+    elif sport in ("cycling_outdoor", "cycling"):
+        if tt == "heart_rate" and low and high:
+            return {
+                "workoutTargetTypeId": TargetType.HEART_RATE,
+                "workoutTargetTypeKey": "heart.rate.zone",
+                "targetValueOne": low,
+                "targetValueTwo": high,
+            }
+
+    # Generic fallback
     if tt == "pace" and low and high:
-        # Garmin speed target is in m/s; Claude gives sec/km
-        # Convert: sec/km → m/s = 1000 / sec_per_km
-        speed_low  = round(1000 / high, 4)   # slower pace = lower speed
-        speed_high = round(1000 / low, 4)    # faster pace = higher speed
+        speed_low  = round(1000 / high, 4)
+        speed_high = round(1000 / low, 4)
         return {
             "workoutTargetTypeId": TargetType.SPEED,
             "workoutTargetTypeKey": "speed.zone",
             "targetValueOne": speed_low,
             "targetValueTwo": speed_high,
-        }
-    elif tt == "heart_rate" and low and high:
-        return {
-            "workoutTargetTypeId": TargetType.HEART_RATE,
-            "workoutTargetTypeKey": "heart.rate.zone",
-            "targetValueOne": low,
-            "targetValueTwo": high,
         }
     elif tt == "power" and low and high:
         return {
@@ -393,43 +457,64 @@ def make_target(step):
             "targetValueOne": low,
             "targetValueTwo": high,
         }
-    else:
+    elif tt == "heart_rate" and low and high:
         return {
-            "workoutTargetTypeId": TargetType.NO_TARGET,
-            "workoutTargetTypeKey": "no.target",
+            "workoutTargetTypeId": TargetType.HEART_RATE,
+            "workoutTargetTypeKey": "heart.rate.zone",
+            "targetValueOne": low,
+            "targetValueTwo": high,
         }
 
+    return {
+        "workoutTargetTypeId": TargetType.NO_TARGET,
+        "workoutTargetTypeKey": "no.target",
+    }
+
 def make_strength_workout_json(name, steps_data, session_date, notes=""):
-    """Build a strength workout as a plain JSON dict for upload_workout()."""
+    """Build a strength workout as a plain JSON dict for upload_workout().
+    Uses sportTypeId 4 (FITNESS_EQUIPMENT) which Garmin accepts for strength.
+    """
+    total = sum(s.get("duration_secs", 600) for s in steps_data) or 2700
+
     steps = []
     for i, step in enumerate(steps_data):
-        duration = step.get("duration_secs", 600)
-        label    = step.get("notes", step.get("type", "Work").capitalize())
+        duration  = float(step.get("duration_secs", 600))
+        step_type = step.get("type", "interval")
+        label     = step.get("notes", "")
+
+        # Map to Garmin step type IDs
+        type_id  = 1 if step_type == "warmup" else 2 if step_type == "cooldown" else 3
+        type_key = "warmup" if step_type == "warmup" else "cooldown" if step_type == "cooldown" else "interval"
+
         steps.append({
+            "type": "ExecutableStepDTO",
             "stepOrder": i + 1,
-            "stepType": {"stepTypeId": 3, "stepTypeKey": "interval"},
-            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time"},
-            "endConditionValue": float(duration),
+            "stepType": {"stepTypeId": type_id, "stepTypeKey": type_key},
+            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time", "displayable": True},
+            "endConditionValue": duration,
             "targetType": {"workoutTargetTypeId": 1, "workoutTargetTypeKey": "no.target"},
             "description": label[:100] if label else "",
         })
+
     if not steps:
         steps = [{
+            "type": "ExecutableStepDTO",
             "stepOrder": 1,
             "stepType": {"stepTypeId": 3, "stepTypeKey": "interval"},
-            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time"},
-            "endConditionValue": 2700.0,
+            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time", "displayable": True},
+            "endConditionValue": float(total),
             "targetType": {"workoutTargetTypeId": 1, "workoutTargetTypeKey": "no.target"},
             "description": notes[:100] if notes else "Strength session",
         }]
+
     return {
         "workoutName": name,
         "description": notes[:500] if notes else "",
-        "sportType": {"sportTypeId": 5, "sportTypeKey": "strength_training"},
-        "estimatedDurationInSecs": sum(s.get("duration_secs", 600) for s in steps_data) or 2700,
+        "sportType": {"sportTypeId": 4, "sportTypeKey": "fitness_equipment"},
+        "estimatedDurationInSecs": int(total),
         "workoutSegments": [{
             "segmentOrder": 1,
-            "sportType": {"sportTypeId": 5, "sportTypeKey": "strength_training"},
+            "sportType": {"sportTypeId": 4, "sportTypeKey": "fitness_equipment"},
             "workoutSteps": steps,
         }],
     }
@@ -509,7 +594,7 @@ else:
                 step_type = step.get("type", "interval")
                 duration  = float(step.get("duration_secs", 600))
                 order     = i + 1
-                target    = make_target(step)
+                target    = make_target(step, sport)
 
                 if step_type == "warmup":
                     steps.append(create_warmup_step(duration, order, target))
