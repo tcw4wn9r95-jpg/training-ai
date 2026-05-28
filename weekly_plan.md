@@ -6,167 +6,148 @@
 ---
 
 # DIEGO'S WEEKLY TRAINING PLAN
-## Week of 01–07 June 2026
+**Week of June 1–7, 2026**
 
 ---
 
-### MONDAY 01 JUN — Tempo Run
-**Sport:** Running  
-**Total duration:** 60 min  
-**Session goal:** Build aerobic capacity and teach the body to sustain faster paces comfortably.
+## SECTION 1: MARKDOWN PLAN
 
-**Warm-up:** 10 min | Z1 Recovery | pace > 7:00/km | easy jogging to elevate HR to ~130 bpm
+### **Monday, June 1 | 1.0h MAX**
+**Easy Aerobic Run**
 
-**Main set:**
-- Tempo block 1: 12 min | Z3 Tempo | pace 5:30–6:00/km | HR 163–172 bpm | *Set Garmin alert: HR zone 3 (163–172 bpm)*
-- Recovery jog: 3 min | Z1 Recovery | pace > 7:00/km | HR drop to ~140 bpm
-- Tempo block 2: 12 min | Z3 Tempo | pace 5:30–6:00/km | HR 163–172 bpm
-- Recovery jog: 3 min | Z1 Recovery | pace > 7:00/km
+**Goal:** Build aerobic base with low stress; prepare system for harder sessions later in the week.
 
-**Cool-down:** 7 min | Z1 Recovery | pace > 7:00/km | easy finish, HR < 130 bpm
+| Component | Duration | HR Zone | Pace | RPE | Notes |
+|-----------|----------|---------|------|-----|-------|
+| **Warmup** | 10 min | Z1 (< 145 bpm) | > 7:00/km | 3–4 | Gradual buildup; feel fluid |
+| **Main Set** | 35 min | Z2 (146–162 bpm) | 6:15–6:45/km | 5–6 | Conversational pace; steady effort |
+| **Cooldown** | 10 min | Z1 (< 145 bpm) | > 7:00/km | 2–3 | Walk if needed; HR recovery |
+| **Mobility** | 5 min | – | – | – | Light stretching (hips, hamstrings, calves) |
 
-**RPE target:** 6/10  
-**Key Garmin settings:**  
-- HR zone alert: Z3 (163–172 bpm)  
-- Pace alert: 5:30–6:00/km  
-- Auto-pause off
-
-**Coaching note:** Focus on holding the tempo pace with controlled breathing—not a sprint. If HR spikes above 172, back off slightly and let the pace naturally settle. Garmin will alert you when you drift into Z4.
+**Total Duration:** 60 minutes  
+**Garmin Alerts:** Set HR zone alerts for Z1 lower bound (< 145) and Z2 upper bound (> 162) to keep honest.  
+**Coaching Notes:**
+- This is a foundational aerobic session; focus on **feeling good** rather than hitting splits.
+- Maintain a rhythm you could sustain for much longer—true "easy" running.
+- Monitor HR stability; if bouncing between zones, settle into lower Z2 (146–150 bpm).
 
 ---
 
-### WEDNESDAY 03 JUN — Indoor Cycling Threshold
-**Sport:** Cycling Indoor  
-**Total duration:** 60 min  
-**Session goal:** Develop lactate threshold power and build sustainable hard-effort capacity.
-
-**Warm-up:** 10 min | Z1–Z2 Recovery/Aerobic | power < 106W rising to 120W | HR ~140–150 bpm | easy spin, 90+ rpm
-
-**Main set:**
-- Threshold block 1: 10 min | Z4 Threshold | power 169–195W | HR 173–181 bpm | *Set Garmin alert: HR zone 4 (173–181 bpm) and power zone 4*
-- Recovery spin: 3 min | Z1 Recovery | power < 106W | HR ~130 bpm
-- Threshold block 2: 10 min | Z4 Threshold | power 169–195W | HR 173–181 bpm
-- Recovery spin: 3 min | Z1 Recovery | power < 106W
-
-**Cool-down:** 6 min | Z1 Recovery | power < 106W | easy, natural HR drop to < 130 bpm
-
-**RPE target:** 7/10  
-**Key Garmin settings:**  
-- HR zone alert: Z4 (173–181 bpm)  
-- Power zone alert: Z4 (169–195W at 91–105% FTP)  
-- Cadence target: 90–100 rpm (display on screen)
-
-**Coaching note:** Stay seated during the threshold efforts—this builds muscular endurance. If power drops below 165W in the final minutes, shorten the block slightly. Use a fan for cooling.
+### **Tuesday, June 2**
+**REST DAY** ✅  
+Recovery focus: hydration, sleep, light mobility work if desired.
 
 ---
 
-### THURSDAY 04 JUN — Strength + Conditioning Circuit
-**Sport:** Strength  
-**Total duration:** 60 min  
-**Session goal:** Build functional strength and muscular endurance using home equipment; maintain aerobic base.
+### **Wednesday, June 3 | 1.0h MAX**
+**Indoor Cycling – Threshold Intervals**
 
-**Warm-up:** 5 min | dynamic movement | arm circles, leg swings, bodyweight squats | HR ~100–110 bpm
+**Goal:** Build lactate threshold power; improve sustained effort capacity at hard intensities.
 
-**Main set (3 rounds, 2 min rest between rounds):**
+| Component | Duration | Power | HR Zone | RPE | Notes |
+|-----------|----------|-------|---------|-----|-------|
+| **Warmup** | 10 min | 88–106W (Z1–Z2) | < 162 bpm | 3–4 | Easy spin; get HR up gradually |
+| **Ramp** | 3 min | 141W (Z2/Z3 boundary) | 160–165 bpm | 5 | Build momentum into intervals |
+| **Interval 1** | 6 min | 169–195W (Z4) | 173–181 bpm | 8–9 | Hold steady; watch cadence (90–95 rpm) |
+| **Recovery** | 3 min | 88–106W (Z1–Z2) | < 145 bpm | 2–3 | Spin easy; breathing normalizes |
+| **Interval 2** | 6 min | 169–195W (Z4) | 173–181 bpm | 8–9 | Match Interval 1 power; mental push |
+| **Recovery** | 3 min | 88–106W (Z1–Z2) | < 145 bpm | 2–3 | – |
+| **Interval 3** | 6 min | 169–195W (Z4) | 173–181 bpm | 8–9 | – |
+| **Recovery** | 3 min | 88–106W (Z1–Z2) | < 145 bpm | 2–3 | – |
+| **Interval 4** | 6 min | 169–195W (Z4) | 173–181 bpm | 8–9 | Last one—stay composed |
+| **Cooldown** | 5 min | 53–88W (Z1 deep) | < 145 bpm | 2–3 | Light pedal; let HR drop |
 
-**Round structure (15 min per round):**
-- TRX single-leg squats: 40 sec | 8–10 reps per leg | 22kg dumbbell in one hand (offset load)
-- Rest: 20 sec
-- Resistance band chest press (standing): 40 sec | 12–15 reps | moderate band tension
-- Rest: 20 sec
-- Dumbbell goblet hold + walking lunges: 40 sec | 8 lunges per leg | 16kg dumbbell
-- Rest: 20 sec
-- TRX row (high angle): 40 sec | 12–15 reps
-- Rest: 20 sec
-- Lateral band walks: 40 sec | 10 steps each direction | light resistance band
-- Rest: 2 min between rounds
-
-**Cool-down:** 5 min | slow breathing, foam roll if available, light stretching | HR dropping to ~100 bpm
-
-**RPE target:** 6–7/10  
-**Key Garmin settings:**  
-- Timer mode (interval timer for 40 sec work/20 sec rest)  
-- HR recording on  
-- Manual note: "Strength circuit"
-
-**Coaching note:** Keep rest periods tight to maintain elevated HR (~140–150 bpm during work intervals). This builds strength with a conditioning overlay. Adjust dumbbell weight if you can't complete 8+ reps cleanly on single-leg work.
+**Total Duration:** 60 minutes  
+**Garmin Alerts:** Set power alerts at 169W (lower threshold) and 195W (upper threshold) for each interval.  
+**Coaching Notes:**
+- **Cadence:** Aim for 90–95 rpm in intervals; too low risks knee stress, too high wastes energy.
+- **Mental game:** These are *hard*. Focus on steady power, not surges. Use breathing rhythm (in-2-3, out-2-3).
+- If power drops > 5W in final 2 minutes of an interval, extend recovery slightly next time.
+- Post-session: cool legs with easy spinning or walking.
 
 ---
 
-### SATURDAY 06 JUN — Long Easy Run
-**Sport:** Running  
-**Total duration:** 60 min  
-**Session goal:** Build aerobic base and mental resilience; practice steady-state pacing over extended duration.
+### **Thursday, June 4 | 1.0h MAX**
+**Strength & Conditioning Circuit**
 
-**Warm-up:** 5 min | Z1 Recovery | pace > 7:00/km | HR ~120–130 bpm
+**Goal:** Build functional strength, core stability, and muscular endurance; complement aerobic training.
 
-**Main set:**
-- Steady-state run: 48 min | Z2 Aerobic | pace 6:15–6:45/km | HR 146–162 bpm | *Set Garmin alert: HR zone 2 (146–162 bpm)*
+**Warm-up (5 min):**
+- 2 min easy movement (arm circles, leg swings, torso rotations)
+- 3 min mobility: 10 bodyweight squats, 10 push-ups, 10 glute bridges
 
-**Cool-down:** 7 min | Z1 Recovery | pace > 7:00/km | HR < 130 bpm
+**Main Circuit (50 min):** Perform 4 rounds, ~3 min per round (12 min total) + 2 min rest between rounds.
 
-**RPE target:** 5/10  
-**Key Garmin settings:**  
-- HR zone alert: Z2 (146–162 bpm)  
-- Pace alert: 6:15–6:45/km  
-- Auto-lap: every 5 km (helps track consistency)
+| Exercise | Reps / Duration | Load | Focus |
+|----------|-----------------|------|-------|
+| **TRX Rows** | 10 reps | Bodyweight (adjust angle) | Control tempo; full range |
+| **Dumbbell Goblet Squats** | 12 reps | 16 kg | Depth & glute activation |
+| **Push-ups (TRX or floor)** | 10 reps | Bodyweight | Chest & core; elbows 45° |
+| **Dumbbell Deadlifts** | 10 reps | 2 × 16 kg (or 2 × 11 kg) | Hip hinge; neutral spine |
+| **Resistance Band Pulls** (lateral) | 12 reps each side | Medium band | Shoulder stability |
 
-**Coaching note:** This should feel conversational—you should be able to speak in full sentences. If you drift into Z3 (faster), ease back; the goal is time on feet in a sustainable zone. Use this run to practice nutrition/hydration if you plan longer events.
+**Cooldown (5 min):**
+- 5 min static stretching: quads, hamstrings, hip flexors, chest (30 sec each).
 
----
-
-### SUNDAY 07 JUN — Recovery Cycling + Mobility
-**Sport:** Cycling Outdoor  
-**Total duration:** 60 min  
-**Session goal:** Active recovery and mobility work; flush metabolic byproducts from the week and prepare for next week.
-
-**Warm-up:** 5 min | Z1 Recovery | HR < 145 bpm | easy spin on flat terrain
-
-**Main set:**
-- Easy ride: 45 min | Z1 Recovery | HR < 145 bpm | pace relaxed, focus on cadence 85–90 rpm | flat/rolling terrain only
-
-**Cool-down:** 5 min | Z1 Recovery | very easy
-
-**RPE target:** 3/10  
-**Key Garmin settings:**  
-- HR zone alert: Z1 only (< 145 bpm) — if you exceed this, ease off immediately  
-- Cadence display on screen  
-- Recording mode: standard activity
-
-**Coaching note:** Keep HR under 145 bpm—this is true recovery. If terrain tempts you to go faster, resist it. After the ride, spend 10 min on dynamic stretching (hips, hamstrings, shoulders, chest) to improve mobility and reduce soreness heading into Week 2.
+**Total Duration:** 60 minutes  
+**RPE:** 6–7/10 (moderate effort)  
+**Garmin Alerts:** Not applicable (strength); manually track time for each round.  
+**Coaching Notes:**
+- This session **complements** your aerobic work; it's not meant to be cardio-intensive.
+- Rest 60–90 sec between rounds to allow CNS recovery.
+- If HR creeps above 162 bpm during movement, slow down and extend rest periods.
+- Prioritize **form over speed**—quality reps build resilience.
 
 ---
 
-## WEEK SUMMARY
-
-**Total planned load:** ~320 TSS (estimate)  
-- Monday (Tempo): ~65 TSS  
-- Wednesday (Threshold): ~85 TSS  
-- Thursday (Strength circuit): ~55 TSS  
-- Saturday (Long easy): ~85 TSS  
-- Sunday (Recovery): ~30 TSS  
-
-**Weekly volume:**  
-- Running: ~13 km (Monday 7 km + Saturday 6 km)  
-- Cycling: ~45 km (Wednesday ~18 km indoor equivalent + Sunday ~27 km outdoor)  
-- Strength: 1 circuit session (3 rounds, 15 min each)  
-
-**Focus this week:** Build threshold capacity and aerobic base while maintaining functional strength; emphasize recovery on back-to-back easy/recovery days.
+### **Friday, June 5**
+**REST DAY** ✅  
+Recovery focus: foam roll legs, upper back mobility, sleep.
 
 ---
 
-## INSIGHTS FROM YOUR RECENT DATA
+### **Saturday, June 6 | 1.0h MAX**
+**Tempo Run**
 
-• **Low recent training volume:** Your last recorded workout (26 Apr) was a 149-minute hiking session at an average HR of 125 bpm. This suggests either a gap in data or a recovery block—the plan assumes you're returning to structured training and starts conservatively with Z2–Z3 work.
+**Goal:** Improve lactate threshold running pace; build sustained speed capacity at hard but controlled effort.
 
-• **Max HR spike during hiking:** Your max HR reached 204 bpm during the hike (well above the 196 bpm max), indicating either a sensor error or a very hard effort on steep terrain. The zones provided (max 196 bpm) are more realistic; watch for anomalies and recalibrate if needed.
+| Component | Duration | HR Zone | Pace | RPE | Notes |
+|-----------|----------|---------|------|-----|-------|
+| **Warmup** | 10 min | Z1 (< 145 bpm) | > 7:00/km | 3–4 | Easy jog; let body warm up fully |
+| **Build** | 5 min | Z2 (146–162 bpm) | 6:30–6:45/km | 5–6 | Gradual increase toward tempo |
+| **Tempo** | 25 min | Z3 (163–172 bpm) | 5:30–6:00/km | 7–8 | Steady, controlled hard effort; slightly uncomfortable but sustainable |
+| **Cooldown** | 10 min | Z1 (< 145 bpm) | > 7:00/km | 2–3 | Walk/jog; recovery breathing |
 
-• **HR efficiency:** Your resting HR of 60 bpm is excellent and suggests good aerobic fitness. This plan leverages that—you have room for harder efforts without overreaching early in the week.
+**Total Duration:** 60 minutes  
+**Garmin Alerts:** Set HR alerts for Z3 bounds (163–172 bpm) to keep tempo stable.  
+**Coaching Notes:**
+- **Tempo pace target:** ~5:45/km (tight range: 5:30–6:00). This should feel "hard but not max."
+- **Mental anchor:** "I could hold this for another 5–10 minutes if I had to."
+- If HR drifts into Z4 (> 173 bpm), dial back pace slightly—tempo work is about *sustained* effort, not peak effort.
+- Post-run: hydrate well and refuel within 30 min (carbs + protein).
 
 ---
 
-## WATCH OUT FOR
+### **Sunday, June 7 | 1.0h MAX**
+**Long Slow Distance (LSD) Run**
 
-⚠️ **Recovery pacing discipline:** With only 1 hour per day and 2 rest days, there's a temptation to make easy days harder. Enforce the Z1–Z2 boundaries strictly on Sunday and the warm-ups/cool-downs on other days. Garmin alerts will help, but you must trust them.
+**Goal:** Build aerobic capacity, mental toughness, and running economy; extended time at low intensity.
 
-⚠️ **Strength-to-running balance:** The strength circuit on Thursday is placed 2 days before the long run (Saturday). If your legs feel heavy on Saturday morning, dial back the long run to 40 min or move it to Sunday as a recovery pace instead. Monitor calf/quad soreness and adjust dumbbell weight downward if needed for the next week.
+| Component | Duration | HR Zone | Pace | RPE | Notes |
+|-----------|----------|---------|------|-----|-------|
+| **Warmup** | 10 min | Z1 (< 145 bpm) | > 7:00/km | 3–4 | Gradual; ease into rhythm |
+| **Main Set** | 40 min | Z2 (146–162 bpm) | 6:15–6:45/km | 5–6 | Conversational pace; steady state |
+| **Cooldown** | 10 min | Z1 (< 145 bpm) | > 7:00/km | 2–3 | Walk if needed |
+
+**Total Duration:** 60 minutes  
+**Garmin Alerts:** Set HR ceiling at 162 bpm; if you exceed it, back off.  
+**Coaching Notes:**
+- This is a **volume day**—consistency and duration matter more than pace or HR.
+- Settle into an easy rhythm from the start; resist early-run tempo temptation.
+- Use this session to practice fueling / hydration if training longer in the future.
+- Perfect opportunity to run a familiar route and enjoy the process.
+- Post-run recovery: refuel, massage legs, celebrate the week's work!
+
+---
+
+## SECTION 2: JSON PLAN
