@@ -6,133 +6,92 @@
 ---
 
 # DIEGO'S WEEKLY TRAINING PLAN
-**Week of June 1–7, 2026**
+## Week of June 1–7, 2026
 
 ---
 
 ## SECTION 1: MARKDOWN PLAN
 
-### **MONDAY, JUNE 1 — Easy Aerobic Run** *(0.5h max)*
+### **Monday, June 1** | 30 minutes max
+**Session: Easy Aerobic Run**
 
-**Duration:** 30 minutes  
-**Zone:** Z1–Z2 (Recovery to Aerobic)  
-**Goal:** Build aerobic base with low intensity; activate system after weekend rest
+**Purpose:** Low-intensity aerobic base building; recovery-focused given limited availability.
 
-| Phase | Duration | HR Zone | Pace | RPE | Notes |
-|-------|----------|---------|------|-----|-------|
-| **Warmup** | 5 min | Z1 (<145 bpm) | >7:00/km | 3–4 | Easy jog; let HR settle in |
-| **Main Set** | 20 min | Z2 (146–162 bpm) | 6:15–6:45/km | 4–5 | Steady aerobic run; conversational pace |
-| **Cooldown** | 5 min | Z1 (<145 bpm) | >7:00/km | 2–3 | Gradual HR recovery |
+| Component | Duration | HR Zone | Pace | RPE | Notes |
+|-----------|----------|---------|------|-----|-------|
+| **Warmup** | 5 min | Z1 (< 145 bpm) | > 7:00/km | 3/10 | Gradual acceleration; focus on form |
+| **Main Set** | 18 min | Z2 (146–162 bpm) | 6:15–6:45/km | 4/10 | Steady aerobic; conversational pace |
+| **Cooldown** | 7 min | Z1 (< 145 bpm) | > 7:00/km | 2/10 | Easy jog; HR recovery to <130 bpm |
 
-**Garmin Alerts:**
-- Alert at HR >162 bpm (exit Z2)
-- Alert at HR <130 bpm during main set (too easy)
-
-**Coaching Notes:**
-- Focus on controlled breathing and rhythm
-- This is a confidence builder; no speed work needed
-- Use this run to assess any niggles or fatigue from weekend
-
----
-
-### **TUESDAY, JUNE 2 — Strength Circuit (Upper Body + Core)** *(0.5h max)*
-
-**Duration:** 28 minutes  
-**Equipment:** Dumbbells (11kg, 16kg), TRX, resistance bands  
-**Goal:** Upper body strength, core stability, injury prevention
-
-| Circuit | Exercise | Sets × Reps | Load | Rest | RPE |
-|---------|----------|-------------|------|------|-----|
-| **A1** | TRX Chest Press | 3 × 8 | Bodyweight | 60s | 7 |
-| **A2** | Dumbbell Rows (each arm) | 3 × 8 | 16kg | 60s | 7 |
-| **B1** | Resistance Band Pull-Aparts | 3 × 12 | Medium band | 45s | 5–6 |
-| **B2** | Dumbbell Overhead Press | 3 × 10 | 11kg | 45s | 6 |
-| **C** | TRX Plank + Core Hold | 3 × 40s | Bodyweight | 60s | 6–7 |
-
-**Garmin Alerts:**
-- Use HR as secondary monitor; aim for 140–160 bpm during work sets
+**Garmin Setup:**
+- Set HR alerts: Low 146, High 162
+- Record as "Run – Aerobic"
 
 **Coaching Notes:**
-- Control tempo: 2s down, 1s pause, 1s up
-- Keep core engaged throughout
-- If HR >165 bpm, reduce rest intervals slightly less; prioritize movement quality
-- Finish with 2 min walking recovery
+- Keep effort relaxed; this is a building block for the week.
+- Focus on cadence ~170 rpm and smooth breathing.
+- Stay hydrated; short duration but build consistency.
 
 ---
 
-### **WEDNESDAY, JUNE 3 — REST DAY**
+### **Tuesday, June 2** | 30 minutes max
+**Session: Strength Circuit (Full Body)**
 
-**Active recovery encouraged:** gentle walk (20–30 min, Z1) or mobility/stretching (15 min)  
-Focus on hydration, sleep, and nutrition to support upcoming threshold session.
+**Purpose:** Maintain muscular strength and power; time-efficient functional work.
 
----
+| Component | Duration | Exercises | Sets × Reps | Load | Rest |
+|-----------|----------|-----------|-------------|------|------|
+| **Warmup** | 3 min | Bodyweight: arm circles, leg swings, glute bridges | 1 × 8 | — | — |
+| **Main Circuit** | 20 min | Circuit (repeat 4 rounds) | — | — | 45s between rounds |
+| | | A. TRX Single-leg Romanian Deadlift | 2 × 8/leg | Bodyweight | 30s |
+| | | B. Dumbbell Goblet Squat | 2 × 10 | 16kg | 30s |
+| | | C. Resistance Band Chest Press | 2 × 12 | Medium band | 30s |
+| | | D. Dumbbell Single-arm Rows | 2 × 8/side | 16kg | 30s |
+| **Cooldown** | 7 min | Static stretching (quads, hamstrings, chest, lats) | — | — | Hold 20s each |
 
-### **THURSDAY, JUNE 4 — Indoor Cycling Threshold Intervals** *(1h max)*
-
-**Duration:** 55 minutes  
-**Equipment:** Stationary bike + power meter (or smart trainer)  
-**Goal:** Build lactate threshold power and mental toughness; improve FTP tolerance
-
-| Phase | Duration | Power Zone | Power (W) | HR Target | RPE | Notes |
-|-------|----------|------------|-----------|-----------|-----|-------|
-| **Warmup** | 10 min | Z1–Z2 | 88–141W | 130–150 bpm | 3–4 | Gradual spin-up; increase cadence to 85–90 rpm |
-| **Build** | 3 min | Z3 | 142–168W | 160–170 bpm | 5–6 | Ramp into threshold effort |
-| **Interval 1** | 6 min | Z4 | 169–195W | 173–181 bpm | 8 | Hold steady power; control breathing |
-| **Recovery** | 3 min | Z2 | 106–141W | 145–155 bpm | 3–4 | Easy spin; HR drop crucial |
-| **Interval 2** | 6 min | Z4 | 169–195W | 173–181 bpm | 8 | Match Interval 1 power; should feel slightly harder |
-| **Recovery** | 3 min | Z2 | 106–141W | 145–155 bpm | 3–4 | Spin easy |
-| **Interval 3** | 5 min | Z4 | 169–195W | 173–181 bpm | 8 | Shorten slightly; maintain quality |
-| **Cooldown** | 9 min | Z1–Z2 | 53–141W | <150 bpm | 2–3 | Gradual spin-down; 80 rpm final minute |
-
-**Garmin Alerts:**
-- Power alert: 169W (floor), 195W (ceiling) for threshold efforts
-- HR alert: 173 bpm (entry to Z4), 182 bpm (exit Z4)
+**Garmin Setup:**
+- Record as "Strength Training"
+- Monitor HR during rest intervals (should drop to Z1)
 
 **Coaching Notes:**
-- **Mental game:** These are hard efforts. Commit fully for 6 minutes each.
-- **Cadence:** Maintain 85–90 rpm; avoid grinding low cadence
-- **Pacing:** Don't blow up on Interval 1; save energy for Interval 3
-- **Power stability:** Smooth power output; avoid surges
-- **Post-session:** Cool down on bike; drink 500ml fluid + carbs (30–40g) within 15 min
+- Prioritize form over speed; controlled 2-second eccentric on each rep.
+- Circuit format keeps HR elevated (Z1–Z2) for conditioning benefit.
+- Rest 45 seconds between complete rounds to allow CNS recovery.
 
 ---
 
-### **FRIDAY, JUNE 5 — REST DAY**
+### **Thursday, June 4** | 60 minutes max
+**Session: Tempo + VO2max Intervals (Running)**
 
-**Active recovery:** Gentle 20 min walk (Z1) or yoga/mobility (15 min)  
-Focus on nutrition timing and sleep quality.
+**Purpose:** Build lactate threshold and aerobic power; key intensity session of the week.
 
----
+| Component | Duration | HR Zone | Pace | RPE | Notes |
+|-----------|----------|---------|------|-----|-------|
+| **Warmup** | 8 min | Z1–Z2 (< 162 bpm) | 6:45–7:00/km | 3/10 | Gradual buildup; increase to Z2 by end |
+| **Tempo Block** | 15 min | Z3 (163–172 bpm) | 5:30–6:00/km | 6/10 | Steady tempo; controlled breathing |
+| **Recovery Jog** | 3 min | Z1 (< 145 bpm) | > 7:00/km | 2/10 | Active recovery between blocks |
+| **VO2max Intervals** | 24 min | Repeat 3× [3min Z5 + 2min Z1] | 3min: <4:30/km, 2min: >7:00/km | 3min: 8/10, 2min: 2/10 | High-intensity repeats; control effort in recovery |
+| **Cooldown** | 10 min | Z1 (< 145 bpm) | > 7:00/km | 2/10 | Gradual HR decline; stretch lower body |
 
-### **SATURDAY, JUNE 6 — REST DAY**
+**Garmin Setup:**
+- Set HR alerts: Tempo zone 163–172, VO2max >181 bpm
+- Create custom workout on watch or use Garmin Coach
+- Record as "Run – Tempo + Intervals"
 
-Complete rest. Optional: 15 min easy stretching or foam rolling.
-
----
-
-### **SUNDAY, JUNE 7 — REST DAY**
-
-Complete rest. Prepare mentally and physically for next week.
-
----
-
-## SUMMARY TABLE
-
-| Day | Sport | Focus | Duration | Intensity | Notes |
-|-----|-------|-------|----------|-----------|-------|
-| Mon 06/01 | Running | Aerobic | 30 min | Z1–Z2 | Easy, confidence-building |
-| Tue 06/02 | Strength | Upper/Core | 28 min | RPE 5–7 | Circuit: chest, rows, press, plank |
-| Wed 06/03 | — | REST | — | — | Active recovery optional |
-| Thu 06/04 | Cycling (Indoor) | Threshold | 55 min | Z4 (3×) | 6–6–5 min intervals; hard session |
-| Fri 06/05 | — | REST | — | — | Active recovery optional |
-| Sat 06/06 | — | REST | — | — | Complete rest |
-| Sun 06/07 | — | REST | — | — | Complete rest |
-
-**Weekly Volume:** ~2h 33 min active training  
-**Intensity Distribution:** 1 easy (Z1–Z2), 1 strength, 1 threshold (Z4)  
-**Rest Days:** 4 (including 3 consecutive Fri–Sun)
+**Coaching Notes:**
+- This is the most challenging session; execute on fresh legs (day after strength, before rest days).
+- Tempo block establishes threshold awareness; VO2max intervals build peak aerobic capacity.
+- Between VO2max reps, *actively jog easy* (don't stop) to accelerate recovery.
+- If HR struggles to recover below 145 bpm in Z1 intervals, reduce intensity slightly and extend recovery time.
+- Post-session: light meal with carbs + protein within 30 minutes.
 
 ---
+
+### **Wednesday, Friday, Saturday, Sunday** | REST DAYS
+- No structured training
+- Light walking (15–20 min) acceptable for active recovery if desired
+- Focus on sleep (7–9 hours), hydration, and nutrition
+- Prepare mentally for next week's intensity
 
 ---
 
