@@ -2,6 +2,7 @@ import os
 import json
 import anthropic
 from datetime import date, timedelta
+from garminconnect.workout import RunningWorkout, CyclingWorkout, WorkoutSegment, create_warmup_step, create_interval_step, create_recovery_step, create_cooldown_step
 from garminconnect import Garmin
 from ftp_detector import estimate_ftp_from_efforts, update_profile_with_new_ftp
 from lthr_detector import estimate_lthr_from_efforts, update_zones_with_new_lthr
@@ -328,8 +329,7 @@ print("Plans saved.")
 
 # ── Push workouts to Garmin Connect ──────────────────────────────────────────
 if not plan_json:
-    print(f"\nJSON plan contains {len(plan_json)} sessions to upload.")
-    print("Skipping Garmin upload.")
+    print(f"\nNo sessions to upload. Check weekly_plan.json.")
 else:
     print(f"\nPushing {len(plan_json)} workouts to Garmin Connect...")
     uploaded = 0
@@ -340,39 +340,35 @@ else:
         session_date = session.get("date", "")
         total_secs   = session.get("total_duration_secs", 3600)
         steps_data   = session.get("steps", [])
-        
+
         try:
-            # Build steps from Claude's structured plan
+            # Build steps with correct signatures
             steps = []
-            for step in steps_data:
+            for i, step in enumerate(steps_data):
                 step_type = step.get("type", "interval")
-                duration = float(step.get("duration_secs", 600))
-                
-                try:
-                    if step_type == "warmup":
-                        steps.append(create_warmup_step(duration))
-                    elif step_type == "cooldown":
-                        steps.append(create_cooldown_step(duration))
-                    elif step_type == "recovery":
-                        steps.append(create_recovery_step(duration))
-                    else:  # interval or main set
-                        steps.append(create_interval_step(duration))
-                except TypeError as te:
-                    # If step function doesn't like just duration, try without params
-                    print(f"    Warning: Step creation failed ({step_type}): {str(te)[:50]}")
-                    continue
-            
+                duration  = float(step.get("duration_secs", 600))
+                order     = i + 1
+
+                if step_type == "warmup":
+                    steps.append(create_warmup_step(duration, order))
+                elif step_type == "cooldown":
+                    steps.append(create_cooldown_step(duration, order))
+                elif step_type == "recovery":
+                    steps.append(create_recovery_step(duration, order))
+                else:
+                    steps.append(create_interval_step(duration, order))
+
             if not steps:
-                # Fallback: create one interval step for entire workout
-                steps = [create_interval_step(float(total_secs))]
-            
+                steps = [create_interval_step(float(total_secs), 1)]
+
+            segment = WorkoutSegment(
+                segmentOrder=1,
+                sportType={"sportTypeId": 1, "sportTypeKey": "running"} if sport == "running"
+                          else {"sportTypeId": 2, "sportTypeKey": "cycling"},
+                workoutSteps=steps
+            )
+
             if sport == "running":
-                from garminconnect import RunningWorkout
-                segment = WorkoutSegment(
-                    segmentOrder=1,
-                    sportType={"sportTypeId": 1, "sportTypeKey": "running"},
-                    workoutSteps=steps
-                )
                 workout = RunningWorkout(
                     workoutName=name,
                     estimatedDurationInSecs=total_secs,
@@ -381,12 +377,6 @@ else:
                 result = client.upload_running_workout(workout)
 
             elif sport in ("cycling_indoor", "cycling_outdoor", "cycling"):
-                from garminconnect import CyclingWorkout
-                segment = WorkoutSegment(
-                    segmentOrder=1,
-                    sportType={"sportTypeId": 2, "sportTypeKey": "cycling"},
-                    workoutSteps=steps
-                )
                 workout = CyclingWorkout(
                     workoutName=name,
                     estimatedDurationInSecs=total_secs,
@@ -395,29 +385,26 @@ else:
                 result = client.upload_cycling_workout(workout)
 
             else:
-                print(f"  Skipping {name} ({sport}) — unsupported sport type.")
+                print(f"  Skipping {name} ({sport}) — unsupported type.")
                 continue
 
-            # Extract workout ID
             workout_id = result.get("workoutId") if isinstance(result, dict) else None
-            
             if workout_id and session_date:
                 client.schedule_workout(workout_id, session_date)
-                print(f"  ✓ {name} ({sport}) → uploaded with {len(steps)} steps, scheduled for {session_date}")
+                print(f"  ✓ {name} ({sport}) → {len(steps)} steps, scheduled {session_date}")
                 uploaded += 1
             elif workout_id:
-                print(f"  ✓ {name} ({sport}) → uploaded with {len(steps)} steps")
+                print(f"  ✓ {name} ({sport}) → {len(steps)} steps, uploaded")
                 uploaded += 1
             else:
-                print(f"  ⚠️  {name}: unclear response from Garmin")
+                print(f"  ⚠️  {name}: unclear response: {result}")
 
         except Exception as e:
-            error_msg = str(e)
-            print(f"  ❌ {name}: {error_msg[:100]}")
+            print(f"  ❌ {name}: {str(e)[:120]}")
 
     print(f"\nGarmin: {uploaded}/{len(plan_json)} workouts pushed.")
     if uploaded > 0:
-        print("Sync your Fenix in Garmin Connect to see the workouts on your watch.")
+        print("Sync your Fenix to see workouts on your watch.")
 
 print("\n" + "="*60)
 print(plan_md[:1000] + "..." if len(plan_md) > 1000 else plan_md)
