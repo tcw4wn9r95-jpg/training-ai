@@ -3,6 +3,8 @@ import json
 import anthropic
 from datetime import date, timedelta
 from garminconnect import Garmin
+from ftp_detector import estimate_ftp_from_efforts, update_profile_with_new_ftp
+from lthr_detector import estimate_lthr_from_efforts, update_zones_with_new_lthr
 from garminconnect.workout import (
     RunningWorkout,
     CyclingWorkout,
@@ -28,12 +30,18 @@ if days_data:
     available_days  = [d for d, v in days_data.items() if v.get("available")]
     hours_per_day   = {d: v.get("hours", 1.0) for d, v in days_data.items() if v.get("available")}
 else:
-    available_days  = ["Monday", "Wednesday", "Thursday", "Saturday", "Sunday"]
-    hours_per_day   = {d: 1.0 for d in available_days}
+    available_days  = []
+    hours_per_day   = {}
 
+# If no days set (availability not configured yet), use sensible defaults
 if not available_days:
+    print("WARNING: No availability set — using default schedule.")
+    print("Set your availability on the dashboard before Sunday to get a personalised plan.")
     available_days = ["Monday", "Wednesday", "Thursday", "Saturday", "Sunday"]
-    hours_per_day  = {d: 1.0 for d in available_days}
+    hours_per_day  = {"Monday": 1.0, "Wednesday": 1.0, "Thursday": 1.5, "Saturday": 2.0, "Sunday": 1.5}
+
+print(f"Available days: {available_days}")
+print(f"Hours per day: {hours_per_day}")
 
 # ── Garmin login ──────────────────────────────────────────────────────────────
 print("Connecting to Garmin Connect...")
@@ -88,6 +96,53 @@ for a in activities:
 with open("workouts.json", "w") as f:
     json.dump(workouts, f, indent=2)
 print("Workout history saved.")
+
+# ── Auto-detect FTP from recent power data ────────────────────────────────────
+print("\n--- Checking FTP (Cycling) ---")
+ftp_result, ftp_confidence = estimate_ftp_from_efforts(workouts, ftp_current=FTP)
+ftp_changed = False
+if ftp_result:
+    print(f"FTP increase detected: {ftp_result['old_ftp']}W → {ftp_result['new_ftp']}W")
+    print(f"Confidence: {ftp_result['confidence']}% | Based on {ftp_result['best_effort_duration']}min @ {ftp_result['best_effort_power']}W")
+    profile = update_profile_with_new_ftp(profile, ftp_result['new_ftp'])
+    FTP = profile["cycling"]["ftp_watts"]
+    ftp_changed = True
+else:
+    print(f"No FTP change needed (confidence too low or insufficient data)")
+
+# ── Auto-detect LTHR from recent running data ────────────────────────────────
+print("\n--- Checking LTHR (Running) ---")
+lthr_result, lthr_confidence = estimate_lthr_from_efforts(workouts, lthr_current=LTHR, max_hr=MAX_HR, min_duration_min=15)
+lthr_changed = False
+if lthr_result:
+    print(f"LTHR increase detected: {lthr_result['old_lthr']} → {lthr_result['new_lthr']} bpm")
+    print(f"Confidence: {lthr_result['confidence']}% | {lthr_result['hr_pct_max']}% of max HR")
+    print(f"Based on: {lthr_result['best_effort_duration']}min @ {lthr_result['best_effort_hr']} bpm on {lthr_result['best_effort_date']}")
+    new_running_zones = update_zones_with_new_lthr(
+        profile["running"]["zones"],
+        lthr_result['new_lthr'],
+        profile["running"]["max_hr"],
+        profile["running"]["resting_hr"]
+    )
+    profile["running"]["threshold_hr"] = lthr_result['new_lthr']
+    profile["running"]["zones"] = new_running_zones
+    LTHR = lthr_result['new_lthr']
+    lthr_changed = True
+else:
+    print(f"No LTHR change needed (confidence too low or insufficient data)")
+
+# Save profile if either changed
+if ftp_changed or lthr_changed:
+    with open("profile.json", "w") as f:
+        json.dump(profile, f, indent=2)
+    print(f"\n✓ Profile updated and saved.")
+    if ftp_changed and lthr_changed:
+        print(f"  • FTP: {ftp_result['old_ftp']}W → {ftp_result['new_ftp']}W")
+        print(f"  • LTHR: {lthr_result['old_lthr']} → {lthr_result['new_lthr']} bpm")
+    elif ftp_changed:
+        print(f"  • FTP: {ftp_result['old_ftp']}W → {ftp_result['new_ftp']}W")
+    else:
+        print(f"  • LTHR: {lthr_result['old_lthr']} → {lthr_result['new_lthr']} bpm")
 
 # ── Build next week date map ──────────────────────────────────────────────────
 today            = date.today()
@@ -317,8 +372,13 @@ def build_steps(steps_list):
         order += 1
     return built
 
+print(f"\nJSON plan contains {len(plan_json)} sessions to upload.")
 if not plan_json:
-    print("No structured JSON plan found — skipping Garmin upload.")
+    print("WARNING: No sessions in JSON plan — this usually means:")
+    print("  1. No availability was set (all days off), OR")
+    print("  2. Claude did not output valid JSON")
+    print("  Check weekly_plan.json to see what Claude returned.")
+    print("Skipping Garmin upload.")
 else:
     print(f"\nPushing {len(plan_json)} workouts to Garmin Connect...")
     uploaded = 0

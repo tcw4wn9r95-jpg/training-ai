@@ -1,0 +1,39 @@
+name: Weekly Training Plan
+on:
+  schedule:
+    - cron: '0 19 * * 0'  # Sunday 7pm UTC = 8pm Luxembourg
+  workflow_dispatch:
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  generate-plan:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: pip install garminconnect anthropic
+      
+      - name: Run sync
+        env:
+          GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
+          GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+        run: python sync.py
+      
+      - name: Commit results
+        run: |
+          git config user.name "AthleteIQ Bot"
+          git config user.email "bot@athleteiq.local"
+          git add workouts.json weekly_plan.md weekly_plan.json profile.json
+          git diff --staged --quiet || git commit -m "Weekly plan $(date +%Y-%m-%d)"
+          git push
