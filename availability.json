@@ -2,7 +2,7 @@
   "week_of": "2026-05-31",
   "days": {
     "Monday": {
-      "available": true,
+      "available": false,
       "hours": 0.5
     },
     "Tuesday": {
@@ -10,20 +10,20 @@
       "hours": 0.5
     },
     "Wednesday": {
-      "available": false,
-      "hours": 1
+      "available": true,
+      "hours": 0.5
     },
     "Thursday": {
       "available": true,
-      "hours": 1
+      "hours": 0.5
     },
     "Friday": {
-      "available": false,
-      "hours": 1
+      "available": true,
+      "hours": 0.5
     },
     "Saturday": {
-      "available": false,
-      "hours": 1.5
+      "available": true,
+      "hours": 0.5
     },
     "Sunday": {
       "available": false,
