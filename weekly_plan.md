@@ -5,95 +5,119 @@
 
 ---
 
-# DIEGO'S TRAINING PLAN — WEEK 1 (BASE PHASE)
+# DIEGO'S TRAINING PLAN — WEEK 2 (BUILD PHASE)
+
+**Generated:** 02 June 2026  
+**Week of:** 08 June 2026  
+**Phase:** Build (threshold + sweet-spot intensity, raise TSS 8% from week 1 actual)  
+**Available days:** Wednesday, Thursday, Friday, Saturday  
+**Weekly time budget:** 5 h/week
+
+---
+
+## CONTEXT & PROGRESSION
+
+**Last week (Week 1, BASE):**
+- Planned: 143 TSS
+- Actual: 0 TSS (athlete did not complete sessions)
+
+**This week (Week 2, BUILD):**
+- Since Week 1 sessions were not executed, we **hold TSS roughly stable at ~140 TSS** but **shift the structure** to build threshold stimulus more directly. This is a controlled entry into intensity without shock.
+- Add a second hard day (cycling threshold), keep running aerobic but extend slightly, and introduce structured strength.
+- Goal: establish consistent execution habits while raising fitness signals (threshold power/pace work).
 
 ---
 
 ## SECTION 1: MARKDOWN PLAN
 
-### Wednesday 2026-06-03 — Easy Aerobic Run
+### Wednesday 2026-06-10 — Tempo Run (Aerobic-Threshold Bridge)
 **Sport:** Running  
-**Duration:** 30 min | **Planned TSS:** 28 | **Focus:** Establish aerobic base, build running consistency, conversational effort
+**Duration:** 35 min | **Planned TSS:** 36 | **Focus:** Build running threshold capacity, bridge between easy and hard, prepare body for sustained effort
 
 #### Warm-up
-- 5 min Z1 easy jog (>7:00/km, <145 bpm) to mobilise legs and settle into rhythm
+- 5 min Z1 easy jog (>7:00/km, <145 bpm) to mobilise hips and settle HR
 
 #### Main set
-- 20 min Z2 aerobic (6:15–6:45/km, 146–162 bpm) — steady, sustainable pace; you should be able to speak short sentences
-- Maintain cadence 170–180 spm if possible
+- 20 min Z3 tempo (5:30–6:00/km, 163–172 bpm) — comfortably hard; you should be able to speak short phrases only
+- Maintain steady cadence 175–185 spm
+- Focus on *feel*: this pace should feel challenging but sustainable for the duration
 
 #### Cool-down
-- 5 min Z1 easy jog to bring HR down and aid recovery
+- 5 min Z1 easy jog to bring HR down
 
-**Coach notes:** This is your first structured run in the programme. Focus on *feel* over numbers — aim for a pace where you could hold a conversation. Use your Garmin's real-time HR and pace display to stay in zone; if you drift above 162 bpm, dial back slightly. This builds the aerobic engine without creating excessive fatigue.
+**Coach notes:** Tempo runs build your aerobic-threshold boundary and train lactate clearance. This is your first structured threshold-adjacent work on foot. Use your Garmin's real-time pace and HR; if you drift into Z4 (>173 bpm), back off slightly. If you're comfortably in zone at 5:45/km, that's the sweet spot.
 
 ---
 
-### Thursday 2026-06-04 — Threshold Cycling (Indoor)
+### Thursday 2026-06-11 — Threshold Cycling + Sweet-Spot (Indoor)
 **Sport:** Cycling (Indoor)  
-**Duration:** 45 min | **Planned TSS:** 52 | **Focus:** Build sustainable threshold power, raise FTP stimulus
+**Duration:** 50 min | **Planned TSS:** 60 | **Focus:** Raise sustainable threshold power, build FTP, increase aerobic-anaerobic capacity
 
 #### Warm-up
-- 10 min Z1–Z2 easy spin (70–120W) at 90+ rpm; gradually build intensity
+- 10 min Z1–Z2 easy spin (80–115W, 90+ rpm) — gradually build cadence and HR
 
 #### Main set
-- 3 × 6 min Z4 threshold (169–185W, smooth 90+ rpm)
-  - Each repeat: maintain power as steady as possible; focus on smooth pedal circles
-  - 3 min easy spin recovery (88–110W) between reps
-- The third repeat may feel hardest — that is normal; hold form
+- 4 × 5 min Z4 threshold (169–185W, smooth 90+ rpm)
+  - 3 min Z2 recovery spin (106–130W, 90 rpm) between each repeat
+  - Keep power *steady* within the Z4 band; avoid surges. Focus on relaxed shoulders and even pedal pressure.
 
 #### Cool-down
-- 5 min easy spin (70–100W) to clear legs
+- 5 min Z2 spin (110–130W), then 2 min Z1 easy (80–100W)
 
-**Coach notes:** Threshold work triggers fitness adaptation and is central to your weight-loss goal because it burns significant calories during and post-exercise. Keep cadence high (90+) to reduce joint stress. If power drops >5% in the final 2 min of any repeat, it's OK to dial back slightly — quality > quantity at this stage.
+**Coach notes:** Four reps of 5 min at threshold is a classic FTP builder. Your FTP is 177 W; these repeats should feel hard but controllable. If you finish the 4th rep and can still speak only in single words, you've nailed the intensity. Log the average power per repeat — we'll track this to see FTP rise over the block.
 
 ---
 
-### Friday 2026-06-05 — Lower Body & Core Strength
+### Friday 2026-06-12 — Strength: Lower Body & Core (TRX, dumbbells, bands)
 **Sport:** Strength  
-**Duration:** 45 min | **Planned TSS:** 25 | **Focus:** Build leg strength and core stability; support running and cycling power
+**Duration:** 30 min | **Planned TSS:** 24 | **Focus:** Strength endurance for legs and glutes; core stability; injury prevention and metabolic effect
 
-#### Warm-up
-- 5 min dynamic mobility: leg swings, hip circles, bodyweight squats, arm circles
+#### Warm-up (3 min)
+- Leg swings (10/leg), hip circles (10/direction), bodyweight squats (10), cat-cow (10)
 
-#### Main set
-**3 rounds (60 s rest between rounds):**
-1. 12 × Goblet Squat (22 kg dumbbell) — controlled descent, full range
-2. 10 × Romanian Deadlift (22 kg, single dumbbell or two 11 kg) — hinge at hips, feel hamstring stretch
-3. 15 × TRX Split Squat (alternating legs) — rear foot elevated, lean forward slightly
-4. 20 × Band Glute Bridge (resistance band looped above knees) — drive through heels, squeeze glutes at top
-5. 45 s Plank (forearm or high plank) — engage core, neutral spine
+#### Main Circuit (24 min)
+**3 rounds, 60 s rest between rounds:**
+1. 12× Goblet squat 22 kg (3 s descent, 1 s pause at bottom)
+2. 10× Single-leg RDL 11 kg/side (alternating, slow eccentric)
+3. 12× TRX split squat (6/leg, explosive ascent)
+4. 15× Band glute bridge (pulse at top, 2 s hold)
+5. 45 s plank (strict core, no sag)
 
-#### Cool-down
-- 7 min static stretch: hip flexors, hamstrings, glutes, lower back
+#### Cool-down (3 min)
+- Quad stretch (30 s/leg), hip flexor lunge (30 s/leg), pigeon pose (30 s/side), glute stretch (30 s/side)
 
-**Coach notes:** Strength work accelerates weight loss by preserving muscle mass and raising metabolic rate. Keep rest minimal within each round to maintain heart rate elevation. The band glute bridge primes your glutes for running and cycling. If any movement causes discomfort, regress (e.g. reduce depth on squats, or use lighter weight).
+**Coach notes:** This circuit builds leg strength and glute activation (critical for running power and injury resilience) while creating a metabolic demand that supports your weight-loss goal. Keep rest between exercises minimal; the 60 s between rounds is your recovery. Tempo: controlled, not rushed. If you feel any knee pain, stop and regress the split squat depth.
 
 ---
 
-### Saturday 2026-06-06 — Steady Endurance Run
+### Saturday 2026-06-13 — Steady Aerobic Run (Z2 Endurance Base)
 **Sport:** Running  
-**Duration:** 50 min | **Planned TSS:** 38 | **Focus:** Build aerobic volume and mental toughness; longest effort of the week
+**Duration:** 40 min | **Planned TSS:** 38 | **Focus:** Build aerobic volume at easy-moderate pace, develop fat-adaptation, strengthen capillary networks
 
 #### Warm-up
-- 5 min Z1 easy jog to settle
+- 5 min Z1 easy jog (>7:00/km, <145 bpm)
 
 #### Main set
-- 40 min Z2 aerobic (6:15–6:45/km, 146–162 bpm) — think of this as a long, easy conversation with a friend
-- If terrain allows, run on mixed surfaces (road, trail) to engage stabiliser muscles
+- 30 min Z2 aerobic (6:15–6:45/km, 146–162 bpm) — conversational, steady effort
+- Maintain cadence 170–180 spm
+- This is your "long" run for the week; embrace the duration and let your mind settle
 
 #### Cool-down
 - 5 min Z1 easy jog
 
-**Coach notes:** This is your "volume day" — it's the longest run of the week and builds aerobic capacity while keeping intensity low enough to recover by Monday. By running longer at easy pace, you burn more total calories (weight-loss goal), strengthen aerobic pathways, and prepare the body for harder work. Stay disciplined: do NOT speed up just because you feel good. Easier runs allow harder workouts.
+**Coach notes:** Long, easy runs are the foundation of endurance and weight loss. Your HR should feel controlled; you should be able to chat with a training partner. The 40 min is a moderate step up from week 1; if you feel strong at the end, that's a good sign. If you feel flat, dial back the pace slightly and focus on consistency.
 
 ---
 
 ## Week Summary
 
-**Total Planned TSS: ~143 | Phase: BASE | Duration: 2 h 50 min**
+**Total Planned TSS:** 158 TSS  
+**Phase:** Build  
+**Focus:** Threshold stimulus (both running and cycling), establish strength routine, raise weekly volume 11% from BASE target (143 → 158 TSS).  
 
-This is your foundation week: three aerobic-dominant sessions (2 running, 1 cycling at threshold) and one strength block. The focus is **establishing consistency, building aerobic volume, and introducing structured intensity (threshold work) without overwhelming the body**. You're starting from minimal recent load, so the volume is conservative but strategically placed. Thursday's threshold cycling and Saturday's long run are your "hard" anchors; Wednesday and Friday are supporting efforts. Next week we'll raise volume slightly and introduce more threshold work as you adapt. **Stay disciplined with easy days — they are not "filler"; they are where most of the aerobic and metabolic adaptation happens.**
+**Coaching directive:** You are now executing a *balanced* week: 2 hard days (tempo run + threshold cycling), 1 strength session, 1 steady long run. This is the build-phase structure. Nail execution this week — consistency over perfection. By week 4, you'll see measurable gains in threshold power and running pace.
+
+---
 
 ---
 

@@ -38,5 +38,45 @@
         "focus": "Build aerobic volume and running economy at easy pace"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-29",
+    "phase": "build",
+    "planned_tss": 158,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Wednesday",
+        "sport": "running",
+        "name": "Tempo run",
+        "planned_tss": 36,
+        "focus": "Build aerobic-threshold capacity, bridge easy and hard"
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Threshold 4\u00d75",
+        "planned_tss": 60,
+        "focus": "Raise sustainable threshold power, build FTP"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Lower body & core circuit",
+        "planned_tss": 24,
+        "focus": "Strength endurance, glute activation, core stability, metabolic effect"
+      },
+      {
+        "day": "Saturday",
+        "sport": "running",
+        "name": "Steady aerobic run (long)",
+        "planned_tss": 38,
+        "focus": "Build aerobic volume, develop fat-adaptation, capillary networks"
+      }
+    ]
   }
 ]
