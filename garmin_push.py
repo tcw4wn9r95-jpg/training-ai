@@ -1,111 +1,145 @@
 """
 garmin_push.py — shared Garmin upload logic for Coach Claudio.
-Used by both the scheduled generate workflow (optional) and the on-demand
-"Let's do this!" push workflow. Keeps the workout-building in one place.
+
+Builds workouts as PLAIN DICTS and uploads via client.upload_workout(), which is
+stable across garminconnect versions. This avoids the fragile model classes
+(RunningWorkout/create_*_step) whose constructor signatures have changed between
+releases and caused "ExecutableStep() takes no arguments" on the runner.
 """
-from garminconnect.workout import (
-    RunningWorkout, CyclingWorkout, WorkoutSegment,
-    create_warmup_step, create_interval_step,
-    create_recovery_step, create_cooldown_step, create_repeat_group,
-    TargetType,
-)
+
+# Garmin sport type IDs
+SPORT_IDS = {
+    "running": (1, "running"),
+    "cycling": (2, "cycling"),
+    "cycling_indoor": (2, "cycling"),
+    "cycling_outdoor": (2, "cycling"),
+    "strength": (4, "fitness_equipment"),
+}
+
+# Step type IDs
+STEP_IDS = {
+    "warmup": (1, "warmup"),
+    "cooldown": (2, "cooldown"),
+    "interval": (3, "interval"),
+    "recovery": (4, "recovery"),
+    "rest": (5, "rest"),
+}
+
+NO_TARGET = {"workoutTargetTypeId": 1, "workoutTargetTypeKey": "no.target", "displayOrder": 1}
 
 
-# ── Target builder ────────────────────────────────────────────────────────────
-def make_target(step, sport):
-    """Return (target_type_dict, value_one, value_two).
+def make_target(step):
+    """Return a dict of the target fields to merge into a step.
 
-    CRITICAL: Garmin expects targetValueOne/Two as SIBLINGS of targetType on the
-    step, not nested inside targetType. We return them separately so build_step
-    can set them as step attributes (the library's ExecutableStep allows extras).
+    Garmin expects targetType + targetValueOne/Two as SIBLING keys on the step.
+    Running -> speed.zone (m/s), cycling indoor -> power.zone (W),
+    cycling outdoor -> heart.rate.zone (bpm).
     """
     tt = step.get("target_type", "")
     low = float(step.get("target_low", 0) or 0)
     high = float(step.get("target_high", 0) or 0)
-    no_target = ({"workoutTargetTypeId": TargetType.NO_TARGET,
-                  "workoutTargetTypeKey": "no.target", "displayOrder": 1}, None, None)
     if not low or not high:
-        return no_target
+        return {"targetType": dict(NO_TARGET)}
+
     if tt == "pace":
         # Claude gives sec/km; low=slower, high=faster.
-        # Garmin speed target in m/s: valueOne = slower (lower speed), valueTwo = faster (higher speed).
-        slower_speed = round(1000.0 / low, 4)
-        faster_speed = round(1000.0 / high, 4)
-        return ({"workoutTargetTypeId": TargetType.SPEED, "workoutTargetTypeKey": "speed.zone",
-                 "displayOrder": 1}, slower_speed, faster_speed)
+        # Garmin speed target m/s: valueOne = slower (lower speed), valueTwo = faster (higher speed).
+        return {
+            "targetType": {"workoutTargetTypeId": 5, "workoutTargetTypeKey": "speed.zone", "displayOrder": 1},
+            "targetValueOne": round(1000.0 / low, 4),
+            "targetValueTwo": round(1000.0 / high, 4),
+        }
     if tt == "power":
-        return ({"workoutTargetTypeId": TargetType.POWER, "workoutTargetTypeKey": "power.zone",
-                 "displayOrder": 1}, low, high)
+        return {
+            "targetType": {"workoutTargetTypeId": 2, "workoutTargetTypeKey": "power.zone", "displayOrder": 1},
+            "targetValueOne": low, "targetValueTwo": high,
+        }
     if tt == "heart_rate":
-        return ({"workoutTargetTypeId": TargetType.HEART_RATE, "workoutTargetTypeKey": "heart.rate.zone",
-                 "displayOrder": 1}, low, high)
-    return no_target
+        return {
+            "targetType": {"workoutTargetTypeId": 4, "workoutTargetTypeKey": "heart.rate.zone", "displayOrder": 1},
+            "targetValueOne": low, "targetValueTwo": high,
+        }
+    return {"targetType": dict(NO_TARGET)}
 
 
-def build_step(step, order, sport):
+def executable_step(step, order):
+    """Build one ExecutableStepDTO as a plain dict."""
     stype = step.get("type", "interval")
+    type_id, type_key = STEP_IDS.get(stype, STEP_IDS["interval"])
     dur = float(step.get("duration_secs", 600))
-    target_type, v1, v2 = make_target(step, sport)
-    desc = step.get("description", "")[:120]
-    if stype == "warmup":
-        s = create_warmup_step(dur, order, target_type)
-    elif stype == "cooldown":
-        s = create_cooldown_step(dur, order, target_type)
-    elif stype == "recovery":
-        s = create_recovery_step(dur, order, target_type)
-    else:
-        s = create_interval_step(dur, order, target_type)
-    if v1 is not None:
-        s.targetValueOne = v1
-    if v2 is not None:
-        s.targetValueTwo = v2
-    try:
-        s.description = desc
-    except Exception:
-        pass
-    return s
+    d = {
+        "type": "ExecutableStepDTO",
+        "stepOrder": order,
+        "stepType": {"stepTypeId": type_id, "stepTypeKey": type_key, "displayOrder": type_id},
+        "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time", "displayOrder": 2, "displayable": True},
+        "endConditionValue": dur,
+        "description": (step.get("description", "") or "")[:120],
+    }
+    d.update(make_target(step))
+    return d
 
 
-def build_steps(steps_data, sport):
-    """Build steps including real repeat groups."""
+def build_steps(steps_data):
+    """Build the workoutSteps list, including real repeat groups, as plain dicts."""
     out = []
     order = 1
     for step in steps_data:
         if step.get("type") == "repeat":
-            inner = []
+            child_steps = []
             for sub in step.get("steps", []):
-                inner.append(build_step(sub, order, sport))
+                child_steps.append(executable_step(sub, order))
                 order += 1
-            out.append(create_repeat_group(int(step.get("repeat_count", 2)), inner, order))
+            out.append({
+                "type": "RepeatGroupDTO",
+                "stepOrder": order,
+                "stepType": {"stepTypeId": 6, "stepTypeKey": "repeat", "displayOrder": 6},
+                "numberOfIterations": int(step.get("repeat_count", 2)),
+                "smartRepeat": False,
+                "endCondition": {"conditionTypeId": 7, "conditionTypeKey": "iterations", "displayable": False},
+                "endConditionValue": float(step.get("repeat_count", 2)),
+                "workoutSteps": child_steps,
+            })
             order += 1
         else:
-            out.append(build_step(step, order, sport))
+            out.append(executable_step(step, order))
             order += 1
     return out
 
 
-def make_strength_workout_json(name, steps_data, notes):
-    total = sum(s.get("duration_secs", 600) for s in steps_data) or 2700
-    steps = []
-    for i, step in enumerate(steps_data):
-        stype = step.get("type", "interval")
-        type_id = 1 if stype == "warmup" else 2 if stype == "cooldown" else 3
-        type_key = "warmup" if stype == "warmup" else "cooldown" if stype == "cooldown" else "interval"
-        steps.append({
-            "type": "ExecutableStepDTO", "stepOrder": i + 1,
-            "stepType": {"stepTypeId": type_id, "stepTypeKey": type_key},
-            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time", "displayable": True},
-            "endConditionValue": float(step.get("duration_secs", 600)),
-            "targetType": {"workoutTargetTypeId": 1, "workoutTargetTypeKey": "no.target"},
-            "description": step.get("description", "")[:120],
-        })
+def build_workout_dict(session):
+    """Build a complete workout payload dict for client.upload_workout()."""
+    sport = session.get("sport", "running")
+    sport_id, sport_key = SPORT_IDS.get(sport, SPORT_IDS["running"])
+    name = session.get("name", "Session")
+    total = session.get("total_duration_secs") or sum(
+        s.get("duration_secs", 600) for s in session.get("steps", [])
+    ) or 3600
+
+    if sport == "strength":
+        steps = []
+        for i, step in enumerate(session.get("steps", [])):
+            tid, tkey = STEP_IDS.get(step.get("type", "interval"), STEP_IDS["interval"])
+            steps.append({
+                "type": "ExecutableStepDTO", "stepOrder": i + 1,
+                "stepType": {"stepTypeId": tid, "stepTypeKey": tkey, "displayOrder": tid},
+                "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time", "displayOrder": 2, "displayable": True},
+                "endConditionValue": float(step.get("duration_secs", 600)),
+                "targetType": dict(NO_TARGET),
+                "description": (step.get("description", "") or "")[:120],
+            })
+        desc = (session.get("notes", "") or "")[:1000]
+    else:
+        steps = build_steps(session.get("steps", [])) or [executable_step({"type": "interval", "duration_secs": total}, 1)]
+        desc = (session.get("focus", "") or "")[:1000]
+
     return {
-        "workoutName": name, "description": (notes or "")[:1000],
-        "sportType": {"sportTypeId": 4, "sportTypeKey": "fitness_equipment"},
+        "workoutName": name,
+        "description": desc,
+        "sportType": {"sportTypeId": sport_id, "sportTypeKey": sport_key, "displayOrder": sport_id},
         "estimatedDurationInSecs": int(total),
         "workoutSegments": [{
             "segmentOrder": 1,
-            "sportType": {"sportTypeId": 4, "sportTypeKey": "fitness_equipment"},
+            "sportType": {"sportTypeId": sport_id, "sportTypeKey": sport_key, "displayOrder": sport_id},
             "workoutSteps": steps,
         }],
     }
@@ -145,7 +179,7 @@ def cleanup_existing(client, plan_json):
 
 
 def push_plan_to_garmin(client, plan_json):
-    """Upload every session in plan_json to Garmin and schedule it. Returns count uploaded."""
+    """Upload + schedule every session in plan_json. Returns count uploaded."""
     if not plan_json:
         print("\nNo sessions to upload.")
         return 0
@@ -153,45 +187,22 @@ def push_plan_to_garmin(client, plan_json):
     print(f"\nPushing {len(plan_json)} workouts to Garmin...")
     uploaded = 0
     for session in plan_json:
-        sport = session.get("sport", "running")
         name = session.get("name", "Session")
         sdate = session.get("date", "")
-        total_secs = session.get("total_duration_secs", 3600)
-        steps_data = session.get("steps", [])
-        notes = session.get("notes", "")
+        sport = session.get("sport", "running")
         try:
-            if sport == "strength":
-                result = client.upload_workout(make_strength_workout_json(name, steps_data, notes))
-                wid = result.get("workoutId") if isinstance(result, dict) else None
-                if wid and sdate:
-                    client.schedule_workout(wid, sdate)
-                    print(f"  OK {name} (strength) scheduled {sdate}")
-                    uploaded += 1
-                continue
-
-            steps = build_steps(steps_data, sport) or [create_interval_step(float(total_secs), 1)]
-            if sport == "running":
-                seg = WorkoutSegment(segmentOrder=1, sportType={"sportTypeId": 1, "sportTypeKey": "running"}, workoutSteps=steps)
-                wk = RunningWorkout(workoutName=name, estimatedDurationInSecs=total_secs, workoutSegments=[seg])
-                result = client.upload_running_workout(wk)
-            elif sport in ("cycling_indoor", "cycling_outdoor", "cycling"):
-                seg = WorkoutSegment(segmentOrder=1, sportType={"sportTypeId": 2, "sportTypeKey": "cycling"}, workoutSteps=steps)
-                wk = CyclingWorkout(workoutName=name, estimatedDurationInSecs=total_secs, workoutSegments=[seg])
-                result = client.upload_cycling_workout(wk)
-            else:
-                print(f"  skip {name} ({sport})")
-                continue
-
+            payload = build_workout_dict(session)
+            result = client.upload_workout(payload)
             wid = result.get("workoutId") if isinstance(result, dict) else None
             if wid and sdate:
                 client.schedule_workout(wid, sdate)
-                print(f"  OK {name} ({sport}) {len(steps)} top-steps scheduled {sdate}")
+                print(f"  OK {name} ({sport}) scheduled {sdate}")
                 uploaded += 1
             elif wid:
-                print(f"  OK {name} ({sport}) uploaded")
+                print(f"  OK {name} ({sport}) uploaded (no date)")
                 uploaded += 1
             else:
-                print(f"  ?? {name}: {result}")
+                print(f"  ?? {name}: {str(result)[:100]}")
         except Exception as e:
             print(f"  FAIL {name}: {str(e)[:140]}")
     print(f"\nGarmin: {uploaded}/{len(plan_json)} workouts pushed.")

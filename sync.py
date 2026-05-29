@@ -10,12 +10,6 @@ from datetime import date, timedelta
 
 import anthropic
 from garminconnect import Garmin
-from garminconnect.workout import (
-    RunningWorkout, CyclingWorkout, WorkoutSegment,
-    create_warmup_step, create_interval_step,
-    create_recovery_step, create_cooldown_step, create_repeat_group,
-    TargetType,
-)
 from ftp_detector import estimate_ftp_from_efforts, update_profile_with_new_ftp
 from lthr_detector import estimate_lthr_from_efforts, update_zones_with_new_lthr
 

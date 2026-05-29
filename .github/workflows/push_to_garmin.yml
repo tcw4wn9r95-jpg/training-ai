@@ -17,7 +17,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: pip install garminconnect
+        run: pip install "garminconnect==0.3.3"
       - name: Push current plan to Garmin
         env:
           GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}

@@ -19,7 +19,7 @@ jobs:
         with:
           python-version: '3.11'
       - name: Install dependencies
-        run: pip install garminconnect anthropic
+        run: pip install "garminconnect==0.3.3" anthropic
       - name: Generate plan (no Garmin push)
         env:
           GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}

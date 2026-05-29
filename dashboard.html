@@ -96,6 +96,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 
 .chart-box{height:200px;position:relative}
 .chart-sm{height:150px;position:relative}
+.proj-stats{display:flex;gap:12px;margin-bottom:8px}
+.proj-stat{flex:1;background:var(--bg3);border-radius:12px;padding:13px;text-align:center;position:relative}
+.proj-now{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--t2);display:inline-block}
+.proj-arrow{display:inline-block;margin:0 7px;color:var(--blue);font-weight:700}
+.proj-future{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--blue);display:inline-block}
+.proj-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
 
 /* Plan */
 .week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
@@ -104,6 +110,11 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .week-nav .lbl{text-align:center}
 .week-nav .lbl .w{font-size:15px;font-weight:700}
 .week-nav .lbl .d{font-size:11px;color:var(--t3);margin-top:1px}
+.refresh-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
+  padding:11px;margin-bottom:14px;border-radius:11px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.refresh-btn:active{background:var(--bg3)}
+.refresh-btn.spinning #refresh-ic{animation:sp 1s linear infinite}
 
 .day{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
 .day-head{display:flex;align-items:center;gap:13px;padding:14px;cursor:pointer}
@@ -249,6 +260,26 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="chart-box"><canvas id="pmcChart"></canvas></div>
     </div>
 
+    <div class="card" id="proj-card" style="display:none;background:linear-gradient(160deg,#13161b,#15191f);border-color:rgba(59,130,246,.18)">
+      <div class="card-h" style="color:var(--blue)">📈 If you stick to the plan</div>
+      <div class="proj-stats">
+        <div class="proj-stat">
+          <div class="proj-now" id="proj-ctl-now">—</div>
+          <div class="proj-arrow">→</div>
+          <div class="proj-future" id="proj-ctl-future">—</div>
+          <div class="proj-label">Fitness (CTL)</div>
+        </div>
+        <div class="proj-stat">
+          <div class="proj-now" id="proj-tsb-now">—</div>
+          <div class="proj-arrow">→</div>
+          <div class="proj-future" id="proj-tsb-future">—</div>
+          <div class="proj-label">Form (TSB)</div>
+        </div>
+      </div>
+      <div class="chart-sm" style="margin-top:6px"><canvas id="projChart"></canvas></div>
+      <div id="proj-msg" style="font-size:13px;color:var(--t2);line-height:1.5;margin-top:12px;padding:12px;background:rgba(59,130,246,.08);border-radius:10px"></div>
+    </div>
+
     <div class="card">
       <div class="card-h">Weekly Load</div>
       <div class="chart-sm"><canvas id="loadChart"></canvas></div>
@@ -267,6 +298,10 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="lbl"><div class="w" id="plan-wlabel">This Week</div><div class="d" id="plan-wdate"></div></div>
       <button onclick="shiftWeek(1)">›</button>
     </div>
+    <button class="refresh-btn" id="refresh-btn" onclick="refreshPlan()">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="refresh-ic"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2v3h-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <span id="refresh-label">Refresh plan</span>
+    </button>
     <div id="plan-days"></div>
     <div id="push-zone" style="display:none;margin-top:6px">
       <div id="push-status" style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:12px;padding:11px;border-radius:10px;background:var(--bg2)"></div>
@@ -441,6 +476,47 @@ function renderHome(){
 
   drawPMC(pmc);drawLoad();drawMix();
   renderTodayHero();
+  renderProjection(ctl,atl);
+}
+
+// ── PROJECTION: where you'll be if you hit the plan ───────────
+function renderProjection(ctlNow,atlNow){
+  var card=document.getElementById("proj-card");
+  // Weekly planned TSS from the current plan
+  var weekTSS=(planJson||[]).reduce(function(s,x){return s+(x.planned_tss||0);},0);
+  if(!weekTSS||!planJson.length){card.style.display="none";return;}
+  card.style.display="block";
+
+  var dailyTSS=weekTSS/7;
+  var weeks=6; // project 6 weeks forward
+  var c=ctlNow,a=atlNow;
+  var labels=["Now"],ctlLine=[+c.toFixed(1)],tsbLine=[+(c-a).toFixed(1)];
+  for(var d=1;d<=weeks*7;d++){
+    c+=(dailyTSS-c)/42; a+=(dailyTSS-a)/7;
+    if(d%7===0){labels.push("Wk "+(d/7));ctlLine.push(+c.toFixed(1));tsbLine.push(+(c-a).toFixed(1));}
+  }
+  var ctlFuture=Math.round(c), tsbFuture=Math.round(c-a), ctlGain=ctlFuture-Math.round(ctlNow);
+
+  document.getElementById("proj-ctl-now").textContent=Math.round(ctlNow);
+  document.getElementById("proj-ctl-future").textContent=ctlFuture;
+  document.getElementById("proj-tsb-now").textContent=(Math.round(c-a)>=0?"":"")+Math.round(ctlNow-atlNow);
+  document.getElementById("proj-tsb-future").textContent=(tsbFuture>0?"+":"")+tsbFuture;
+
+  var msg;
+  if(ctlGain>=8)msg="🔥 Big fitness jump ahead — +"+ctlGain+" CTL in 6 weeks. That's an aggressive, rewarding build. Keep recovery weeks honest.";
+  else if(ctlGain>=4)msg="💪 Solid, sustainable progress — +"+ctlGain+" CTL over 6 weeks if you stay consistent. This is the sweet spot for durable gains.";
+  else if(ctlGain>=1)msg="📈 Gentle build — +"+ctlGain+" CTL in 6 weeks. Good for maintaining and topping up fitness without burning out.";
+  else if(ctlGain>=-2)msg="⚖️ Maintenance — your fitness holds steady at this load. Great if you're in-season or managing fatigue.";
+  else msg="🌿 Recovery focus — fitness eases back to let you absorb training. Exactly right after a hard block.";
+  document.getElementById("proj-msg").textContent=msg;
+
+  drawProjection(labels,ctlLine,tsbLine);
+}
+function drawProjection(labels,ctlLine,tsbLine){
+  mk("projChart",{type:"line",data:{labels:labels,datasets:[
+    {label:"Projected Fitness",data:ctlLine,borderColor:"#3b82f6",backgroundColor:"rgba(59,130,246,.12)",borderWidth:2,fill:true,tension:.35,pointRadius:2,pointBackgroundColor:"#3b82f6"},
+    {label:"Projected Form",data:tsbLine,borderColor:"#22c55e",borderWidth:1.5,borderDash:[4,3],fill:false,tension:.35,pointRadius:0}
+  ]},options:Object.assign({},CD,{plugins:Object.assign({},CD.plugins,{legend:{display:true,position:"bottom",labels:{color:"#6b7480",font:{size:10},boxWidth:8,padding:12,usePointStyle:true}}})})});
 }
 
 function renderTodayHero(){
@@ -564,6 +640,25 @@ function renderStep(step,sport,col){
   '</div>';
 }
 function toggleDay(h){h.querySelector(".chev").classList.toggle("open");h.nextElementSibling.classList.toggle("open");}
+
+// ── REFRESH ───────────────────────────────────────────────────
+async function refreshPlan(){
+  var btn=document.getElementById("refresh-btn");
+  var label=document.getElementById("refresh-label");
+  btn.classList.add("spinning");label.textContent="Refreshing…";
+  var r=await Promise.all([fetchJSON("weekly_plan.json"),fetchText("weekly_plan.md"),fetchJSON("plan_status.json"),fetchJSON("workouts.json"),fetchJSON("profile.json")]);
+  if(r[0])planJson=r[0];
+  if(r[1])planText=r[1];
+  planStatus=r[2];
+  if(r[3])workouts=r[3];
+  if(r[4]){profile=r[4];FTP=profile.cycling?.ftp_watts||FTP;LTHR=profile.running?.threshold_hr||LTHR;REST_HR=profile.running?.resting_hr||REST_HR;MAX_HR=profile.running?.max_hr||MAX_HR;}
+  weekOffset=0;
+  document.getElementById("plan-wlabel").textContent="This Week";
+  renderPlan();
+  if(workouts.length)renderHome();
+  btn.classList.remove("spinning");label.textContent="Plan updated ✓";
+  setTimeout(function(){label.textContent="Refresh plan";},2000);
+}
 
 // ── PUSH TO GARMIN ────────────────────────────────────────────
 let planStatus=null;
@@ -691,6 +786,28 @@ function addCoachMessage(text,isUser){
   c.appendChild(b);document.getElementById("scroll").scrollTop=document.getElementById("scroll").scrollHeight;
 }
 function askQuick(q){document.getElementById("coach-input").value=q;sendCoachMessage();}
+var EDIT_PLAN_TOOL={
+  name:"edit_plan",
+  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. You must return the COMPLETE updated plan (all sessions for the week, not just the changed one). Each session needs: day, date (YYYY-MM-DD), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, and a steps array. Step targets: running uses target_type 'pace' with target_low/target_high in SECONDS PER KM (low=slower, high=faster); cycling_indoor uses 'power' in watts; cycling_outdoor uses 'heart_rate' in bpm; strength steps need only a description plus a top-level notes field with the full circuit. Use repeat blocks {type:'repeat',repeat_count:N,steps:[...]} for intervals.",
+  input_schema:{
+    type:"object",
+    properties:{
+      summary:{type:"string",description:"One short sentence describing what you changed, shown to Diego."},
+      plan:{type:"array",description:"The complete updated weekly plan array.",items:{
+        type:"object",
+        properties:{
+          day:{type:"string"},date:{type:"string"},sport:{type:"string"},
+          name:{type:"string"},total_duration_secs:{type:"number"},
+          planned_tss:{type:"number"},focus:{type:"string"},notes:{type:"string"},
+          steps:{type:"array",items:{type:"object"}}
+        },
+        required:["day","date","sport","name","total_duration_secs","steps"]
+      }}
+    },
+    required:["summary","plan"]
+  }
+};
+
 async function sendCoachMessage(){
   var input=document.getElementById("coach-input"), send=document.getElementById("coach-send");
   var msg=input.value.trim();if(!msg||!send)return;
@@ -701,21 +818,57 @@ async function sendCoachMessage(){
   var recentW=workouts.filter(w=>new Date(w.date)>=cutoff);
   var tss=recentW.reduce((s,w)=>s+getTSS(w),0), km=recentW.reduce((s,w)=>s+(w.distance_km||0),0);
   var pmc=buildPMC(90),tsb=pmc.T[pmc.T.length-1],ctl=pmc.C[pmc.C.length-1];
-  var sys="You are Coach Claudio, Diego's personal AI endurance coach (running + cycling + strength). Expert, friendly, direct, data-driven. Keep replies to 2-4 sentences unless asked for detail.\n\nContext:\n"+
+  var sys="You are Coach Claudio, Diego's personal AI endurance coach (running + cycling + strength). Expert, friendly, direct, data-driven. Keep chat replies to 2-4 sentences unless asked for detail.\n\n"+
+    "When Diego asks to change his plan in any way, call the edit_plan tool with the FULL updated plan. Keep all unchanged sessions intact. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\nContext:\n"+
     "This week: "+recentW.length+" sessions, "+Math.round(tss)+" TSS, "+km.toFixed(1)+" km\n"+
     "Fitness(CTL) "+Math.round(ctl)+", Form(TSB) "+Math.round(tsb)+"\n"+
-    "FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W, LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm, MaxHR "+(profile.running?profile.running.max_hr:MAX_HR)+"\n"+
-    "Plan: "+(planText?planText.substring(0,400):"Not yet generated");
+    "Current plan JSON: "+JSON.stringify(planJson);
   coachHistory.push({role:"user",content:msg});
   try{
     var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:600,system:sys,messages:coachHistory})});
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL],messages:coachHistory})});
     var data=await res.json();
-    if(data.content&&data.content[0]&&data.content[0].text){var resp=data.content[0].text;addCoachMessage(resp,false);coachHistory.push({role:"assistant",content:resp});if(coachHistory.length>30)coachHistory=coachHistory.slice(-30);}
-    else if(data.error)addCoachMessage("Error: "+data.error.message,false);
+    if(data.error){addCoachMessage("Error: "+data.error.message,false);return;}
+
+    // Process all content blocks: text + tool_use
+    var textParts=[], toolUse=null;
+    (data.content||[]).forEach(function(b){
+      if(b.type==="text")textParts.push(b.text);
+      else if(b.type==="tool_use"&&b.name==="edit_plan")toolUse=b;
+    });
+    coachHistory.push({role:"assistant",content:data.content});
+
+    if(textParts.length)addCoachMessage(textParts.join("\n"),false);
+
+    if(toolUse){
+      var newPlan=toolUse.input.plan, summary=toolUse.input.summary||"Plan updated";
+      // Apply locally and persist to GitHub
+      var ok=await commitPlanEdit(newPlan,summary);
+      // Give the tool result back to Claude so the turn is complete
+      coachHistory.push({role:"user",content:[{type:"tool_result",tool_use_id:toolUse.id,content:ok?"Plan saved successfully.":"Save failed — Diego must add a GitHub token."}]});
+      if(ok){
+        planJson=newPlan;renderPlan();renderHome();
+        addCoachMessage("✅ "+summary+"\n\nTap Refresh on the Plan tab to see it, then push to Garmin when ready.",false);
+      }
+    }
+    if(coachHistory.length>20)coachHistory=coachHistory.slice(-20);
   }catch(e){addCoachMessage("Network error: "+e.message,false);}
   finally{send.disabled=false;send.style.opacity="1";}
+}
+
+async function commitPlanEdit(newPlan,summary){
+  var token=getToken();
+  if(!token){addCoachMessage("⚠️ To save plan edits I need your GitHub token (gear icon, top right).",false);return false;}
+  try{
+    var path="weekly_plan.json";
+    var meta=await(await fetch(API+"/"+path,{headers:{Authorization:"Bearer "+token}})).json();
+    var body=JSON.stringify(newPlan,null,2);
+    var r=await fetch(API+"/"+path,{method:"PUT",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({message:"Coach edit: "+summary,content:btoa(unescape(encodeURIComponent(body))),sha:meta.sha})});
+    return r.ok;
+  }catch(e){addCoachMessage("Save error: "+e.message,false);return false;}
 }
 document.addEventListener("DOMContentLoaded",function(){
   var i=document.getElementById("coach-input");
