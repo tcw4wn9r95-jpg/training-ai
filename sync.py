@@ -1,61 +1,101 @@
+"""
+Coach Claudio — weekly training sync
+Fetches Garmin data, auto-detects FTP/LTHR, asks Claude for a periodised plan,
+and pushes properly structured workouts (with real interval repeats and
+correct pace/power/HR targets) back to Garmin Connect.
+"""
 import os
 import json
-import anthropic
 from datetime import date, timedelta
-from garminconnect.workout import RunningWorkout, CyclingWorkout, WorkoutSegment, create_warmup_step, create_interval_step, create_recovery_step, create_cooldown_step
+
+import anthropic
 from garminconnect import Garmin
+from garminconnect.workout import (
+    RunningWorkout, CyclingWorkout, WorkoutSegment,
+    create_warmup_step, create_interval_step,
+    create_recovery_step, create_cooldown_step, create_repeat_group,
+    TargetType,
+)
 from ftp_detector import estimate_ftp_from_efforts, update_profile_with_new_ftp
 from lthr_detector import estimate_lthr_from_efforts, update_zones_with_new_lthr
-from garminconnect.workout import (
-    RunningWorkout,
-    CyclingWorkout,
-    WorkoutSegment,
-    create_warmup_step,
-    create_interval_step,
-    create_recovery_step,
-    create_cooldown_step,
-    create_repeat_group,
-)
 
-# ── Load profile and availability ─────────────────────────────────────────────
+DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+# ── Load profile & availability ───────────────────────────────────────────────
 with open("profile.json") as f:
     profile = json.load(f)
-
 with open("availability.json") as f:
     availability = json.load(f)
 
-# Load last week's plan for continuity
 last_plan_md = ""
-last_plan_json = []
 if os.path.exists("weekly_plan.md"):
     with open("weekly_plan.md") as f:
         last_plan_md = f.read()
-if os.path.exists("weekly_plan.json"):
+
+# Load multi-week plan history so the plan builds on itself over time
+plan_history = []
+if os.path.exists("plan_history.json"):
     try:
-        with open("weekly_plan.json") as f:
-            last_plan_json = json.load(f)
+        with open("plan_history.json") as f:
+            plan_history = json.load(f)
     except Exception:
-        last_plan_json = []
+        plan_history = []
+
+# Determine where we are in the 4-week periodisation block
+_block_phases = ["base", "build", "peak", "recovery"]
+current_week_index = len(plan_history)
+current_phase = _block_phases[current_week_index % 4]
+next_phase = _block_phases[(current_week_index + 1) % 4]
+
+# Build a compact multi-week summary for the prompt
+if plan_history:
+    history_lines = []
+    for h in plan_history[-6:]:
+        history_lines.append(
+            f"  Week of {h.get('week_of','?')} [{h.get('phase','?')}]: "
+            f"planned {h.get('planned_tss',0)} TSS, actual 7d {h.get('last_7d_actual_tss','?')} TSS, "
+            f"FTP {h.get('ftp','?')}W, LTHR {h.get('lthr','?')}"
+        )
+    history_summary = "\n".join(history_lines)
+else:
+    history_summary = "  (no history yet — this is week 1)"
 
 availability_notes = availability.get("notes", "")
 days_data = availability.get("days", {})
-
 if days_data:
-    available_days  = [d for d, v in days_data.items() if v.get("available")]
-    hours_per_day   = {d: v.get("hours", 1.0) for d, v in days_data.items() if v.get("available")}
+    available_days = [d for d, v in days_data.items() if v.get("available")]
+    hours_per_day = {d: v.get("hours", 1.0) for d, v in days_data.items() if v.get("available")}
 else:
-    available_days  = []
-    hours_per_day   = {}
+    available_days, hours_per_day = [], {}
 
-# If no days set (availability not configured yet), use sensible defaults
 if not available_days:
     print("WARNING: No availability set — using default schedule.")
-    print("Set your availability on the dashboard before Sunday to get a personalised plan.")
     available_days = ["Monday", "Wednesday", "Thursday", "Saturday", "Sunday"]
-    hours_per_day  = {"Monday": 1.0, "Wednesday": 1.0, "Thursday": 1.5, "Saturday": 2.0, "Sunday": 1.5}
+    hours_per_day = {"Monday": 1.0, "Wednesday": 1.0, "Thursday": 1.5, "Saturday": 2.0, "Sunday": 1.5}
 
 print(f"Available days: {available_days}")
 print(f"Hours per day: {hours_per_day}")
+
+FTP = profile["cycling"]["ftp_watts"]
+LTHR = profile["running"]["threshold_hr"]
+REST_HR = profile["running"]["resting_hr"]
+MAX_HR = profile["running"]["max_hr"]
+
+# ── TSS helpers ───────────────────────────────────────────────────────────────
+def hr_tss(duration_min, avg_hr):
+    if not avg_hr or avg_hr < 60 or not duration_min:
+        return 0
+    hrr = (avg_hr - REST_HR) / (MAX_HR - REST_HR)
+    lthr_frac = (LTHR - REST_HR) / (MAX_HR - REST_HR)
+    intensity = hrr / lthr_frac if lthr_frac else 0
+    return round((duration_min / 60) * intensity * intensity * 100, 1)
+
+def power_tss(duration_min, avg_power):
+    """Approximate power-based TSS using avg power as a proxy for NP."""
+    if not avg_power or avg_power < 20 or not duration_min or not FTP:
+        return 0
+    intensity = avg_power / FTP
+    return round((duration_min / 60) * intensity * intensity * 100, 1)
 
 # ── Garmin login ──────────────────────────────────────────────────────────────
 print("Connecting to Garmin Connect...")
@@ -64,178 +104,170 @@ client.login()
 print("Logged in.")
 
 # ── Fetch last 6 weeks of activities ─────────────────────────────────────────
-end_date   = date.today()
+end_date = date.today()
 start_date = end_date - timedelta(days=42)
 activities = client.get_activities_by_date(start_date.isoformat(), end_date.isoformat())
 print(f"Found {len(activities)} activities.")
 
-FTP     = profile["cycling"]["ftp_watts"]
-LTHR    = profile["cycling"]["threshold_hr"]
-REST_HR = profile["running"]["resting_hr"]
-MAX_HR  = profile["running"]["max_hr"]
-
-def hr_tss(duration_min, avg_hr):
-    if not avg_hr or avg_hr < 60 or not duration_min:
-        return 0
-    hrr  = (avg_hr - REST_HR) / (MAX_HR - REST_HR)
-    lthr = (LTHR    - REST_HR) / (MAX_HR - REST_HR)
-    IF   = hrr / lthr
-    return round((duration_min / 60) * IF * IF * 100, 1)
+SPORT_MAP = {
+    "running": "running", "trail_running": "running", "treadmill_running": "running",
+    "cycling": "cycling", "road_biking": "cycling", "mountain_biking": "cycling",
+    "indoor_cycling": "cycling_indoor", "virtual_ride": "cycling_indoor",
+    "strength_training": "strength", "fitness_equipment": "strength",
+}
 
 workouts = []
 for a in activities:
     sport_raw = a.get("activityType", {}).get("typeKey", "unknown")
-    sport_map = {
-        "running": "running", "cycling": "cycling",
-        "road_biking": "cycling", "indoor_cycling": "cycling_indoor",
-        "strength_training": "strength", "fitness_equipment": "strength",
-    }
-    sport        = sport_map.get(sport_raw, sport_raw)
+    sport = SPORT_MAP.get(sport_raw, sport_raw)
     duration_min = round(a.get("duration", 0) / 60, 1)
-    distance_km  = round(a.get("distance", 0) / 1000, 2)
-    avg_hr       = a.get("averageHR", 0)
-    avg_power    = a.get("avgPower", 0)
-    avg_pace     = round(duration_min / distance_km, 2) if sport == "running" and distance_km > 0 else None
-    tss = hr_tss(duration_min, avg_hr)
+    distance_km = round(a.get("distance", 0) / 1000, 2)
+    avg_hr = a.get("averageHR", 0)
+    avg_power = a.get("avgPower", 0) or 0
+    avg_pace = round(duration_min / distance_km, 2) if sport == "running" and distance_km > 0 else None
+
+    if avg_power > 20 and "cycl" in sport:
+        tss = power_tss(duration_min, avg_power)
+    else:
+        tss = hr_tss(duration_min, avg_hr)
 
     workouts.append({
         "date": a.get("startTimeLocal", "")[:10],
-        "sport": sport, "duration_min": duration_min,
-        "distance_km": distance_km, "avg_hr": avg_hr,
-        "max_hr": a.get("maxHR", 0), "avg_pace_min_km": avg_pace,
-        "avg_power_watts": avg_power, "calories": a.get("calories", 0),
-        "tss": tss,
+        "sport": sport, "duration_min": duration_min, "distance_km": distance_km,
+        "avg_hr": avg_hr, "max_hr": a.get("maxHR", 0), "avg_pace_min_km": avg_pace,
+        "avg_power_watts": avg_power, "calories": a.get("calories", 0), "tss": tss,
     })
 
 with open("workouts.json", "w") as f:
     json.dump(workouts, f, indent=2)
 print("Workout history saved.")
 
-# ── Auto-detect FTP from recent power data ────────────────────────────────────
+# ── Auto-detect FTP & LTHR ────────────────────────────────────────────────────
 print("\n--- Checking FTP (Cycling) ---")
-ftp_result, ftp_confidence = estimate_ftp_from_efforts(workouts, ftp_current=FTP)
+ftp_result, _ = estimate_ftp_from_efforts(workouts, ftp_current=FTP)
 ftp_changed = False
 if ftp_result:
-    print(f"FTP increase detected: {ftp_result['old_ftp']}W → {ftp_result['new_ftp']}W")
-    print(f"Confidence: {ftp_result['confidence']}% | Based on {ftp_result['best_effort_duration']}min @ {ftp_result['best_effort_power']}W")
+    print(f"FTP: {ftp_result['old_ftp']}W -> {ftp_result['new_ftp']}W (confidence {ftp_result['confidence']}%)")
     profile = update_profile_with_new_ftp(profile, ftp_result['new_ftp'])
     FTP = profile["cycling"]["ftp_watts"]
     ftp_changed = True
 else:
-    print(f"No FTP change needed (confidence too low or insufficient data)")
+    print("No FTP change.")
 
-# ── Auto-detect LTHR from recent running data ────────────────────────────────
 print("\n--- Checking LTHR (Running) ---")
-lthr_result, lthr_confidence = estimate_lthr_from_efforts(workouts, lthr_current=LTHR, max_hr=MAX_HR, min_duration_min=15)
+lthr_result, _ = estimate_lthr_from_efforts(workouts, lthr_current=LTHR, max_hr=MAX_HR, min_duration_min=15)
 lthr_changed = False
 if lthr_result:
-    print(f"LTHR increase detected: {lthr_result['old_lthr']} → {lthr_result['new_lthr']} bpm")
-    print(f"Confidence: {lthr_result['confidence']}% | {lthr_result['hr_pct_max']}% of max HR")
-    print(f"Based on: {lthr_result['best_effort_duration']}min @ {lthr_result['best_effort_hr']} bpm on {lthr_result['best_effort_date']}")
-    new_running_zones = update_zones_with_new_lthr(
-        profile["running"]["zones"],
-        lthr_result['new_lthr'],
-        profile["running"]["max_hr"],
-        profile["running"]["resting_hr"]
-    )
+    print(f"LTHR: {lthr_result['old_lthr']} -> {lthr_result['new_lthr']} bpm (confidence {lthr_result['confidence']}%)")
+    profile["running"]["zones"] = update_zones_with_new_lthr(
+        profile["running"]["zones"], lthr_result['new_lthr'],
+        profile["running"]["max_hr"], profile["running"]["resting_hr"])
     profile["running"]["threshold_hr"] = lthr_result['new_lthr']
-    profile["running"]["zones"] = new_running_zones
     LTHR = lthr_result['new_lthr']
     lthr_changed = True
 else:
-    print(f"No LTHR change needed (confidence too low or insufficient data)")
+    print("No LTHR change.")
 
-# Save profile if either changed
 if ftp_changed or lthr_changed:
     with open("profile.json", "w") as f:
         json.dump(profile, f, indent=2)
-    print(f"\n✓ Profile updated and saved.")
-    if ftp_changed and lthr_changed:
-        print(f"  • FTP: {ftp_result['old_ftp']}W → {ftp_result['new_ftp']}W")
-        print(f"  • LTHR: {lthr_result['old_lthr']} → {lthr_result['new_lthr']} bpm")
-    elif ftp_changed:
-        print(f"  • FTP: {ftp_result['old_ftp']}W → {ftp_result['new_ftp']}W")
-    else:
-        print(f"  • LTHR: {lthr_result['old_lthr']} → {lthr_result['new_lthr']} bpm")
+    print("Profile updated.")
 
-# ── Build next week date map ──────────────────────────────────────────────────
-today            = date.today()
-days_until_mon   = (7 - today.weekday()) % 7 or 7
-next_monday      = today + timedelta(days=days_until_mon)
-DAY_NAMES        = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"]
-week_dates       = {name: (next_monday + timedelta(days=i)).isoformat() for i, name in enumerate(DAY_NAMES)}
+# ── Build next-week date map ──────────────────────────────────────────────────
+today = date.today()
+days_until_mon = (7 - today.weekday()) % 7 or 7
+next_monday = today + timedelta(days=days_until_mon)
+week_dates = {name: (next_monday + timedelta(days=i)).isoformat() for i, name in enumerate(DAY_NAMES)}
 
 week_schedule = "\n".join(
     f"  {name} {week_dates[name]}: "
-    + ("✅ AVAILABLE — " + str(hours_per_day.get(name, 1.0)) + "h max" if name in available_days else "❌ REST DAY")
+    + (f"AVAILABLE — up to {hours_per_day.get(name, 1.0)}h" if name in available_days else "REST DAY")
     for name in DAY_NAMES
 )
 
-# ── Call Claude — ask for BOTH markdown plan AND structured JSON ──────────────
+recent_4wk = [w for w in workouts if (today - date.fromisoformat(w["date"])).days <= 28] if workouts else []
+last_4wk_tss = round(sum(w["tss"] for w in recent_4wk))
+last_wk_tss = round(sum(w["tss"] for w in workouts if (today - date.fromisoformat(w["date"])).days <= 7)) if workouts else 0
+
+# ── Build the prompt ──────────────────────────────────────────────────────────
 print("Calling Claude for training plan...")
-claude  = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
+claude = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-prompt = f"""You are Diego's personal trainer. Build a detailed weekly training plan.
+prompt = f"""You are Coach Claudio, Diego's expert endurance coach. You write structured, periodised weekly plans the way a professional human coach using TrainingPeaks would. Every session must have purpose, structure, and explicit targets.
 
-## ATHLETE PROFILE
-- Name: Diego | Device: Garmin Fenix
-- Resting HR: {REST_HR} bpm | Max HR: {MAX_HR} bpm | Threshold HR: {LTHR} bpm
-- FTP (cycling): {FTP}W
+## ATHLETE
+Name: Diego | Device: Garmin Fenix
+Resting HR {REST_HR} | Max HR {MAX_HR} | Running threshold HR {LTHR} bpm | FTP {FTP}W
 
-## RUNNING ZONES
-- Z1 Recovery:  < 145 bpm  | pace > 7:00/km
-- Z2 Aerobic:   146–162 bpm | pace 6:15–6:45/km
-- Z3 Tempo:     163–172 bpm | pace 5:30–6:00/km
-- Z4 Threshold: 173–181 bpm | pace 4:45–5:20/km
-- Z5 VO2max:    > 181 bpm   | pace < 4:30/km
+## RUNNING ZONES (pace is primary, HR is reference)
+Z1 Recovery: >7:00/km, <145 bpm
+Z2 Aerobic: 6:15-6:45/km, 146-162 bpm
+Z3 Tempo: 5:30-6:00/km, 163-172 bpm
+Z4 Threshold: 4:45-5:20/km, 173-181 bpm
+Z5 VO2max: <4:30/km, >181 bpm
 
-## CYCLING ZONES (indoor = power, outdoor = HR only)
-- Z1: < 145 bpm | < 106W  (< 55% FTP)
-- Z2: 146–162 bpm | 106–141W (56–75% FTP)
-- Z3: 163–172 bpm | 142–168W (76–90% FTP)
-- Z4: 173–181 bpm | 169–195W (91–105% FTP)
-- Z5: > 181 bpm   | 196–239W (106–120% FTP)
+## CYCLING ZONES (indoor=power, outdoor=HR)
+Z1 <106W / <145 bpm | Z2 106-141W / 146-162 bpm | Z3 142-168W / 163-172 bpm
+Z4 169-195W / 173-181 bpm | Z5 196-239W / >181 bpm
 
 ## STRENGTH EQUIPMENT
-TRX, resistance bands, dumbbells: 6kg, 11kg, 16kg, 22kg
+TRX, resistance bands, dumbbells 6/11/16/22 kg
 
-## LAST WEEK'S PLAN & CONTINUITY
-{f'''Last week's plan (build progressively on this — do NOT repeat the same sessions):
-{last_plan_md[:1500]}
+## RECENT LOAD
+Last 7 days: ~{last_wk_tss} TSS | Last 28 days: ~{last_4wk_tss} TSS
 
-Compliance: compare last week's plan above against the training data below to see what was completed.
-- If all sessions completed → increase load 5-10% this week
-- If sessions were missed → maintain similar load, don't add extra
-- Vary stimulus: rotate between aerobic base, threshold, VO2max, strength focus
-- Follow a 4-week arc: Week 1 base → Week 2 build → Week 3 peak → Week 4 recovery
-''' if last_plan_md else 'No previous plan — this is week 1. Start with a moderate base week.'}
+## MULTI-WEEK HISTORY (this is week {current_week_index + 1} of the athlete's journey)
+You have planned the following weeks already. The plan must CONTINUE this arc — never restart from scratch:
+{history_summary}
+
+## LAST WEEK'S PLAN (continue and progress it, do NOT copy it)
+{last_plan_md[:1500] if last_plan_md else "No previous plan — this is week 1, start with a controlled base week."}
+
+## PERIODIZATION — YOU ARE IN THE *{current_phase.upper()}* PHASE THIS WEEK
+- This week's phase is **{current_phase}** (next week will be {next_phase}). Honour the 4-week arc: base -> build -> peak -> recovery.
+- base: build aerobic volume, mostly easy. build: add threshold/sweet-spot, raise TSS. peak: sharpen with VO2max/race-pace, highest intensity. recovery: cut volume ~40%, easy only, let adaptation land.
+- Progress from last week's ACTUAL load (not just planned). If the athlete completed last week -> raise weekly TSS 5-10% (except recovery weeks, which drop). If sessions were missed -> hold or slightly reduce.
+- Carry forward the training thread: if last week introduced threshold work, this week should develop it (e.g. longer intervals or more reps), not switch to something unrelated.
+- Rotate the *specific* key session so it's fresh, but keep the progression logical.
+- 1-2 hard days max, separated by easy/rest. Most volume easy (80/20).
+- Reflect FTP {FTP}W and LTHR {LTHR} — if these rose recently, the athlete is fitter; nudge targets accordingly.
+
 
 ## NEXT WEEK AVAILABILITY
 {week_schedule}
-Respect available hours strictly. Longer availability = longer or harder session.
-{f"Notes: {availability_notes}" if availability_notes else ""}
+Respect available hours strictly. {f"Athlete note: {availability_notes}" if availability_notes else ""}
 
-## LAST 6 WEEKS OF TRAINING DATA
+## TRAINING DATA (last 6 weeks)
 {json.dumps(workouts, indent=2)}
 
-## OUTPUT FORMAT — YOU MUST RETURN EXACTLY THIS STRUCTURE
-
-Return your response in two clearly separated sections:
+## OUTPUT — TWO SECTIONS
 
 ### SECTION 1: MARKDOWN PLAN
-A detailed human-readable plan for each training day exactly as before,
-with warmup/main set/cooldown, HR zones, pace or power targets, RPE, Garmin alerts, coaching notes.
+For each training day write a clear block:
+### <Day> — <Session name>
+**Sport:** <running / cycling indoor / cycling outdoor / strength>
+**Duration:** <min> | **Planned TSS:** <number> | **Focus:** <one line purpose>
+#### Warm-up
+- target + description
+#### Main set
+- the work, with reps/targets
+#### Cool-down
+- target
+**Coach notes:** one or two sentences on execution/feel.
+
+End with:
+## Week Summary
+- Total planned TSS, the week's focus (base/build/peak/recovery), and one coaching sentence.
 
 ### SECTION 2: JSON PLAN
-After the markdown, output a JSON block wrapped in ```json ... ``` containing ONLY training days (skip rest days).
-Each session must follow this exact schema:
+Then a ```json block with ONLY training days. Follow this schema EXACTLY.
 
-IMPORTANT target_type rules:
-- Running: ALWAYS use "pace" as the primary target. target_low/target_high in SECONDS PER KM (e.g. easy=390=6:30/km, tempo=330=5:30/km, threshold=315=5:15/km). Also add a "notes" field with the HR zone as reference (e.g. "HR Z2 146-162 bpm").
-- Cycling indoor: use "power" with target_low/target_high in WATTS
-- Cycling outdoor: use "heart_rate" with target_low/target_high in BPM
-- Strength: add top-level "notes" with full exercise list; individual steps use "notes" field describing the exercises
-- Always include both target_low and target_high for all non-strength sports
+TARGET RULES (critical — match these precisely):
+- running: every step target_type="pace", target_low/target_high in SECONDS PER KM where target_low is the SLOWER bound and target_high is the FASTER bound (e.g. easy 405/375, threshold 320/285). Put the HR zone in the step "description".
+- cycling_indoor: target_type="power", target_low/target_high in WATTS.
+- cycling_outdoor: target_type="heart_rate", target_low/target_high in BPM.
+- strength: no targets; put exercises in step "description" and a full list in top-level "notes".
+- Use "repeat" blocks for intervals (e.g. 4x8min). Never flatten intervals.
 
 ```json
 [
@@ -245,416 +277,118 @@ IMPORTANT target_type rules:
     "sport": "running",
     "name": "Easy aerobic run",
     "total_duration_secs": 2700,
+    "planned_tss": 35,
+    "focus": "Aerobic base, conversational",
     "steps": [
-      {{
-        "type": "warmup",
-        "duration_secs": 600,
-        "target_type": "heart_rate",
-        "target_low": 130,
-        "target_high": 145
-      }},
-      {{
-        "type": "interval",
-        "duration_secs": 1500,
-        "target_type": "heart_rate",
-        "target_low": 146,
-        "target_high": 162
-      }},
-      {{
-        "type": "cooldown",
-        "duration_secs": 600,
-        "target_type": "heart_rate",
-        "target_low": 100,
-        "target_high": 130
-      }}
+      {{"type": "warmup", "duration_secs": 600, "target_type": "pace", "target_low": 450, "target_high": 405, "description": "Z1 easy, <145 bpm"}},
+      {{"type": "interval", "duration_secs": 1500, "target_type": "pace", "target_low": 405, "target_high": 375, "description": "Z2 aerobic 146-162 bpm"}},
+      {{"type": "cooldown", "duration_secs": 600, "target_type": "pace", "target_low": 480, "target_high": 420, "description": "Z1 easy"}}
     ]
   }},
   {{
     "day": "Wednesday",
     "date": "{week_dates['Wednesday']}",
     "sport": "cycling_indoor",
-    "name": "Threshold intervals",
-    "total_duration_secs": 4500,
+    "name": "Threshold 4x8",
+    "total_duration_secs": 4200,
+    "planned_tss": 75,
+    "focus": "Raise FTP with threshold repeats",
     "steps": [
-      {{
-        "type": "warmup",
-        "duration_secs": 900,
-        "target_type": "power",
-        "target_low": 88,
-        "target_high": 106
-      }},
-      {{
-        "type": "repeat",
-        "repeat_count": 4,
-        "steps": [
-          {{
-            "type": "interval",
-            "duration_secs": 480,
-            "target_type": "power",
-            "target_low": 169,
-            "target_high": 195
-          }},
-          {{
-            "type": "recovery",
-            "duration_secs": 240,
-            "target_type": "power",
-            "target_low": 88,
-            "target_high": 106
-          }}
-        ]
-      }},
-      {{
-        "type": "cooldown",
-        "duration_secs": 600,
-        "target_type": "power",
-        "target_low": 53,
-        "target_high": 88
-      }}
+      {{"type": "warmup", "duration_secs": 900, "target_type": "power", "target_low": 88, "target_high": 120, "description": "Spin up, build to Z2"}},
+      {{"type": "repeat", "repeat_count": 4, "steps": [
+        {{"type": "interval", "duration_secs": 480, "target_type": "power", "target_low": 169, "target_high": 185, "description": "Z4 threshold, smooth 90+ rpm"}},
+        {{"type": "recovery", "duration_secs": 240, "target_type": "power", "target_low": 88, "target_high": 110, "description": "Easy spin"}}
+      ]}},
+      {{"type": "cooldown", "duration_secs": 420, "target_type": "power", "target_low": 70, "target_high": 100, "description": "Easy spin down"}}
     ]
   }},
   {{
-    "day": "Thursday",
-    "date": "2026-06-05",
+    "day": "Friday",
+    "date": "{week_dates['Friday']}",
     "sport": "strength",
-    "name": "Lower body strength circuit",
+    "name": "Lower body & core",
     "total_duration_secs": 2700,
-    "notes": "3 rounds: 12x goblet squat 22kg, 10x Romanian deadlift 22kg, 15x TRX split squat each leg, 20x resistance band glute bridge. Rest 60s between rounds.",
+    "planned_tss": 30,
+    "focus": "Strength endurance for legs and core",
+    "notes": "3 rounds: 12x goblet squat 22kg, 10x RDL 22kg, 15x TRX split squat/leg, 20x band glute bridge, 45s plank. 60s rest between rounds.",
     "steps": [
-      {{
-        "type": "warmup",
-        "duration_secs": 300,
-        "notes": "Dynamic warm-up: leg swings, hip circles, bodyweight squats"
-      }},
-      {{
-        "type": "interval",
-        "duration_secs": 1800,
-        "notes": "Main circuit: 3 rounds of goblet squat, RDL, TRX split squat, glute bridge"
-      }},
-      {{
-        "type": "cooldown",
-        "duration_secs": 600,
-        "notes": "Stretch: hip flexors, hamstrings, glutes"
-      }}
+      {{"type": "warmup", "duration_secs": 300, "description": "Leg swings, hip circles, bodyweight squats"}},
+      {{"type": "interval", "duration_secs": 1980, "description": "3 rounds of the main circuit"}},
+      {{"type": "cooldown", "duration_secs": 420, "description": "Stretch hips, hamstrings, glutes"}}
     ]
   }}
 ]
 ```
 
-Sport values: "running", "cycling_indoor", "cycling_outdoor", "strength"
-Target types: "heart_rate" (use bpm), "power" (use watts, indoor cycling only), "pace" (use seconds per km)
-Step types: "warmup", "interval", "recovery", "cooldown", "repeat"
-Strength sessions: use a single interval step with target_type "heart_rate" and duration only — no power/pace.
-Only include days in available_days. Do not include rest days in the JSON.
+Only include available days. Use realistic pace seconds-per-km values for Diego.
 """
 
 message = claude.messages.create(
     model="claude-haiku-4-5-20251001",
-    max_tokens=6000,
-    messages=[{"role": "user", "content": prompt}]
+    max_tokens=8000,
+    messages=[{"role": "user", "content": prompt}],
 )
-
 response = message.content[0].text
 print("Plan received from Claude.")
 
-# ── Split markdown and JSON ───────────────────────────────────────────────────
-plan_md   = response
+# ── Split markdown & JSON ─────────────────────────────────────────────────────
+plan_md = response
 plan_json = []
-
 if "```json" in response:
-    parts     = response.split("```json")
-    plan_md   = parts[0].strip()
+    parts = response.split("```json")
+    plan_md = parts[0].strip()
     json_part = parts[1].split("```")[0].strip()
     try:
         plan_json = json.loads(json_part)
-        print(f"Parsed {len(plan_json)} sessions from Claude's JSON.")
+        print(f"Parsed {len(plan_json)} sessions.")
     except json.JSONDecodeError as e:
-        print(f"WARNING: Could not parse JSON plan: {e}")
-        plan_json = []
+        print(f"WARNING: JSON parse failed: {e}")
 
-# Save both
 with open("weekly_plan.md", "w") as f:
     f.write(f"# Training Plan — Week of {next_monday.strftime('%d %B %Y')}\n\n")
     f.write(f"**Generated:** {date.today().strftime('%d %B %Y')}  \n")
     f.write(f"**Available days:** {', '.join(available_days)}  \n\n---\n\n")
     f.write(plan_md)
-
 with open("weekly_plan.json", "w") as f:
     json.dump(plan_json, f, indent=2)
-
 print("Plans saved.")
 
-# ── Push workouts to Garmin Connect ──────────────────────────────────────────
-from garminconnect.workout import TargetType
+# ── Mark plan as DRAFT (awaiting review) — do NOT push to Garmin here ─────────
+# The push happens on demand when Diego taps "Let's do this!" in the app,
+# after he's reviewed and optionally adjusted the plan via Coach Claudio.
+plan_status = {
+    "status": "draft",
+    "generated": date.today().isoformat(),
+    "week_of": next_monday.isoformat(),
+    "sessions": len(plan_json),
+    "pushed": False,
+}
+with open("plan_status.json", "w") as f:
+    json.dump(plan_status, f, indent=2)
+print("Plan marked as DRAFT — review it in the app, then tap 'Let's do this!' to push.")
 
-def make_target(step, sport="running"):
-    """Build a Garmin target_type dict from a Claude step.
-    
-    For running: pace (speed) is always the primary target.
-    For indoor cycling: power is the primary target.
-    For outdoor cycling: heart rate is the primary target.
-    """
-    tt   = step.get("target_type", "")
-    low  = step.get("target_low", 0)
-    high = step.get("target_high", 0)
+# ── Archive to plan history so weeks build on each other ─────────────────────
+# plan_history was already loaded at the top; append this week's snapshot.
+snapshot = {
+    "week_of": next_monday.isoformat(),
+    "generated": date.today().isoformat(),
+    "phase": current_phase,
+    "planned_tss": sum(s.get("planned_tss", 0) for s in plan_json),
+    "last_7d_actual_tss": last_wk_tss,
+    "last_28d_actual_tss": last_4wk_tss,
+    "ftp": FTP,
+    "lthr": LTHR,
+    "sessions": [
+        {"day": s.get("day"), "sport": s.get("sport"), "name": s.get("name"),
+         "planned_tss": s.get("planned_tss"), "focus": s.get("focus")}
+        for s in plan_json
+    ],
+}
+plan_history.append(snapshot)
+plan_history = plan_history[-12:]  # keep last 12 weeks
+with open("plan_history.json", "w") as f:
+    json.dump(plan_history, f, indent=2)
+print(f"Archived to plan history ({len(plan_history)} weeks tracked, phase: {current_phase}).")
 
-    # Running: always prefer pace target
-    if sport == "running":
-        if tt == "pace" and low and high:
-            # Garmin speed in m/s; Claude gives sec/km
-            # Slower pace = lower speed, faster pace = higher speed
-            speed_low  = round(1000 / high, 4)
-            speed_high = round(1000 / low, 4)
-            return {
-                "workoutTargetTypeId": TargetType.SPEED,
-                "workoutTargetTypeKey": "speed.zone",
-                "targetValueOne": speed_low,
-                "targetValueTwo": speed_high,
-            }
-        elif tt == "heart_rate" and low and high:
-            # Claude sent HR for running — still use it but this shouldn't happen
-            # after prompt update
-            return {
-                "workoutTargetTypeId": TargetType.HEART_RATE,
-                "workoutTargetTypeKey": "heart.rate.zone",
-                "targetValueOne": low,
-                "targetValueTwo": high,
-            }
-
-    # Indoor cycling: always power
-    elif sport == "cycling_indoor":
-        if tt == "power" and low and high:
-            return {
-                "workoutTargetTypeId": TargetType.POWER,
-                "workoutTargetTypeKey": "power.zone",
-                "targetValueOne": low,
-                "targetValueTwo": high,
-            }
-
-    # Outdoor cycling: always HR
-    elif sport in ("cycling_outdoor", "cycling"):
-        if tt == "heart_rate" and low and high:
-            return {
-                "workoutTargetTypeId": TargetType.HEART_RATE,
-                "workoutTargetTypeKey": "heart.rate.zone",
-                "targetValueOne": low,
-                "targetValueTwo": high,
-            }
-
-    # Generic fallback
-    if tt == "pace" and low and high:
-        speed_low  = round(1000 / high, 4)
-        speed_high = round(1000 / low, 4)
-        return {
-            "workoutTargetTypeId": TargetType.SPEED,
-            "workoutTargetTypeKey": "speed.zone",
-            "targetValueOne": speed_low,
-            "targetValueTwo": speed_high,
-        }
-    elif tt == "power" and low and high:
-        return {
-            "workoutTargetTypeId": TargetType.POWER,
-            "workoutTargetTypeKey": "power.zone",
-            "targetValueOne": low,
-            "targetValueTwo": high,
-        }
-    elif tt == "heart_rate" and low and high:
-        return {
-            "workoutTargetTypeId": TargetType.HEART_RATE,
-            "workoutTargetTypeKey": "heart.rate.zone",
-            "targetValueOne": low,
-            "targetValueTwo": high,
-        }
-
-    return {
-        "workoutTargetTypeId": TargetType.NO_TARGET,
-        "workoutTargetTypeKey": "no.target",
-    }
-
-def make_strength_workout_json(name, steps_data, session_date, notes=""):
-    """Build a strength workout as a plain JSON dict for upload_workout().
-    Uses sportTypeId 4 (FITNESS_EQUIPMENT) which Garmin accepts for strength.
-    """
-    total = sum(s.get("duration_secs", 600) for s in steps_data) or 2700
-
-    steps = []
-    for i, step in enumerate(steps_data):
-        duration  = float(step.get("duration_secs", 600))
-        step_type = step.get("type", "interval")
-        label     = step.get("notes", "")
-
-        # Map to Garmin step type IDs
-        type_id  = 1 if step_type == "warmup" else 2 if step_type == "cooldown" else 3
-        type_key = "warmup" if step_type == "warmup" else "cooldown" if step_type == "cooldown" else "interval"
-
-        steps.append({
-            "type": "ExecutableStepDTO",
-            "stepOrder": i + 1,
-            "stepType": {"stepTypeId": type_id, "stepTypeKey": type_key},
-            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time", "displayable": True},
-            "endConditionValue": duration,
-            "targetType": {"workoutTargetTypeId": 1, "workoutTargetTypeKey": "no.target"},
-            "description": label[:100] if label else "",
-        })
-
-    if not steps:
-        steps = [{
-            "type": "ExecutableStepDTO",
-            "stepOrder": 1,
-            "stepType": {"stepTypeId": 3, "stepTypeKey": "interval"},
-            "endCondition": {"conditionTypeId": 2, "conditionTypeKey": "time", "displayable": True},
-            "endConditionValue": float(total),
-            "targetType": {"workoutTargetTypeId": 1, "workoutTargetTypeKey": "no.target"},
-            "description": notes[:100] if notes else "Strength session",
-        }]
-
-    return {
-        "workoutName": name,
-        "description": notes[:500] if notes else "",
-        "sportType": {"sportTypeId": 4, "sportTypeKey": "fitness_equipment"},
-        "estimatedDurationInSecs": int(total),
-        "workoutSegments": [{
-            "segmentOrder": 1,
-            "sportType": {"sportTypeId": 4, "sportTypeKey": "fitness_equipment"},
-            "workoutSteps": steps,
-        }],
-    }
-
-if not plan_json:
-    print(f"\nNo sessions to upload. Check weekly_plan.json.")
-else:
-    # ── Clean up any existing workouts for this week ───────────────────────
-    # Prevents duplicates if the workflow runs multiple times
-    print("\nChecking for existing workouts to clean up...")
-    try:
-        existing = client.get_workouts(0, 100)
-        plan_names = {s.get("name", "") for s in plan_json}
-        
-        # Also get scheduled workouts for this month and unschedule them
-        from datetime import date
-        today = date.today()
-        scheduled = client.get_scheduled_workouts(today.year, today.month)
-        scheduled_items = scheduled.get("calendarItems", []) if isinstance(scheduled, dict) else []
-        
-        removed = 0
-        for item in scheduled_items:
-            item_name = item.get("title", "")
-            if item_name in plan_names:
-                try:
-                    client.unschedule_workout(item["id"])
-                    removed += 1
-                except Exception:
-                    pass
-        
-        for workout in existing:
-            if workout.get("workoutName", "") in plan_names:
-                try:
-                    client.delete_workout(workout["workoutId"])
-                    removed += 1
-                except Exception:
-                    pass
-        
-        if removed:
-            print(f"  Removed {removed} existing workout(s) for this week.")
-        else:
-            print("  No existing workouts found for this week.")
-    except Exception as e:
-        print(f"  Warning: cleanup failed ({str(e)[:60]}), continuing anyway.")
-
-    print(f"\nPushing {len(plan_json)} workouts to Garmin Connect...")
-    uploaded = 0
-
-    for session in plan_json:
-        sport        = session.get("sport", "running")
-        name         = session.get("name", "Training session")
-        session_date = session.get("date", "")
-        total_secs   = session.get("total_duration_secs", 3600)
-        steps_data   = session.get("steps", [])
-        notes        = session.get("notes", "")
-
-        try:
-            # ── Strength ────────────────────────────────────────────────────
-            if sport == "strength":
-                workout_json = make_strength_workout_json(name, steps_data, session_date, notes)
-                result = client.upload_workout(workout_json)
-                workout_id = result.get("workoutId") if isinstance(result, dict) else None
-                if workout_id and session_date:
-                    client.schedule_workout(workout_id, session_date)
-                    print(f"  ✓ {name} (strength) → uploaded with notes, scheduled {session_date}")
-                    uploaded += 1
-                elif workout_id:
-                    print(f"  ✓ {name} (strength) → uploaded with notes")
-                    uploaded += 1
-                else:
-                    print(f"  ⚠️  {name}: unclear response")
-                continue
-
-            # ── Running / Cycling ────────────────────────────────────────────
-            steps = []
-            for i, step in enumerate(steps_data):
-                step_type = step.get("type", "interval")
-                duration  = float(step.get("duration_secs", 600))
-                order     = i + 1
-                target    = make_target(step, sport)
-
-                if step_type == "warmup":
-                    steps.append(create_warmup_step(duration, order, target))
-                elif step_type == "cooldown":
-                    steps.append(create_cooldown_step(duration, order, target))
-                elif step_type == "recovery":
-                    steps.append(create_recovery_step(duration, order, target))
-                else:
-                    steps.append(create_interval_step(duration, order, target))
-
-            if not steps:
-                steps = [create_interval_step(float(total_secs), 1)]
-
-            if sport == "running":
-                segment = WorkoutSegment(
-                    segmentOrder=1,
-                    sportType={"sportTypeId": 1, "sportTypeKey": "running"},
-                    workoutSteps=steps
-                )
-                workout = RunningWorkout(
-                    workoutName=name,
-                    estimatedDurationInSecs=total_secs,
-                    workoutSegments=[segment]
-                )
-                result = client.upload_running_workout(workout)
-
-            elif sport in ("cycling_indoor", "cycling_outdoor", "cycling"):
-                segment = WorkoutSegment(
-                    segmentOrder=1,
-                    sportType={"sportTypeId": 2, "sportTypeKey": "cycling"},
-                    workoutSteps=steps
-                )
-                workout = CyclingWorkout(
-                    workoutName=name,
-                    estimatedDurationInSecs=total_secs,
-                    workoutSegments=[segment]
-                )
-                result = client.upload_cycling_workout(workout)
-
-            else:
-                print(f"  Skipping {name} ({sport}) — unsupported type.")
-                continue
-
-            workout_id = result.get("workoutId") if isinstance(result, dict) else None
-            if workout_id and session_date:
-                client.schedule_workout(workout_id, session_date)
-                print(f"  ✓ {name} ({sport}) → {len(steps)} steps with targets, scheduled {session_date}")
-                uploaded += 1
-            elif workout_id:
-                print(f"  ✓ {name} ({sport}) → {len(steps)} steps with targets, uploaded")
-                uploaded += 1
-            else:
-                print(f"  ⚠️  {name}: unclear response: {result}")
-
-        except Exception as e:
-            print(f"  ❌ {name}: {str(e)[:120]}")
-
-    print(f"\nGarmin: {uploaded}/{len(plan_json)} workouts pushed.")
-    if uploaded > 0:
-        print("Sync your Fenix to see workouts on your watch.")
-
-print("\n" + "="*60)
-print(plan_md[:1000] + "..." if len(plan_md) > 1000 else plan_md)
+print("\n" + "=" * 60)
+print(plan_md[:800] + ("..." if len(plan_md) > 800 else ""))

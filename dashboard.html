@@ -5,1205 +5,733 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<meta name="theme-color" content="#0a0a0f">
-<title>Diego · Training</title>
-<link rel="apple-touch-icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 120 120'%3E%3Crect width='120' height='120' rx='26' fill='%230a0a0f'/%3E%3Ccircle cx='60' cy='60' r='34' fill='none' stroke='%232563eb' stroke-width='5'/%3E%3Cpath d='M46 60 L56 48 L66 64 L73 55' stroke='%2334d399' stroke-width='4' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E">
+<title>Coach Claudio</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{
-  --bg:#0a0a0f;
-  --bg2:#111118;
-  --bg3:#18181f;
-  --card:#16161d;
-  --border:rgba(255,255,255,0.07);
-  --border2:rgba(255,255,255,0.12);
-  --text:#f0f0f5;
-  --text2:#a0a0b0;
-  --text3:#606070;
-  --blue:#2563eb;
-  --blue-light:#4c9be8;
-  --blue-bg:rgba(37,99,235,0.12);
-  --blue-bg2:rgba(76,155,232,0.18);
-  --green:#34d399;
-  --green-bg:rgba(52,211,153,0.12);
-  --amber:#f59e0b;
-  --amber-bg:rgba(245,158,11,0.12);
-  --red:#f87171;
-  --red-bg:rgba(248,113,113,0.12);
-  --purple:#818cf8;
-  --nav-h:60px;
-  --top-h:52px;
+  --bg:#0b0d10; --bg2:#13161b; --bg3:#1c2127; --line:rgba(255,255,255,.07);
+  --t1:#f4f6f8; --t2:#aeb6c0; --t3:#6b7480;
+  --blue:#3b82f6; --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --violet:#8b5cf6;
+  --run:#3b82f6; --bike:#22c55e; --strength:#f59e0b;
   --r:14px;
-  --r-lg:18px;
-  --r-xl:22px;
-  --font:-apple-system,BlinkMacSystemFont,'SF Pro Display','SF Pro Text','Helvetica Neue',sans-serif;
-  --font-mono:'SF Mono','Fira Code',monospace;
+  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,monospace;
 }
-*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
-html,body{height:100%;background:var(--bg);color:var(--text);font-family:var(--font);font-size:15px;line-height:1.5;overscroll-behavior:none}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{background:var(--bg);color:var(--t1);font-family:var(--font);
+  font-size:15px;line-height:1.5;overflow:hidden;
+  -webkit-font-smoothing:antialiased;
+  background-image:radial-gradient(circle at 50% 0%,rgba(59,130,246,.06),transparent 55%);}
 
-/* ── TOPBAR ── */
-.topbar{
-  position:fixed;top:0;left:0;right:0;z-index:200;
-  height:var(--top-h);
-  background:rgba(10,10,15,0.85);
-  backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  border-bottom:1px solid var(--border);
-  display:flex;align-items:center;padding:0 20px;gap:10px;
-}
-.logo{display:flex;align-items:center;gap:9px}
-.logo-mark{width:28px;height:28px;flex-shrink:0}
-.logo-text{font-size:16px;font-weight:700;letter-spacing:-0.5px;color:var(--text)}
-.logo-text span{color:var(--blue-light)}
-.topbar-right{margin-left:auto;display:flex;align-items:center;gap:10px}
-.status-chip{
-  display:flex;align-items:center;gap:5px;
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:20px;padding:4px 10px;
-  font-size:11px;color:var(--text2);
-}
-.status-dot{width:6px;height:6px;border-radius:50%;background:var(--green);flex-shrink:0}
-.status-dot.spin{background:var(--amber);animation:glow 1.2s ease-in-out infinite}
-@keyframes glow{0%,100%{opacity:1;box-shadow:0 0 0 0 rgba(245,158,11,0)}50%{opacity:.7;box-shadow:0 0 0 3px rgba(245,158,11,0.3)}}
-.icon-btn{
-  width:32px;height:32px;border-radius:50%;border:1px solid var(--border);
-  background:var(--bg3);color:var(--text2);cursor:pointer;
-  display:flex;align-items:center;justify-content:center;font-size:14px;
-}
+/* Top bar */
+.topbar{position:fixed;top:0;left:0;right:0;height:calc(54px + env(safe-area-inset-top));
+  padding-top:env(safe-area-inset-top);
+  display:flex;align-items:center;gap:10px;padding-left:18px;padding-right:14px;
+  background:rgba(11,13,16,.82);backdrop-filter:saturate(180%) blur(20px);
+  border-bottom:1px solid var(--line);z-index:50}
+.logo-mark{width:30px;height:30px;border-radius:9px;
+  background:linear-gradient(135deg,#1e40af,#3b82f6);
+  display:flex;align-items:center;justify-content:center;
+  box-shadow:0 2px 10px rgba(59,130,246,.4)}
+.brand{font-size:16px;font-weight:700;letter-spacing:-.3px}
+.brand span{color:var(--t3);font-weight:500}
+.gear{margin-left:auto;width:36px;height:36px;border-radius:10px;border:none;
+  background:var(--bg2);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer}
 
-/* ── SETUP DRAWER ── */
-.setup-drawer{
-  position:fixed;top:var(--top-h);left:0;right:0;z-index:190;
-  background:var(--bg2);border-bottom:1px solid var(--border);
-  padding:16px 20px;display:none;flex-direction:column;gap:12px;
-  box-shadow:0 8px 32px rgba(0,0,0,0.6);
-}
-.setup-drawer.open{display:flex}
-.setup-row{display:flex;gap:8px;align-items:center}
-.setup-label{font-size:12px;color:var(--text2);white-space:nowrap;font-weight:500}
-.setup-input{
-  flex:1;background:var(--bg3);border:1px solid var(--border2);
-  border-radius:10px;padding:9px 12px;color:var(--text);
-  font-size:12px;font-family:var(--font-mono);outline:none;
-}
-.setup-input:focus{border-color:var(--blue-light);box-shadow:0 0 0 3px rgba(76,155,232,0.15)}
-.setup-hint{font-size:11px;color:var(--text3);line-height:1.6}
-.setup-hint a{color:var(--blue-light)}
-
-/* ── SCROLL ── */
-.scroll-area{
-  position:fixed;top:var(--top-h);bottom:var(--nav-h);
-  left:0;right:0;overflow-y:auto;-webkit-overflow-scrolling:touch;
-}
-.page{display:none;padding:16px 16px 24px}
+/* Scroll area */
+#scroll{position:fixed;top:calc(54px + env(safe-area-inset-top));
+  bottom:calc(64px + env(safe-area-inset-bottom));left:0;right:0;
+  overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px 30px}
+.page{display:none;animation:fade .35s ease}
 .page.active{display:block}
+@keyframes fade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
-/* ── BOTTOM NAV ── */
-.bottom-nav{
-  position:fixed;bottom:0;left:0;right:0;z-index:200;
-  height:var(--nav-h);
-  background:rgba(17,17,24,0.92);
-  backdrop-filter:saturate(180%) blur(20px);
-  -webkit-backdrop-filter:saturate(180%) blur(20px);
-  border-top:1px solid var(--border);
-  display:flex;align-items:stretch;
+/* Bottom nav */
+.nav{position:fixed;bottom:0;left:0;right:0;height:calc(64px + env(safe-area-inset-bottom));
   padding-bottom:env(safe-area-inset-bottom);
-}
-.nav-item{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  gap:4px;cursor:pointer;color:var(--text3);background:none;border:none;
-  transition:color .2s;padding-bottom:2px;
-}
-.nav-item.active{color:var(--blue-light)}
-.nav-icon{width:22px;height:22px}
-.nav-label{font-size:9px;font-weight:500;letter-spacing:.4px;text-transform:uppercase}
+  display:flex;background:rgba(11,13,16,.9);backdrop-filter:saturate(180%) blur(20px);
+  border-top:1px solid var(--line);z-index:50}
+.nav button{flex:1;background:none;border:none;color:var(--t3);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
+  font-size:10px;font-weight:600;cursor:pointer;letter-spacing:.2px}
+.nav button.active{color:var(--blue)}
+.nav button svg{width:22px;height:22px}
 
-/* ── CARD ── */
-.card{
-  background:var(--card);
-  border:1px solid var(--border);
-  border-radius:var(--r-lg);
-  padding:16px 18px;
-  margin-bottom:12px;
-}
-.card-title{
-  font-size:11px;font-weight:600;
-  color:var(--text3);
-  text-transform:uppercase;letter-spacing:.8px;
-  margin-bottom:14px;
-}
-.card + .card{margin-top:0}
+/* Cards */
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);
+  padding:16px;margin-bottom:14px}
+.card-h{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;
+  color:var(--t3);margin-bottom:12px}
 
-/* ── KPI GRID ── */
-.kpi-grid{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:12px}
-.kpi{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r);padding:14px 14px 12px;
-  position:relative;overflow:hidden;
-}
-.kpi::before{
-  content:'';position:absolute;top:0;left:0;right:0;height:2px;
-  background:var(--kpi-color,var(--blue-light));opacity:.5;border-radius:var(--r) var(--r) 0 0;
-}
-.kpi-label{font-size:10px;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:6px;font-weight:500}
-.kpi-value{font-size:24px;font-weight:700;letter-spacing:-0.8px;line-height:1;color:var(--kpi-color,var(--text))}
-.kpi-unit{font-size:11px;font-weight:500;color:var(--text3);margin-left:1px}
-.kpi-sub{font-size:10px;color:var(--text3);margin-top:4px;font-weight:400}
+/* Hero — today's session */
+.hero{background:linear-gradient(160deg,#13161b,#171b22);
+  border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
+.hero::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--blue))}
+.hero-top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
+.hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3)}
+.hero-pill{margin-left:auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
+.hero-title{font-size:23px;font-weight:800;letter-spacing:-.5px;margin:6px 0 3px;line-height:1.15}
+.hero-sub{font-size:13px;color:var(--t2)}
+.hero-stats{display:flex;gap:18px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
+.hero-stat .v{font-size:18px;font-weight:800;font-family:var(--mono)}
+.hero-stat .l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
 
-/* ── SECTION LABEL ── */
-.section-label{font-size:13px;font-weight:600;color:var(--text2);margin:20px 0 10px;letter-spacing:-.1px}
+/* Form/readiness banner */
+.form-banner{display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--r);
+  background:var(--bg2);border:1px solid var(--line);margin-bottom:14px}
+.form-gauge{width:58px;height:58px;min-width:58px;border-radius:50%;
+  display:flex;align-items:center;justify-content:center;font-family:var(--mono);
+  font-size:18px;font-weight:800;position:relative}
+.form-info{flex:1}
+.form-state{font-size:16px;font-weight:700}
+.form-desc{font-size:12px;color:var(--t2);margin-top:2px;line-height:1.4}
 
-/* ── CHARTS ── */
-.chart-wrap{position:relative;height:200px}
-.chart-wrap-sm{position:relative;height:160px}
-.chart-wrap-xs{position:relative;height:130px}
+/* KPI strip */
+.kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
+.kpi{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 12px;text-align:center}
+.kpi .v{font-size:21px;font-weight:800;font-family:var(--mono);letter-spacing:-.5px}
+.kpi .l{font-size:9.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
+.kpi .d{font-size:10px;font-weight:600;margin-top:3px}
 
-/* ── PLAN DAY CARDS ── */
-.plan-day{
-  background:var(--card);border:1px solid var(--border);
-  border-radius:var(--r-lg);margin-bottom:10px;overflow:hidden;
-}
-.plan-day-header{
-  display:flex;align-items:center;gap:12px;
-  padding:14px 16px;cursor:pointer;
-}
-.plan-day-header:active{background:rgba(255,255,255,0.03)}
-.day-icon{
-  width:36px;height:36px;border-radius:10px;
-  display:flex;align-items:center;justify-content:center;flex-shrink:0;
-}
-.day-icon svg{width:18px;height:18px}
-.day-info{flex:1;min-width:0}
-.day-name{font-size:15px;font-weight:600;letter-spacing:-.2px}
-.day-meta{font-size:12px;color:var(--text2);margin-top:2px}
-.day-pill{
-  font-size:10px;font-weight:600;padding:3px 9px;border-radius:20px;
-  letter-spacing:.2px;
-}
-.pill-run{background:rgba(37,99,235,0.2);color:var(--blue-light)}
-.pill-cycle{background:rgba(52,211,153,0.15);color:var(--green)}
-.pill-strength{background:rgba(245,158,11,0.15);color:var(--amber)}
-.pill-rest{background:rgba(255,255,255,0.05);color:var(--text3)}
-.day-chevron{color:var(--text3);transition:transform .25s;flex-shrink:0}
-.day-chevron svg{width:16px;height:16px}
-.plan-day-header.open .day-chevron{transform:rotate(90deg)}
-.plan-day-body{
-  display:none;padding:0 16px 16px;
-  border-top:1px solid var(--border);
-  font-size:13px;line-height:1.85;color:var(--text2);
-}
-.plan-day-body.open{display:block;padding-top:14px}
-.plan-day-body strong{color:var(--text);font-weight:600}
-.plan-day-body .section-h{
-  font-size:10px;font-weight:700;color:var(--text3);
-  text-transform:uppercase;letter-spacing:.8px;
-  margin:12px 0 5px;
-}
+.chart-box{height:200px;position:relative}
+.chart-sm{height:150px;position:relative}
 
-/* ── AVAILABILITY ── */
-.avail-grid{
-  display:grid;grid-template-columns:repeat(7,1fr);
-  gap:7px;margin-bottom:16px;
-}
-.av-cell{
-  background:var(--bg3);border:1.5px solid var(--border);
-  border-radius:12px;padding:10px 4px 8px;
-  text-align:center;cursor:pointer;user-select:none;
-  transition:background .15s,border-color .15s;
-}
-.av-cell.on{
-  background:rgba(37,99,235,0.15);
-  border-color:rgba(76,155,232,0.5);
-}
-.av-cell .av-d{font-size:9px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.4px;display:block}
-.av-cell.on .av-d{color:var(--blue-light)}
-.av-cell .av-n{font-size:13px;font-weight:700;display:block;margin:3px 0 4px;letter-spacing:-.2px}
-.av-cell .av-h{font-size:10px;color:var(--text3);display:block;min-height:14px}
-.av-cell.on .av-h{color:var(--blue-light)}
-.stepper{display:flex;align-items:center;justify-content:center;gap:3px;margin-top:6px}
-.stepper-btn{
-  width:20px;height:20px;border-radius:6px;
-  background:rgba(255,255,255,0.06);border:1px solid var(--border2);
-  color:var(--text);cursor:pointer;font-size:13px;
-  display:flex;align-items:center;justify-content:center;
-  font-weight:500;line-height:1;
-}
-.stepper-btn:active{background:rgba(76,155,232,0.2)}
-.stepper-val{font-size:11px;font-weight:700;color:var(--blue-light);min-width:22px;text-align:center}
-.avail-notes{
-  width:100%;background:var(--bg3);border:1px solid var(--border);
-  border-radius:12px;padding:12px 14px;color:var(--text);
-  font-size:13px;resize:none;outline:none;
-  font-family:var(--font);margin-bottom:14px;line-height:1.6;
-}
-.avail-notes:focus{border-color:rgba(76,155,232,0.5);box-shadow:0 0 0 3px rgba(76,155,232,0.1)}
-.save-status{font-size:12px;margin-top:10px;min-height:16px;line-height:1.4;color:var(--text3)}
-.save-status.ok{color:var(--green)}
-.save-status.err{color:var(--red)}
+/* Plan */
+.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.week-nav button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--t2);font-size:18px;cursor:pointer}
+.week-nav .lbl{text-align:center}
+.week-nav .lbl .w{font-size:15px;font-weight:700}
+.week-nav .lbl .d{font-size:11px;color:var(--t3);margin-top:1px}
 
-/* ── BUTTONS ── */
-.btn-primary{
-  width:100%;padding:14px;border:none;border-radius:12px;
-  background:var(--blue);color:#fff;
-  font-size:15px;font-weight:600;font-family:var(--font);
-  cursor:pointer;letter-spacing:-.1px;
-  transition:background .15s,transform .1s;
-}
-.btn-primary:active{background:#1d4ed8;transform:scale(0.98)}
+.day{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
+.day-head{display:flex;align-items:center;gap:13px;padding:14px;cursor:pointer}
+.day-ic{width:42px;height:42px;min-width:42px;border-radius:11px;display:flex;align-items:center;justify-content:center}
+.day-ic svg{width:21px;height:21px}
+.day-meta{flex:1;min-width:0}
+.day-name{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px}
+.day-line{font-size:12px;color:var(--t3);margin-top:2px}
+.chev{color:var(--t3);transition:transform .25s}
+.chev.open{transform:rotate(90deg)}
+.day-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
+.day-body.open{max-height:1500px}
+.day-inner{padding:0 14px 14px}
+.step{background:var(--bg3);border-radius:10px;padding:11px 13px;margin-bottom:8px}
+.step-h{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.step-dot{width:8px;height:8px;border-radius:50%}
+.step-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--t2)}
+.step-dur{margin-left:auto;font-size:12px;font-family:var(--mono);color:var(--t3)}
+.step-tgt{font-size:14px;font-weight:600;font-family:var(--mono);color:var(--t1)}
+.step-desc{font-size:12px;color:var(--t3);margin-top:3px}
+.coach-note{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);
+  border-radius:10px;padding:11px 13px;margin-top:8px;font-size:13px;color:var(--t2);line-height:1.5}
 
-/* ── COMPLIANCE ── */
-.comp-item{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 0;border-bottom:1px solid var(--border);
-}
-.comp-item:last-child{border-bottom:none}
-.comp-icon-wrap{width:38px;height:38px;min-width:38px;display:flex;align-items:center;justify-content:center;border-radius:8px;flex-shrink:0;}
-.comp-icon-wrap svg{width:18px;height:18px}
-.comp-info{flex:1;min-width:0}
-.comp-title{font-size:13px;font-weight:600}
-.comp-sub{font-size:11px;color:var(--text3);margin-top:2px}
-.comp-bar-track{flex:0.7;height:6px;background:rgba(255,255,255,0.08);border-radius:3px;overflow:hidden;flex-shrink:0}
-.comp-bar-fill{height:100%;border-radius:2px;transition:width .4s}
-.comp-check{width:18px;font-size:12px;font-weight:700;text-align:right;flex-shrink:0}
-
-/* ── LOG ── */
-.filter-row{display:flex;gap:6px;margin-bottom:12px;overflow-x:auto;padding-bottom:2px}
-.filter-row::-webkit-scrollbar{display:none}
-.filter-chip{
-  padding:7px 14px;border-radius:20px;font-size:12px;font-weight:500;
-  cursor:pointer;white-space:nowrap;
-  background:var(--bg3);border:1px solid var(--border);color:var(--text2);
-  transition:all .15s;
-}
-.filter-chip.active{
-  background:var(--blue-bg2);border-color:rgba(76,155,232,0.4);color:var(--blue-light);
-}
-.act-item{
-  display:flex;align-items:center;gap:12px;
-  padding:12px 0;border-bottom:1px solid var(--border);
-}
-.act-item:last-child{border-bottom:none}
-.act-icon{
-  width:40px;height:40px;border-radius:12px;flex-shrink:0;
-  display:flex;align-items:center;justify-content:center;
-}
-.act-icon svg{width:20px;height:20px}
+/* Activities log */
+.act{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.act:last-child{border-bottom:none}
+.act-ic{width:40px;height:40px;min-width:40px;border-radius:11px;display:flex;align-items:center;justify-content:center}
+.act-ic svg{width:20px;height:20px}
 .act-info{flex:1;min-width:0}
-.act-sport{font-size:14px;font-weight:600;letter-spacing:-.2px}
-.act-detail{font-size:12px;color:var(--text2);margin-top:2px}
-.act-tss-wrap{text-align:right;flex-shrink:0}
-.act-tss-num{font-size:17px;font-weight:700;color:var(--amber);letter-spacing:-.5px}
-.act-tss-lbl{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.4px}
+.act-sp{font-size:14px;font-weight:600}
+.act-dt{font-size:12px;color:var(--t3);margin-top:1px}
+.act-tss{text-align:right}
+.act-tss .n{font-size:16px;font-weight:800;font-family:var(--mono)}
+.act-tss .u{font-size:9px;color:var(--t3);text-transform:uppercase}
+.chips{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
+.chip{padding:7px 14px;border-radius:20px;border:1px solid var(--line);background:var(--bg2);
+  color:var(--t2);font-size:12px;font-weight:600;cursor:pointer}
+.chip.active{background:var(--blue);border-color:var(--blue);color:#fff}
 
-/* ── INFO BOX ── */
-.info-box{
-  background:var(--bg3);border:1px solid var(--border);
-  border-radius:var(--r);padding:14px 16px;margin-bottom:10px;
-}
-.info-box-title{font-size:13px;font-weight:600;margin-bottom:4px}
-.info-box-body{font-size:12px;color:var(--text2);line-height:1.7}
+/* Availability */
+.av-grid{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+.av-cell{display:flex;align-items:center;gap:13px;padding:13px 15px;border-radius:12px;
+  border:1px solid var(--line);background:var(--bg2);cursor:pointer;transition:.2s}
+.av-cell.on{border-color:var(--blue);background:rgba(59,130,246,.08)}
+.av-day{font-size:15px;font-weight:600;width:90px}
+.av-date{font-size:12px;color:var(--t3)}
+.av-toggle{margin-left:auto;display:flex;align-items:center;gap:10px}
+.stepper{display:flex;align-items:center;gap:8px}
+.stepper button{width:30px;height:30px;border-radius:8px;border:1px solid var(--line);
+  background:var(--bg3);color:var(--t1);font-size:16px;cursor:pointer}
+.stepper .val{font-size:14px;font-weight:700;font-family:var(--mono);width:42px;text-align:center}
+.av-off{font-size:12px;color:var(--t3);font-weight:600}
+.btn{width:100%;padding:15px;border-radius:13px;border:none;background:var(--blue);
+  color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px}
+.status{font-size:13px;text-align:center;margin-top:12px;padding:11px;border-radius:10px;display:none}
+.status.ok{display:block;background:rgba(34,197,94,.12);color:var(--green)}
+.status.err{display:block;background:rgba(239,68,68,.12);color:var(--red)}
+textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:12px;
+  padding:13px;color:var(--t1);font-family:var(--font);font-size:14px;resize:vertical;min-height:70px;margin-bottom:6px}
 
-/* ── SCROLLBAR ── */
-::-webkit-scrollbar{width:0px}
+/* Coach chat */
+#coach-msgs{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;min-height:200px}
+.bubble{max-width:85%;padding:12px 14px;border-radius:15px;font-size:14px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
+.bubble.me{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:5px}
+.bubble.ai{align-self:flex-start;background:var(--bg3);color:var(--t1);border-bottom-left-radius:5px}
+.coach-input-row{display:flex;gap:9px;align-items:flex-end}
+.coach-input-row textarea{margin:0;min-height:46px;max-height:120px}
+.coach-send{width:46px;height:46px;min-width:46px;border-radius:12px;border:none;
+  background:var(--blue);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.quick-q{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.quick-q button{padding:8px 13px;border-radius:18px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--t2);font-size:12px;cursor:pointer}
 
-/* ── DESKTOP ── */
-@media(min-width:600px){
-  .scroll-area,.topbar,.bottom-nav,.setup-drawer{max-width:430px;left:50%;right:auto;transform:translateX(-50%)}
-  body::before{content:'';position:fixed;inset:0;background:var(--bg2);z-index:-1}
-}
-
-#comp-list{display:flex;flex-direction:column;gap:8px;width:100%}
-#comp-list .comp-item{display:flex;align-items:center;gap:10px;padding:10px 0;border-bottom:1px solid var(--border);width:100%}
-#comp-list .comp-item:last-child{border-bottom:none}
-
-
-/* ── Plan step cards ─────────────────────────────────── */
-.plan-step{background:var(--bg3);border-radius:8px;padding:10px 12px;margin-bottom:8px}
-.plan-step-header{display:flex;align-items:center;gap:8px;margin-bottom:6px}
-.plan-step-icon{font-size:16px;line-height:1}
-.plan-step-title{font-size:12px;font-weight:600;color:var(--text2);text-transform:uppercase;letter-spacing:.4px}
-.plan-step-bullets{display:flex;flex-direction:column;gap:4px}
-.plan-bullet{font-size:13px;color:var(--text2);line-height:1.4;padding-left:10px;border-left:2px solid rgba(255,255,255,0.08)}
-.plan-coach-note{background:rgba(37,99,235,0.08);border:1px solid rgba(37,99,235,0.2);border-radius:8px;padding:10px 12px;margin-top:8px;font-size:13px;color:var(--text2);line-height:1.5}
-.plan-garmin-note{background:rgba(52,211,153,0.06);border:1px solid rgba(52,211,153,0.2);border-radius:8px;padding:10px 12px;margin-top:6px;font-size:13px;color:var(--text2);line-height:1.5}
-
+/* Setup drawer */
+.drawer-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;display:none}
+.drawer-bg.open{display:block}
+.drawer{position:fixed;bottom:0;left:0;right:0;background:var(--bg2);
+  border-radius:22px 22px 0 0;padding:24px 20px calc(30px + env(safe-area-inset-bottom));
+  z-index:100;transform:translateY(100%);transition:transform .3s ease;border-top:1px solid var(--line)}
+.drawer.open{transform:translateY(0)}
+.drawer h3{font-size:18px;font-weight:800;margin-bottom:4px}
+.drawer p{font-size:13px;color:var(--t3);margin-bottom:18px}
+.field{margin-bottom:16px}
+.field label{font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px}
+.field input{width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:11px;
+  padding:13px;color:var(--t1);font-size:14px;font-family:var(--mono)}
+.field a{color:var(--blue);font-size:12px;text-decoration:none}
+.empty{color:var(--t3);text-align:center;padding:40px 20px;font-size:14px;line-height:1.6}
+.spin{animation:sp 1s linear infinite}
+@keyframes sp{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
 
-<!-- TOPBAR -->
 <div class="topbar">
-  <div class="logo">
-    <svg class="logo-mark" viewBox="0 0 28 28" fill="none" xmlns="http://www.w3.org/2000/svg">
-      <rect width="28" height="28" rx="8" fill="#111118"/>
-      <circle cx="14" cy="14" r="9" stroke="#2563eb" stroke-width="1.5"/>
-      <path d="M9.5 14L12.5 10.5L15.5 15.5L17.5 12.5" stroke="#34d399" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+  <div class="logo-mark">
+    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+      <circle cx="9" cy="6.5" r="3" stroke="#fff" stroke-width="1.5"/>
+      <path d="M3.5 15.5c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
     </svg>
-    <span class="logo-text">Athlete<span>IQ</span></span>
   </div>
-  <div class="topbar-right">
-    <div class="status-chip">
-      <div class="status-dot spin" id="sync-dot"></div>
-      <span id="sync-label">Loading</span>
-    </div>
-    <button class="icon-btn" onclick="toggleSetup()" title="Setup">
-      <svg viewBox="0 0 16 16" fill="none" width="14" height="14">
-        <circle cx="8" cy="8" r="2.5" stroke="currentColor" stroke-width="1.3"/>
-        <path d="M8 1.5v1M8 13.5v1M1.5 8h1M13.5 8h1M3.4 3.4l.7.7M11.9 11.9l.7.7M3.4 12.6l.7-.7M11.9 4.1l.7-.7" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-      </svg>
-    </button>
-  </div>
-</div>
-
-<!-- SETUP DRAWER -->
-<div class="setup-drawer" id="setup-drawer">
-  <div class="setup-row">
-    <span class="setup-label">GitHub token</span>
-    <input class="setup-input" type="password" id="gh-token" placeholder="ghp_..." autocomplete="off"/>
-    <button class="btn-primary" style="width:auto;padding:9px 16px;font-size:13px" onclick="saveGHToken()">Save</button>
-  </div>
-  <div class="setup-hint">
-    Needs <strong style="color:var(--text2)">repo</strong> scope &middot;
-    Repo: <strong style="color:var(--text2)" id="repo-label"></strong><br>
-    <a href="https://github.com/settings/tokens/new" target="_blank">Generate on GitHub &rarr;</a>
-  </div>
-
-  <div style="height:1px;background:var(--border);margin:8px 0"></div>
-
-  <div class="setup-row">
-    <span class="setup-label">Anthropic API key</span>
-    <input class="setup-input" type="password" id="anthropic-key" placeholder="sk-ant-..." autocomplete="off"/>
-    <button class="btn-primary" style="width:auto;padding:9px 16px;font-size:13px" onclick="saveAnthropic()">Save</button>
-  </div>
-  <div class="setup-hint">
-    For Coach Claudio. Get your key from <a href="https://console.anthropic.com/account/keys" target="_blank">Anthropic Console &rarr;</a>
-  </div>
-</div>
-
-<!-- SCROLL AREA -->
-<div class="scroll-area" id="scroll-area">
-
-<!-- PAGE: HOME -->
-<div class="page active" id="page-home">
-
-  <div class="kpi-grid" style="margin-top:4px">
-    <div class="kpi" style="--kpi-color:#4c9be8">
-      <div class="kpi-label">Fitness</div>
-      <div class="kpi-value" id="kpi-ctl">—</div>
-      <div class="kpi-sub">CTL · 42d</div>
-    </div>
-    <div class="kpi" style="--kpi-color:#f87171">
-      <div class="kpi-label">Fatigue</div>
-      <div class="kpi-value" id="kpi-atl">—</div>
-      <div class="kpi-sub">ATL · 7d</div>
-    </div>
-    <div class="kpi" id="kpi-form-card" style="--kpi-color:#34d399">
-      <div class="kpi-label">Form</div>
-      <div class="kpi-value" id="kpi-tsb">—</div>
-      <div class="kpi-sub" id="kpi-form-label">TSB</div>
-    </div>
-    <div class="kpi" style="--kpi-color:#f59e0b">
-      <div class="kpi-label">Week TSS</div>
-      <div class="kpi-value" id="kpi-week">—</div>
-      <div class="kpi-sub kpi-delta" id="kpi-week-delta">vs last</div>
-    </div>
-    <div class="kpi" style="--kpi-color:#818cf8">
-      <div class="kpi-label">Month</div>
-      <div class="kpi-value" id="kpi-km">—<span class="kpi-unit">km</span></div>
-      <div class="kpi-sub" id="kpi-km-sub">—</div>
-    </div>
-    <div class="kpi" style="--kpi-color:#34d399">
-      <div class="kpi-label">Compliance</div>
-      <div class="kpi-value" id="kpi-comp">—<span class="kpi-unit">%</span></div>
-      <div class="kpi-sub">4 weeks</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Performance Management Chart</div>
-    <div class="chart-wrap"><canvas id="pmcChart"></canvas></div>
-  </div>
-
-  <div class="card">
-    <div class="card-title">Weekly TSS</div>
-    <div class="chart-wrap-xs"><canvas id="weekTssChart"></canvas></div>
-  </div>
-
-  <div style="display:flex;flex-direction:column;gap:10px">
-    <div class="card" style="margin-bottom:0">
-      <div class="card-title">Mix · 30d</div>
-      <div class="chart-wrap-xs"><canvas id="mixChart"></canvas></div>
-    </div>
-    <div class="card" style="margin-bottom:0">
-      <div class="card-title">Compliance</div>
-      <div class="chart-wrap-xs"><canvas id="compSmallChart"></canvas></div>
-    </div>
-  </div>
-
-</div>
-
-<!-- PAGE: PLAN -->
-<div class="page" id="page-plan">
-  <div style="display:flex;align-items:baseline;justify-content:space-between;margin-bottom:14px;margin-top:4px">
-    <div style="font-size:20px;font-weight:700;letter-spacing:-.5px">This Week</div>
-    <span id="plan-date" style="font-size:11px;color:var(--text3)"></span>
-  </div>
-  <div id="plan-days"></div>
-  <div id="plan-summary" class="card" style="display:none">
-    <div class="card-title">Week Summary</div>
-    <div id="plan-summary-text" style="font-size:13px;color:var(--text2);line-height:1.85"></div>
-  </div>
-</div>
-
-<!-- PAGE: COMPLIANCE -->
-<div class="page" id="page-compliance">
-  <div style="font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:14px;margin-top:4px">Compliance</div>
-  <div class="card">
-    <div class="card-title">By Sport · Last 8 Weeks</div>
-    <div class="chart-wrap-sm"><canvas id="compChart"></canvas></div>
-  </div>
-  <div class="card">
-    <div class="card-title">Recent Sessions</div>
-    <div id="comp-list"></div>
-  </div>
-</div>
-
-<!-- PAGE: AVAILABILITY -->
-<div class="page" id="page-availability">
-  <div style="font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px;margin-top:4px">Next Week</div>
-  <div style="font-size:13px;color:var(--text2);margin-bottom:16px">Tap a day to toggle. Use +/- to set available hours (min 30 min).</div>
-
-  <div class="card">
-    <div class="avail-grid" id="avail-grid"></div>
-    <div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">Note for Claude</div>
-    <textarea class="avail-notes" id="avail-notes" rows="3"
-      placeholder="e.g. Legs tired. Race on Saturday, keep Friday easy. Traveling Tuesday."></textarea>
-    <button class="btn-primary" onclick="saveAvailability()">Save to GitHub</button>
-    <div class="save-status" id="save-status"></div>
-  </div>
-
-  <div class="info-box">
-    <div class="info-box-title">How it works</div>
-    <div class="info-box-body">
-      Set your days and hours before Sunday 8pm Luxembourg time. Claude reads this along with your Garmin history to build a personalised plan. Workouts push directly to Garmin Connect and sync to your Fenix.
-    </div>
-  </div>
-</div>
-
-<!-- PAGE: LOG -->
-<div class="page" id="page-log">
-  <div style="font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:14px;margin-top:4px">Activity Log</div>
-  <div class="filter-row" id="log-filters">
-    <div class="filter-chip active" onclick="filterLog('all',this)">All</div>
-    <div class="filter-chip" onclick="filterLog('running',this)">Running</div>
-    <div class="filter-chip" onclick="filterLog('cycling',this)">Cycling</div>
-    <div class="filter-chip" onclick="filterLog('strength',this)">Strength</div>
-  </div>
-  <div class="card"><div id="log-list"></div></div>
-</div>
-
-<!-- PAGE: COACH -->
-<div class="page" id="page-coach">
-  <div style="font-size:20px;font-weight:700;letter-spacing:-.5px;margin-bottom:6px;margin-top:4px">Coach Claudio</div>
-  <div style="font-size:13px;color:var(--text2);margin-bottom:14px">Ask your AI coach anything about your training.</div>
-
-  <div class="card" style="display:flex;flex-direction:column;height:calc(100vh - 300px);padding:0">
-    <div id="coach-messages" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:14px 16px 16px;display:flex;flex-direction:column;gap:10px"></div>
-    <div style="border-top:1px solid var(--border);padding:12px 16px;display:flex;gap:8px;align-items:flex-end">
-      <textarea id="coach-input" placeholder="Ask me anything..." style="
-        flex:1;background:var(--bg3);border:1px solid var(--border);border-radius:10px;
-        padding:10px 12px;color:var(--text);font-size:13px;font-family:var(--font);
-        resize:none;outline:none;max-height:80px;line-height:1.4;
-      " rows="2"></textarea>
-      <button id="coach-send" onclick="sendCoachMessage()" style="
-        width:36px;height:36px;border-radius:8px;background:var(--blue);
-        color:#fff;border:none;cursor:pointer;display:flex;align-items:center;
-        justify-content:center;font-size:14px;flex-shrink:0;
-      ">↑</button>
-    </div>
-  </div>
-</div>
-
-</div><!-- /scroll-area -->
-
-<!-- BOTTOM NAV -->
-<nav class="bottom-nav">
-  <button class="nav-item active" onclick="showPage('home',this)">
-    <svg class="nav-icon" viewBox="0 0 22 22" fill="none">
-      <path d="M3 9.5L11 3L19 9.5V19H14v-5H8v5H3V9.5Z" stroke="currentColor" stroke-width="1.5" stroke-linejoin="round"/>
-    </svg>
-    <span class="nav-label">Home</span>
+  <div class="brand">Coach <span>Claudio</span></div>
+  <button class="gear" onclick="toggleSetup()" aria-label="Settings">
+    <svg width="19" height="19" viewBox="0 0 20 20" fill="none"><path d="M10 13a3 3 0 100-6 3 3 0 000 6z" stroke="currentColor" stroke-width="1.5"/><path d="M10 1.5v2M10 16.5v2M3.5 10h-2M18.5 10h-2M5 5L3.6 3.6M16.4 16.4L15 15M15 5l1.4-1.4M3.6 16.4L5 15" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
   </button>
-  <button class="nav-item" onclick="showPage('plan',this)">
-    <svg class="nav-icon" viewBox="0 0 22 22" fill="none">
-      <rect x="3" y="3" width="16" height="16" rx="3" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M7 8h8M7 11h8M7 14h5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-    </svg>
-    <span class="nav-label">Plan</span>
-  </button>
-  <button class="nav-item" onclick="showPage('compliance',this)">
-    <svg class="nav-icon" viewBox="0 0 22 22" fill="none">
-      <circle cx="11" cy="11" r="8" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M7.5 11L10 13.5L14.5 8.5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
-    </svg>
-    <span class="nav-label">Compliance</span>
-  </button>
-  <button class="nav-item" onclick="showPage('availability',this)">
-    <svg class="nav-icon" viewBox="0 0 22 22" fill="none">
-      <rect x="3" y="4" width="16" height="15" rx="2.5" stroke="currentColor" stroke-width="1.5"/>
-      <path d="M7 2v4M15 2v4M3 9h16" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <path d="M7 13h2v2H7z" fill="currentColor" rx="1"/>
-      <path d="M13 13h2v2h-2z" fill="currentColor" rx="1"/>
-    </svg>
-    <span class="nav-label">Availability</span>
-  </button>
-  <button class="nav-item" onclick="showPage('log',this)">
-    <svg class="nav-icon" viewBox="0 0 22 22" fill="none">
-      <path d="M5 17c2-3 4-5 6-5s4 2 6-2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="11" cy="8" r="3" stroke="currentColor" stroke-width="1.5"/>
-    </svg>
-    <span class="nav-label">Log</span>
-  </button>
-  <button class="nav-item" onclick="showPage('coach',this)">
-    <svg class="nav-icon" viewBox="0 0 22 22" fill="none">
-      <path d="M4 10c0-3.3 2.7-6 6-6s6 2.7 6 6M7 18h6c1.1 0 2 .9 2 2v1H5v-1c0-1.1.9-2 2-2z" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-      <circle cx="16" cy="16" r="4.5" stroke="currentColor" stroke-width="1.3"/>
-      <path d="M16 14v4M14 16h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/>
-    </svg>
-    <span class="nav-label">Coach</span>
-  </button>
-</nav>
+</div>
+
+<div id="scroll">
+
+  <!-- HOME -->
+  <div class="page active" id="page-home">
+    <div class="hero" id="today-hero" style="--accent:var(--blue)">
+      <div class="hero-top">
+        <span class="hero-eyebrow">Today · <span id="today-date">—</span></span>
+        <span class="hero-pill" id="today-pill" style="background:rgba(59,130,246,.15);color:var(--blue)">—</span>
+      </div>
+      <div class="hero-title" id="today-title">Loading…</div>
+      <div class="hero-sub" id="today-sub">Fetching your plan</div>
+      <div class="hero-stats" id="today-stats" style="display:none">
+        <div class="hero-stat"><div class="v" id="today-dur">—</div><div class="l">Duration</div></div>
+        <div class="hero-stat"><div class="v" id="today-tss">—</div><div class="l">Planned TSS</div></div>
+        <div class="hero-stat"><div class="v" id="today-focus" style="font-size:13px">—</div><div class="l">Focus</div></div>
+      </div>
+    </div>
+
+    <div class="form-banner">
+      <div class="form-gauge" id="form-gauge">—</div>
+      <div class="form-info">
+        <div class="form-state" id="form-state">Form —</div>
+        <div class="form-desc" id="form-desc">Sync your training to see readiness.</div>
+      </div>
+    </div>
+
+    <div class="kpi-row">
+      <div class="kpi"><div class="v" id="kpi-ctl" style="color:var(--blue)">—</div><div class="l">Fitness</div><div class="d" id="kpi-ramp" style="color:var(--t3)">CTL</div></div>
+      <div class="kpi"><div class="v" id="kpi-atl" style="color:var(--red)">—</div><div class="l">Fatigue</div><div class="d" style="color:var(--t3)">ATL 7d</div></div>
+      <div class="kpi"><div class="v" id="kpi-week">—</div><div class="l">This Week</div><div class="d" id="kpi-week-d" style="color:var(--t3)">TSS</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Fitness Trend · 90 days</div>
+      <div class="chart-box"><canvas id="pmcChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Weekly Load</div>
+      <div class="chart-sm"><canvas id="loadChart"></canvas></div>
+    </div>
+
+    <div class="card">
+      <div class="card-h">Sport Mix · 30 days</div>
+      <div class="chart-sm"><canvas id="mixChart"></canvas></div>
+    </div>
+  </div>
+
+  <!-- PLAN -->
+  <div class="page" id="page-plan">
+    <div class="week-nav">
+      <button onclick="shiftWeek(-1)">‹</button>
+      <div class="lbl"><div class="w" id="plan-wlabel">This Week</div><div class="d" id="plan-wdate"></div></div>
+      <button onclick="shiftWeek(1)">›</button>
+    </div>
+    <div id="plan-days"></div>
+    <div id="push-zone" style="display:none;margin-top:6px">
+      <div id="push-status" style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:12px;padding:11px;border-radius:10px;background:var(--bg2)"></div>
+      <button class="btn" id="push-btn" onclick="pushToGarmin()" style="font-size:16px;background:linear-gradient(135deg,#2563eb,#3b82f6)">Let's do this! 🚀</button>
+      <div style="font-size:11px;color:var(--t3);text-align:center;margin-top:10px;line-height:1.5">Pushes this plan to your Garmin calendar and replaces what's there. Sync your Fenix afterwards.</div>
+    </div>
+  </div>
+
+  <!-- LOG -->
+  <div class="page" id="page-log">
+    <div class="chips">
+      <div class="chip active" onclick="filterLog('all',this)">All</div>
+      <div class="chip" onclick="filterLog('running',this)">Run</div>
+      <div class="chip" onclick="filterLog('cycling',this)">Bike</div>
+      <div class="chip" onclick="filterLog('strength',this)">Strength</div>
+    </div>
+    <div class="card"><div id="log-list"></div></div>
+  </div>
+
+  <!-- AVAILABILITY -->
+  <div class="page" id="page-avail">
+    <div class="card-h" style="margin-bottom:14px">Next week · tap a day to toggle, set hours</div>
+    <div class="av-grid" id="av-grid"></div>
+    <textarea id="av-notes" placeholder="Notes for Coach Claudio (e.g. travelling Thu, long ride Sat with friends)…"></textarea>
+    <button class="btn" onclick="saveAvail()">Save to Coach Claudio</button>
+    <div class="status" id="av-status"></div>
+  </div>
+
+  <!-- COACH -->
+  <div class="page" id="page-coach">
+    <div class="quick-q">
+      <button onclick="askQuick('How does my training look this week?')">This week?</button>
+      <button onclick="askQuick('Should I train today or rest?')">Train today?</button>
+      <button onclick="askQuick('How is my fitness trending?')">Trend?</button>
+    </div>
+    <div id="coach-msgs"></div>
+    <div class="coach-input-row">
+      <textarea id="coach-input" placeholder="Ask Coach Claudio…"></textarea>
+      <button class="coach-send" onclick="sendCoachMessage()" id="coach-send">
+        <svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10l14-6-6 14-2-6-6-2z" fill="currentColor"/></svg>
+      </button>
+    </div>
+  </div>
+
+</div>
+
+<div class="nav">
+  <button class="active" onclick="showPage('home',this)">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7M5 10v9a1 1 0 001 1h12a1 1 0 001-1v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Home</button>
+  <button onclick="showPage('plan',this)">
+    <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Plan</button>
+  <button onclick="showPage('log',this)">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M4 18l4-6 4 3 4-7 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Log</button>
+  <button onclick="showPage('avail',this)">
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Avail</button>
+  <button onclick="showPage('coach',this)">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M20 11.5a7.5 7.5 0 01-10.5 6.9L4 20l1.6-5A7.5 7.5 0 1120 11.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Coach</button>
+</div>
+
+<div class="drawer-bg" id="drawer-bg" onclick="toggleSetup()"></div>
+<div class="drawer" id="drawer">
+  <h3>Setup</h3>
+  <p>Stored only on this device. Needed for saving availability and chatting with Coach Claudio.</p>
+  <div class="field">
+    <label>GitHub token <a href="https://github.com/settings/tokens/new" target="_blank">create one →</a></label>
+    <input id="in-gh" type="password" placeholder="ghp_…">
+  </div>
+  <div class="field">
+    <label>Anthropic API key <a href="https://console.anthropic.com/account/keys" target="_blank">get key →</a></label>
+    <input id="in-anth" type="password" placeholder="sk-ant-…">
+  </div>
+  <button class="btn" onclick="saveKeys()">Save</button>
+</div>
 
 <script>
-// ── CONFIG ────────────────────────────────────────────────────────────────────
-const GITHUB_USER = "tcw4wn9r95-jpg";
-const GITHUB_REPO = "training-ai";
-const REPO = GITHUB_USER + "/" + GITHUB_REPO;
-const RAW  = "https://raw.githubusercontent.com/" + REPO + "/main";
-const API  = "https://api.github.com/repos/" + REPO + "/contents";
+// ── CONFIG ────────────────────────────────────────────────────
+const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
+const REPO=GITHUB_USER+"/"+GITHUB_REPO;
+const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
+const API="https://api.github.com/repos/"+REPO+"/contents";
+const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
-document.getElementById("repo-label").textContent = REPO;
+// ── STATE ─────────────────────────────────────────────────────
+let workouts=[], planText="", planJson=[], profile={cycling:{ftp_watts:177},running:{max_hr:196,resting_hr:60,threshold_hr:173}};
+let FTP=177, LTHR=173, REST_HR=60, MAX_HR=196;
+let avState={}, weekOffset=0, logFilter="all", coachHistory=[];
+DAYS.forEach(d=>avState[d]={available:false,hours:(d==="Saturday"||d==="Sunday")?2:1});
 
-// ── CONSTANTS ─────────────────────────────────────────────────────────────────
-const FTP=177,LTHR=173,REST_HR=60,MAX_HR=196;
-const DAY_NAMES=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-const SPORT_LABELS={running:"Running",cycling_indoor:"Cycling (indoor)",cycling_outdoor:"Cycling (outdoor)",cycling:"Cycling",strength:"Strength"};
-
-// ── STATE ─────────────────────────────────────────────────────────────────────
-let workouts=[], planText="", logFilter="all";
-let profile = {
-  cycling: { ftp_watts: FTP },
-  running: { max_hr: MAX_HR, resting_hr: REST_HR, threshold_hr: LTHR }
-};
-let avState={};
-DAY_NAMES.forEach(function(d){ avState[d]={available:false,hours:d==="Saturday"||d==="Sunday"?2:1}; });
-
-// ── TOKEN ─────────────────────────────────────────────────────────────────────
+// ── HELPERS ───────────────────────────────────────────────────
 function getToken(){return localStorage.getItem("gh_token")||"";}
-function saveGHToken(){
-  var t=document.getElementById("gh-token").value.trim();
-  if(t){localStorage.setItem("gh_token",t);showStatus("GitHub token saved","ok");}
-  else{showStatus("No token entered","err");}
+function toggleSetup(){document.getElementById("drawer").classList.toggle("open");document.getElementById("drawer-bg").classList.toggle("open");}
+function saveKeys(){
+  var gh=document.getElementById("in-gh").value.trim(), an=document.getElementById("in-anth").value.trim();
+  if(gh)localStorage.setItem("gh_token",gh);
+  if(an)localStorage.setItem("anthropic_key",an);
+  toggleSetup();
 }
-function saveAnthropic(){
-  var t=document.getElementById("anthropic-key").value.trim();
-  if(t){localStorage.setItem("anthropic_key",t);showStatus("Anthropic key saved","ok");}
-  else{showStatus("No key entered","err");}
-}
-function toggleSetup(){
-  document.getElementById("setup-drawer").classList.toggle("open");
-}
-
-// ── NAV ───────────────────────────────────────────────────────────────────────
 function showPage(id,btn){
-  document.querySelectorAll(".page").forEach(function(p){p.classList.remove("active");});
-  document.querySelectorAll(".nav-item").forEach(function(n){n.classList.remove("active");});
+  document.querySelectorAll(".page").forEach(p=>p.classList.remove("active"));
+  document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
   document.getElementById("page-"+id).classList.add("active");
   btn.classList.add("active");
-  document.getElementById("scroll-area").scrollTop=0;
+  document.getElementById("scroll").scrollTop=0;
 }
+async function fetchJSON(p){try{var r=await fetch(RAW+"/"+p+"?t="+Date.now());return r.ok?await r.json():null;}catch(e){return null;}}
+async function fetchText(p){try{var r=await fetch(RAW+"/"+p+"?t="+Date.now());return r.ok?await r.text():"";}catch(e){return "";}}
 
-// ── FETCH ─────────────────────────────────────────────────────────────────────
-async function fetchJSON(p){
-  try{
-    var r=await fetch(RAW+"/"+p+"?t="+Date.now());
-    return r.ok ? await r.json() : null;
-  }catch(e){console.warn("fetchJSON failed:",p,e.message);return null;}
-}
-async function fetchText(p){
-  try{
-    var r=await fetch(RAW+"/"+p+"?t="+Date.now());
-    return r.ok ? await r.text() : "";
-  }catch(e){console.warn("fetchText failed:",p,e.message);return "";}
-}
-
-// ── TSS ───────────────────────────────────────────────────────────────────────
 function getTSS(w){
   if(w.tss&&w.tss>0)return Math.round(w.tss);
-  if(w.avg_power_watts>0&&w.duration_min>0){var IF=w.avg_power_watts/FTP;return Math.round((w.duration_min/60)*IF*IF*100);}
+  if(w.avg_power_watts>0&&w.duration_min>0){var IF=w.avg_power_watts/FTP;return Math.round(w.duration_min/60*IF*IF*100);}
   if(!w.avg_hr||w.avg_hr<60||!w.duration_min)return 0;
-  var hrr=(w.avg_hr-REST_HR)/(MAX_HR-REST_HR),lthr=(LTHR-REST_HR)/(MAX_HR-REST_HR),IF2=hrr/lthr;
-  return Math.round((w.duration_min/60)*IF2*IF2*100);
+  var hrr=(w.avg_hr-REST_HR)/(MAX_HR-REST_HR), lf=(LTHR-REST_HR)/(MAX_HR-REST_HR), IF2=lf?hrr/lf:0;
+  return Math.round(w.duration_min/60*IF2*IF2*100);
+}
+function sportOf(w){var s=w.sport||"";return s==="running"?"run":s.indexOf("cycl")>-1?"bike":s==="strength"?"strength":"other";}
+function sportClr(t){return{run:["rgba(59,130,246,.18)","#3b82f6"],bike:["rgba(34,197,94,.16)","#22c55e"],strength:["rgba(245,158,11,.16)","#f59e0b"],other:["rgba(255,255,255,.06)","#6b7480"]}[t]||["rgba(255,255,255,.06)","#6b7480"];}
+function sportIcon(t){
+  var i={
+    run:'<svg viewBox="0 0 20 20" fill="none"><circle cx="13" cy="4" r="1.6" fill="currentColor"/><path d="M11 7l-3 2 2 2v4M11 7l3 1 1 3M8 9l-2 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg>',
+    bike:'<svg viewBox="0 0 20 20" fill="none"><circle cx="5" cy="14" r="3" stroke="currentColor" stroke-width="1.5"/><circle cx="15" cy="14" r="3" stroke="currentColor" stroke-width="1.5"/><path d="M5 14l4-7h3M9 7l3 7M12 7h3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="4.5" r="1.2" fill="currentColor"/></svg>',
+    strength:'<svg viewBox="0 0 20 20" fill="none"><path d="M5 10h10M4 7v6M16 7v6M2 8.5v3M18 8.5v3" stroke="currentColor" stroke-width="1.7" stroke-linecap="round"/></svg>',
+    rest:'<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="7" stroke="currentColor" stroke-width="1.5"/><path d="M10 6v4l2.5 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>'
+  };return i[t]||i.rest;
 }
 
-// ── PMC ───────────────────────────────────────────────────────────────────────
+// ── PMC ───────────────────────────────────────────────────────
 function buildPMC(days){
-  days=days||90;
-  var daily={};
-  workouts.forEach(function(w){daily[w.date]=(daily[w.date]||0)+getTSS(w);});
-  var L=[],C=[],A=[],T=[],c=0,a=0;
-  var today=new Date();
+  var daily={};workouts.forEach(w=>{daily[w.date]=(daily[w.date]||0)+getTSS(w);});
+  var L=[],C=[],A=[],T=[],c=0,a=0,today=new Date();
   for(var i=days;i>=0;i--){
     var d=new Date(today);d.setDate(today.getDate()-i);
-    var k=d.toISOString().split("T")[0];
-    var tss=daily[k]||0;
-    c=c+(tss-c)/42;a=a+(tss-a)/7;
+    var k=d.toISOString().split("T")[0], tss=daily[k]||0;
+    c+=(tss-c)/42; a+=(tss-a)/7;
     L.push(d.toLocaleDateString("en-GB",{day:"numeric",month:"short"}));
-    C.push(Math.round(c*10)/10);A.push(Math.round(a*10)/10);T.push(Math.round((c-a)*10)/10);
+    C.push(+c.toFixed(1));A.push(+a.toFixed(1));T.push(+(c-a).toFixed(1));
   }
-  return{L:L,C:C,A:A,T:T};
+  return{L,C,A,T};
 }
 
-// ── CHART DEFAULTS ────────────────────────────────────────────────────────────
-var CD={
-  responsive:true,maintainAspectRatio:false,
-  plugins:{
-    legend:{display:false},
-    tooltip:{backgroundColor:"#16161d",borderColor:"rgba(255,255,255,0.08)",borderWidth:1,
-      titleColor:"#f0f0f5",bodyColor:"#a0a0b0",padding:10,cornerRadius:8}
-  },
-  scales:{
-    x:{grid:{color:"rgba(255,255,255,0.04)"},ticks:{color:"#606070",font:{size:9},maxTicksLimit:6}},
-    y:{grid:{color:"rgba(255,255,255,0.04)"},ticks:{color:"#606070",font:{size:9}},beginAtZero:true}
-  }
-};
-function mk(id,cfg){var c=document.getElementById(id);if(c)return new Chart(c,cfg);}
+// ── RENDER HOME ───────────────────────────────────────────────
+function renderHome(){
+  var pmc=buildPMC(90);
+  var ctl=pmc.C[pmc.C.length-1], atl=pmc.A[pmc.A.length-1], tsb=pmc.T[pmc.T.length-1];
+  var ctl7ago=pmc.C[pmc.C.length-8]||ctl, ramp=(ctl-ctl7ago).toFixed(1);
 
-// ── CHARTS ────────────────────────────────────────────────────────────────────
+  // Form gauge
+  var g=document.getElementById("form-gauge");
+  var clr,state,desc;
+  if(tsb>15){clr="#3b82f6";state="Fresh / Tapered";desc="High form. Great for racing or a hard key session. If not racing, you may be detraining slightly.";}
+  else if(tsb>5){clr="#22c55e";state="Good Form";desc="Well-balanced and ready. A good day for quality work or an event.";}
+  else if(tsb>-10){clr="#22c55e";state="Optimal Training";desc="Productive zone — you're absorbing load well. Keep the rhythm.";}
+  else if(tsb>-20){clr="#f59e0b";state="Building / Tired";desc="Carrying real fatigue. Normal mid-block. Keep easy days easy.";}
+  else{clr="#ef4444";state="Deep Fatigue";desc="You're deep in the hole. Prioritise recovery to avoid overtraining.";}
+  g.textContent=(tsb>0?"+":"")+Math.round(tsb);
+  g.style.background="conic-gradient("+clr+" "+Math.min(100,Math.abs(tsb)*2.5)+"%,var(--bg3) 0)";
+  g.style.color=clr;
+  g.innerHTML='<div style="position:absolute;inset:5px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center">'+(tsb>0?"+":"")+Math.round(tsb)+'</div>';
+  document.getElementById("form-state").textContent=state;
+  document.getElementById("form-desc").textContent=desc;
+
+  // KPIs
+  document.getElementById("kpi-ctl").textContent=Math.round(ctl);
+  var rampEl=document.getElementById("kpi-ramp");
+  rampEl.textContent=(ramp>=0?"▲ ":"▼ ")+Math.abs(ramp)+"/wk";
+  rampEl.style.color=ramp>8?"var(--red)":ramp>=0?"var(--green)":"var(--t3)";
+  document.getElementById("kpi-atl").textContent=Math.round(atl);
+
+  var today=new Date(),dow=today.getDay()||7,mon=new Date(today);mon.setDate(today.getDate()-dow+1);
+  var monStr=mon.toISOString().split("T")[0];
+  var wTss=workouts.filter(w=>w.date>=monStr).reduce((s,w)=>s+getTSS(w),0);
+  document.getElementById("kpi-week").textContent=Math.round(wTss);
+
+  drawPMC(pmc);drawLoad();drawMix();
+  renderTodayHero();
+}
+
+function renderTodayHero(){
+  var today=new Date().toISOString().split("T")[0];
+  var dayName=DAYS[(new Date().getDay()+6)%7];
+  document.getElementById("today-date").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"});
+  var session=planJson.find(s=>s.date===today);
+  var hero=document.getElementById("today-hero"), pill=document.getElementById("today-pill"), stats=document.getElementById("today-stats");
+  if(session){
+    var sp=session.sport||"running";
+    var st=sp==="running"?"run":sp.indexOf("cycl")>-1?"bike":sp==="strength"?"strength":"other";
+    var clr=sportClr(st)[1];
+    hero.style.setProperty("--accent",clr);
+    pill.textContent=sp.replace("_"," ");pill.style.background=sportClr(st)[0];pill.style.color=clr;
+    document.getElementById("today-title").textContent=session.name||"Training";
+    document.getElementById("today-sub").textContent=session.focus||"";
+    document.getElementById("today-dur").textContent=Math.round((session.total_duration_secs||0)/60)+"m";
+    document.getElementById("today-tss").textContent=session.planned_tss||"—";
+    document.getElementById("today-focus").textContent=(session.focus||"—").split(",")[0];
+    stats.style.display="flex";
+  }else{
+    hero.style.setProperty("--accent","#6b7480");
+    pill.textContent="Rest";pill.style.background="rgba(255,255,255,.06)";pill.style.color="var(--t3)";
+    document.getElementById("today-title").textContent="Rest Day";
+    document.getElementById("today-sub").textContent="Recovery is where adaptation happens. Easy walk or full rest.";
+    stats.style.display="none";
+  }
+}
+
+var CD={responsive:true,maintainAspectRatio:false,
+  plugins:{legend:{display:false},tooltip:{backgroundColor:"#1c2127",borderColor:"rgba(255,255,255,.1)",borderWidth:1,titleColor:"#f4f6f8",bodyColor:"#aeb6c0",padding:10,cornerRadius:8}},
+  scales:{x:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7480",font:{size:9},maxTicksLimit:6}},y:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7480",font:{size:9}},beginAtZero:true}}};
+function mk(id,cfg){var c=document.getElementById(id);if(c){if(c._ch)c._ch.destroy();c._ch=new Chart(c,cfg);}}
+
 function drawPMC(p){
-  mk("pmcChart",{type:"line",
-    data:{labels:p.L,datasets:[
-      {label:"CTL",data:p.C,borderColor:"#4c9be8",backgroundColor:"rgba(76,155,232,0.08)",borderWidth:2,fill:true,tension:0.35,pointRadius:0},
-      {label:"ATL",data:p.A,borderColor:"#f87171",backgroundColor:"rgba(248,113,113,0.06)",borderWidth:2,fill:true,tension:0.35,pointRadius:0},
-      {label:"TSB",data:p.T,borderColor:"#34d399",borderWidth:1.5,fill:false,tension:0.35,pointRadius:0,borderDash:[4,3]}
-    ]},
-    options:Object.assign({},CD,{interaction:{mode:"index",intersect:false},
-      plugins:Object.assign({},CD.plugins,{
-        legend:{display:true,position:"bottom",
-          labels:{color:"#606070",font:{size:10},boxWidth:8,padding:12,usePointStyle:true}}
-      })
-    })
-  });
+  mk("pmcChart",{type:"line",data:{labels:p.L,datasets:[
+    {label:"Fitness",data:p.C,borderColor:"#3b82f6",backgroundColor:"rgba(59,130,246,.1)",borderWidth:2,fill:true,tension:.35,pointRadius:0},
+    {label:"Fatigue",data:p.A,borderColor:"#ef4444",borderWidth:1.5,fill:false,tension:.35,pointRadius:0},
+    {label:"Form",data:p.T,borderColor:"#22c55e",borderWidth:1.5,fill:false,tension:.35,pointRadius:0,borderDash:[4,3]}
+  ]},options:Object.assign({},CD,{interaction:{mode:"index",intersect:false},plugins:Object.assign({},CD.plugins,{legend:{display:true,position:"bottom",labels:{color:"#6b7480",font:{size:10},boxWidth:8,padding:12,usePointStyle:true}}})})});
 }
-function drawWeekTSS(){
-  var W={};
-  workouts.forEach(function(w){
-    var d=new Date(w.date),day=d.getDay()||7;
-    var m=new Date(d);m.setDate(d.getDate()-day+1);
-    var k=m.toISOString().split("T")[0];
-    W[k]=(W[k]||0)+getTSS(w);
-  });
+function drawLoad(){
+  var W={};workouts.forEach(w=>{var d=new Date(w.date),day=d.getDay()||7,m=new Date(d);m.setDate(d.getDate()-day+1);var k=m.toISOString().split("T")[0];W[k]=(W[k]||0)+getTSS(w);});
   var keys=Object.keys(W).sort().slice(-10);
-  mk("weekTssChart",{type:"bar",
-    data:{labels:keys.map(function(k){return new Date(k).toLocaleDateString("en-GB",{day:"numeric",month:"short"});}),
-      datasets:[{data:keys.map(function(k){return Math.round(W[k]);}),
-        backgroundColor:"rgba(37,99,235,0.6)",borderRadius:5,borderSkipped:false}]},
-    options:CD
-  });
+  mk("loadChart",{type:"bar",data:{labels:keys.map(k=>new Date(k).toLocaleDateString("en-GB",{day:"numeric",month:"short"})),datasets:[{data:keys.map(k=>Math.round(W[k])),backgroundColor:"rgba(59,130,246,.55)",borderRadius:5}]},options:CD});
 }
 function drawMix(){
-  var c={Running:0,Cycling:0,Strength:0};
-  workouts.filter(function(w){return (Date.now()-new Date(w.date))/86400000<=30;}).forEach(function(w){
-    var s=w.sport||"";
-    if(s==="running")c.Running++;
-    else if(s.indexOf("cycl")>-1)c.Cycling++;
-    else if(s==="strength")c.Strength++;
-  });
-  mk("mixChart",{type:"doughnut",
-    data:{labels:Object.keys(c),datasets:[{data:Object.values(c),
-      backgroundColor:["#2563eb","#34d399","#f59e0b"],borderWidth:0,hoverOffset:4}]},
-    options:{responsive:true,maintainAspectRatio:false,cutout:"70%",
-      plugins:{legend:{position:"bottom",labels:{color:"#606070",font:{size:9},boxWidth:7,padding:8}}}}
-  });
-}
-function drawCompSmall(){
-  var by={Run:[0,0],Cycle:[0,0],Str:[0,0]};
-  workouts.slice(-60).forEach(function(w){
-    var s=w.sport||"";
-    var k=s==="running"?"Run":s.indexOf("cycl")>-1?"Cycle":s==="strength"?"Str":null;
-    if(!k)return;by[k][1]++;if((w.duration_min||0)>10)by[k][0]++;
-  });
-  var labels=Object.keys(by),rates=labels.map(function(l){return by[l][1]?Math.round(by[l][0]/by[l][1]*100):0;});
-  mk("compSmallChart",{type:"bar",
-    data:{labels:labels,datasets:[{data:rates,backgroundColor:["rgba(37,99,235,0.7)","rgba(52,211,153,0.7)","rgba(245,158,11,0.7)"],borderRadius:5,borderSkipped:false}]},
-    options:Object.assign({},CD,{scales:Object.assign({},CD.scales,{y:Object.assign({},CD.scales.y,{max:100})})})
-  });
-}
-function drawCompFull(){
-  var by={Running:[0,0],Cycling:[0,0],Strength:[0,0]};
-  workouts.slice(-60).forEach(function(w){
-    var s=w.sport||"";
-    var k=s==="running"?"Running":s.indexOf("cycl")>-1?"Cycling":s==="strength"?"Strength":null;
-    if(!k)return;by[k][1]++;if((w.duration_min||0)>10)by[k][0]++;
-  });
-  var labels=Object.keys(by),rates=labels.map(function(l){return by[l][1]?Math.round(by[l][0]/by[l][1]*100):0;});
-  mk("compChart",{type:"bar",
-    data:{labels:labels,datasets:[{data:rates,backgroundColor:["rgba(37,99,235,0.7)","rgba(52,211,153,0.7)","rgba(245,158,11,0.7)"],borderRadius:6,borderSkipped:false}]},
-    options:Object.assign({},CD,{scales:Object.assign({},CD.scales,{y:Object.assign({},CD.scales.y,{max:100})})})
-  });
+  var c={Run:0,Bike:0,Strength:0};
+  workouts.filter(w=>(Date.now()-new Date(w.date))/864e5<=30).forEach(w=>{var s=sportOf(w);if(s==="run")c.Run++;else if(s==="bike")c.Bike++;else if(s==="strength")c.Strength++;});
+  mk("mixChart",{type:"doughnut",data:{labels:Object.keys(c),datasets:[{data:Object.values(c),backgroundColor:["#3b82f6","#22c55e","#f59e0b"],borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:"68%",plugins:{legend:{position:"bottom",labels:{color:"#6b7480",font:{size:10},boxWidth:8,padding:12,usePointStyle:true}}}}});
 }
 
-// ── KPIs ──────────────────────────────────────────────────────────────────────
-function buildKPIs(p){
-  var ctl=p.C[p.C.length-1],atl=p.A[p.A.length-1],tsb=p.T[p.T.length-1];
-  document.getElementById("kpi-ctl").textContent=Math.round(ctl);
-  document.getElementById("kpi-atl").textContent=Math.round(atl);
-  var tsbEl=document.getElementById("kpi-tsb");
-  tsbEl.textContent=(tsb>0?"+":"")+Math.round(tsb);
-  var tsbColor=tsb>5?"#34d399":tsb<-10?"#f87171":"#f59e0b";
-  document.getElementById("kpi-form-card").style.setProperty("--kpi-color",tsbColor);
-  tsbEl.style.color=tsbColor;
-  document.getElementById("kpi-form-label").textContent=
-    tsb>10?"Fresh":tsb>0?"Good form":tsb>-10?"Optimal":tsb>-20?"Tired":"Cooked";
-  var today=new Date(),dow=today.getDay()||7;
-  var mon=new Date(today);mon.setDate(today.getDate()-dow+1);
-  var monStr=mon.toISOString().split("T")[0];
-  var lastMonStr=new Date(mon.getTime()-7*86400000).toISOString().split("T")[0];
-  var tw=workouts.filter(function(w){return w.date>=monStr;}).reduce(function(s,w){return s+getTSS(w);},0);
-  var lw=workouts.filter(function(w){return w.date>=lastMonStr&&w.date<monStr;}).reduce(function(s,w){return s+getTSS(w);},0);
-  var delta=tw-lw;
-  document.getElementById("kpi-week").textContent=Math.round(tw);
-  var dEl=document.getElementById("kpi-week-delta");
-  dEl.textContent=(delta>=0?"+":"")+Math.round(delta)+" vs last";
-  dEl.style.color=delta>=0?"var(--green)":"var(--red)";
-  var mStart=new Date(today.getFullYear(),today.getMonth(),1).toISOString().split("T")[0];
-  var month=workouts.filter(function(w){return w.date>=mStart;});
-  var rKm=Math.round(month.filter(function(w){return w.sport==="running";}).reduce(function(s,w){return s+(w.distance_km||0);},0));
-  var cKm=Math.round(month.filter(function(w){return (w.sport||"").indexOf("cycl")>-1;}).reduce(function(s,w){return s+(w.distance_km||0);},0));
-  document.getElementById("kpi-km").innerHTML=rKm+cKm+'<span class="kpi-unit">km</span>';
-  document.getElementById("kpi-km-sub").textContent=rKm+"r \u00b7 "+cKm+"c";
-  var cut=new Date();cut.setDate(cut.getDate()-28);
-  var rec=workouts.filter(function(w){return new Date(w.date)>cut&&w.sport!=="unknown";});
-  var comp=rec.length?Math.round(rec.filter(function(w){return w.duration_min>10;}).length/rec.length*100):0;
-  document.getElementById("kpi-comp").innerHTML=comp+'<span class="kpi-unit">%</span>';
+// ── PLAN ──────────────────────────────────────────────────────
+function fmtPace(secPerKm){var m=Math.floor(secPerKm/60),s=Math.round(secPerKm%60);return m+":"+(s<10?"0":"")+s;}
+function shiftWeek(dir){
+  weekOffset+=dir;
+  var lbl=weekOffset===0?"This Week":weekOffset===1?"Next Week":weekOffset===-1?"Last Week":(weekOffset>0?"+"+weekOffset+" weeks":weekOffset+" weeks");
+  document.getElementById("plan-wlabel").textContent=lbl;
+  if(weekOffset===0)renderPlan();
+  else document.getElementById("plan-days").innerHTML='<div class="empty">'+(weekOffset>0?"Next week's plan is generated every Sunday at 4pm.":"Past plans aren't stored yet.")+'</div>';
+  renderPushZone();
 }
-
-// ── PLAN ──────────────────────────────────────────────────────────────────────
-function sportFromText(text){
-  var t=text.toLowerCase();
-  if(t.indexOf("run")>-1)return "run";
-  if(t.indexOf("cycl")>-1||t.indexOf("bike")>-1||t.indexOf("indoor")>-1)return "cycle";
-  if(t.indexOf("strength")>-1||t.indexOf("trx")>-1||t.indexOf("weight")>-1)return "strength";
-  return "rest";
-}
-function sportIcon(type){
-  var icons={
-    run:'<svg viewBox="0 0 20 20" fill="none"><path d="M13 4a1 1 0 1 0 2 0 1 1 0 0 0-2 0zm-2 3l-2 1.5L7 12h2l1-2.5 2 1L14 14h2l-2-5-2.5-1.5.5-1z" fill="currentColor"/><path d="M7 17l1.5-3" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>',
-    cycle:'<svg viewBox="0 0 20 20" fill="none"><circle cx="5.5" cy="13.5" r="3" stroke="currentColor" stroke-width="1.3"/><circle cx="14.5" cy="13.5" r="3" stroke="currentColor" stroke-width="1.3"/><path d="M14.5 13.5L11 6H8.5M8.5 6l-3 7.5M8.5 6h4" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/><circle cx="13" cy="4.5" r="1" fill="currentColor"/></svg>',
-    strength:'<svg viewBox="0 0 20 20" fill="none"><path d="M3 10h2M15 10h2M5 10h10M5 7v6M15 7v6M2 8.5v3M18 8.5v3" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>',
-    rest:'<svg viewBox="0 0 20 20" fill="none"><path d="M10 3a7 7 0 1 0 0 14A7 7 0 0 0 10 3zm0 3v4l2.5 2.5" stroke="currentColor" stroke-width="1.3" stroke-linecap="round"/></svg>'
-  };
-  return icons[type]||icons.rest;
-}
-function sportColors(type){
-  var m={run:["rgba(37,99,235,0.2)","#4c9be8"],cycle:["rgba(52,211,153,0.15)","#34d399"],strength:["rgba(245,158,11,0.15)","#f59e0b"],rest:["rgba(255,255,255,0.05)","#606070"]};
-  return m[type]||m.rest;
-}
-function pillClass(type){return{run:"pill-run",cycle:"pill-cycle",strength:"pill-strength",rest:"pill-rest"}[type]||"pill-rest";}
-function pillLabel(type){return{run:"Run",cycle:"Cycling",strength:"Strength",rest:"Rest"}[type]||"Rest";}
-
-function renderPlan(md){
-  if(!md){
-    document.getElementById("plan-days").innerHTML='<div style="color:var(--text3);padding:40px 0;text-align:center;font-size:13px">No plan yet — run the workflow first.</div>';
-    return;
+function renderPlan(){
+  var box=document.getElementById("plan-days");
+  if(!planJson||!planJson.length){box.innerHTML='<div class="empty">No plan yet.<br>Set your availability and the plan generates Sunday 8pm — or trigger the workflow on GitHub.</div>';return;}
+  // week date label
+  if(planJson[0]&&planJson[0].date){
+    var d0=new Date(planJson[0].date);
+    document.getElementById("plan-wdate").textContent="Week of "+d0.toLocaleDateString("en-GB",{day:"numeric",month:"long"});
   }
+  box.innerHTML="";
+  planJson.forEach(s=>{
+    var sp=s.sport||"running";
+    var st=sp==="running"?"run":sp.indexOf("cycl")>-1?"bike":sp==="strength"?"strength":"other";
+    var cl=sportClr(st), bg=cl[0], col=cl[1];
+    var dt=s.date?new Date(s.date):null;
+    var dayLabel=(s.day||"")+(dt?" · "+dt.toLocaleDateString("en-GB",{day:"numeric",month:"short"}):"");
+    var dur=Math.round((s.total_duration_secs||0)/60);
 
-  // Extract generated date
-  var genMatch=md.indexOf("**Generated:**");
-  if(genMatch>-1){
-    var genLine=md.substring(genMatch+14,md.indexOf("\n",genMatch)).trim();
-    document.getElementById("plan-date").textContent=genLine;
-  }
+    var stepsHTML=(s.steps||[]).map(function(step){return renderStep(step,sp,col);}).join("");
+    var noteHTML=s.notes?'<div class="coach-note">'+s.notes+'</div>':"";
 
-  // Split by day (### Monday, ### Tuesday etc)
-  var container=document.getElementById("plan-days");
-  container.innerHTML="";
-
-  // Split on ### day headers
-  var parts=md.split("### ");
-  parts.forEach(function(part){
-    if(!part.trim())return;
-
-    // Check if this looks like a day section
-    var firstLine=part.split("\n")[0].trim();
-    var dayNames=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-    var isDay=false;
-    for(var di=0;di<dayNames.length;di++){
-      if(firstLine.indexOf(dayNames[di])>-1){isDay=true;break;}
-    }
-    if(!isDay)return;
-
-    // Get sport and duration
-    var sportLine="";
-    var durLine="";
-    var lines=part.split("\n");
-    for(var li=0;li<lines.length;li++){
-      if(lines[li].indexOf("**Sport:**")>-1)sportLine=lines[li];
-      if(lines[li].indexOf("**Total duration:**")>-1)durLine=lines[li];
-    }
-    var sportText=sportLine.replace("**Sport:**","").replace(/\|.*/,"").trim();
-    var dur=durLine.replace("**Total duration:**","").trim();
-    var st=sportFromText(sportText);
-    var colors=sportColors(st);
-    var bg=colors[0],col=colors[1];
-
-    // Parse #### subsections (Warm-up, Main Set, Cool-down etc)
-    var stepSections=[];
-    var subParts=part.split("#### ");
-    subParts.forEach(function(sub,idx){
-      if(idx===0)return; // skip the day header part
-      var subLines=sub.split("\n");
-      var title=subLines[0].trim();
-      var bullets=[];
-      for(var si=1;si<subLines.length;si++){
-        var l=subLines[si].trim();
-        if(l.indexOf("- ")==0)bullets.push(l.substring(2));
-        else if(l&&l.indexOf("#")<0&&l.indexOf("**Coach")<0&&l.indexOf("**Garmin")<0)bullets.push(l);
-      }
-      if(title)stepSections.push({title:title,bullets:bullets.filter(function(b){return b.length>0;})});
-    });
-
-    // Extract coach notes and garmin alerts
-    var coachNote="";
-    var garminNote="";
-    var coachIdx=part.indexOf("**Coaching notes:**");
-    if(coachIdx<0)coachIdx=part.indexOf("**Coach notes:**");
-    if(coachIdx>-1){
-      var coachEnd=part.indexOf("\n**",coachIdx+5);
-      if(coachEnd<0)coachEnd=coachIdx+300;
-      coachNote=part.substring(coachIdx,coachEnd).replace("**Coaching notes:**","").replace("**Coach notes:**","").trim();
-    }
-    var garminIdx=part.indexOf("**Garmin alert");
-    if(garminIdx>-1){
-      var garminEnd=part.indexOf("\n**",garminIdx+5);
-      if(garminEnd<0)garminEnd=garminIdx+200;
-      garminNote=part.substring(garminIdx,garminEnd).replace(/\*\*Garmin alerts?:\*\*/g,"").trim();
-    }
-
-    // Build step cards HTML
-    var icons={warmup:"🔥",main:"💪",interval:"💪",threshold:"💪",cooldown:"❄️",recovery:"🔄",strength:"🏋️",circuit:"🏋️"};
-    var stepsHTML=stepSections.map(function(s){
-      var titleLow=s.title.toLowerCase();
-      var icon="⏱";
-      Object.keys(icons).forEach(function(k){if(titleLow.indexOf(k)>-1)icon=icons[k];});
-      var bulletsHTML=s.bullets.map(function(b){
-        var safe=b.replace(/</g,"&lt;").replace(/>/g,"&gt;");
-        // Bold **text**
-        safe=safe.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
-        return '<div class="plan-bullet">'+safe+'</div>';
-      }).join("");
-      return '<div class="plan-step">'+
-        '<div class="plan-step-header">'+
-          '<span class="plan-step-icon">'+icon+'</span>'+
-          '<span class="plan-step-title">'+s.title+'</span>'+
-        '</div>'+
-        '<div class="plan-step-bullets">'+bulletsHTML+'</div>'+
-      '</div>';
-    }).join("");
-
-    if(!stepsHTML)stepsHTML='<div style="color:var(--text3);font-size:13px;padding:8px 0">Rest day</div>';
-
-    var notesHTML="";
-    if(coachNote)notesHTML+='<div class="plan-coach-note"><span style="opacity:0.6;font-size:11px;text-transform:uppercase;letter-spacing:.5px">Coach</span><br>'+coachNote+'</div>';
-    if(garminNote)notesHTML+='<div class="plan-garmin-note"><span style="opacity:0.6;font-size:11px;text-transform:uppercase;letter-spacing:.5px">⌚ Garmin alert</span><br>'+garminNote+'</div>';
-
-    var el=document.createElement("div");
-    el.className="plan-day";
+    var el=document.createElement("div");el.className="day";
     el.innerHTML=
-      '<div class="plan-day-header" onclick="togglePlanDay(this)">'+
-        '<div class="day-icon" style="background:'+bg+';color:'+col+'">'+sportIcon(st)+'</div>'+
-        '<div class="day-info">'+
-          '<div class="day-name">'+firstLine+' <span class="day-pill '+pillClass(st)+'">'+pillLabel(st)+'</span></div>'+
-          '<div class="day-meta">'+dur+'</div>'+
-        '</div>'+
-        '<div class="day-chevron"><svg viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
+      '<div class="day-head" onclick="toggleDay(this)">'+
+        '<div class="day-ic" style="background:'+bg+';color:'+col+'">'+sportIcon(st)+'</div>'+
+        '<div class="day-meta"><div class="day-name">'+(s.name||"Session")+
+          ' <span class="tag" style="background:'+bg+';color:'+col+'">'+sp.replace("_"," ")+'</span></div>'+
+          '<div class="day-line">'+dayLabel+' · '+dur+' min'+(s.planned_tss?' · '+s.planned_tss+' TSS':"")+'</div></div>'+
+        '<div class="chev"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
       '</div>'+
-      '<div class="plan-day-body">'+stepsHTML+notesHTML+'</div>';
-
-    container.appendChild(el);
+      '<div class="day-body"><div class="day-inner">'+
+        (s.focus?'<div style="font-size:13px;color:var(--t2);margin-bottom:10px">'+s.focus+'</div>':"")+
+        stepsHTML+noteHTML+
+      '</div></div>';
+    box.appendChild(el);
   });
+  renderPushZone();
+}
+function renderStep(step,sport,col){
+  if(step.type==="repeat"){
+    var inner=(step.steps||[]).map(function(s){return renderStep(s,sport,col);}).join("");
+    return '<div style="border-left:2px solid '+col+';padding-left:10px;margin-bottom:8px">'+
+      '<div style="font-size:11px;font-weight:700;color:'+col+';text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">'+(step.repeat_count||2)+'× Repeat</div>'+inner+'</div>';
+  }
+  var label={warmup:"Warm-up",cooldown:"Cool-down",recovery:"Recovery",interval:"Work"}[step.type]||"Work";
+  var dotColor={warmup:"#f59e0b",cooldown:"#22c55e",recovery:"#6b7480",interval:col}[step.type]||col;
+  var dur=step.duration_secs?Math.floor(step.duration_secs/60)+":"+(step.duration_secs%60<10?"0":"")+(step.duration_secs%60):"";
+  var tgt="";
+  if(step.target_type==="pace"&&step.target_low&&step.target_high)
+    tgt=fmtPace(step.target_high)+"–"+fmtPace(step.target_low)+" /km";
+  else if(step.target_type==="power"&&step.target_low)
+    tgt=step.target_low+"–"+step.target_high+" W";
+  else if(step.target_type==="heart_rate"&&step.target_low)
+    tgt=step.target_low+"–"+step.target_high+" bpm";
+  return '<div class="step">'+
+    '<div class="step-h"><span class="step-dot" style="background:'+dotColor+'"></span>'+
+      '<span class="step-t">'+label+'</span><span class="step-dur">'+dur+'</span></div>'+
+    (tgt?'<div class="step-tgt">'+tgt+'</div>':"")+
+    (step.description?'<div class="step-desc">'+step.description+'</div>':"")+
+  '</div>';
+}
+function toggleDay(h){h.querySelector(".chev").classList.toggle("open");h.nextElementSibling.classList.toggle("open");}
+
+// ── PUSH TO GARMIN ────────────────────────────────────────────
+let planStatus=null;
+function renderPushZone(){
+  var zone=document.getElementById("push-zone");
+  var status=document.getElementById("push-status");
+  var btn=document.getElementById("push-btn");
+  // Only show the push button on the current week with a real plan
+  if(weekOffset!==0||!planJson||!planJson.length){zone.style.display="none";return;}
+  zone.style.display="block";
+  if(planStatus&&planStatus.pushed){
+    status.innerHTML='✓ Pushed to Garmin'+(planStatus.uploaded?(' · '+planStatus.uploaded+' workouts on your calendar'):'')+'. Re-push if you made changes.';
+    status.style.color="var(--green)";
+    btn.textContent="Push again 🚀";
+  }else{
+    status.textContent="Draft plan ready. Review it, adjust via Coach if needed, then push.";
+    status.style.color="var(--t2)";
+    btn.textContent="Let's do this! 🚀";
+  }
+}
+async function pushToGarmin(){
+  var token=getToken();
+  var btn=document.getElementById("push-btn");
+  var status=document.getElementById("push-status");
+  if(!token){status.textContent="Add your GitHub token first (gear icon, top right).";status.style.color="var(--red)";return;}
+  btn.disabled=true;btn.style.opacity="0.6";btn.textContent="Sending to Garmin…";
+  status.style.color="var(--t2)";
+  status.textContent="Triggering push… this takes ~1–2 minutes on Garmin's side.";
+  try{
+    var r=await fetch("https://api.github.com/repos/"+REPO+"/actions/workflows/push_to_garmin.yml/dispatches",{
+      method:"POST",
+      headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
+      body:JSON.stringify({ref:"main"})
+    });
+    if(r.status===204){
+      status.innerHTML="🚀 Push started! Your workouts will be on Garmin in ~1–2 min.<br>Open Garmin Connect and sync your Fenix.";
+      status.style.color="var(--green)";
+      btn.textContent="Pushed 🚀";
+      // Poll plan_status.json a few times to confirm
+      pollPushStatus(0);
+    }else{
+      var e=await r.json();
+      status.textContent="Couldn't start push: "+(e.message||r.status)+". Check your token has 'workflow' scope.";
+      status.style.color="var(--red)";
+      btn.disabled=false;btn.style.opacity="1";btn.textContent="Try again 🚀";
+    }
+  }catch(err){
+    status.textContent="Network error: "+err.message;
+    status.style.color="var(--red)";
+    btn.disabled=false;btn.style.opacity="1";btn.textContent="Try again 🚀";
+  }
+}
+async function pollPushStatus(attempt){
+  if(attempt>6)return;
+  setTimeout(async function(){
+    var s=await fetchJSON("plan_status.json");
+    if(s&&s.status==="pushed"){
+      planStatus=s;
+      var status=document.getElementById("push-status");
+      status.innerHTML="✓ Done! "+(s.uploaded||0)+" workouts on your Garmin calendar. Sync your Fenix to pull them onto the watch.";
+      status.style.color="var(--green)";
+      var btn=document.getElementById("push-btn");
+      btn.disabled=false;btn.style.opacity="1";btn.textContent="Push again 🚀";
+    }else{
+      pollPushStatus(attempt+1);
+    }
+  },20000); // check every 20s
 }
 
-
-function togglePlanDay(h){
-  h.classList.toggle("open");
-  h.nextElementSibling.classList.toggle("open");
-}
-function renderBody(md){
-  return md
-    .replace(/^####\s+(.+)$/gm,'<div class="section-h">$1</div>')
-    .replace(/\*\*(.+?)\*\*/g,"<strong>$1</strong>")
-    .replace(/^-\s+(.+)$/gm,'<div style="padding:1px 0;padding-left:10px;border-left:2px solid rgba(255,255,255,0.06);margin:3px 0">$1</div>')
-    .replace(/\n\n+/g,"<br>").replace(/\n/g,"<br>");
-}
-
-// ── COMPLIANCE ────────────────────────────────────────────────────────────────
-function renderComp(){
-  var list=document.getElementById("comp-list");
-  var recent=workouts.slice(-15).reverse();
-  if(!recent.length){list.innerHTML='<div style="color:var(--text3);padding:20px 0;text-align:center;font-size:13px">No data yet</div>';return;}
-  list.innerHTML=recent.map(function(w){
-    var sp=w.sport||"";
-    var st=sp==="running"?"run":sp.indexOf("cycl")>-1?"cycle":"strength";
-    var colors=sportColors(st);var bg=colors[0],col=colors[1];
-    var pct=Math.min(100,w.duration_min>0?Math.round(w.duration_min/60*100):0);
-    var barCol=pct>=90?"#34d399":pct>=70?"#f59e0b":"#f87171";
-    var check=pct>=90?"\u2713":"~";
-    var checkCol=pct>=90?"var(--green)":pct>=70?"var(--amber)":"var(--red)";
-    var date=new Date(w.date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
-    var dur=Math.round(w.duration_min||0)+" min";
-    var dist=w.distance_km>0?" \u00b7 "+w.distance_km.toFixed(1)+" km":"";
-    var hr=w.avg_hr?" \u00b7 "+w.avg_hr+" bpm":"";
-    return '<div class="comp-item">'+
-      '<div class="comp-icon-wrap" style="background:'+bg+';color:'+col+'">'+sportIcon(st)+'</div>'+
-      '<div class="comp-info"><div class="comp-title">'+date+'</div><div class="comp-sub">'+dur+dist+hr+'</div></div>'+
-      '<div class="comp-bar-track"><div class="comp-bar-fill" style="width:'+pct+'%;background:'+barCol+'"></div></div>'+
-      '<div class="comp-check" style="color:'+checkCol+'">'+check+'</div>'+
-    '</div>';
-  }).join("");
-}
-
-// ── LOG ───────────────────────────────────────────────────────────────────────
-function filterLog(f,btn){
-  logFilter=f;
-  document.querySelectorAll(".filter-chip").forEach(function(c){c.classList.remove("active");});
-  btn.classList.add("active");
-  renderLog();
-}
+// ── LOG ───────────────────────────────────────────────────────
+function filterLog(f,btn){logFilter=f;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));btn.classList.add("active");renderLog();}
 function renderLog(){
   var list=document.getElementById("log-list");
   var acts=workouts.slice().reverse();
-  if(logFilter!=="all")acts=acts.filter(function(w){
-    var s=w.sport||"";
-    if(logFilter==="running")return s==="running";
-    if(logFilter==="cycling")return s.indexOf("cycl")>-1;
-    if(logFilter==="strength")return s==="strength";
-    return true;
-  });
-  if(!acts.length){list.innerHTML='<div style="color:var(--text3);padding:20px 0;text-align:center;font-size:13px">No activities</div>';return;}
-  list.innerHTML=acts.map(function(w){
-    var sp=w.sport||"";
-    var st=sp==="running"?"run":sp.indexOf("cycl")>-1?"cycle":sp==="strength"?"strength":"rest";
-    var colors=sportColors(st);var bg=colors[0],col=colors[1];
-    var label=SPORT_LABELS[sp]||sp||"Activity";
-    var date=new Date(w.date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
-    var dur=Math.round(w.duration_min||0)+" min";
-    var dist=w.distance_km>0?" \u00b7 "+w.distance_km.toFixed(1)+" km":"";
-    var hr=w.avg_hr?" \u00b7 "+w.avg_hr+" bpm":"";
-    return '<div class="act-item">'+
-      '<div class="act-icon" style="background:'+bg+';color:'+col+'">'+sportIcon(st)+'</div>'+
-      '<div class="act-info">'+
-        '<div class="act-sport">'+label+'</div>'+
-        '<div class="act-detail">'+date+' \u00b7 '+dur+dist+hr+'</div>'+
-      '</div>'+
-      '<div class="act-tss-wrap">'+
-        '<div class="act-tss-num">'+getTSS(w)+'</div>'+
-        '<div class="act-tss-lbl">TSS</div>'+
-      '</div>'+
-    '</div>';
+  if(logFilter!=="all")acts=acts.filter(w=>{var s=sportOf(w);return logFilter==="running"?s==="run":logFilter==="cycling"?s==="bike":logFilter==="strength"?s==="strength":true;});
+  if(!acts.length){list.innerHTML='<div class="empty">No activities yet.</div>';return;}
+  list.innerHTML=acts.map(w=>{
+    var st=sportOf(w),cl=sportClr(st);
+    var label={run:"Running",bike:"Cycling",strength:"Strength"}[st]||"Activity";
+    var dt=new Date(w.date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+    var det=Math.round(w.duration_min||0)+" min"+(w.distance_km>0?" · "+w.distance_km.toFixed(1)+" km":"")+(w.avg_hr?" · "+w.avg_hr+" bpm":"")+(w.avg_power_watts>0?" · "+w.avg_power_watts+" W":"");
+    return '<div class="act"><div class="act-ic" style="background:'+cl[0]+';color:'+cl[1]+'">'+sportIcon(st)+'</div>'+
+      '<div class="act-info"><div class="act-sp">'+label+'</div><div class="act-dt">'+dt+' · '+det+'</div></div>'+
+      '<div class="act-tss"><div class="n">'+getTSS(w)+'</div><div class="u">TSS</div></div></div>';
   }).join("");
 }
 
-// ── AVAILABILITY ──────────────────────────────────────────────────────────────
-function getNextMonday(){
-  var d=new Date(),day=d.getDay()||7;
-  d.setDate(d.getDate()+(8-day));d.setHours(0,0,0,0);return d;
-}
+// ── AVAILABILITY ──────────────────────────────────────────────
+function nextMonday(){var d=new Date(),day=d.getDay()||7;d.setDate(d.getDate()+(8-day));d.setHours(0,0,0,0);return d;}
 function renderAvail(){
-  var grid=document.getElementById("avail-grid");
-  var mon=getNextMonday();
-  grid.innerHTML=DAY_NAMES.map(function(name,i){
+  var grid=document.getElementById("av-grid"),mon=nextMonday();
+  grid.innerHTML=DAYS.map((name,i)=>{
     var d=new Date(mon);d.setDate(mon.getDate()+i);
-    var label=d.toLocaleDateString("en-GB",{day:"numeric",month:"short"});
-    var s=avState[name];
-    var hDisplay=s.hours>=1?s.hours+"h":Math.round(s.hours*60)+"m";
-    return '<div class="av-cell '+(s.available?"on":"")+'" id="av-'+name+'" onclick="toggleAv(\''+name+'\')">'+
-      '<span class="av-d">'+name.slice(0,2)+'</span>'+
-      '<span class="av-n">'+label.split(" ")[0]+'</span>'+
-      '<span class="av-h">'+(s.available?hDisplay:"off")+'</span>'+
-      (s.available?'<div class="stepper" onclick="event.stopPropagation()">'+
-        '<button class="stepper-btn" onclick="adjH(\''+name+'\',-0.5)">-</button>'+
-        '<span class="stepper-val">'+hDisplay+'</span>'+
-        '<button class="stepper-btn" onclick="adjH(\''+name+'\',0.5)">+</button>'+
-      '</div>':"")+
-    '</div>';
+    var s=avState[name],h=s.hours>=1?s.hours+"h":Math.round(s.hours*60)+"m";
+    return '<div class="av-cell '+(s.available?"on":"")+'" onclick="toggleAv(\''+name+'\')">'+
+      '<div><div class="av-day">'+name+'</div><div class="av-date">'+d.toLocaleDateString("en-GB",{day:"numeric",month:"short"})+'</div></div>'+
+      '<div class="av-toggle" onclick="event.stopPropagation()">'+
+        (s.available?'<div class="stepper"><button onclick="adjH(\''+name+'\',-0.5)">−</button><span class="val">'+h+'</span><button onclick="adjH(\''+name+'\',0.5)">+</button></div>':'<span class="av-off" onclick="toggleAv(\''+name+'\')">Rest</span>')+
+      '</div></div>';
   }).join("");
 }
 function toggleAv(n){avState[n].available=!avState[n].available;renderAvail();}
-function adjH(n,d){
-  avState[n].hours=Math.max(0.5,Math.min(4,+(avState[n].hours+d).toFixed(1)));
-  renderAvail();
-}
-async function saveAvailability(){
+function adjH(n,d){avState[n].hours=Math.max(0.5,Math.min(4,+(avState[n].hours+d).toFixed(1)));renderAvail();}
+async function saveAvail(){
   var token=getToken();
-  if(!token){showStatus("Save your GitHub token first (tap the gear icon)","err");return;}
-  var mon=getNextMonday();
-  var weekOf=mon.toISOString().split("T")[0];
-  var payload={
-    week_of:weekOf,
-    days:{},
-    notes:document.getElementById("avail-notes").value.trim()
-  };
-  DAY_NAMES.forEach(function(d){payload.days[d]={available:avState[d].available,hours:avState[d].hours};});
-  showStatus("Saving...","");
+  if(!token){showStatus("Add your GitHub token first (gear icon).","err");return;}
+  var mon=nextMonday(),weekOf=mon.toISOString().split("T")[0];
+  var payload={week_of:weekOf,days:{},notes:document.getElementById("av-notes").value.trim()};
+  DAYS.forEach(d=>payload.days[d]={available:avState[d].available,hours:avState[d].hours});
+  showStatus("Saving…","");
   try{
-    var gR=await fetch(API+"/availability.json",{headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json"}});
-    var gJ=await gR.json();
-    var pR=await fetch(API+"/availability.json",{
-      method:"PUT",
-      headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
-      body:JSON.stringify({message:"Availability "+weekOf,content:btoa(JSON.stringify(payload,null,2)),sha:gJ.sha})
-    });
-    if(pR.ok){
-      var days=DAY_NAMES.filter(function(d){return avState[d].available;});
-      showStatus("Saved for "+weekOf+" - "+days.join(", ")+". Claude reads this Sunday 8pm Luxembourg time.","ok");
-    }else{
-      var e=await pR.json();showStatus("Error: "+(e.message||"Unknown"),"err");
-    }
-  }catch(err){showStatus("Network error: "+err.message,"err");}
+    var g=await(await fetch(API+"/availability.json",{headers:{Authorization:"Bearer "+token}})).json();
+    var r=await fetch(API+"/availability.json",{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({message:"Availability "+weekOf,content:btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2)))),sha:g.sha})});
+    if(r.ok){var ds=DAYS.filter(d=>avState[d].available);showStatus("Saved · "+ds.join(", ")+". Coach Claudio plans Sunday 8pm.","ok");}
+    else{var e=await r.json();showStatus("Error: "+(e.message||"failed"),"err");}
+  }catch(e){showStatus("Network error: "+e.message,"err");}
 }
-function showStatus(msg,type){
-  var el=document.getElementById("save-status");
-  el.textContent=msg;el.className="save-status"+(type?" "+type:"");
-}
+function showStatus(m,t){var el=document.getElementById("av-status");el.textContent=m;el.className="status "+(t||"");}
 
-// ── COACH CLAUDIO ────────────────────────────────────────────────────────────
-let coachHistory=[];
-
+// ── COACH CLAUDIO ─────────────────────────────────────────────
 function addCoachMessage(text,isUser){
-  var container=document.getElementById("coach-messages");
-  if(!container)return;
-  var msg=document.createElement("div");
-  msg.style.cssText="align-self:"+(isUser?"flex-end":"flex-start")+";max-width:85%;background:"+(isUser?"var(--blue)":"var(--bg3)")+";color:"+(isUser?"#fff":"var(--text2)")+";padding:12px 14px;border-radius:14px;font-size:13px;line-height:1.5;word-break:break-word;";
-  msg.textContent=text;
-  container.appendChild(msg);
-  container.scrollTop=container.scrollHeight;
+  var c=document.getElementById("coach-msgs");
+  var b=document.createElement("div");b.className="bubble "+(isUser?"me":"ai");b.textContent=text;
+  c.appendChild(b);document.getElementById("scroll").scrollTop=document.getElementById("scroll").scrollHeight;
 }
-
+function askQuick(q){document.getElementById("coach-input").value=q;sendCoachMessage();}
 async function sendCoachMessage(){
-  var input=document.getElementById("coach-input");
-  var send=document.getElementById("coach-send");
-  var msg=input.value.trim();
-  if(!msg||!send)return;
-
+  var input=document.getElementById("coach-input"), send=document.getElementById("coach-send");
+  var msg=input.value.trim();if(!msg||!send)return;
   var apiKey=localStorage.getItem("anthropic_key")||"";
-  if(!apiKey){
-    addCoachMessage("Please add your Anthropic API key in the setup menu (gear icon top right).",false);
-    return;
-  }
-
-  send.disabled=true;send.style.opacity="0.5";
-  addCoachMessage(msg,true);
-  input.value="";
-
+  if(!apiKey){addCoachMessage("Add your Anthropic API key in setup (gear icon, top right).",false);return;}
+  send.disabled=true;send.style.opacity="0.5";addCoachMessage(msg,true);input.value="";
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
-  var recentW=workouts.filter(function(w){return new Date(w.date)>=cutoff;});
-  var tss=recentW.reduce(function(s,w){return s+getTSS(w);},0);
-  var km=recentW.reduce(function(s,w){return s+(w.distance_km||0);},0);
-
-  var systemPrompt="You are Coach Claudio, Diego's personal AI running and cycling coach. You have expertise in training, physiology, performance analysis, and recovery. Your style: friendly, direct, data-driven. Keep responses concise (2-3 sentences) unless asked for detail.\n\nDiego's current context:\n"+
-    "Training this week: "+recentW.length+" sessions, "+Math.round(tss)+" TSS, "+km.toFixed(1)+" km\n"+
-    "FTP: "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W | LTHR: "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm | Max HR: "+(profile.running?profile.running.max_hr:MAX_HR)+" bpm\n"+
-    "Plan: "+(planText?planText.substring(0,300)+"...":"Not yet generated");
-
+  var recentW=workouts.filter(w=>new Date(w.date)>=cutoff);
+  var tss=recentW.reduce((s,w)=>s+getTSS(w),0), km=recentW.reduce((s,w)=>s+(w.distance_km||0),0);
+  var pmc=buildPMC(90),tsb=pmc.T[pmc.T.length-1],ctl=pmc.C[pmc.C.length-1];
+  var sys="You are Coach Claudio, Diego's personal AI endurance coach (running + cycling + strength). Expert, friendly, direct, data-driven. Keep replies to 2-4 sentences unless asked for detail.\n\nContext:\n"+
+    "This week: "+recentW.length+" sessions, "+Math.round(tss)+" TSS, "+km.toFixed(1)+" km\n"+
+    "Fitness(CTL) "+Math.round(ctl)+", Form(TSB) "+Math.round(tsb)+"\n"+
+    "FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W, LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm, MaxHR "+(profile.running?profile.running.max_hr:MAX_HR)+"\n"+
+    "Plan: "+(planText?planText.substring(0,400):"Not yet generated");
   coachHistory.push({role:"user",content:msg});
-
   try{
-    var res=await fetch("https://api.anthropic.com/v1/messages",{
-      method:"POST",
-      headers:{
-        "Content-Type":"application/json",
-        "x-api-key":apiKey,
-        "anthropic-version":"2023-06-01",
-        "anthropic-dangerous-direct-browser-access":"true"
-      },
-      body:JSON.stringify({
-        model:"claude-haiku-4-5-20251001",
-        max_tokens:500,
-        system:systemPrompt,
-        messages:coachHistory
-      })
-    });
+    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+      headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:600,system:sys,messages:coachHistory})});
     var data=await res.json();
-    if(data.content&&data.content[0]&&data.content[0].text){
-      var resp=data.content[0].text;
-      addCoachMessage(resp,false);
-      coachHistory.push({role:"assistant",content:resp});
-      if(coachHistory.length>30)coachHistory=coachHistory.slice(-30);
-    }else if(data.error){
-      addCoachMessage("Error: "+data.error.message,false);
-    }
-  }catch(err){
-    addCoachMessage("Network error: "+err.message,false);
-  }finally{
-    send.disabled=false;send.style.opacity="1";
-  }
+    if(data.content&&data.content[0]&&data.content[0].text){var resp=data.content[0].text;addCoachMessage(resp,false);coachHistory.push({role:"assistant",content:resp});if(coachHistory.length>30)coachHistory=coachHistory.slice(-30);}
+    else if(data.error)addCoachMessage("Error: "+data.error.message,false);
+  }catch(e){addCoachMessage("Network error: "+e.message,false);}
+  finally{send.disabled=false;send.style.opacity="1";}
 }
-
 document.addEventListener("DOMContentLoaded",function(){
-  var input=document.getElementById("coach-input");
-  if(input){
-    input.addEventListener("keydown",function(e){
-      if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendCoachMessage();}
-    });
-  }
+  var i=document.getElementById("coach-input");
+  if(i)i.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendCoachMessage();}});
 });
 
-// ── INIT ─────────────────────────────────────────────────────────────────────
+// ── INIT ──────────────────────────────────────────────────────
 async function init(){
-  var dot=document.getElementById("sync-dot");
-  var lbl=document.getElementById("sync-label");
-  var results=await Promise.all([
-    fetchJSON("workouts.json"),
-    fetchText("weekly_plan.md"),
-    fetchJSON("availability.json"),
-    fetchJSON("profile.json")
-  ]);
-  var wData=results[0],plan=results[1],avail=results[2],profileData=results[3];
-
-  workouts=wData||[];
-  planText=plan||"";
-  if(profileData)profile=profileData;
-
-  dot.classList.remove("spin");
-  lbl.textContent=workouts.length?workouts.length+" activities":"No data";
-
-  if(avail&&avail.days){
-    DAY_NAMES.forEach(function(d){if(avail.days[d])avState[d]=avail.days[d];});
-    var notesEl=document.getElementById("avail-notes");
-    if(avail.notes&&notesEl)notesEl.value=avail.notes;
-  }
-  renderAvail();
-  renderComp();
-  renderLog();
-  if(planText)renderPlan(planText);
-
-  if(workouts.length){
-    var p=buildPMC(90);
-    buildKPIs(p);
-    drawPMC(p);
-    drawWeekTSS();
-    drawMix();
-    drawCompSmall();
-    drawCompFull();
-  }
-
-  var ghToken=getToken();
-  var apiKey=localStorage.getItem("anthropic_key");
-  if(!ghToken||!apiKey){
-    document.getElementById("setup-drawer").classList.add("open");
-  }
+  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),fetchJSON("weekly_plan.json"),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json")]);
+  workouts=r[0]||[];planText=r[1]||"";planJson=r[2]||[];
+  var avail=r[3],prof=r[4];planStatus=r[5];
+  if(prof){profile=prof;FTP=prof.cycling?.ftp_watts||FTP;LTHR=prof.running?.threshold_hr||LTHR;REST_HR=prof.running?.resting_hr||REST_HR;MAX_HR=prof.running?.max_hr||MAX_HR;}
+  if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
+  renderAvail();renderLog();renderPlan();
+  if(workouts.length)renderHome();
+  if(!getToken()||!localStorage.getItem("anthropic_key"))setTimeout(toggleSetup,600);
 }
 init();
 </script>
