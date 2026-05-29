@@ -17,41 +17,6 @@
     ]
   },
   {
-    "day": "Monday",
-    "date": "2026-06-01",
-    "sport": "running",
-    "name": "Easy aerobic run",
-    "total_duration_secs": 1800,
-    "planned_tss": 35,
-    "focus": "Aerobic base, conversational effort",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 300,
-        "target_type": "pace",
-        "target_low": 450,
-        "target_high": 450,
-        "description": "Z1 easy jog, <145 bpm"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 1200,
-        "target_type": "pace",
-        "target_low": 405,
-        "target_high": 375,
-        "description": "Z2 aerobic, 146–162 bpm, conversational"
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 300,
-        "target_type": "pace",
-        "target_low": 450,
-        "target_high": 450,
-        "description": "Z1 easy jog to settle"
-      }
-    ]
-  },
-  {
     "day": "Tuesday",
     "date": "2026-06-02",
     "sport": "cycling_indoor",
