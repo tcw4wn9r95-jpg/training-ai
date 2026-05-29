@@ -1,137 +1,168 @@
 [
   {
-    "day": "Monday",
-    "date": "2026-06-01",
-    "sport": "strength",
-    "name": "Full-body strength circuit",
-    "total_duration_secs": 2100,
-    "planned_tss": 35,
-    "focus": "Full-body strength, movement quality",
-    "notes": "Complete 5 rounds: 8 reps goblet squats (24kg), 8 reps push-ups, 8 reps single-leg RDL (per leg, 12kg), 8 reps bent-over rows (20kg), 30sec rest between rounds. Focus on control and form.",
-    "steps": [
-      {
-        "type": "circuit",
-        "duration_secs": 2100,
-        "description": "Full-body strength circuit: goblet squats, push-ups, single-leg RDLs, bent-over rows"
-      }
-    ]
-  },
-  {
     "day": "Tuesday",
     "date": "2026-06-02",
-    "sport": "cycling_indoor",
-    "name": "Sweet spot build",
-    "total_duration_secs": 1800,
-    "planned_tss": 42,
-    "focus": "Sustainable threshold power, aerobic capacity",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 88,
-        "target_high": 106,
-        "description": "Z1 easy spin, 90–100 rpm"
-      },
-      {
-        "type": "repeat",
-        "repeat_count": 2,
-        "steps": [
-          {
-            "type": "interval",
-            "duration_secs": 480,
-            "target_type": "power",
-            "target_low": 142,
-            "target_high": 156,
-            "description": "Z2–Z3 sweet spot, 80–88% FTP, 160–170 bpm, 90–95 rpm"
-          },
-          {
-            "type": "recovery",
-            "duration_secs": 120,
-            "target_type": "power",
-            "target_low": 88,
-            "target_high": 106,
-            "description": "Z1 easy spin, 100W, 95+ rpm"
-          }
-        ]
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 240,
-        "target_type": "power",
-        "target_low": 70,
-        "target_high": 106,
-        "description": "Z1 easy spin down, 95+ rpm"
-      }
-    ]
-  },
-  {
-    "day": "Thursday",
-    "date": "2026-06-04",
     "sport": "running",
-    "name": "Tempo threshold (compact)",
+    "name": "Easy aerobic run",
     "total_duration_secs": 1800,
     "planned_tss": 32,
-    "focus": "Threshold pacing, Z3 tolerance",
+    "focus": "Aerobic base, conversational effort",
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 300,
         "target_type": "pace",
-        "target_low": 420,
-        "target_high": 385,
-        "description": "Z1–Z2 easy jog, <150 bpm"
+        "target_low": 450,
+        "target_high": 420,
+        "description": "Z1 easy, <145 bpm"
       },
       {
         "type": "interval",
-        "duration_secs": 360,
+        "duration_secs": 1200,
         "target_type": "pace",
-        "target_low": 360,
-        "target_high": 345,
-        "description": "Z3 tempo, 163–172 bpm"
-      },
-      {
-        "type": "recovery",
-        "duration_secs": 120,
-        "target_type": "pace",
-        "target_low": 420,
-        "target_high": 390,
-        "description": "Z2 easy jog"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 360,
-        "target_type": "pace",
-        "target_low": 360,
-        "target_high": 345,
-        "description": "Z3 tempo, 163–172 bpm"
+        "target_low": 405,
+        "target_high": 375,
+        "description": "Z2 aerobic, 146\u2013162 bpm, conversational"
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
         "target_type": "pace",
         "target_low": 450,
-        "target_high": 390,
-        "description": "Z1–Z2 easy jog and walk"
+        "target_high": 420,
+        "description": "Z1 easy, <145 bpm"
+      }
+    ]
+  },
+  {
+    "day": "Wednesday",
+    "date": "2026-06-03",
+    "sport": "cycling_indoor",
+    "name": "Sweet spot build",
+    "total_duration_secs": 2100,
+    "planned_tss": 48,
+    "focus": "Raise threshold power with sustained sweet-spot effort",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 420,
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 106,
+        "description": "Z1 easy spin, 85\u201395 rpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "power",
+        "target_low": 142,
+        "target_high": 155,
+        "description": "Z3 sweet spot, 88\u201392 rpm, 162\u2013172 bpm reference"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 480,
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 106,
+        "description": "Z1 easy spin, 85\u201395 rpm"
+      }
+    ]
+  },
+  {
+    "day": "Thursday",
+    "date": "2026-06-04",
+    "sport": "strength",
+    "name": "Lower body & core",
+    "total_duration_secs": 1800,
+    "planned_tss": 28,
+    "focus": "Strength endurance for legs, glutes, and core; shoulder-friendly",
+    "notes": "3 rounds (60s rest between): 12\u00d7 goblet squat 16/22 kg, 10\u00d7 RDL 22 kg, 8\u00d7 TRX split squat/leg, 20\u00d7 glute bridge (bw or 11 kg), 45s plank. Warm: leg swings, hip circles, bodyweight squats. Cool: child's pose, quad stretch, hamstring fold, glute figure-four.",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "description": "Leg swings (10 each), hip circles (10 each), bodyweight squats (15 reps)"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "description": "3 rounds of circuit: goblet squat, RDL, TRX split squat, glute bridge, plank (60s rest between rounds)"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "description": "Child's pose (30s), quad stretch (15s each leg), hamstring fold (30s), glute figure-four (20s each side)"
       }
     ]
   },
   {
     "day": "Friday",
     "date": "2026-06-05",
-    "sport": "cycling_outdoor",
-    "name": "Easy aerobic base ride",
-    "total_duration_secs": 1800,
-    "planned_tss": 22,
-    "focus": "Aerobic base building, active recovery",
+    "sport": "running",
+    "name": "Easy recovery run",
+    "total_duration_secs": 1500,
+    "planned_tss": 27,
+    "focus": "Active recovery, aerobic maintenance",
     "steps": [
       {
+        "type": "warmup",
+        "duration_secs": 240,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 420,
+        "description": "Z1 easy, <145 bpm"
+      },
+      {
         "type": "interval",
-        "duration_secs": 1800,
+        "duration_secs": 1020,
+        "target_type": "pace",
+        "target_low": 420,
+        "target_high": 390,
+        "description": "Z1\u2013Z2 easy, 140\u2013155 bpm, very conversational"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 240,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 420,
+        "description": "Z1 easy, <145 bpm"
+      }
+    ]
+  },
+  {
+    "day": "Saturday",
+    "date": "2026-06-06",
+    "sport": "cycling_outdoor",
+    "name": "Long easy ride",
+    "total_duration_secs": 3000,
+    "planned_tss": 42,
+    "focus": "Build aerobic endurance, time in zone Z2",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 480,
         "target_type": "heart_rate",
         "target_low": 130,
-        "target_high": 150,
-        "description": "Z1–Z2 easy steady pace, 75–87% LTHR, conversational effort, smooth cadence"
+        "target_high": 145,
+        "description": "Z1 easy spin on flat terrain, building gradually"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1920,
+        "target_type": "heart_rate",
+        "target_low": 146,
+        "target_high": 162,
+        "description": "Z2 aerobic, conversational pace, mostly flat terrain"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 600,
+        "target_type": "heart_rate",
+        "target_low": 130,
+        "target_high": 155,
+        "description": "Z1 easy pedal, HR drifting down"
       }
     ]
   }
