@@ -6,7 +6,7 @@
       "hours": 0.5
     },
     "Tuesday": {
-      "available": true,
+      "available": false,
       "hours": 0.5
     },
     "Wednesday": {
