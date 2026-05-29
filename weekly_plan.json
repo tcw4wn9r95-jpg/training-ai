@@ -69,34 +69,18 @@
     "day": "Thursday",
     "date": "2026-06-04",
     "sport": "running",
-    "name": "Tempo threshold opener (pyramid)",
-    "total_duration_secs": 2700,
-    "planned_tss": 52,
-    "focus": "Introduce threshold pacing, build Z3 tolerance",
+    "name": "Tempo threshold (compact)",
+    "total_duration_secs": 1800,
+    "planned_tss": 32,
+    "focus": "Threshold pacing, Z3 tolerance",
     "steps": [
       {
         "type": "warmup",
-        "duration_secs": 600,
+        "duration_secs": 300,
         "target_type": "pace",
         "target_low": 420,
         "target_high": 385,
         "description": "Z1–Z2 easy jog, <150 bpm"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 240,
-        "target_type": "pace",
-        "target_low": 360,
-        "target_high": 345,
-        "description": "Z3 tempo, 163–172 bpm, controlled effort"
-      },
-      {
-        "type": "recovery",
-        "duration_secs": 120,
-        "target_type": "pace",
-        "target_low": 420,
-        "target_high": 390,
-        "description": "Z2 easy jog"
       },
       {
         "type": "interval",
@@ -116,7 +100,7 @@
       },
       {
         "type": "interval",
-        "duration_secs": 240,
+        "duration_secs": 360,
         "target_type": "pace",
         "target_low": 360,
         "target_high": 345,
@@ -124,11 +108,11 @@
       },
       {
         "type": "cooldown",
-        "duration_secs": 600,
+        "duration_secs": 300,
         "target_type": "pace",
         "target_low": 450,
         "target_high": 390,
-        "description": "Z1–Z2 easy jog and walk, settle HR"
+        "description": "Z1–Z2 easy jog and walk"
       }
     ]
   }
