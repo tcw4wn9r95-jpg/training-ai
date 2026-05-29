@@ -1,5 +1,6 @@
 {
   "status": "pushed",
-  "uploaded": 0,
-  "total": 3
+  "uploaded": 3,
+  "total": 3,
+  "pushed": true
 }
