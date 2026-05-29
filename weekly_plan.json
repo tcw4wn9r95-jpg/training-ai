@@ -2,6 +2,23 @@
   {
     "day": "Monday",
     "date": "2026-06-01",
+    "sport": "strength",
+    "name": "Full-body strength circuit",
+    "total_duration_secs": 1800,
+    "planned_tss": 30,
+    "focus": "Full-body strength, movement quality",
+    "notes": "Complete 4 rounds: 8 reps goblet squats (24kg), 8 reps push-ups, 8 reps single-leg RDL (per leg, 12kg), 8 reps bent-over rows (20kg), 30sec rest between rounds. Focus on control and form.",
+    "steps": [
+      {
+        "type": "circuit",
+        "duration_secs": 1800,
+        "description": "Full-body strength circuit: goblet squats, push-ups, single-leg RDLs, bent-over rows"
+      }
+    ]
+  },
+  {
+    "day": "Monday",
+    "date": "2026-06-01",
     "sport": "running",
     "name": "Easy aerobic run",
     "total_duration_secs": 1800,
@@ -22,7 +39,7 @@
         "target_type": "pace",
         "target_low": 405,
         "target_high": 375,
-        "description": "Z2 aerobic, 146\u2013162 bpm, conversational"
+        "description": "Z2 aerobic, 146–162 bpm, conversational"
       },
       {
         "type": "cooldown",
@@ -49,7 +66,7 @@
         "target_type": "power",
         "target_low": 88,
         "target_high": 106,
-        "description": "Z1 easy spin, 90\u2013100 rpm"
+        "description": "Z1 easy spin, 90–100 rpm"
       },
       {
         "type": "repeat",
@@ -61,7 +78,7 @@
             "target_type": "power",
             "target_low": 142,
             "target_high": 156,
-            "description": "Z2\u2013Z3 sweet spot, 80\u201388% FTP, 160\u2013170 bpm, 90\u201395 rpm"
+            "description": "Z2–Z3 sweet spot, 80–88% FTP, 160–170 bpm, 90–95 rpm"
           },
           {
             "type": "recovery",
@@ -98,7 +115,7 @@
         "target_type": "pace",
         "target_low": 420,
         "target_high": 385,
-        "description": "Z1\u2013Z2 easy jog, <150 bpm"
+        "description": "Z1–Z2 easy jog, <150 bpm"
       },
       {
         "type": "interval",
@@ -106,7 +123,7 @@
         "target_type": "pace",
         "target_low": 360,
         "target_high": 345,
-        "description": "Z3 tempo, 163\u2013172 bpm, controlled effort"
+        "description": "Z3 tempo, 163–172 bpm, controlled effort"
       },
       {
         "type": "recovery",
@@ -122,7 +139,7 @@
         "target_type": "pace",
         "target_low": 360,
         "target_high": 345,
-        "description": "Z3 tempo, 163\u2013172 bpm"
+        "description": "Z3 tempo, 163–172 bpm"
       },
       {
         "type": "recovery",
@@ -138,7 +155,7 @@
         "target_type": "pace",
         "target_low": 360,
         "target_high": 345,
-        "description": "Z3 tempo, 163\u2013172 bpm"
+        "description": "Z3 tempo, 163–172 bpm"
       },
       {
         "type": "cooldown",
@@ -146,7 +163,7 @@
         "target_type": "pace",
         "target_low": 450,
         "target_high": 390,
-        "description": "Z1\u2013Z2 easy jog and walk, settle HR"
+        "description": "Z1–Z2 easy jog and walk, settle HR"
       }
     ]
   }
