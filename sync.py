@@ -54,6 +54,49 @@ if plan_history:
 else:
     history_summary = "  (no history yet — this is week 1)"
 
+# Load athlete goals (set during onboarding) so plans are tailored from week 1
+goals = {}
+if os.path.exists("goals.json"):
+    try:
+        with open("goals.json") as f:
+            goals = json.load(f)
+    except Exception:
+        goals = {}
+
+if goals.get("primary_goal"):
+    _gd = goals
+    # Compute weeks-to-event if a target date is set, for taper logic
+    weeks_to_event = None
+    if _gd.get("target_date"):
+        try:
+            ev = date.fromisoformat(_gd["target_date"][:10])
+            weeks_to_event = max(0, (ev - date.today()).days // 7)
+        except Exception:
+            weeks_to_event = None
+    goals_block = (
+        f"PRIMARY GOAL: {_gd.get('primary_goal','')} (type: {_gd.get('goal_type','general')})\n"
+        f"TARGET EVENT: {_gd.get('target_event') or 'none'}"
+        + (f" on {_gd.get('target_date')} (~{weeks_to_event} weeks away)" if weeks_to_event is not None else "") + "\n"
+        f"WEEKLY TIME BUDGET: {_gd.get('weekly_hours','?')} h/week\n"
+        f"PREFERRED DAYS: {', '.join(_gd.get('preferred_days', [])) or 'flexible'}\n"
+        f"SPORT PRIORITY: {_gd.get('sport_priority','balanced')}\n"
+        f"INJURIES/LIMITS: {_gd.get('injuries','none')}\n"
+        f"CURRENT VOLUME: {_gd.get('current_volume','unknown')}\n"
+        f"NOTES: {_gd.get('coach_notes','')}"
+    )
+    # Taper guidance if an event is near
+    taper_note = ""
+    if weeks_to_event is not None:
+        if weeks_to_event <= 1:
+            taper_note = "RACE WEEK: sharp taper — cut volume ~50-60%, keep a little intensity, prioritise freshness so Form (TSB) goes positive."
+        elif weeks_to_event <= 3:
+            taper_note = f"~{weeks_to_event} weeks to the event: begin easing volume while holding sharpness; build toward a positive TSB on race day."
+        else:
+            taper_note = f"~{weeks_to_event} weeks out: still in build — develop the specific fitness the goal needs."
+else:
+    goals_block = "No explicit goals set yet — train balanced general fitness across running, cycling and strength until the athlete sets goals."
+    taper_note = ""
+
 availability_notes = availability.get("notes", "")
 days_data = availability.get("days", {})
 if days_data:
@@ -193,6 +236,10 @@ prompt = f"""You are Coach Claudio, Diego's expert endurance coach. You write st
 Name: Diego | Device: Garmin Fenix
 Resting HR {REST_HR} | Max HR {MAX_HR} | Running threshold HR {LTHR} bpm | FTP {FTP}W
 
+## GOALS & TARGETS (the athlete set these — tailor every plan toward them)
+{goals_block}
+{taper_note}
+
 ## RUNNING ZONES (pace is primary, HR is reference)
 Z1 Recovery: >7:00/km, <145 bpm
 Z2 Aerobic: 6:15-6:45/km, 146-162 bpm
@@ -225,6 +272,7 @@ You have planned the following weeks already. The plan must CONTINUE this arc �
 - Rotate the *specific* key session so it's fresh, but keep the progression logical.
 - 1-2 hard days max, separated by easy/rest. Most volume easy (80/20).
 - Reflect FTP {FTP}W and LTHR {LTHR} — if these rose recently, the athlete is fitter; nudge targets accordingly.
+- ALWAYS bias the plan toward the athlete's PRIMARY GOAL above. If there's a target event, make the key sessions specific to it (e.g. a 10K goal needs threshold + race-pace running; a gran fondo needs long endurance rides). If the event is near, follow the taper guidance. This is week {current_week_index + 1}; if it's week 1, use the athlete's stated current volume as the starting load — do NOT start generic or random.
 
 
 ## NEXT WEEK AVAILABILITY
