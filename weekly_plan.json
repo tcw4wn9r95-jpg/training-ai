@@ -1,1 +1,148 @@
-[]
+[
+  {
+    "day": "Wednesday",
+    "date": "2026-06-03",
+    "sport": "running",
+    "name": "Easy aerobic run",
+    "total_duration_secs": 1800,
+    "planned_tss": 28,
+    "focus": "Establish aerobic base, conversational effort",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 420,
+        "description": "Z1 easy, <145 bpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "pace",
+        "target_low": 405,
+        "target_high": 375,
+        "description": "Z2 aerobic, 146\u2013162 bpm, conversational"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 420,
+        "description": "Z1 easy, <145 bpm"
+      }
+    ]
+  },
+  {
+    "day": "Thursday",
+    "date": "2026-06-04",
+    "sport": "cycling_indoor",
+    "name": "Threshold repeats 3x6",
+    "total_duration_secs": 2700,
+    "planned_tss": 52,
+    "focus": "Build FTP and sustainable threshold power",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 600,
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 120,
+        "description": "Z1\u2013Z2 spin-up, build cadence to 90+ rpm"
+      },
+      {
+        "type": "repeat",
+        "repeat_count": 3,
+        "steps": [
+          {
+            "type": "interval",
+            "duration_secs": 360,
+            "target_type": "power",
+            "target_low": 169,
+            "target_high": 185,
+            "description": "Z4 threshold, 90+ rpm, steady smooth power"
+          },
+          {
+            "type": "recovery",
+            "duration_secs": 180,
+            "target_type": "power",
+            "target_low": 88,
+            "target_high": 110,
+            "description": "Easy spin recovery"
+          }
+        ]
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 100,
+        "description": "Easy spin down"
+      }
+    ]
+  },
+  {
+    "day": "Friday",
+    "date": "2026-06-05",
+    "sport": "strength",
+    "name": "Lower body & core circuit",
+    "total_duration_secs": 2700,
+    "planned_tss": 25,
+    "focus": "Strength endurance for legs, glutes, and core stability",
+    "notes": "3 rounds (60 s rest between rounds): 12\u00d7 Goblet Squat 22kg | 10\u00d7 RDL 22kg | 15\u00d7 TRX Split Squat | 20\u00d7 Band Glute Bridge | 45s Plank. Use 22kg dumbbell or 2\u00d711kg for RDL. Band looped above knees for glute bridge.",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "description": "Leg swings, hip circles, bodyweight squats, arm circles"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 2040,
+        "description": "3 rounds of main circuit: Goblet Squat \u2192 RDL \u2192 TRX Split Squat \u2192 Band Glute Bridge \u2192 Plank, 60s rest between rounds"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 360,
+        "description": "Static stretch: hip flexors, hamstrings, glutes, lower back"
+      }
+    ]
+  },
+  {
+    "day": "Saturday",
+    "date": "2026-06-06",
+    "sport": "running",
+    "name": "Steady endurance run",
+    "total_duration_secs": 3000,
+    "planned_tss": 38,
+    "focus": "Build aerobic volume and running economy at easy pace",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 420,
+        "description": "Z1 easy, <145 bpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 2400,
+        "target_type": "pace",
+        "target_low": 405,
+        "target_high": 375,
+        "description": "Z2 aerobic, 146\u2013162 bpm, long and steady"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 420,
+        "description": "Z1 easy, <145 bpm"
+      }
+    ]
+  }
+]

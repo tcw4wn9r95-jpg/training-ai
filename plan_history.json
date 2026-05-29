@@ -1,1 +1,42 @@
-[]
+[
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-29",
+    "phase": "base",
+    "planned_tss": 143,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Wednesday",
+        "sport": "running",
+        "name": "Easy aerobic run",
+        "planned_tss": 28,
+        "focus": "Establish aerobic base, conversational effort"
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Threshold repeats 3x6",
+        "planned_tss": 52,
+        "focus": "Build FTP and sustainable threshold power"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Lower body & core circuit",
+        "planned_tss": 25,
+        "focus": "Strength endurance for legs, glutes, and core stability"
+      },
+      {
+        "day": "Saturday",
+        "sport": "running",
+        "name": "Steady endurance run",
+        "planned_tss": 38,
+        "focus": "Build aerobic volume and running economy at easy pace"
+      }
+    ]
+  }
+]
