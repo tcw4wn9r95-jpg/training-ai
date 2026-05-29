@@ -203,8 +203,9 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .refresh-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
   padding:11px;margin-bottom:14px;border-radius:11px;border:1px solid var(--line);
   background:var(--bg2);color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
-.refresh-btn:active{background:var(--bg3)}
-.refresh-btn.spinning #refresh-ic{animation:sp 1s linear infinite}
+.refresh-btn:active{filter:brightness(0.92)}
+.refresh-btn:disabled{opacity:0.55;cursor:wait}
+.refresh-btn.spinning #refresh-ic,.refresh-btn.spinning #gen-ic{animation:sp 1s linear infinite}
 
 .day{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);margin-bottom:10px;overflow:hidden}
 .day-head{display:flex;align-items:center;gap:13px;padding:14px;cursor:pointer}
@@ -421,10 +422,16 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="lbl"><div class="w" id="plan-wlabel">This Week</div><div class="d" id="plan-wdate"></div></div>
       <button onclick="shiftWeek(1)">›</button>
     </div>
-    <button class="refresh-btn" id="refresh-btn" onclick="refreshPlan()">
-      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="refresh-ic"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2v3h-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-      <span id="refresh-label">Refresh plan</span>
-    </button>
+    <div style="display:flex;gap:8px;margin-bottom:14px">
+      <button class="refresh-btn" id="refresh-btn" onclick="refreshPlan()" style="flex:1;margin:0">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="refresh-ic"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2v3h-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+        <span id="refresh-label">Refresh</span>
+      </button>
+      <button class="refresh-btn" id="gen-btn" onclick="generatePlan()" style="flex:1;margin:0;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border-color:transparent">
+        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="gen-ic"><path d="M8 1.5l1.7 4.3 4.3.4-3.3 2.8 1 4.2L8 11l-3.7 2.2 1-4.2-3.3-2.8 4.3-.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+        <span id="gen-label">Generate plan</span>
+      </button>
+    </div>
     <div id="plan-days"></div>
     <div id="push-zone" style="display:none;margin-top:6px">
       <div id="push-status" style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:12px;padding:11px;border-radius:10px;background:var(--bg2)"></div>
@@ -844,7 +851,7 @@ function planForOffset(off){var w=weekObjForOffset(off);return w?w.sessions:null
 function renderPlan(){renderPlanForOffset();}
 function renderPlanArray(arr,wk){
   var box=document.getElementById("plan-days");
-  if(!arr||!arr.length){box.innerHTML='<div class="empty">No plan yet.<br>Set your availability and the plan generates Sunday 4pm — or trigger the workflow on GitHub.</div>';return;}
+  if(!arr||!arr.length){box.innerHTML='<div class="empty">No plan yet.<br><br>1️⃣ Set your availability in the <b>Avail</b> tab<br>2️⃣ Come back here and tap <b>Generate plan</b></div>';return;}
   box.innerHTML="";
   var isOutline=wk&&!wk.detailed;
   if(wk&&wk.phase){
@@ -927,8 +934,60 @@ async function refreshPlan(){
   updateWeekLabel();
   renderPlan();
   if(workouts.length)renderHome();
-  btn.classList.remove("spinning");label.textContent="Plan updated ✓";
-  setTimeout(function(){label.textContent="Refresh plan";},2000);
+  btn.classList.remove("spinning");label.textContent="Updated ✓";
+  setTimeout(function(){label.textContent="Refresh";},2000);
+}
+
+// ── GENERATE NEW PLAN ─────────────────────────────────────────
+async function generatePlan(){
+  var token=getToken();
+  if(!token){alert("Add your GitHub token first (gear icon, top right).");return;}
+  if(!goals){alert("Please complete onboarding first (set your goals).");return;}
+  var avail=await fetchJSON("availability.json");
+  var anyDays=avail&&avail.days&&Object.values(avail.days).some(function(d){return d&&d.available;});
+  if(!anyDays){
+    var go=confirm("You haven't set your availability for next week. Set it in the Avail tab first?\n\nTap OK to go to Avail, or Cancel to generate anyway.");
+    if(go){
+      var avBtn=document.querySelector(".nav button[onclick*=\"'avail'\"]");
+      if(avBtn)showPage("avail",avBtn);
+      return;
+    }
+  }
+  var btn=document.getElementById("gen-btn");
+  var label=document.getElementById("gen-label");
+  btn.disabled=true;btn.classList.add("spinning");label.textContent="Triggering…";
+  var ok=await triggerGenerate();
+  if(!ok){
+    btn.disabled=false;btn.classList.remove("spinning");label.textContent="Generate plan";
+    alert("Couldn't trigger the workflow. Check your GitHub token has 'workflow' scope.");
+    return;
+  }
+  // Snapshot what we have so we can detect when the new plan lands
+  var beforeSig=JSON.stringify(planJson||[])+"|"+JSON.stringify(planBlock||[]);
+  label.textContent="Building plan…";
+  // Poll for up to ~5 minutes
+  var maxTries=15, tries=0;
+  var poll=async function(){
+    tries++;
+    var r=await Promise.all([fetchJSON("weekly_plan.json"),fetchJSON("plan_block.json"),fetchJSON("plan_status.json"),fetchText("weekly_plan.md")]);
+    var newSig=JSON.stringify(r[0]||[])+"|"+JSON.stringify(r[1]||[]);
+    if(newSig!==beforeSig&&((r[0]&&r[0].length)||(r[1]&&r[1].length))){
+      // New plan!
+      planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
+      weekOffset=0;updateWeekLabel();renderPlan();renderHome();renderPushZone();
+      btn.disabled=false;btn.classList.remove("spinning");label.textContent="✓ New plan ready";
+      setTimeout(function(){label.textContent="Generate plan";},3500);
+      return;
+    }
+    if(tries>=maxTries){
+      btn.disabled=false;btn.classList.remove("spinning");label.textContent="Still building…";
+      setTimeout(function(){label.textContent="Generate plan";},3500);
+      alert("Plan is still being built — it can take a few minutes the first time (Garmin login + Claude generation). Tap Refresh in a minute or two.");
+      return;
+    }
+    setTimeout(poll,20000);  // poll every 20s
+  };
+  setTimeout(poll,25000);  // first check after 25s (give the workflow time to start + finish)
 }
 
 // ── PUSH TO GARMIN ────────────────────────────────────────────
@@ -1225,11 +1284,9 @@ async function runOnboardingTurn(){
       obHistory.push({role:"user",content:[{type:"tool_result",tool_use_id:toolUse.id,content:saved?"Goals saved.":"Save failed — needs GitHub token."}]});
       if(saved){
         renderGoalsSummary();
-        // Immediately trigger first plan generation
-        var triggered=await triggerGenerate();
         document.getElementById("ob-close").textContent="Done";
         setTimeout(function(){
-          obMsg(triggered?"🚀 Building your first plan now — it'll appear in the Plan tab in a couple of minutes. Tap Refresh there shortly. Welcome aboard, Diego!":"Your goals are saved. I'll build your plan on the next run — or trigger 'Generate Weekly Plan' on GitHub. Welcome aboard!",false);
+          obMsg("Goals are saved ✨\n\nTwo quick steps before your first plan:\n\n1️⃣ Open the **Avail** tab and set your availability for next week (which days, how many hours).\n\n2️⃣ Come back to the **Plan** tab and tap **Generate plan**. I'll build you a tailored 4-week block based on your goals and availability.\n\nWelcome aboard, Diego.",false);
         },400);
       }
     }
@@ -1283,20 +1340,30 @@ function closeConfirm(){
 async function doRestart(){
   var token=getToken();
   if(!token){alert("Add your GitHub token first (gear icon).");return;}
-  // Clear plan_history, goals, and plan_block so sync.py starts fresh, then onboard
-  try{
-    for(var fname of ["plan_history.json","goals.json","plan_block.json"]){
-      try{
-        var meta=await(await fetch(API+"/"+fname,{headers:{Authorization:"Bearer "+token}})).json();
-        if(meta.sha){
-          var empty=(fname==="goals.json")?"{}":"[]";
-          await fetch(API+"/"+fname,{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
-            body:JSON.stringify({message:"Restart: reset "+fname,content:btoa(empty),sha:meta.sha})});
-        }
-      }catch(e){}
-    }
-  }catch(e){}
-  goals=null;planBlock=[];renderGoalsSummary();
+  // Clear ALL plan-related files so nothing stale remains, then onboard
+  var resets=[
+    ["plan_history.json","[]"],
+    ["goals.json","{}"],
+    ["plan_block.json","[]"],
+    ["weekly_plan.json","[]"],
+    ["weekly_plan.md",""],
+    ["plan_status.json","{}"]
+  ];
+  for(var i=0;i<resets.length;i++){
+    var fname=resets[i][0], empty=resets[i][1];
+    try{
+      var meta=await(await fetch(API+"/"+fname,{headers:{Authorization:"Bearer "+token}})).json();
+      if(meta.sha){
+        await fetch(API+"/"+fname,{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+          body:JSON.stringify({message:"Restart: reset "+fname,content:btoa(unescape(encodeURIComponent(empty))),sha:meta.sha})});
+      }
+    }catch(e){}
+  }
+  // Clear in-memory state and refresh the UI immediately
+  goals=null;planBlock=[];planJson=[];planText="";planStatus=null;
+  weekOffset=0;
+  renderGoalsSummary();renderPlan();updateWeekLabel();renderPushZone();
+  if(workouts.length)renderHome();
   closeConfirm();
   startOnboarding();
 }
