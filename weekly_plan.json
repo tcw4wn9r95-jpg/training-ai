@@ -115,5 +115,24 @@
         "description": "Z1–Z2 easy jog and walk"
       }
     ]
+  },
+  {
+    "day": "Friday",
+    "date": "2026-06-05",
+    "sport": "cycling_outdoor",
+    "name": "Easy aerobic base ride",
+    "total_duration_secs": 1800,
+    "planned_tss": 22,
+    "focus": "Aerobic base building, active recovery",
+    "steps": [
+      {
+        "type": "interval",
+        "duration_secs": 1800,
+        "target_type": "heart_rate",
+        "target_low": 130,
+        "target_high": 150,
+        "description": "Z1–Z2 easy steady pace, 75–87% LTHR, conversational effort, smooth cadence"
+      }
+    ]
   }
 ]
