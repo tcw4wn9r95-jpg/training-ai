@@ -4,14 +4,14 @@
     "date": "2026-06-01",
     "sport": "strength",
     "name": "Full-body strength circuit",
-    "total_duration_secs": 1800,
-    "planned_tss": 30,
+    "total_duration_secs": 2100,
+    "planned_tss": 35,
     "focus": "Full-body strength, movement quality",
-    "notes": "Complete 4 rounds: 8 reps goblet squats (24kg), 8 reps push-ups, 8 reps single-leg RDL (per leg, 12kg), 8 reps bent-over rows (20kg), 30sec rest between rounds. Focus on control and form.",
+    "notes": "Complete 5 rounds: 8 reps goblet squats (24kg), 8 reps push-ups, 8 reps single-leg RDL (per leg, 12kg), 8 reps bent-over rows (20kg), 30sec rest between rounds. Focus on control and form.",
     "steps": [
       {
         "type": "circuit",
-        "duration_secs": 1800,
+        "duration_secs": 2100,
         "description": "Full-body strength circuit: goblet squats, push-ups, single-leg RDLs, bent-over rows"
       }
     ]
