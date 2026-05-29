@@ -28,5 +28,10 @@ jobs:
           git config user.name "Coach Claudio"
           git config user.email "bot@coachclaudio.local"
           git add plan_status.json
-          git diff --staged --quiet || git commit -m "Pushed to Garmin $(date +%Y-%m-%d)"
-          git push
+          git diff --staged --quiet && echo "No changes to commit" && exit 0
+          git commit -m "Pushed to Garmin $(date +%Y-%m-%d)"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && break
+            echo "Push attempt $i failed, retrying..."
+            sleep 3
+          done

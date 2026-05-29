@@ -155,8 +155,6 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .gb-readiness{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-top:8px}
 .gb-dot{width:9px;height:9px;border-radius:50%}
 .gb-msg{font-size:12px;color:var(--t2);line-height:1.5;margin-top:8px}
-.motiv-btn{margin-top:12px;background:none;border:1px solid rgba(139,92,246,.3);color:var(--violet);font-size:11px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;padding:7px 14px;border-radius:20px;cursor:pointer;font-family:var(--font);transition:.2s}
-.motiv-btn:active{background:rgba(139,92,246,.12)}
 .hero{background:linear-gradient(160deg,#13161b,#171b22);
   border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
 .hero::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--blue))}
@@ -530,17 +528,6 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <button class="coach-send" onclick="sendOnboarding()" id="ob-send"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M3 10l14-6-6 14-2-6-6-2z" fill="currentColor"/></svg></button>
   </div>
 
-<!-- Motivation popup -->
-<div id="motiv-bg" style="display:none;position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.7);backdrop-filter:blur(6px);align-items:center;justify-content:center;padding:24px" onclick="closeMotivation()">
-  <div id="motiv-card" onclick="event.stopPropagation()" style="background:linear-gradient(145deg,#13161b,#1a1d25);border:1px solid rgba(139,92,246,.25);border-radius:22px;padding:30px 26px;max-width:340px;width:100%;position:relative;box-shadow:0 24px 80px rgba(0,0,0,.6)">
-    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1.2px;color:var(--violet);margin-bottom:18px">✦ For you</div>
-    <div id="motiv-quote" style="font-size:18px;font-weight:600;line-height:1.5;color:var(--t1);letter-spacing:-.2px;min-height:80px;display:flex;align-items:center"></div>
-    <div id="motiv-author" style="font-size:12px;color:var(--t3);margin-top:14px;font-style:italic"></div>
-    <button onclick="closeMotivation()" style="position:absolute;top:16px;right:16px;background:none;border:none;color:var(--t3);font-size:18px;cursor:pointer;line-height:1">✕</button>
-    <button onclick="showMotivation()" id="motiv-refresh" style="margin-top:22px;width:100%;padding:12px;border-radius:12px;border:1px solid var(--line);background:var(--bg2);color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">another one ↻</button>
-  </div>
-</div>
-
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
@@ -553,6 +540,7 @@ const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunda
 let workouts=[], planText="", planJson=[], profile={cycling:{ftp_watts:177},running:{max_hr:196,resting_hr:60,threshold_hr:173}};
 let FTP=177, LTHR=173, REST_HR=60, MAX_HR=196;
 let avState={}, weekOffset=0, logFilter="all", coachHistory=[];
+let planBlock=[];
 let goals=null, obHistory=[];
 DAYS.forEach(d=>avState[d]={available:false,hours:(d==="Saturday"||d==="Sunday")?2:1});
 
@@ -686,7 +674,6 @@ function renderGoalBanner(ctlNow,atlNow){
         '<div class="gb-readiness"><span class="gb-dot" style="background:'+rclr+'"></span><span style="color:'+rclr+'">'+ready+'</span>'+
           '<span style="color:var(--t3);font-weight:500;margin-left:auto">proj. fitness '+projCTL+' · form '+(projTSB>0?"+":"")+projTSB+'</span></div>'+
         '<div class="gb-msg">'+rmsg+'</div>'+
-        '<button class="motiv-btn" onclick="showMotivation()">need motivation ✦</button>'+
       '</div>';
   } else {
     // Open-ended goal — progress on the metric that fits the goal type
@@ -715,7 +702,6 @@ function renderGoalBanner(ctlNow,atlNow){
         '<div style="font-size:13px;color:var(--t2);margin-top:4px">'+metricLabel+': <strong style="color:var(--t1)">'+curVal+'</strong></div>'+
         '<div class="gb-prog"><div class="gb-prog-fill" style="width:'+pct+'%;background:linear-gradient(90deg,#8b5cf6,#3b82f6)"></div></div>'+
         '<div class="gb-msg">'+msg+'</div>'+
-        '<button class="motiv-btn" onclick="showMotivation()">need motivation ✦</button>'+
       '</div>';
   }
 }
@@ -813,24 +799,65 @@ function drawMix(){
 
 // ── PLAN ──────────────────────────────────────────────────────
 function fmtPace(secPerKm){var m=Math.floor(secPerKm/60),s=Math.round(secPerKm%60);return m+":"+(s<10?"0":"")+s;}
-function shiftWeek(dir){
-  weekOffset+=dir;
+function mondayOf(offset){
+  var t=new Date();var dw=t.getDay()||7;var m=new Date(t);m.setDate(t.getDate()-dw+1+offset*7);m.setHours(0,0,0,0);return m;
+}
+function currentPlanMonday(){
+  // The "current" week is the one weekly_plan.json covers. Anchor to its first
+  // session date so navigation stays correct regardless of the device clock or
+  // whether today is the Sunday the plan was generated.
+  if(planJson&&planJson.length&&planJson[0].date){
+    var d=new Date(planJson[0].date+"T00:00:00");var dw=d.getDay()||7;
+    d.setDate(d.getDate()-dw+1);d.setHours(0,0,0,0);return d;
+  }
+  return mondayOf(0);
+}
+function mondayForOffset(offset){
+  var base=currentPlanMonday();var m=new Date(base);m.setDate(base.getDate()+offset*7);return m;
+}
+function updateWeekLabel(){
   var lbl=weekOffset===0?"This Week":weekOffset===1?"Next Week":weekOffset===-1?"Last Week":(weekOffset>0?"+"+weekOffset+" weeks":weekOffset+" weeks");
   document.getElementById("plan-wlabel").textContent=lbl;
-  if(weekOffset===0)renderPlan();
-  else document.getElementById("plan-days").innerHTML='<div class="empty">'+(weekOffset>0?"Next week's plan is generated every Sunday at 4pm.":"Past plans aren't stored yet.")+'</div>';
+  var mon=mondayForOffset(weekOffset);
+  document.getElementById("plan-wdate").textContent="Week of "+mon.toLocaleDateString("en-GB",{day:"numeric",month:"long"});
+}
+function shiftWeek(dir){
+  weekOffset+=dir;
+  updateWeekLabel();
+  renderPlanForOffset();
   renderPushZone();
 }
-function renderPlan(){
+function renderPlanForOffset(){
+  // Determine which plan to show for the current weekOffset, using the 4-week block if available
   var box=document.getElementById("plan-days");
-  if(!planJson||!planJson.length){box.innerHTML='<div class="empty">No plan yet.<br>Set your availability and the plan generates Sunday 8pm — or trigger the workflow on GitHub.</div>';return;}
-  // week date label
-  if(planJson[0]&&planJson[0].date){
-    var d0=new Date(planJson[0].date);
-    document.getElementById("plan-wdate").textContent="Week of "+d0.toLocaleDateString("en-GB",{day:"numeric",month:"long"});
-  }
+  var wk=weekObjForOffset(weekOffset);
+  if(wk&&wk.sessions&&wk.sessions.length){renderPlanArray(wk.sessions,wk);}
+  else if(weekOffset===0&&planJson&&planJson.length){renderPlanArray(planJson,null);}
+  else{box.innerHTML='<div class="empty">'+(weekOffset>0?"This week is part of your training block but the detailed plan firms up closer to the date.":"Past plans aren't stored yet.")+'</div>';}
+}
+function weekObjForOffset(off){
+  if(!planBlock||!planBlock.length)return null;
+  var mon=mondayForOffset(off).toISOString().split("T")[0];
+  return planBlock.find(function(w){return w.week_of===mon;})||null;
+}
+function planForOffset(off){var w=weekObjForOffset(off);return w?w.sessions:null;}
+function renderPlan(){renderPlanForOffset();}
+function renderPlanArray(arr,wk){
+  var box=document.getElementById("plan-days");
+  if(!arr||!arr.length){box.innerHTML='<div class="empty">No plan yet.<br>Set your availability and the plan generates Sunday 4pm — or trigger the workflow on GitHub.</div>';return;}
   box.innerHTML="";
-  planJson.forEach(s=>{
+  var isOutline=wk&&!wk.detailed;
+  if(wk&&wk.phase){
+    var ph=wk.phase.charAt(0).toUpperCase()+wk.phase.slice(1);
+    var phClr=wk.phase==="recovery"?"#22c55e":wk.phase==="peak"?"#ef4444":wk.phase==="build"?"#f59e0b":"#3b82f6";
+    box.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:11px 14px;border-radius:11px;background:var(--bg2)">'+
+      '<span style="width:9px;height:9px;border-radius:50%;background:'+phClr+'"></span>'+
+      '<span style="font-size:13px;font-weight:700;color:'+phClr+'">'+ph+' week</span>'+
+      (wk.target_tss?'<span style="font-size:12px;color:var(--t3);margin-left:auto">target '+wk.target_tss+' TSS</span>':"")+
+      '</div>'+
+      (isOutline?'<div style="font-size:12px;color:var(--t3);margin-bottom:14px;line-height:1.5">📋 Outline — detailed targets firm up when this becomes the current week.'+(wk.summary?'<br>'+esc(wk.summary):"")+'</div>':"");
+  }
+  arr.forEach(s=>{
     var sp=s.sport||"running";
     var st=sp==="running"?"run":sp.indexOf("cycl")>-1?"bike":sp==="strength"?"strength":"other";
     var cl=sportClr(st), bg=cl[0], col=cl[1];
@@ -840,6 +867,7 @@ function renderPlan(){
 
     var stepsHTML=(s.steps||[]).map(function(step){return renderStep(step,sp,col);}).join("");
     var noteHTML=s.notes?'<div class="coach-note">'+s.notes+'</div>':"";
+    var metaLine=dayLabel+(dur?' · '+dur+' min':"")+(s.planned_tss?' · '+s.planned_tss+' TSS':"");
 
     var el=document.createElement("div");el.className="day";
     el.innerHTML=
@@ -847,12 +875,12 @@ function renderPlan(){
         '<div class="day-ic" style="background:'+bg+';color:'+col+'">'+sportIcon(st)+'</div>'+
         '<div class="day-meta"><div class="day-name">'+(s.name||"Session")+
           ' <span class="tag" style="background:'+bg+';color:'+col+'">'+sp.replace("_"," ")+'</span></div>'+
-          '<div class="day-line">'+dayLabel+' · '+dur+' min'+(s.planned_tss?' · '+s.planned_tss+' TSS':"")+'</div></div>'+
+          '<div class="day-line">'+metaLine+'</div></div>'+
         '<div class="chev"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
       '</div>'+
       '<div class="day-body"><div class="day-inner">'+
         (s.focus?'<div style="font-size:13px;color:var(--t2);margin-bottom:10px">'+s.focus+'</div>':"")+
-        stepsHTML+noteHTML+
+        (stepsHTML||noteHTML?stepsHTML+noteHTML:(isOutline?'<div style="font-size:12px;color:var(--t3)">Session detail will be generated when this week becomes active.</div>':""))+
       '</div></div>';
     box.appendChild(el);
   });
@@ -888,14 +916,15 @@ async function refreshPlan(){
   var btn=document.getElementById("refresh-btn");
   var label=document.getElementById("refresh-label");
   btn.classList.add("spinning");label.textContent="Refreshing…";
-  var r=await Promise.all([fetchJSON("weekly_plan.json"),fetchText("weekly_plan.md"),fetchJSON("plan_status.json"),fetchJSON("workouts.json"),fetchJSON("profile.json")]);
+  var r=await Promise.all([fetchJSON("weekly_plan.json"),fetchText("weekly_plan.md"),fetchJSON("plan_status.json"),fetchJSON("workouts.json"),fetchJSON("profile.json"),fetchJSON("plan_block.json")]);
   if(r[0])planJson=r[0];
   if(r[1])planText=r[1];
   planStatus=r[2];
   if(r[3])workouts=r[3];
   if(r[4]){profile=r[4];FTP=profile.cycling?.ftp_watts||FTP;LTHR=profile.running?.threshold_hr||LTHR;REST_HR=profile.running?.resting_hr||REST_HR;MAX_HR=profile.running?.max_hr||MAX_HR;}
+  if(Array.isArray(r[5]))planBlock=r[5];
   weekOffset=0;
-  document.getElementById("plan-wlabel").textContent="This Week";
+  updateWeekLabel();
   renderPlan();
   if(workouts.length)renderHome();
   btn.classList.remove("spinning");label.textContent="Plan updated ✓";
@@ -1090,8 +1119,13 @@ async function sendCoachMessage(){
       // Give the tool result back to Claude so the turn is complete
       coachHistory.push({role:"user",content:[{type:"tool_result",tool_use_id:toolUse.id,content:ok?"Plan saved successfully.":"Save failed — Diego must add a GitHub token."}]});
       if(ok){
-        planJson=newPlan;renderPlan();renderHome();
-        addCoachMessage("✅ "+summary+"\n\nTap Refresh on the Plan tab to see it, then push to Garmin when ready.",false);
+        planJson=newPlan;
+        // Keep the in-memory block's current week in sync so the Plan tab reflects the edit immediately
+        var curMon=currentPlanMonday().toISOString().split("T")[0];
+        var wk=planBlock.find(function(w){return w.week_of===curMon;});
+        if(wk){wk.sessions=newPlan;wk.detailed=true;}
+        weekOffset=0;updateWeekLabel();renderPlan();renderHome();
+        addCoachMessage("✅ "+summary+"\n\nIt's updated here — review it and push to Garmin when ready.",false);
       }
     }
     if(coachHistory.length>20)coachHistory=coachHistory.slice(-20);
@@ -1130,7 +1164,7 @@ var SAVE_GOALS_TOOL={
       target_event:{type:"string",description:"Name of the event, or empty if none"},
       target_date:{type:"string",description:"YYYY-MM-DD of the event, or empty if none"},
       weekly_hours:{type:"number",description:"Total hours per week Diego can train"},
-      preferred_days:{type:"array",items:{type:"string"},description:"Days he prefers to train"},
+      preferred_days:{type:"array",items:{type:"string"},description:"Optional. Only include if Diego volunteers it — he sets exact daily availability in the Availability tab, so leave empty otherwise."},
       sport_priority:{type:"string",description:"e.g. 'running focus, bike for cross-training, 2x strength' "},
       injuries:{type:"string",description:"Injury history or limitations, or 'none'"},
       current_volume:{type:"string",description:"Current weekly volume and longest sessions, e.g. '25 km/week running, long run 10 km'"},
@@ -1173,9 +1207,9 @@ async function runOnboardingTurn(){
   send.disabled=true;send.style.opacity="0.5";
   var sys="You are Coach Claudio, a warm, encouraging endurance coach onboarding a new athlete, Diego. "+
     "Have a natural conversation to understand his goals. Ask ONE question at a time, conversationally — never interrogate with a list. "+
-    "Cover, over the course of the chat: his primary goal; any target event + date; how many hours/week and which days he can train; how he wants to split running/cycling/strength; injuries or limitations; and his current weekly volume and longest sessions. "+
+    "Cover, over the course of the chat: his primary goal; any target event + date; roughly how many hours per week he can train (just a high-level total — do NOT ask which specific days, he sets exact daily availability in the Availability tab himself); how he wants to split running/cycling/strength; injuries or limitations; and his current weekly volume and longest sessions. "+
     "Acknowledge each answer briefly before the next question. He does running, cycling (indoor power + outdoor HR) and home strength. "+
-    "When you have enough to build a tailored plan, call save_goals, then give a short, motivating sign-off telling him you're building his first plan now. Keep each message short.";
+    "When you have enough to build a tailored plan, call save_goals, then give a short, motivating sign-off telling him you're building his first plan now. Mention he can fine-tune his exact training days anytime in the Availability tab. Keep each message short.";
   try{
     var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
@@ -1249,76 +1283,32 @@ function closeConfirm(){
 async function doRestart(){
   var token=getToken();
   if(!token){alert("Add your GitHub token first (gear icon).");return;}
-  // Clear plan_history.json and goals.json so sync.py starts fresh, then onboard
+  // Clear plan_history, goals, and plan_block so sync.py starts fresh, then onboard
   try{
-    for(var fname of ["plan_history.json","goals.json"]){
+    for(var fname of ["plan_history.json","goals.json","plan_block.json"]){
       try{
         var meta=await(await fetch(API+"/"+fname,{headers:{Authorization:"Bearer "+token}})).json();
         if(meta.sha){
-          var empty=fname==="plan_history.json"?"[]":"{}";
+          var empty=(fname==="goals.json")?"{}":"[]";
           await fetch(API+"/"+fname,{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
             body:JSON.stringify({message:"Restart: reset "+fname,content:btoa(empty),sha:meta.sha})});
         }
       }catch(e){}
     }
   }catch(e){}
-  goals=null;renderGoalsSummary();
+  goals=null;planBlock=[];renderGoalsSummary();
   closeConfirm();
   startOnboarding();
 }
-
-// ── MOTIVATION POPUP ──────────────────────────────────────────
-function closeMotivation(){
-  var bg=document.getElementById("motiv-bg");
-  bg.style.opacity="0";
-  setTimeout(function(){bg.style.display="none";bg.style.opacity="";},300);
-}
-async function showMotivation(){
-  var bg=document.getElementById("motiv-bg");
-  var quoteEl=document.getElementById("motiv-quote");
-  var authorEl=document.getElementById("motiv-author");
-  var refresh=document.getElementById("motiv-refresh");
-  bg.style.display="flex";bg.style.opacity="0";
-  setTimeout(function(){bg.style.transition="opacity .25s ease";bg.style.opacity="1";},10);
-  quoteEl.innerHTML='<span style="color:var(--t3);font-size:14px;font-weight:400;animation:sp 1s linear infinite;display:inline-block">⟳</span>';
-  authorEl.textContent="";
-  refresh.disabled=true;refresh.style.opacity="0.5";
-  var apiKey=localStorage.getItem("anthropic_key")||"";
-  if(!apiKey){
-    quoteEl.textContent='"The only bad workout is the one that didn\'t happen."';
-    authorEl.textContent="— Unknown";
-    refresh.disabled=false;refresh.style.opacity="1";
-    return;
-  }
-  var goal=goals?goals.primary_goal:"training";
-  var gt=goals?goals.goal_type:"general";
-  var prompt="Give me one short, powerful motivational quote for an endurance athlete working toward: "+goal+". "+
-    "Return ONLY a JSON object with two fields: quote (the quote text, no quotation marks) and author (name, or 'Unknown' if anonymous). "+
-    "Make it feel earned and specific — not generic. Vary it each time. No preamble, no markdown, just the JSON.";
-  try{
-    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
-      headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:120,
-        messages:[{role:"user",content:prompt}]})});
-    var data=await res.json();
-    var raw=(data.content&&data.content[0]&&data.content[0].text)||"";
-    var parsed=JSON.parse(raw.replace(/```json|```/g,"").trim());
-    quoteEl.textContent="\u201c"+parsed.quote+"\u201d";
-    authorEl.textContent="— "+(parsed.author||"Unknown");
-  }catch(e){
-    quoteEl.textContent='"Champions aren\'t made in gyms. Champions are made from something deep inside them."';
-    authorEl.textContent="— Muhammad Ali";
-  }
-  refresh.disabled=false;refresh.style.opacity="1";
-}
-
 async function init(){
-  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),fetchJSON("weekly_plan.json"),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json")]);
+  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),fetchJSON("weekly_plan.json"),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json"),fetchJSON("plan_block.json")]);
   workouts=r[0]||[];planText=r[1]||"";planJson=r[2]||[];
   var avail=r[3],prof=r[4];planStatus=r[5];
   goals=(r[6]&&r[6].primary_goal)?r[6]:null;
+  planBlock=Array.isArray(r[7])?r[7]:[];
   if(prof){profile=prof;FTP=prof.cycling?.ftp_watts||FTP;LTHR=prof.running?.threshold_hr||LTHR;REST_HR=prof.running?.resting_hr||REST_HR;MAX_HR=prof.running?.max_hr||MAX_HR;}
   if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
+  updateWeekLabel();
   renderAvail();renderLog();renderPlan();renderGoalsSummary();
   if(workouts.length)renderHome();
   else if(goals)renderGoalBanner(0,0);

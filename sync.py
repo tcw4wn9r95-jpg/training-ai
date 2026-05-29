@@ -363,6 +363,18 @@ TARGET RULES (critical — match these precisely):
 ```
 
 Only include available days. Use realistic pace seconds-per-km values for Diego.
+
+### SECTION 3: 4-WEEK BLOCK OUTLINE
+After the JSON, add a SECOND ```json block (labelled exactly ```json-block) giving a LIGHTWEIGHT outline of the full 4-week training block this week belongs to. This is for the athlete to see the bigger picture — NOT full step detail. Week 1 is the current week ({next_monday.isoformat()}). Project weeks 2-4 following the periodisation arc (current phase: {current_phase}). For each week give the phase, target weekly TSS, and a one-line summary plus session headlines (day, sport, name, focus, planned_tss) — no steps.
+
+```json-block
+[
+  {{"week_index": {current_week_index + 1}, "week_of": "{next_monday.isoformat()}", "phase": "{current_phase}", "target_tss": 0, "summary": "one line", "sessions": [
+    {{"day": "Monday", "sport": "running", "name": "Easy run", "focus": "aerobic base", "planned_tss": 35}}
+  ]}}
+]
+```
+Project all 4 weeks with sensible progression (build weeks raise TSS, recovery week drops ~40%).
 """
 
 message = claude.messages.create(
@@ -376,8 +388,24 @@ print("Plan received from Claude.")
 # ── Split markdown & JSON ─────────────────────────────────────────────────────
 plan_md = response
 plan_json = []
-if "```json" in response:
-    parts = response.split("```json")
+plan_block = []
+
+# Parse the 4-week block outline first (labelled ```json-block) and remove it
+if "```json-block" in response:
+    try:
+        block_part = response.split("```json-block")[1].split("```")[0].strip()
+        plan_block = json.loads(block_part)
+        print(f"Parsed {len(plan_block)} week(s) in block outline.")
+    except (json.JSONDecodeError, IndexError) as e:
+        print(f"WARNING: block outline parse failed: {e}")
+    # Strip the block section out so the detailed-plan parser doesn't trip on it
+    response_main = response.split("```json-block")[0]
+else:
+    response_main = response
+
+# Parse the detailed weekly plan
+if "```json" in response_main:
+    parts = response_main.split("```json")
     plan_md = parts[0].strip()
     json_part = parts[1].split("```")[0].strip()
     try:
@@ -393,6 +421,31 @@ with open("weekly_plan.md", "w") as f:
     f.write(plan_md)
 with open("weekly_plan.json", "w") as f:
     json.dump(plan_json, f, indent=2)
+
+# Merge the detailed current-week sessions into week 1 of the block,
+# so the app shows full step detail for the current week and outlines for 2-4.
+if plan_block:
+    for wk in plan_block:
+        if wk.get("week_of") == next_monday.isoformat() and plan_json:
+            wk["sessions"] = plan_json  # full detail for the current week
+            wk["detailed"] = True
+    with open("plan_block.json", "w") as f:
+        json.dump(plan_block, f, indent=2)
+    print(f"Saved plan_block.json ({len(plan_block)} weeks).")
+else:
+    # Fallback: at least store the current week so navigation has data
+    fallback_block = [{
+        "week_index": current_week_index + 1,
+        "week_of": next_monday.isoformat(),
+        "phase": current_phase,
+        "target_tss": sum(s.get("planned_tss", 0) for s in plan_json),
+        "summary": "Current week",
+        "sessions": plan_json,
+        "detailed": True,
+    }]
+    with open("plan_block.json", "w") as f:
+        json.dump(fallback_block, f, indent=2)
+    print("Saved plan_block.json (current week only — outline parse failed).")
 print("Plans saved.")
 
 # ── Mark plan as DRAFT (awaiting review) — do NOT push to Garmin here ─────────
