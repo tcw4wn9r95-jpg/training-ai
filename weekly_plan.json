@@ -1,0 +1,153 @@
+[
+  {
+    "day": "Monday",
+    "date": "2026-06-01",
+    "sport": "running",
+    "name": "Easy aerobic run",
+    "total_duration_secs": 1800,
+    "planned_tss": 35,
+    "focus": "Aerobic base, conversational effort",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 450,
+        "description": "Z1 easy jog, <145 bpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "pace",
+        "target_low": 405,
+        "target_high": 375,
+        "description": "Z2 aerobic, 146\u2013162 bpm, conversational"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 450,
+        "description": "Z1 easy jog to settle"
+      }
+    ]
+  },
+  {
+    "day": "Tuesday",
+    "date": "2026-06-02",
+    "sport": "cycling_indoor",
+    "name": "Sweet spot build",
+    "total_duration_secs": 1800,
+    "planned_tss": 42,
+    "focus": "Sustainable threshold power, aerobic capacity",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 88,
+        "target_high": 106,
+        "description": "Z1 easy spin, 90\u2013100 rpm"
+      },
+      {
+        "type": "repeat",
+        "repeat_count": 2,
+        "steps": [
+          {
+            "type": "interval",
+            "duration_secs": 480,
+            "target_type": "power",
+            "target_low": 142,
+            "target_high": 156,
+            "description": "Z2\u2013Z3 sweet spot, 80\u201388% FTP, 160\u2013170 bpm, 90\u201395 rpm"
+          },
+          {
+            "type": "recovery",
+            "duration_secs": 120,
+            "target_type": "power",
+            "target_low": 88,
+            "target_high": 106,
+            "description": "Z1 easy spin, 100W, 95+ rpm"
+          }
+        ]
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 240,
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 106,
+        "description": "Z1 easy spin down, 95+ rpm"
+      }
+    ]
+  },
+  {
+    "day": "Thursday",
+    "date": "2026-06-04",
+    "sport": "running",
+    "name": "Tempo threshold opener (pyramid)",
+    "total_duration_secs": 2700,
+    "planned_tss": 52,
+    "focus": "Introduce threshold pacing, build Z3 tolerance",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 600,
+        "target_type": "pace",
+        "target_low": 420,
+        "target_high": 385,
+        "description": "Z1\u2013Z2 easy jog, <150 bpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 240,
+        "target_type": "pace",
+        "target_low": 360,
+        "target_high": 345,
+        "description": "Z3 tempo, 163\u2013172 bpm, controlled effort"
+      },
+      {
+        "type": "recovery",
+        "duration_secs": 120,
+        "target_type": "pace",
+        "target_low": 420,
+        "target_high": 390,
+        "description": "Z2 easy jog"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 360,
+        "target_type": "pace",
+        "target_low": 360,
+        "target_high": 345,
+        "description": "Z3 tempo, 163\u2013172 bpm"
+      },
+      {
+        "type": "recovery",
+        "duration_secs": 120,
+        "target_type": "pace",
+        "target_low": 420,
+        "target_high": 390,
+        "description": "Z2 easy jog"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 240,
+        "target_type": "pace",
+        "target_low": 360,
+        "target_high": 345,
+        "description": "Z3 tempo, 163\u2013172 bpm"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 600,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 390,
+        "description": "Z1\u2013Z2 easy jog and walk, settle HR"
+      }
+    ]
+  }
+]

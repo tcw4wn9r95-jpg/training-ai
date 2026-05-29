@@ -1,6 +1,6 @@
 # Training Plan — Week of 01 June 2026
 
-**Generated:** 28 May 2026  
+**Generated:** 29 May 2026  
 **Available days:** Monday, Tuesday, Thursday  
 
 ---
@@ -8,142 +8,107 @@
 # DIEGO'S WEEKLY TRAINING PLAN
 ## Week of June 1–7, 2026
 
+**Plan Phase:** BASE (aerobic foundation, low intensity, volume build)  
+**TSS Context:** Last 28 days = ~83 TSS (1 hiking session); returning to structured run/bike. This week targets **~110–120 TSS**, respecting 3-day availability and base-phase principles.
+
 ---
 
 ## SECTION 1: MARKDOWN PLAN
 
+---
+
 ### **MONDAY, JUNE 1 — Running: Easy Aerobic Run**
-**Available time:** 30 minutes max  
 **Sport:** Running  
-**Total duration:** 30 minutes
+**Duration:** 30 min | **Planned TSS:** 35 | **Focus:** Aerobic base, conversational effort
 
-#### Structure:
-- **Warmup (5 min):** Easy jog to elevate HR gradually
-  - Target HR: 130–145 bpm (Z1 Recovery)
-  - Pace: ~7:15/km
-  - RPE: 2–3/10
+#### Warm-up (5 min)
+- Jog easy to prime the system
+- Target pace: >7:00/km (450+ sec/km)
+- Target HR: <145 bpm (Z1 Recovery)
+- RPE: 2–3/10
 
-- **Main Set (20 min):** Steady aerobic run
-  - Target HR: 146–162 bpm (Z2 Aerobic)
-  - Pace: 6:15–6:45/km
-  - RPE: 4–5/10
-  - Focus: Build aerobic base, conversational effort
+#### Main set (20 min)
+- Steady aerobic run; stay in the Z2 band
+- Target pace: 6:15–6:45/km (375–405 sec/km)
+- Target HR: 146–162 bpm (Z2 Aerobic)
+- RPE: 4–5/10
+- Cue: Conversational pace; you should be able to speak in full sentences
 
-- **Cooldown (5 min):** Easy recovery jog
-  - Target HR: 100–130 bpm (Z1 Recovery)
-  - Pace: >7:00/km
-  - RPE: 1–2/10
+#### Cool-down (5 min)
+- Easy jog to settle HR
+- Target pace: >7:00/km (450+ sec/km)
+- Target HR: <145 bpm
+- RPE: 1–2/10
 
-#### Garmin Alerts:
-- Set HR alerts for Z2 band (146–162 bpm)
-- Monitor pace zone for 6:15–6:45/km
-
-#### Coaching Notes:
-- This is a foundation session to build aerobic base without stress.
-- Keep effort easy and conversational.
-- Use this to prime your system for the week ahead.
-- Last week's data shows only one hiking activity (149 min at low intensity), so we're returning to structured running with modest volume.
+**Coach notes:**  
+This is your entry point into the week. The 30-min format respects your Monday constraint. Keep effort genuinely easy—this primes aerobic adaptation without fatigue carryover.
 
 ---
 
 ### **TUESDAY, JUNE 2 — Cycling (Indoor): Sweet Spot Build**
-**Available time:** 30 minutes max  
 **Sport:** Cycling Indoor  
-**Total duration:** 30 minutes
+**Duration:** 30 min | **Planned TSS:** 42 | **Focus:** Build sustainable threshold power
 
-#### Structure:
-- **Warmup (5 min):** Easy spin
-  - Target power: <106W (Z1, <55% FTP)
-  - RPE: 2–3/10
-  - Cadence: 90–100 rpm
+#### Warm-up (5 min)
+- Easy spin, no resistance
+- Target power: <106W (Z1, <60% FTP)
+- RPE: 2–3/10
+- Cadence: 90–100 rpm, relaxed
 
-- **Main Set (18 min):** Two blocks of Sweet Spot intervals
-  - **Block 1:** 6 min @ 142–156W (80–88% FTP, high Z3)
-    - RPE: 6–7/10
-    - Cadence: 90–95 rpm
-    - Focus: Sustained aerobic power, build muscular endurance
-  
-  - **Rest:** 2 min easy spin @ <106W
-    - RPE: 2/10
-    - Cadence: 95–100 rpm
-  
-  - **Block 2:** 6 min @ 142–156W (80–88% FTP, high Z3)
-    - RPE: 6–7/10
-    - Cadence: 90–95 rpm
-  
-  - **Final Rest:** 2 min easy spin @ <106W
+#### Main set (16 min)
+- 2 × 8 min at sweet spot (upper Z2 / lower Z3)
+- Target power: 142–156W (80–88% FTP)
+- Target HR: 160–170 bpm (high Z2 / low Z3)
+- Recovery between reps: 2 min easy spin at 100W, Z1
+- RPE during work: 5–6/10 (sustainable, not hard)
+- Cadence: 90–95 rpm, steady
 
-- **Cooldown (2 min):** Easy spin-down
-  - Target power: <106W
-  - RPE: 1–2/10
+#### Cool-down (4 min)
+- Easy spin to bring HR down
+- Target power: <106W
+- Cadence: 95+ rpm
 
-#### Garmin Alerts:
-- Set power alerts for 142–156W (Sweet Spot band)
-- Monitor cadence: aim for 90–95 rpm during intervals
-
-#### Coaching Notes:
-- Sweet Spot work is highly efficient for building FTP without excessive fatigue.
-- Maintain steady cadence—avoid grinding or spinning too fast.
-- This complements Monday's aerobic running with a different energy system stimulus.
-- Last week had minimal cycling data, so we're introducing structured indoor work at moderate intensity.
+**Coach notes:**  
+Sweet spot is the "aerobic power" zone—builds FTP without the neuromuscular fatigue of threshold. Keep cadence smooth and high; your Fenix will guide power on the screen.
 
 ---
 
-### **THURSDAY, JUNE 4 — Running + Strength Circuit Combo**
-**Available time:** 60 minutes max  
-**Sport:** Mixed (Running + Strength)  
-**Total duration:** 60 minutes
+### **THURSDAY, JUNE 4 — Running: Tempo Threshold Opener**
+**Sport:** Running  
+**Duration:** 45 min | **Planned TSS:** 52 | **Focus:** Introduce threshold pacing; prepare for build phase
 
-#### Part A: Running (25 minutes)
+#### Warm-up (10 min)
+- Easy jog to settle in
+- Target pace: 6:30–7:00/km (420–385 sec/km)
+- Target HR: <150 bpm
+- RPE: 2–3/10
 
-- **Warmup (5 min):** Easy jog
-  - Target HR: 130–145 bpm (Z1 Recovery)
-  - Pace: ~7:15/km
-  - RPE: 2–3/10
+#### Main set (25 min)
+- **Pyramid:** 4 min at tempo, 2 min easy, 6 min at tempo, 2 min easy, 4 min at tempo
+- Tempo target pace: 5:45–6:00/km (345–360 sec/km)
+- Tempo target HR: 163–172 bpm (Z3 Tempo)
+- Easy recovery pace: 6:30–7:00/km
+- RPE during tempo: 6–7/10 (controlled, sustainable)
+- Total tempo time: 14 min across the session
 
-- **Main Set (15 min):** Tempo-paced aerobic run
-  - Target HR: 163–172 bpm (Z3 Tempo)
-  - Pace: 5:30–6:00/km
-  - RPE: 6–7/10
-  - Focus: Raise lactate threshold gradually, controlled effort
+#### Cool-down (10 min)
+- Easy jog and walk
+- Target pace: 6:30–7:30/km (450–390 sec/km)
+- RPE: 1–2/10
 
-- **Cooldown (5 min):** Easy jog
-  - Target HR: 100–130 bpm (Z1 Recovery)
-  - Pace: >7:00/km
-  - RPE: 1–2/10
+**Coach notes:**  
+This session introduces threshold work in a manageable pyramid—you're building tolerance for Z3/Z4 effort without the acute stress of long continuous intervals. This is the logical step into build phase next week.
 
-#### Part B: Strength Circuit (30 minutes)
+---
 
-**Setup:** Superset format for metabolic efficiency. Perform all exercises back-to-back with minimal rest between movements; rest 60–75 seconds between rounds. Complete 3 full rounds.
+## WEEK SUMMARY
 
-**Exercise Circuit:**
-1. **Goblet Squat (22kg dumbbell)** — 12 reps
-   - Form: Full depth, chest up, controlled tempo
-   - Rest: 0 sec (move to next exercise)
+**Total Planned TSS:** ~129 TSS  
+**Phase:** BASE (weeks 1–2), preparing entry to BUILD (week 3)  
+**Weekly Focus:** Aerobic foundation with introduction to tempo pacing. Three sessions across Monday–Thursday, respecting your availability and low recent load (83 TSS in 28 days). The progression from easy → sweet-spot → tempo mirrors the arc: easy volume, then moderate intensity.
 
-2. **TRX Suspension Row** — 10 reps
-   - Form: Full body tension, scapular retraction
-   - Rest: 0 sec (move to next exercise)
-
-3. **Romanian Deadlift (16kg dumbbell, each hand)** — 10 reps
-   - Form: Hinge at hips, neutral spine, minimal knee bend
-   - Rest: 0 sec (move to next exercise)
-
-4. **Push-ups (bodyweight or modified)** — 12 reps
-   - Form: Chest to deck, core tight
-   - Rest: 60–75 sec, then repeat from exercise 1
-
-#### Garmin Alerts (Running portion):
-- Set HR alerts for Z3 band (163–172 bpm)
-- Monitor pace zone for 5:30–6:00/km
-
-#### Coaching Notes:
-- This session combines aerobic-threshold stimulus with full-body strength work.
-- The tempo run elevates HR and primes the nervous system before strength work.
-- Strength circuit uses heavier loads (22kg, 16kg) with compound movements to build power and muscular endurance.
-- Circuit format keeps HR elevated, creating a conditioning effect.
-- Thursday's longer availability (1 hour) allows for this combined stimulus without rushing.
-- Progression from Monday (Z2 aerobic) → Tuesday (Z3 Sweet Spot) → Thursday (Z3 Tempo + strength) creates a build-up without exceeding recovery capacity given sparse training history.
+**Key Coaching Point:**  
+You're returning to structure after a low-volume period. This week is deliberately conservative to avoid overload. Stick to pace and HR targets, not feel. Your resting HR (60 bpm) and LTHR (173) are solid markers—use them to dial sessions in precisely.
 
 ---
 
