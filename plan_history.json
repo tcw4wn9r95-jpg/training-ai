@@ -1,1 +1,35 @@
-[]
+[
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-30",
+    "phase": "base",
+    "planned_tss": 60,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 22,
+        "focus": "Aerobic base establishment, Z1-Z2, conversational pace"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Spin \u2014 Leg Flush",
+        "planned_tss": 20,
+        "focus": "Low-load aerobic cycling, non-impact leg flush after Monday run"
+      },
+      {
+        "day": "Thursday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Week 1 Foundations",
+        "planned_tss": 18,
+        "focus": "Neuromuscular activation, lower body and core only, shoulder-safe"
+      }
+    ]
+  }
+]
