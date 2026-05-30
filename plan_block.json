@@ -9,35 +9,35 @@
       {
         "day": "Monday",
         "date": "2026-06-01",
-        "sport": "running",
-        "name": "Easy Aerobic Run",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Spin",
         "total_duration_secs": 1800,
         "planned_tss": 18,
-        "focus": "Aerobic primer, Zone 1-2, conversational effort",
+        "focus": "Zone 1/2 aerobic flush, habit building",
         "steps": [
           {
             "type": "warmup",
             "duration_secs": 300,
-            "target_type": "pace",
-            "target_low": 480,
-            "target_high": 420,
-            "description": "Z1 walk/jog, <145 bpm. Transition from walk to slow jog. HR must stay under 145."
+            "target_type": "power",
+            "target_low": 60,
+            "target_high": 115,
+            "description": "Gradual build from 60W toward Z2 low, 90-95 rpm, let legs wake up, HR below 145"
           },
           {
             "type": "interval",
             "duration_secs": 1200,
-            "target_type": "pace",
-            "target_low": 405,
-            "target_high": 375,
-            "description": "Z2 easy run, 146-162 bpm. Conversational pace. Full sentences must be possible."
+            "target_type": "power",
+            "target_low": 106,
+            "target_high": 141,
+            "description": "Steady Z2 aerobic, 106-141W, HR 146-162 bpm, smooth cadence 90-95 rpm, conversational effort"
           },
           {
             "type": "cooldown",
             "duration_secs": 300,
-            "target_type": "pace",
-            "target_low": 510,
-            "target_high": 450,
-            "description": "Z1 walk, <140 bpm. Walk it fully down before stopping."
+            "target_type": "power",
+            "target_low": 60,
+            "target_high": 90,
+            "description": "Easy spin below 90W, HR back below 130 bpm, stretch quads and hip flexors"
           }
         ]
       },
