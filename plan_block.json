@@ -1,149 +1,149 @@
 [
   {
-    "week_index": 5,
-    "week_of": "2026-06-29",
-    "phase": "base",
-    "target_tss": 54,
-    "summary": "Re-establish the training habit \u2014 four short sessions with one longer Thursday ride; all aerobic Zone 1-2, no intensity, shoulder-safe strength foundation.",
-    "sessions": [
-      {
-        "day": "Monday",
-        "sport": "running",
-        "name": "Easy aerobic run",
-        "focus": "Zone 1-2 habit run, 30 min",
-        "planned_tss": 14
-      },
-      {
-        "day": "Tuesday",
-        "sport": "cycling_indoor",
-        "name": "Easy aerobic flush",
-        "focus": "Active recovery ride, Zone 1-2, 30 min",
-        "planned_tss": 13
-      },
-      {
-        "day": "Wednesday",
-        "sport": "strength",
-        "name": "Lower body and core circuit",
-        "focus": "3-round lower-body and core strength, shoulder-safe",
-        "planned_tss": 12
-      },
-      {
-        "day": "Thursday",
-        "sport": "cycling_indoor",
-        "name": "Long easy aerobic ride",
-        "focus": "Primary aerobic base \u2014 65 min sustained Zone 2",
-        "planned_tss": 55
-      }
-    ]
-  },
-  {
     "week_index": 6,
-    "week_of": "2026-07-06",
+    "week_of": "2026-06-29",
     "phase": "build",
-    "target_tss": 68,
-    "summary": "Introduce first threshold stimulus \u2014 one cycling Zone 3-4 effort on Thursday; run volume extends to 35 min; strength progresses to heavier loading on goblet squat and RDL.",
+    "target_tss": 107,
+    "summary": "First structured intensity introduced \u2014 2x6min sweet-spot on Tuesday embedded in an otherwise aerobic week, anchored by a 90-min Zone 2 ride on Thursday.",
     "sessions": [
       {
         "day": "Monday",
         "sport": "running",
-        "name": "Easy aerobic run",
-        "focus": "Zone 2 continuous, 35 min \u2014 slightly longer than week 5",
-        "planned_tss": 17
+        "name": "Easy Aerobic Run",
+        "focus": "Zone 1-2 primer, conversational, aerobic habit",
+        "planned_tss": 18
       },
       {
         "day": "Tuesday",
         "sport": "cycling_indoor",
-        "name": "Zone 2 steady ride",
-        "focus": "Aerobic base ride, 35 min, consolidate Tuesday habit",
-        "planned_tss": 16
-      },
-      {
-        "day": "Wednesday",
-        "sport": "strength",
-        "name": "Lower body and core \u2014 load progression",
-        "focus": "Progress to 22 kg goblet squat and RDL; add TRX hip hinge; 3 rounds",
-        "planned_tss": 14
-      },
-      {
-        "day": "Thursday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic ride with Zone 3 finish",
-        "focus": "60 min Zone 2 then 2x10 min Zone 3 sweet-spot blocks \u2014 first threshold stimulus of Block 2",
-        "planned_tss": 65
-      }
-    ]
-  },
-  {
-    "week_index": 7,
-    "week_of": "2026-07-13",
-    "phase": "peak",
-    "target_tss": 78,
-    "summary": "Sharpen aerobic fitness \u2014 run includes a short tempo segment; Thursday ride features 3x10 min Zone 3-4 intervals; strength adds single-leg loading and core anti-rotation.",
-    "sessions": [
-      {
-        "day": "Monday",
-        "sport": "running",
-        "name": "Run with Zone 3 fartlek",
-        "focus": "30 min with 3x3 min Zone 3 tempo inserts \u2014 first running intensity of the block",
+        "name": "Sweet-Spot Intro Ride",
+        "focus": "2x6min upper Z3 sweet-spot \u2014 first structured stimulus of Block 2",
         "planned_tss": 22
       },
       {
-        "day": "Tuesday",
-        "sport": "cycling_indoor",
-        "name": "Active recovery spin",
-        "focus": "Zone 1 only, 25 min \u2014 flush legs after Monday intensity",
-        "planned_tss": 10
-      },
-      {
         "day": "Wednesday",
         "sport": "strength",
-        "name": "Lower body power and core",
-        "focus": "Introduce single-leg RDL, Bulgarian split squat 22 kg, Pallof press band \u2014 3 rounds",
+        "name": "Lower Body & Core \u2014 Shoulder-Free",
+        "focus": "Strength endurance foundation, core stability, protect shoulder",
         "planned_tss": 15
       },
       {
         "day": "Thursday",
         "sport": "cycling_indoor",
-        "name": "Threshold interval ride",
-        "focus": "3x10 min Zone 3-4 at 155-175W with 5 min Zone 1 recovery \u2014 peak stimulus of Block 2",
-        "planned_tss": 72
+        "name": "Long Aerobic Ride",
+        "focus": "90-min Zone 2 anchor \u2014 primary aerobic adaptation stimulus of the week",
+        "planned_tss": 52
+      }
+    ]
+  },
+  {
+    "week_index": 7,
+    "week_of": "2026-07-06",
+    "phase": "build",
+    "target_tss": 118,
+    "summary": "Build progresses \u2014 sweet-spot reps extended to 3x8min on Tuesday, Thursday long ride extends to 100 minutes, strength moves to 3 rounds.",
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "focus": "Zone 1-2, extend to 35 min, aerobic continuity",
+        "planned_tss": 20
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet-Spot Development Ride",
+        "focus": "3x8min at 155-168W \u2014 progression from 2x6min, more time at stimulus",
+        "planned_tss": 28
+      },
+      {
+        "day": "Wednesday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 3 Rounds",
+        "focus": "Step to 3 rounds, introduce 22kg on goblet squat and RDL",
+        "planned_tss": 18
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Long Aerobic Ride",
+        "focus": "100-min Zone 2 \u2014 extending aerobic window progressively",
+        "planned_tss": 58
       }
     ]
   },
   {
     "week_index": 8,
-    "week_of": "2026-07-20",
-    "phase": "recovery",
-    "target_tss": 35,
-    "summary": "Mandatory recovery week \u2014 cut volume ~40%, all sessions easy Zone 1-2, no intensity. Let Block 2 adaptations land before Block 3 begins.",
+    "week_of": "2026-07-13",
+    "phase": "peak",
+    "target_tss": 128,
+    "summary": "Peak week \u2014 Tuesday introduces first true threshold intervals (3x10min Z4), Thursday long ride holds at 100 min, run extends slightly. Highest intensity week of the block.",
     "sessions": [
       {
         "day": "Monday",
         "sport": "running",
-        "name": "Easy recovery jog",
-        "focus": "20 min Zone 1 only \u2014 flush, not fitness",
-        "planned_tss": 8
+        "name": "Easy Aerobic Run",
+        "focus": "Zone 1-2 easy 35 min \u2014 keep legs fresh ahead of Tuesday",
+        "planned_tss": 20
       },
       {
         "day": "Tuesday",
         "sport": "cycling_indoor",
-        "name": "Easy spin recovery",
-        "focus": "25 min Zone 1 spin, high cadence, zero effort sensation",
-        "planned_tss": 10
+        "name": "Threshold Intervals",
+        "focus": "3x10min at 169-185W (Z4) \u2014 first true threshold work of Block 2",
+        "planned_tss": 38
       },
       {
         "day": "Wednesday",
         "sport": "strength",
-        "name": "Mobility and light activation",
-        "focus": "1 round only of bodyweight circuit \u2014 movement quality, no load progression",
-        "planned_tss": 7
+        "name": "Lower Body & Core \u2014 Peak",
+        "focus": "3 rounds at peak loads \u2014 22kg throughout, add single-leg RDL",
+        "planned_tss": 20
       },
       {
         "day": "Thursday",
         "sport": "cycling_indoor",
-        "name": "Easy aerobic ride",
-        "focus": "45 min Zone 2 \u2014 reduced duration, no intensity, consolidate adaptation",
-        "planned_tss": 28
+        "name": "Long Aerobic Ride",
+        "focus": "100-min Zone 2 \u2014 consolidate aerobic base before recovery week",
+        "planned_tss": 55
+      }
+    ]
+  },
+  {
+    "week_index": 9,
+    "week_of": "2026-07-20",
+    "phase": "recovery",
+    "target_tss": 65,
+    "summary": "Recovery week \u2014 volume drops ~40%, intensity disappears entirely. All sessions Zone 1-2 only. Supercompensation from the build/peak block lands here.",
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "running",
+        "name": "Short Easy Run",
+        "focus": "20 min Zone 1 only \u2014 active recovery, nothing more",
+        "planned_tss": 10
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Easy Spin",
+        "focus": "30 min Zone 1-2 easy \u2014 flush legs, no structure",
+        "planned_tss": 18
+      },
+      {
+        "day": "Wednesday",
+        "sport": "strength",
+        "name": "Mobility & Light Activation",
+        "focus": "1 round only, light loads \u2014 maintain pattern, not stimulus",
+        "planned_tss": 10
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Zone 2 Aerobic Ride \u2014 Recovery Length",
+        "focus": "60 min easy Zone 2 \u2014 shortened anchor, let adaptation consolidate",
+        "planned_tss": 30
       }
     ]
   }
