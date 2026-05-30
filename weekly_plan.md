@@ -5,146 +5,152 @@
 
 ---
 
-# Training Plan — Week of 22 June 2026
+# Training Plan — Week of 29 June 2026
 
-**Generated:** 21 June 2026
+**Generated:** 28 June 2026
 **Available days:** Monday, Tuesday, Wednesday, Thursday
-**Phase:** Recovery
-**Week:** 4 of 4-week block
+**Phase:** Base (Week 1 of new 4-week block)
+**Block:** Block 2 — building consistent habit and aerobic foundation
 
 ---
 
 ## COACH'S PREAMBLE
 
-Diego, this is Week 4 — the recovery week that closes your first training block. The honest truth: the TSS log shows near-zero across the block, but that tells me we haven't locked in the habit yet, not that you're broken or unfit. That one hike (149 minutes, 82.5 TSS) is proof your body can move — it just needs a consistent structure to attach to.
+Diego, welcome to Block 2. Let me be straight with you: the data shows near-zero TSS across the entire first block. That's not a failure — it's information. It tells me the sessions as designed weren't connecting with your week in a way that made them stick. So this block, we do two things differently.
 
-**Recovery week has a precise physiological purpose.** After any accumulation of stress — even partial — the body needs a reduced-load week to let adaptation land. Supercompensation doesn't happen during the hard sessions; it happens in the quiet after them. So this week we cut volume deliberately, keep intensity low, and make the sessions short enough that there's zero excuse not to do them.
+**First, we start even smaller.** Monday, Tuesday, and Wednesday are capped at 30 minutes — genuinely 30 minutes, door to door is 45. There is no session here that should feel like a big production. The goal this week is not fitness. The goal is three completed sessions before Thursday, so that Thursday's longer window feels earned and purposeful.
 
-Here's the honest shape of this week:
+**Second, we respect the constraint.** Thursday is your two-hour window, and that's where we put the one session with real aerobic substance — a longer easy ride or run where your body gets a taste of what sustained effort feels like. Everything before Thursday is preparation for that, and recovery from real life.
 
-- **Monday (30 min) — Easy Run:** Pure Zone 1/Zone 2. No tempo, no pressure. The goal is to move, get blood flowing, and log the session. That's it.
-- **Tuesday (30 min) — Easy Indoor Cycling:** Legs only, low power, pure aerobic flush. If your legs are sore from Monday, this accelerates recovery rather than adding fatigue.
-- **Wednesday (30 min) — Lower Body & Core Strength:** Shoulder-safe, lower body focus. Short circuit, not exhausting — enough to maintain the neuromuscular signal.
-- **Thursday (up to 2h) — Long Easy Ride (Outdoor or Indoor):** This is the anchor of the week. The longest session, but entirely easy. Zone 2 heart rate, no heroics. This is where aerobic base quietly builds.
+**This is a Base week.** That means 80%+ of work is aerobic Zone 1/2. No threshold, no VO2max. The physiology here is simple: we are building capillary density, mitochondrial function, and fat oxidation at low intensities. None of that happens in hard efforts — it happens in accumulated easy time. Your aerobic engine gets built on slow miles and easy pedalling.
 
-Four sessions, all manageable, one clear purpose each. Let's get all four done.
+**On your shoulder:** upper body loading stays minimal. Core work is trunk-focused — planks, dead bugs, TRX rows only if pain-free. If the shoulder speaks up, we drop it entirely and replace with extra hip work. You tell me.
+
+Here is the honest shape of this week:
+
+- **Monday (30 min) — Easy Run:** Zone 1/2, conversational, no pressure on pace. Log the session. That is success.
+- **Tuesday (30 min) — Indoor Cycling:** Low power, aerobic flush, legs only in terms of effort. Active recovery after Monday's run.
+- **Wednesday (30 min) — Lower Body & Core Strength:** Bodyweight-anchored, lower-body dominant, shoulder-safe. Three short rounds, simple movements.
+- **Thursday (up to 2h) — Long Easy Ride (Indoor or Outdoor):** This is the week's key session. Long, easy, unbroken aerobic time. Zone 2 throughout. This is where the aerobic adaptation seeds itself.
+
+**Target weekly TSS: ~60.** Modest, achievable, and a genuine starting point for Block 2's progression.
 
 ---
 
-## Monday — Easy Recovery Run
+## MONDAY — Easy Aerobic Run
 
 **Sport:** Running
-**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Zone 1/2 aerobic flush, build the habit
+**Duration:** 30 min | **Planned TSS:** 14 | **Focus:** Establish the habit; pure Zone 1/2 aerobic movement
 
-#### Warm-up
-- 5 min walk/very easy jog, >7:00/km, HR well below 145 bpm
-- Let legs wake up naturally — no rushing the first kilometre
+### Warm-up
+- **5 min | >7:00/km | Zone 1 | <145 bpm**
+- Walk briskly for 2 minutes, then break into a very easy jog. No pressure to run yet — if it feels better to walk-jog the first 5 minutes, do exactly that. Let the legs wake up.
 
-#### Main Set
-- 20 min easy running, Zone 2 pace: 6:15–6:45/km, HR 146–162 bpm
-- If HR climbs above 162, slow down — no exceptions this week
-- Conversational pace: you should be able to speak full sentences
+### Main Set
+- **20 min | 6:15–6:45/km | Zone 2 | 146–162 bpm**
+- A single continuous easy effort at conversational pace. You should be able to speak full sentences. If HR climbs above 162, slow down — the zone matters more than the pace. This is not a workout you need to push through; it is one you need to finish feeling like you could have gone longer.
 
-#### Cool-down
-- 5 min walk, HR dropping back below 120 bpm
-- 2–3 min standing hip flexor and calf stretch
+### Cool-down
+- **5 min | >7:00/km | Zone 1 | <145 bpm**
+- Drop back to a shuffle or brisk walk. Let HR fall below 130 before you stop.
 
-**Coach notes:** Recovery week means the stimulus is low by design. Don't be tempted to push. The value here is consistency and aerobic maintenance, not fitness gain — that gain is already locked in from the block.
-
----
-
-## Tuesday — Easy Aerobic Spin (Indoor Cycling)
-
-**Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 15 | **Focus:** Active recovery, legs-only aerobic flush
-
-#### Warm-up
-- 8 min gradual build from 60W to Zone 2 low (106–115W)
-- High cadence: aim 90–95 rpm throughout, gear/resistance low
-
-#### Main Set
-- 17 min steady Zone 2 power: 106–141W, HR should settle 146–158 bpm
-- No surges, no testing. Smooth, rhythmic, easy breathing throughout
-- Think of this as flushing yesterday's run out of your legs
-
-#### Cool-down
-- 5 min easy spin below 90W, let HR drop under 130 bpm before you stop
-
-**Coach notes:** Keep resistance genuinely light — this is not a fitness session, it is a recovery session. If it feels too easy, you have calibrated it correctly.
+**Coach notes:** The single priority today is completing 30 minutes on your feet. Pace is secondary to zone — run by feel and HR, not by what the watch says the pace "should" be. If the legs feel heavy, slow down further; a 7:30/km Zone 1 jog still does the job.
 
 ---
 
-## Wednesday — Lower Body & Core Circuit (Strength)
+## TUESDAY — Easy Indoor Cycling Flush
+
+**Sport:** Cycling (Indoor)
+**Duration:** 30 min | **Planned TSS:** 13 | **Focus:** Active recovery; aerobic flush after Monday's run, legs only
+
+### Warm-up
+- **8 min | 70–106W | Zone 1 | <145 bpm**
+- Start easy, high cadence (85–90 rpm), no resistance. The goal is simply to get the legs spinning and blood moving. There should be zero effort sensation here.
+
+### Main Set
+- **18 min | 106–141W | Zone 2 | 146–162 bpm**
+- Steady, unbroken aerobic effort. Cadence 85–95 rpm. Keep resistance modest — this is not a sweat session, it is a recovery-enhancing session. If your legs feel sore from Monday, that soreness should ease within the first 5 minutes of pedalling. If it doesn't, drop back to Zone 1 the whole time.
+
+### Cool-down
+- **4 min | <106W | Zone 1 | <145 bpm**
+- Spin down easy, reduce resistance entirely, let HR drop before stepping off the bike.
+
+**Coach notes:** Tuesday exists to move blood through fatigued running muscles and accelerate Monday's recovery — not to add stress. Keep it genuinely easy. If you feel like you want to push harder, save it for Thursday. Discipline today means more on Thursday.
+
+---
+
+## WEDNESDAY — Lower Body & Core Strength
 
 **Sport:** Strength
-**Duration:** 30 min | **Planned TSS:** 14 | **Focus:** Maintain neuromuscular stimulus, shoulder-safe
+**Duration:** 30 min | **Planned TSS:** 12 | **Focus:** Lower-body and core foundation; shoulder-safe throughout
 
-#### Warm-up
-- 5 min: leg swings (forward/lateral, 10 each leg), hip circles, 10 bodyweight squats, 10 glute bridges
-- No shoulder loading at all this session
+### Warm-up
+- **5 min**
+- Leg swings (10 each direction, each leg), hip circles (10 each direction), bodyweight squats slow and controlled (10 reps), glute bridges on the floor (10 reps). No rushing — this activates the patterns you'll use in the circuit.
 
-#### Main Set
-**2 rounds** (recovery week — one fewer round than peak week):
+### Main Set
+- **3 rounds of the following circuit | ~18 min**
+- Rest 45–60 seconds between exercises, 90 seconds between rounds.
 
-| Exercise | Load | Reps/Time |
-|---|---|---|
-| Goblet squat | 16 kg dumbbell | 10 reps |
-| Romanian deadlift | 16 kg dumbbells | 10 reps |
-| TRX split squat | Bodyweight | 8 reps/leg |
-| Band glute bridge | Medium resistance band | 15 reps |
-| Dead bug | Bodyweight | 8 reps/side |
-| Plank hold | Bodyweight | 30 seconds |
+| Exercise | Reps / Duration | Load | Notes |
+|---|---|---|---|
+| Goblet Squat | 10 reps | 16 kg dumbbell | Hold at chest, elbows down, full depth |
+| Romanian Deadlift | 10 reps | 16 kg dumbbells | Hinge at hip, slight knee bend, feel hamstrings load |
+| TRX Split Squat | 8 reps each leg | Bodyweight | Rear foot in TRX, front foot forward, controlled descent |
+| Banded Glute Bridge | 15 reps | Light/medium band above knees | Drive through heels, squeeze glutes at top |
+| Dead Bug | 8 reps each side | Bodyweight | Lower back pressed to floor throughout; slow and controlled |
+| Plank Hold | 30 seconds | Bodyweight | Forearms, neutral spine — drop to knees if form breaks |
 
-- 60 sec rest between exercises, 90 sec between rounds
-- Load is deliberately lighter than peak week — quality of movement over load
+### Cool-down
+- **5 min**
+- Standing hip flexor stretch (30s each side), seated hamstring stretch (30s each side), glute stretch supine (30s each side), slow cat-cow (10 breaths).
 
-#### Cool-down
-- 5 min: seated hamstring stretch, pigeon pose or figure-4 glute stretch, hip flexor lunge hold
-
-**Coach notes:** Two rounds only — this is the recovery week prescription. Focus on controlled movement and full range of motion rather than grinding through fatigue. The dead bug replaces any pressing movement to keep the shoulder completely out of it.
+**Coach notes:** The shoulder stays unloaded — no pressing, no pulling through shoulder range beyond the TRX split squat handles. If the TRX handles create any shoulder discomfort during the split squat, replace that movement with a standard reverse lunge on the floor. Start with 16 kg on the goblet squat; if it feels easy by round 3, note that — we will progress next week. Form over load, always.
 
 ---
 
-## Thursday — Long Easy Ride
+## THURSDAY — Long Easy Aerobic Ride
 
-**Sport:** Cycling Outdoor (or Indoor if weather/logistics require)
-**Duration:** 90 min | **Planned TSS:** 55 | **Focus:** Aerobic base volume, easy Z2 throughout
+**Sport:** Cycling (Indoor — or outdoor if conditions allow)
+**Duration:** 90 min | **Planned TSS:** 55 | **Focus:** Key aerobic base session; sustained Zone 2 effort, the week's primary adaptation stimulus
 
-#### Warm-up
-- 15 min easy rolling/flat terrain, HR building gradually to 150 bpm
-- No hills in the first 15 minutes — let the cardiovascular system settle
+### Warm-up
+- **15 min | 70–106W (indoor) / <145 bpm (outdoor) | Zone 1**
+- Start very easy, first 5 minutes essentially free-spinning. Gradually build cadence and light resistance over the remaining 10 minutes. By minute 15, you should feel warmed up but not even slightly fatigued. Cadence 80–90 rpm.
 
-#### Main Set
-- **60 min steady Zone 2:** HR 146–162 bpm (outdoor = HR target)
-- If indoor: 106–141W, HR should naturally sit in same range
-- Choose a flat to gently rolling route — avoid climbs that spike HR above 165
-- If HR exceeds 163 on a climb, ease off or shift down — keep it honest
+### Main Set
+- **65 min | 106–141W (indoor) / 146–162 bpm (outdoor) | Zone 2**
+- This is a single unbroken aerobic block. The goal is to stay in Zone 2 for the entire 65 minutes without drifting up into Zone 3. On the bike, that means watching power on the indoor trainer; outdoors, let HR guide you — if a hill pushes you above 162 bpm, soft-pedal over the top and let it come back down before resuming effort.
 
-#### Cool-down
-- 15 min easy spin/flat ride, HR dropping back below 140 bpm
-- Stop and do 3 min of standing quad and hip flexor stretch before going inside
+- **Execution cues:**
+  - Cadence: 85–95 rpm indoors; maintain a comfortable rhythm outdoors
+  - Every 20 minutes, do a quick check: HR in range? Power in range? Can you speak a sentence? If yes, continue. If HR is creeping, reduce resistance slightly.
+  - Do not push through zone drift — the entire point of this session is staying aerobic.
 
-**Coach notes:** This is the week's key aerobic session — long relative to everything else, but the easiest in terms of intensity. If you can only do this one session this week, make it this one. Ninety minutes in Zone 2 is where aerobic infrastructure gets built quietly.
+### Cool-down
+- **10 min | <106W / <145 bpm | Zone 1**
+- Gentle spin, reduce resistance progressively. Let HR drop to below 120 before stopping. Stand up and walk for 2 minutes after dismounting.
+
+**Coach notes:** This is the most important session of the week — not because it's hard, but because 65 continuous minutes of Zone 2 work is where aerobic adaptation actually begins. Your mitochondria respond to duration, not intensity, at this stage. Resist the urge to push. If you feel good at minute 40 and want to add power, the answer is no — bank that energy for next week when the targets rise. Complete this session easy and you'll be ahead of where you need to be.
 
 ---
 
 ## Week Summary
 
-| Day | Session | Sport | Duration | TSS |
+| Day | Session | Sport | Duration | Planned TSS |
 |---|---|---|---|---|
-| Monday | Easy Recovery Run | Running | 30 min | 18 |
-| Tuesday | Easy Aerobic Spin | Cycling Indoor | 30 min | 15 |
-| Wednesday | Lower Body & Core Circuit | Strength | 30 min | 14 |
-| Thursday | Long Easy Ride | Cycling Outdoor/Indoor | 90 min | 55 |
-| **Total** | | | **~3h** | **~102** |
+| Monday | Easy Aerobic Run | Running | 30 min | 14 |
+| Tuesday | Easy Indoor Cycling Flush | Cycling Indoor | 30 min | 13 |
+| Wednesday | Lower Body & Core Strength | Strength | 30 min | 12 |
+| Thursday | Long Easy Aerobic Ride | Cycling Indoor/Outdoor | 90 min | 55 |
+| **Total** | | | **~3h** | **~54 TSS** |
 
-> **Note on TSS:** The 102 figure reflects Thursday's longer ride anchoring the week. Because actual completed TSS across this block has been near zero, I'm treating Thursday's 90-minute ride as the primary adaptation target — if it feels like too much, cut it to 60 minutes (TSS ~37) and that's still a win. The Monday–Wednesday sessions are short enough that there should be no barrier to completing them.
-
-**Week focus:** Recovery — consolidate the block, build consistency, let any accumulated adaptation land.
-**One coaching sentence:** Four short, purposeful sessions this week — get all four done and you'll end the block having established the most important thing: the habit of showing up.
-
----
+**Phase:** Base — Week 1 of 4
+**Weekly TSS Target:** ~54
+**Block 2 focus:** Build the consistent training habit first; aerobic volume second. Four sessions completed this week is the single most important outcome — the fitness follows automatically once the structure is in place.
 
 ---
 
-## SECTION 2: JSON PLAN
+---
+
+# SECTION 2: JSON PLAN

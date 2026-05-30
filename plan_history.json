@@ -137,5 +137,45 @@
         "focus": "Aerobic base volume, sustained Z2 \u2014 anchor session of the week"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-30",
+    "phase": "base",
+    "planned_tss": 94,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "running",
+        "name": "Easy aerobic run",
+        "planned_tss": 14,
+        "focus": "Aerobic base, conversational Zone 1-2, habit establishment"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Easy aerobic flush",
+        "planned_tss": 13,
+        "focus": "Active recovery, aerobic flush, 85-95 rpm, legs only"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "strength",
+        "name": "Lower body and core circuit",
+        "planned_tss": 12,
+        "focus": "Lower-body strength and core stability, shoulder-safe throughout"
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Long easy aerobic ride",
+        "planned_tss": 55,
+        "focus": "Primary aerobic base session \u2014 sustained Zone 2, 65 min unbroken, mitochondrial development"
+      }
+    ]
   }
 ]
