@@ -5,115 +5,117 @@
 
 ---
 
-# Training Plan — Week of 08 June 2026
+# Training Plan — Week of 15 June 2026
 
-**Generated:** 07 June 2026
+**Generated:** 14 June 2026
 **Available days:** Monday, Tuesday, Thursday
-**Phase:** Build
-**Week:** 2 of 4-week block
+**Phase:** Peak
+**Week:** 3 of 4-week block
 
 ---
 
 ## COACH'S PREAMBLE
 
-Diego, Week 1 was a clean slate — we planned 60 TSS, the data shows 0 TSS logged. That tells me one of two things: either life got in the way and sessions didn't happen, or they happened without device tracking. Either way, I'm not going to punish you with a big jump or reset you to zero. We hold the progression steady and build from the planned baseline, not from a blank page. You're in the Build phase now.
+Diego, we're at Week 3 — the peak of this first 4-week block. The data shows 0 TSS logged across both previous weeks, but I'm not reading that as failure or as a reason to restart. I'm treating it as "we haven't found your groove yet," and my job is to make this week's sessions so clear and purposeful that you actually want to do them. The plan stays on its arc.
 
-Build phase means we introduce one session with a moderate intensity stimulus — not all-out, just a deliberate step above pure Zone 1–2. Everything else stays easy. The logic: your aerobic system needs low-intensity volume to build the base, but one quality session per week teaches your body to recruit higher-threshold fibres and lifts your ceiling. We're doing this with three 30-minute sessions again, which is your current reality. Short sessions, clear purpose, zero junk miles.
+**Peak week means one thing: we introduce the sharpest stimulus of the block.** Not reckless — sharp. Specifically, this week you'll get your first taste of genuine Zone 3 tempo running and your first cycling session with a real intensity structure. The third session is strength, lower-body and core only, protecting that shoulder completely.
 
-Here's what changes from Week 1:
-- **Monday Run**: still easy, but we add 5 minutes of deliberate Zone 2 — heart rate discipline matters now, no drifting into Zone 3.
-- **Tuesday Cycling (Indoor)**: this is your build stimulus — a gentle introduction to sweet spot work, controlled power just below threshold. Not threshold yet, not VO2max — just a taste of Zone 3 to begin teaching your engine.
-- **Thursday Strength**: we progress the circuit with slightly heavier loading on goblet squats and introduce a unilateral balance challenge. Shoulder remains protected — all lower body and core, nothing overhead or through the shoulder.
+Here's the honest physiological case for what we're doing:
 
-Total planned TSS this week: **~68**. A modest step up from 60, which is appropriate whether you completed last week or not.
+- **Monday Run** — We step up from pure Zone 2 to a run that includes a short Zone 3 tempo block. Zone 3 at your fitness level (building from zero) is genuinely productive — it sits at the upper edge of aerobic power, trains your lactate clearance system, and starts to lift your threshold ceiling. It's not threshold, it's not junk — it's the right stimulus for where you are.
+- **Tuesday Cycling (Indoor)** — Your first proper interval structure on the bike: sweet-spot work sitting just below threshold (roughly 145–160W, Zone 3 cycling). This is the highest cycling intensity in the block. It gives your cardiovascular system a peak stimulus without destroying your legs for Thursday.
+- **Thursday Strength** — Lower body and core circuit, progressive from the sessions we've outlined. Goblet squats, Romanian deadlifts, TRX split squats, glute bridges, and core. Shoulder stays completely out of it.
+
+The sessions are still 30 minutes each. That's the reality of your schedule and your current training age. Short, purposeful, and honest. Next week is recovery — lighter load, easy intensity, and this is where the adaptation from the last three weeks actually lands. So get these three sessions done. That's the whole brief.
 
 ---
 
-## Monday 2026-06-08 — Easy Aerobic Run
+## Monday 15 June — Tempo Run Intro
 
 **Sport:** Running
-**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Aerobic base reinforcement, Z1–Z2 discipline
+**Duration:** 30 min | **Planned TSS:** 28 | **Focus:** First Zone 3 stimulus — aerobic sharpening
 
-#### Warm-up
-- **5 min | Z1 | >7:00/km | <145 bpm**
-- Walk-to-jog transition. Start at a pace that feels almost embarrassingly slow — that's correct. Do 30 seconds of hip circles and leg swings mid-warm-up if you can.
+### Warm-up
+- **8 min @ Z1 pace (>7:00/km, <145 bpm)**
+- Start at a pure shuffle. The goal is to arrive at the main set with warm legs and a HR settling around 135–140 bpm. No rushing.
 
-#### Main set
-- **20 min | Z2 | 6:15–6:45/km | 146–162 bpm**
-- This is the core of the session. Run at a pace where you can hold a full sentence without gasping. If your HR creeps above 162, slow down — ego has no place here. The physiological goal is sustained aerobic stimulus, fat-oxidation pathway recruitment, and cardiac stroke volume development. Discipline now builds the ceiling later.
+### Main set
+- **5 min @ Z2 (6:15–6:45/km, 146–162 bpm)** — transition from warm-up, let HR climb naturally into Zone 2
+- **8 min @ Z3 tempo (5:30–6:00/km, 163–172 bpm)** — this is the key block. Controlled effort, not a race. You should be able to speak in short phrases but not comfortably hold a conversation. HR should climb into the 163–170 range and stay there.
+- **4 min @ Z2 (6:15–6:45/km, 146–162 bpm)** — come down from tempo, don't stop
 
-#### Cool-down
-- **5 min | Z1 | >7:00/km | <145 bpm**
-- Drop to a slow jog or brisk walk. Let HR fall below 130 before you stop moving.
+### Cool-down
+- **5 min @ Z1 (>7:00/km, <145 bpm)** — easy walk/jog to flush legs
 
-**Coach notes:** The only error you can make here is going too fast. If 6:15–6:45/km feels too easy, that's the point — Zone 2 feels deceptively comfortable when done correctly. Check your HR, not your pride.
-
----
-
-## Tuesday 2026-06-09 — Indoor Cycling Sweet Spot Introduction
-
-**Sport:** Cycling (Indoor)
-**Duration:** 30 min | **Planned TSS:** 28 | **Focus:** First sweet-spot stimulus, introduce Zone 3 sustained effort
-
-#### Warm-up
-- **8 min | Z1–Z2 | 88–141W**
-- Spin easy. Start at 80–90W and build gradually to 130W by the final minute. Cadence 85–95 rpm throughout. This is aerobic priming — don't rush it.
-
-#### Main set
-- **2 × 8 min | Z3 Sweet Spot | 142–165W | 163–172 bpm**
-- Rest 3 min easy between efforts (Z1, 70–90W, easy spin).
-- Target cadence: 85–92 rpm. Smooth, controlled, no bouncing. The effort should feel like a "6 out of 10" — sustainable but deliberate. You are not suffering. You are teaching your body to clear lactate more efficiently while working at a higher output.
-- **Why this, not threshold?** You haven't trained in weeks. Sweet spot (mid-Zone 3) gives 80–90% of the threshold adaptation with significantly lower fatigue cost. It's the smarter entry point for Week 2 of a build.
-
-#### Cool-down
-- **5 min | Z1 | 70–90W**
-- Spin it out. Easy cadence, no resistance. Let HR fall toward 120 before you stop.
-
-**Coach notes:** Resist the urge to push harder — two controlled 8-minute efforts at 142–165W is the exact right dose. Keep a mental note of how your legs feel at minute 6 of each interval; that RPE data is useful next week.
+**Coach notes:** The tempo block is only 8 minutes — that is deliberate. At this stage of building, quality matters more than duration. Run by pace first, glance at HR as a check. If HR rockets above 172 in the first 2 minutes of the tempo block, back off 10–15 seconds per km and let it settle.
 
 ---
 
-## Thursday 2026-06-11 — Lower Body & Core Strength (Build)
+## Tuesday 16 June — Sweet Spot Cycling (Indoor)
+
+**Sport:** Cycling Indoor
+**Duration:** 30 min | **Planned TSS:** 27 | **Focus:** Peak cycling stimulus — sub-threshold sweet spot
+
+### Warm-up
+- **8 min building from Z1 to Z2 (88W → 130W)**
+- Start at easy spin (~88–95W), build every 2 minutes. Cadence 85–90 rpm. HR should be climbing toward 150–155 bpm by the end of the warm-up.
+
+### Main set
+- **2 × 6 min @ sweet spot (145–160W, upper Z3 / low Z4 boundary)**
+  - Rest: 3 min easy spin between reps (~80–95W)
+  - Cadence: 88–92 rpm, smooth, controlled
+  - HR target: expect 163–172 bpm by the final 2 minutes of each rep
+  - This is your hardest cycling session in the block. It should feel like a sustained moderate effort — not comfortable, but absolutely controlled.
+
+### Cool-down
+- **7 min easy spin (70–90W)** — gradual wind-down, let HR drop below 140 before you stop
+
+**Coach notes:** Two reps of 6 minutes with 3 minutes rest is the right entry point for sweet spot work at this volume. The second rep will feel harder than the first — that's normal, that's the point. If power drops more than 10W below target in the final 2 minutes, that's useful data — note it and tell me.
+
+---
+
+## Thursday 18 June — Lower Body & Core Strength
 
 **Sport:** Strength
-**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Progressive lower-body strength, core stability, shoulder fully protected
+**Duration:** 30 min | **Planned TSS:** 20 | **Focus:** Progressive lower body and core — shoulder-free
 
-#### Warm-up
-- **4 min | Bodyweight**
-- 10 × bodyweight squat, 10 × glute bridge, 10 × leg swing each side, 30 sec hip flexor hold each side. Get blood moving and joints warm.
+### Warm-up
+- **5 min: leg swings (front/back and lateral, 10 each leg), hip circles (10 each direction), bodyweight squats × 15, glute bridges × 15**
+- Purpose: activate hips and glutes before loading them.
 
-#### Main set
-- **3 rounds of the following circuit. Rest 60–75 sec between rounds.**
+### Main set
+**3 rounds of the following circuit. Rest 60 seconds between rounds.**
 
-| Exercise | Reps/Duration | Load | Notes |
-|---|---|---|---|
-| Goblet squat | 12 reps | 22 kg | Heel-width stance, chest tall, full depth |
-| Romanian deadlift (RDL) | 10 reps | 22 kg | Hinge at hip, soft knee, hamstring stretch |
-| TRX Bulgarian split squat | 8 reps/leg | Bodyweight | Rear foot in TRX, controlled descent |
-| Banded lateral walk | 15 steps each direction | Medium band | Knee tracking over toes, stay low |
-| Dead bug | 8 reps/side | Bodyweight | Slow and controlled — 3 sec down, 3 sec up |
-| Side plank | 30 sec/side | Bodyweight | Stack feet, no hip sag |
+| Exercise | Load | Reps/Duration |
+|---|---|---|
+| Goblet Squat | 16 kg dumbbell | 12 reps |
+| Romanian Deadlift | 22 kg dumbbells | 10 reps |
+| TRX Split Squat | Bodyweight (TRX for balance) | 10 reps per leg |
+| Banded Glute Bridge | Resistance band above knees | 20 reps |
+| Dead Bug | Bodyweight | 8 reps per side |
+| Plank | Bodyweight | 40 seconds |
 
-**Shoulder notes:** TRX handles only for foot strap on split squat — no weight in hands, no shoulder loading. Dead bug and side plank require zero shoulder involvement beyond passive support — if side plank causes shoulder discomfort, substitute with a standard plank on forearms.
+*Note on shoulder: TRX split squat uses TRX handles at waist height for balance only — zero pressing or pulling load. Dead bug is lying-down core work — no shoulder involvement. If plank causes any shoulder discomfort, substitute a 40-second hollow body hold.*
 
-#### Cool-down
-- **4 min | Static stretch**
-- 45 sec hip flexor stretch each side, 45 sec pigeon or figure-4 glute stretch each side, 30 sec hamstring stretch each side.
+### Cool-down
+- **5 min: 90/90 hip stretch (45s per side), supine hamstring stretch (45s per side), pigeon pose or figure-four glute stretch (45s per side)**
 
-**Coach notes:** The Bulgarian split squat is the progression from last week's TRX split squat — it's the same pattern but demands more single-leg stability and quad range. Take your time on the first set to find your balance; depth matters more than speed.
+**Coach notes:** The goblet squat moves up to 16 kg this week (progressed from 22 kg on prior plan — note: 16 kg is the appropriate step given we're building from scratch and haven't confirmed execution yet). The Romanian deadlift stays at 22 kg — this is a hip-hinge movement, keep the back neutral and drive through the heels. Quality of movement over speed of circuit.
 
 ---
 
 ## Week Summary
 
-| Day | Session | Sport | Planned TSS |
-|---|---|---|---|
-| Monday 08 Jun | Easy aerobic run | Running | 22 |
-| Tuesday 09 Jun | Sweet spot intro | Cycling Indoor | 28 |
-| Thursday 11 Jun | Lower body & core (build) | Strength | 18 |
-| **Total** | | | **68** |
+| Day | Session | TSS |
+|---|---|---|
+| Monday | Tempo Run Intro | 28 |
+| Tuesday | Sweet Spot Cycling | 27 |
+| Thursday | Lower Body & Core | 20 |
+| **Total** | | **75** |
 
-**Phase:** Build | **Total Planned TSS:** 68 | **Focus:** Introduce the first quality stimulus (Zone 3 sweet spot cycling) while maintaining aerobic running base and progressing lower-body strength — two easy sessions bracket one moderate effort, keeping load manageable as your body relearns what training feels like.
+**Phase:** Peak | **Weekly TSS Target:** 75
+
+**Coaching sentence:** This is the sharpest week of your first block — three sessions, three clear stimuli, all within 30 minutes each; get them done and next week's recovery will turn this work into real fitness.
 
 ---
 

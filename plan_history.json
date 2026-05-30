@@ -64,5 +64,38 @@
         "focus": "Progressive lower-body strength and core stability, shoulder fully protected"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-30",
+    "phase": "peak",
+    "planned_tss": 75,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "running",
+        "name": "Tempo Run Intro",
+        "planned_tss": 28,
+        "focus": "First Zone 3 tempo stimulus \u2014 aerobic sharpening"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet Spot 2x6",
+        "planned_tss": 27,
+        "focus": "Peak cycling stimulus \u2014 sub-threshold sweet spot intervals"
+      },
+      {
+        "day": "Thursday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Peak Week",
+        "planned_tss": 20,
+        "focus": "Progressive lower body and core \u2014 shoulder completely unloaded"
+      }
+    ]
   }
 ]
