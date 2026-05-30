@@ -893,7 +893,38 @@ function renderPlanPreamble(){
     if(m&&m[1].trim())noteText=m[1].trim();
   } else {
     var wk=weekObjForOffset(weekOffset);
-    if(wk&&wk.summary)noteText=wk.summary;
+    if(!wk){box.innerHTML="";return;}
+    var ph=wk.phase||"",phClr=ph==="recovery"?"#22c55e":ph==="peak"?"#ef4444":ph==="build"?"#f59e0b":"#3b82f6";
+    var phL=ph.charAt(0).toUpperCase()+ph.slice(1);
+    var hdr='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'+
+      '<span style="width:8px;height:8px;border-radius:50%;background:'+phClr+'"></span>'+
+      '<span style="font-size:12px;font-weight:700;color:'+phClr+'">'+phL+' week</span>'+
+      (wk.target_tss?'<span style="font-size:11px;color:var(--t3);margin-left:auto">'+wk.target_tss+' TSS target</span>':'')+
+    '</div>';
+    var summ=wk.summary?'<p style="font-size:13px;color:var(--t2);line-height:1.6;margin:0 0 12px">'+esc(wk.summary)+'</p>':"";
+    var sess="";
+    if(wk.sessions&&wk.sessions.length){
+      sess='<div style="border-top:1px solid var(--line);padding-top:10px">';
+      wk.sessions.forEach(function(s){
+        var sp=s.sport||"running",st=sp==="running"?"run":sp.indexOf("cycl")>-1?"bike":sp==="strength"?"strength":"other";
+        var cl=sportClr(st),bg=cl[0],col=cl[1];
+        sess+='<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">'+
+          '<div style="min-width:28px;height:28px;border-radius:7px;background:'+bg+';color:'+col+';display:flex;align-items:center;justify-content:center;font-size:13px">'+sportIcon(st)+'</div>'+
+          '<div><div style="font-size:12px;font-weight:600;color:var(--t1)">'+esc(s.day||"")+(s.name?' — '+esc(s.name):"")+'</div>'+
+          (s.focus?'<div style="font-size:11px;color:var(--t3);line-height:1.4">'+esc(s.focus)+'</div>':"")+
+          (s.planned_tss?'<div style="font-size:11px;color:var(--t3)">'+s.planned_tss+' TSS</div>':"")+
+          '</div></div>';
+      });
+      sess+='</div>';
+    }
+    box.innerHTML='<div class="card" style="margin-bottom:0">'+
+      '<div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:0" onclick="togglePreamble()">'+
+        '<div class="card-h" style="margin:0">Coach\'s Notes</div>'+
+        '<span id="preamble-chev" style="font-size:18px;color:var(--t3);line-height:1">+</span>'+
+      '</div>'+
+      '<div id="preamble-body" style="display:none;margin-top:10px">'+hdr+summ+sess+'</div>'+
+    '</div>';
+    return;
   }
   if(!noteText){box.innerHTML="";return;}
   var paras=noteText.split(/\n\n+/).map(function(p){return '<p style="margin:0 0 10px">'+esc(p.replace(/\n/g,' '))+'</p>';}).join('');
@@ -1027,6 +1058,21 @@ async function generatePlan(){
   var token=getToken();
   if(!token){alert("Add your GitHub token first (gear icon, top right).");return;}
   if(!goals){alert("Please complete onboarding first (set your goals).");return;}
+  var btn=document.getElementById("gen-btn");
+  var label=document.getElementById("gen-label");
+  // If a plan already exists, just refresh from the backend — no regeneration
+  if(planJson&&planJson.length){
+    btn.disabled=true;btn.classList.add("spinning");label.textContent="Refreshing…";
+    var r=await Promise.all([fetchJSON("weekly_plan.json"),fetchJSON("plan_block.json"),fetchJSON("plan_status.json"),fetchText("weekly_plan.md")]);
+    planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
+    weekOffset=planStartOffset()||0;
+    showPage("plan",document.querySelector(".nav button[onclick*=\"'plan'\"]"));
+    updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
+    btn.disabled=false;btn.classList.remove("spinning");
+    label.textContent="✓ Refreshed";
+    setTimeout(function(){updateGenLabel();},2000);
+    return;
+  }
   var avail=await fetchJSON("availability.json");
   var anyDays=avail&&avail.days&&Object.values(avail.days).some(function(d){return d&&d.available;});
   if(!anyDays){
@@ -1037,8 +1083,6 @@ async function generatePlan(){
       return;
     }
   }
-  var btn=document.getElementById("gen-btn");
-  var label=document.getElementById("gen-label");
   btn.disabled=true;btn.classList.add("spinning");label.textContent="Triggering…";
   var ok=await triggerGenerate();
   if(!ok){
@@ -1062,12 +1106,12 @@ async function generatePlan(){
       showPage("plan",document.querySelector(".nav button[onclick*=\"'plan'\"]"));
       updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
       btn.disabled=false;btn.classList.remove("spinning");label.textContent="✓ New plan ready";
-      setTimeout(function(){label.textContent="Generate plan";},3500);
+      setTimeout(function(){updateGenLabel();},3500);
       return;
     }
     if(tries>=maxTries){
       btn.disabled=false;btn.classList.remove("spinning");label.textContent="Still building…";
-      setTimeout(function(){label.textContent="Generate plan";},3500);
+      setTimeout(function(){updateGenLabel();},3500);
       alert("Plan is still being built — it can take a few minutes the first time (Garmin login + Claude generation). Tap Generate plan again in a couple of minutes or check Actions on GitHub.");
       return;
     }
@@ -1497,7 +1541,7 @@ async function triggerGenerate(){
 function updateGenLabel(){
   var el=document.getElementById("gen-label");if(!el)return;
   var hasExisting=planJson&&planJson.length;
-  el.textContent=hasExisting?"Regenerate plan":"Generate plan";
+  el.textContent=hasExisting?"Refresh plan":"Generate plan";
 }
 function renderGoalsSummary(){
   var el=document.getElementById("goals-summary");if(!el)return;
