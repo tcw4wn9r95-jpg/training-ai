@@ -1,12 +1,12 @@
 [
   {
     "day": "Monday",
-    "date": "2026-06-01",
+    "date": "2026-06-08",
     "sport": "running",
-    "name": "Easy Aerobic Run",
+    "name": "Easy aerobic run",
     "total_duration_secs": 1800,
     "planned_tss": 22,
-    "focus": "Aerobic base establishment, Z1-Z2, conversational pace",
+    "focus": "Aerobic base reinforcement, Z1-Z2 discipline",
     "steps": [
       {
         "type": "warmup",
@@ -14,7 +14,7 @@
         "target_type": "pace",
         "target_low": 480,
         "target_high": 420,
-        "description": "Z1 easy walk/jog, <145 bpm \u2014 let HR climb naturally, hip openers as you move"
+        "description": "Z1 walk-to-jog, <145 bpm, hip circles and leg swings"
       },
       {
         "type": "interval",
@@ -22,67 +22,34 @@
         "target_type": "pace",
         "target_low": 405,
         "target_high": 375,
-        "description": "Z2 aerobic 146-162 bpm \u2014 conversational, full sentences, back off if HR exceeds 162"
+        "description": "Z2 aerobic, 146-162 bpm, conversational pace, do not let HR drift above 162"
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
         "target_type": "pace",
-        "target_low": 510,
-        "target_high": 450,
-        "description": "Z1 easy walk/shuffle, <145 bpm \u2014 shake out legs, 60s hip flexor stretch each side"
+        "target_low": 480,
+        "target_high": 420,
+        "description": "Z1 slow jog or brisk walk, let HR fall below 130 bpm"
       }
     ]
   },
   {
     "day": "Tuesday",
-    "date": "2026-06-02",
+    "date": "2026-06-09",
     "sport": "cycling_indoor",
-    "name": "Aerobic Spin \u2014 Leg Flush",
+    "name": "Sweet spot introduction \u2014 2x8 min",
     "total_duration_secs": 1800,
-    "planned_tss": 20,
-    "focus": "Low-load aerobic cycling, non-impact leg flush after Monday run",
+    "planned_tss": 28,
+    "focus": "First Zone 3 sweet spot stimulus, sub-threshold aerobic development",
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 480,
         "target_type": "power",
-        "target_low": 70,
-        "target_high": 105,
-        "description": "Z1 easy spin, 85-90 rpm, <145 bpm \u2014 no pressure, joint lubrication, pedal stroke feel"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 1020,
-        "target_type": "power",
-        "target_low": 106,
+        "target_low": 88,
         "target_high": 141,
-        "description": "Z2 aerobic 146-162 bpm \u2014 85-90 rpm, steady effort; reduce watts if HR exceeds 162 bpm"
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 50,
-        "target_high": 90,
-        "description": "Z1 easy spin down, <145 bpm \u2014 near-zero resistance, slow cadence fine"
-      }
-    ]
-  },
-  {
-    "day": "Thursday",
-    "date": "2026-06-04",
-    "sport": "strength",
-    "name": "Lower Body & Core \u2014 Week 1 Foundations",
-    "total_duration_secs": 1800,
-    "planned_tss": 18,
-    "focus": "Neuromuscular activation, lower body and core only, shoulder-safe",
-    "notes": "2 rounds of circuit \u2014 60s rest between exercises, 90s between rounds. Exercises: Goblet Squat 10x 16kg (hold at chest, if shoulder pain switch to sumo squat held between legs); Romanian Deadlift 10x 2x11kg; TRX Split Squat 8 reps/leg bodyweight; Band Clamshell 15 reps/side light band; Dead Bug 8 reps/side bodyweight; Plank 30 seconds. NO shoulder loading. Note any shoulder aggravation for coach review.",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 300,
-        "description": "Bodyweight squats x10, glute bridges x10, leg swings front/back x10/side, hip circles x10/side \u2014 slow and deliberate activation"
+        "description": "Z1-Z2 spin, build from 80W to 130W, cadence 85-95 rpm"
       },
       {
         "type": "repeat",
@@ -91,19 +58,55 @@
           {
             "type": "interval",
             "duration_secs": 480,
-            "description": "Circuit: Goblet Squat 10x 16kg | RDL 10x 2x11kg | TRX Split Squat 8x/leg | Band Clamshell 15x/side | Dead Bug 8x/side | Plank 30s \u2014 60s rest between exercises"
+            "target_type": "power",
+            "target_low": 142,
+            "target_high": 165,
+            "description": "Z3 sweet spot, 163-172 bpm reference, cadence 85-92 rpm, RPE 6/10, smooth and sustained"
           },
           {
             "type": "recovery",
-            "duration_secs": 90,
-            "description": "90s rest between rounds \u2014 shake out legs, controlled breathing"
+            "duration_secs": 180,
+            "target_type": "power",
+            "target_low": 70,
+            "target_high": 90,
+            "description": "Z1 easy spin recovery between efforts, let HR fall back toward 140"
           }
         ]
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
-        "description": "Pigeon pose or figure-4 stretch 60s/side, standing hip flexor stretch 45s/side, hamstring floor stretch 45s/side"
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 90,
+        "description": "Z1 easy spin, HR falling toward 120 bpm before stopping"
+      }
+    ]
+  },
+  {
+    "day": "Thursday",
+    "date": "2026-06-11",
+    "sport": "strength",
+    "name": "Lower body & core \u2014 build progression",
+    "total_duration_secs": 1800,
+    "planned_tss": 18,
+    "focus": "Progressive lower-body strength and core stability, shoulder fully protected",
+    "notes": "3 rounds: 12x goblet squat 22kg, 10x RDL 22kg, 8x TRX Bulgarian split squat per leg (foot in TRX strap \u2014 no shoulder load), 15x banded lateral walk each direction (medium band), 8x dead bug per side (3s eccentric), 30s side plank per side (sub forearm plank if shoulder discomfort). Rest 60-75s between rounds. Warm-up: 10x BW squat, 10x glute bridge, 10x leg swing each side, 30s hip flexor hold each side. Cool-down: 45s hip flexor each side, 45s pigeon/figure-4 each side, 30s hamstring each side.",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 240,
+        "description": "Bodyweight squat x10, glute bridge x10, leg swings x10 each side, hip flexor hold 30s each side"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1320,
+        "description": "3 rounds of circuit: goblet squat 12x22kg, RDL 10x22kg, TRX Bulgarian split squat 8x/leg, banded lateral walk 15 steps each direction, dead bug 8x/side, side plank 30s/side. Rest 60-75s between rounds."
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 240,
+        "description": "Static stretch: hip flexors, glutes (pigeon or figure-4), hamstrings \u2014 45s each hold"
       }
     ]
   }

@@ -31,5 +31,38 @@
         "focus": "Neuromuscular activation, lower body and core only, shoulder-safe"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-30",
+    "phase": "build",
+    "planned_tss": 68,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "running",
+        "name": "Easy aerobic run",
+        "planned_tss": 22,
+        "focus": "Aerobic base reinforcement, Z1-Z2 discipline"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet spot introduction \u2014 2x8 min",
+        "planned_tss": 28,
+        "focus": "First Zone 3 sweet spot stimulus, sub-threshold aerobic development"
+      },
+      {
+        "day": "Thursday",
+        "sport": "strength",
+        "name": "Lower body & core \u2014 build progression",
+        "planned_tss": 18,
+        "focus": "Progressive lower-body strength and core stability, shoulder fully protected"
+      }
+    ]
   }
 ]
