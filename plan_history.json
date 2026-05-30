@@ -177,5 +177,45 @@
         "focus": "Primary aerobic base session \u2014 sustained Zone 2, 65 min unbroken, mitochondrial development"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-30",
+    "phase": "build",
+    "planned_tss": 107,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 18,
+        "focus": "Aerobic primer, Zone 1-2, conversational effort"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet-Spot Intro Ride",
+        "planned_tss": 22,
+        "focus": "First structured stimulus \u2014 2x6min upper Z3/sweet-spot efforts"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Shoulder-Free",
+        "planned_tss": 15,
+        "focus": "Lower-body strength endurance and core stability, no shoulder loading"
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Long Aerobic Ride",
+        "planned_tss": 52,
+        "focus": "Extended Zone 2 aerobic development \u2014 the week's anchor session"
+      }
+    ]
   }
 ]
