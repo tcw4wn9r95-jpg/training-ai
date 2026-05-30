@@ -452,6 +452,9 @@ if "```json-block" in response:
     try:
         block_part = response.split("```json-block")[1].split("```")[0].strip()
         plan_block = json.loads(block_part)
+        # Enforce week_of dates — the LLM sometimes drifts from the prompt's week_dates
+        for i, wk in enumerate(plan_block):
+            wk["week_of"] = (next_monday + timedelta(days=7 * i)).isoformat()
         print(f"Parsed {len(plan_block)} week(s) in block outline.")
     except (json.JSONDecodeError, IndexError) as e:
         print(f"WARNING: block outline parse failed: {e}")
@@ -468,6 +471,11 @@ if "```json" in response_main:
     json_part = parts[1].split("```")[0].strip()
     try:
         plan_json = json.loads(json_part)
+        # Enforce session dates from week_dates — the LLM sometimes invents its own dates
+        for session in plan_json:
+            day_label = session.get("day", "")
+            if day_label in week_dates:
+                session["date"] = week_dates[day_label]
         print(f"Parsed {len(plan_json)} sessions.")
     except json.JSONDecodeError as e:
         parse_error = str(e)

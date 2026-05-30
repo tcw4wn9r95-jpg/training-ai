@@ -5,9 +5,9 @@
 
 ---
 
-# Training Plan — Week of 29 June 2026
+# Training Plan — Week of 01 June 2026
 
-**Generated:** 28 June 2026
+**Generated:** 30 May 2026
 **Available days:** Monday, Tuesday, Wednesday, Thursday
 **Phase:** Base (Week 1 of new 4-week block)
 **Block:** Block 2 — building consistent habit and aerobic foundation

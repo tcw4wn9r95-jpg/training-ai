@@ -1,7 +1,7 @@
 [
   {
     "day": "Monday",
-    "date": "2026-06-23",
+    "date": "2026-06-01",
     "sport": "cycling_indoor",
     "name": "Easy Aerobic Spin",
     "total_duration_secs": 1800,
@@ -36,7 +36,7 @@
   },
   {
     "day": "Tuesday",
-    "date": "2026-06-24",
+    "date": "2026-06-02",
     "sport": "cycling_indoor",
     "name": "Easy Aerobic Spin",
     "total_duration_secs": 1800,
@@ -71,7 +71,7 @@
   },
   {
     "day": "Wednesday",
-    "date": "2026-06-25",
+    "date": "2026-06-03",
     "sport": "strength",
     "name": "Lower Body & Core Circuit",
     "total_duration_secs": 1800,
@@ -98,7 +98,7 @@
   },
   {
     "day": "Thursday",
-    "date": "2026-06-26",
+    "date": "2026-06-04",
     "sport": "cycling_outdoor",
     "name": "Long Easy Ride",
     "total_duration_secs": 5400,
