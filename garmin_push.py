@@ -7,6 +7,8 @@ stable across garminconnect versions. This avoids the fragile model classes
 releases and caused "ExecutableStep() takes no arguments" on the runner.
 """
 
+from datetime import date, timedelta
+
 # Garmin sport type IDs
 SPORT_IDS = {
     "running": (1, "running"),
@@ -146,11 +148,25 @@ def build_workout_dict(session):
 
 
 def cleanup_existing(client, plan_json):
-    """Delete this week's templates + unschedule the dates so we replace, not duplicate."""
-    print("\nCleaning up existing workouts for this week...")
-    plan_names = {s.get("name", "").strip().lower() for s in plan_json}
+    """Delete matching templates and unschedule ALL workouts in the next 4 weeks."""
+    print("\nCleaning up existing workouts for the next 4 weeks...")
+
+    # Sweep window: from the earliest plan date (or today) through 4 weeks forward
     plan_dates = {s.get("date", "") for s in plan_json if s.get("date")}
+    start_date = date.fromisoformat(min(plan_dates)) if plan_dates else date.today()
+    end_date = start_date + timedelta(weeks=4)
+
+    # Build set of months to query
+    months = set()
+    cursor = start_date.replace(day=1)
+    while cursor <= end_date:
+        months.add((cursor.year, cursor.month))
+        cursor = (cursor.replace(day=28) + timedelta(days=4)).replace(day=1)
+
     removed = 0
+
+    # Delete workout templates whose names match the new plan
+    plan_names = {s.get("name", "").strip().lower() for s in plan_json}
     try:
         existing = client.get_workouts(0, 200)
         if isinstance(existing, list):
@@ -162,20 +178,25 @@ def cleanup_existing(client, plan_json):
                         pass
     except Exception as e:
         print(f"  template cleanup warning: {str(e)[:60]}")
-    months = {(d[:4], d[5:7]) for d in plan_dates}
+
+    # Unschedule ALL calendar items in the sweep window (not just plan dates)
+    start_iso = start_date.isoformat()
+    end_iso = end_date.isoformat()
     for yr, mo in months:
         try:
-            sched = client.get_scheduled_workouts(int(yr), int(mo))
+            sched = client.get_scheduled_workouts(yr, mo)
             items = sched.get("calendarItems", []) if isinstance(sched, dict) else []
             for item in items:
-                if item.get("date", "") in plan_dates:
+                item_date = item.get("date", "")
+                if start_iso <= item_date <= end_iso:
                     try:
                         client.unschedule_workout(item["id"]); removed += 1
                     except Exception:
                         pass
         except Exception:
             pass
-    print(f"  Removed {removed} existing item(s).")
+
+    print(f"  Removed {removed} existing item(s) in the next 4 weeks.")
 
 
 def push_plan_to_garmin(client, plan_json):
