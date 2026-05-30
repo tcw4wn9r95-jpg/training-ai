@@ -72,9 +72,24 @@ else:
     checkins_block = "  (no recent subjective check-ins — plan from the objective data)"
 
 
-# Determine where we are in the 4-week periodisation block
+# Determine where we are in the 4-week periodisation block.
+# Week index is based on real elapsed time since the journey started (the Monday
+# of the first-ever generated plan). Generating multiple plans in one week does
+# NOT advance the index — only the passage of time does.
 _block_phases = ["base", "build", "peak", "recovery"]
-current_week_index = len(plan_history)
+
+journey_start_file = "journey_start.json"
+if not os.path.exists(journey_start_file):
+    # First-ever plan: record the Monday of this plan's week as the journey start.
+    journey_start = next_monday
+    with open(journey_start_file, "w") as _f:
+        json.dump({"started": journey_start.isoformat()}, _f)
+    print(f"Journey start recorded: {journey_start}")
+else:
+    with open(journey_start_file) as _f:
+        journey_start = date.fromisoformat(json.load(_f)["started"])
+
+current_week_index = max(0, (today - journey_start).days // 7)
 current_phase = _block_phases[current_week_index % 4]
 next_phase = _block_phases[(current_week_index + 1) % 4]
 
@@ -252,10 +267,12 @@ next_monday = today + timedelta(days=days_until_mon)
 week_dates = {name: (next_monday + timedelta(days=i)).isoformat() for i, name in enumerate(DAY_NAMES)}
 
 # ── Skip if a plan already exists for this week ───────────────────────────────
-# Protects manually-generated plans (and coach edits) from being overwritten by
-# the Sunday auto-run. The Generate button in the app always passes FORCE=true
-# to override this guard.
-if not os.environ.get("FORCE_GENERATE"):
+# A plan, once generated, is never automatically regenerated mid-block.
+# Coach edits (committed directly to weekly_plan.json) take priority and are
+# preserved. A new plan is only generated when none exists for next_monday.
+# FORCE_GENERATE=1 is a developer escape hatch only — never set by the app.
+_force = os.environ.get("FORCE_GENERATE", "").strip().lower() in ("1", "true")
+if not _force:
     existing_status = {}
     if os.path.exists("plan_status.json"):
         try:
@@ -266,8 +283,7 @@ if not os.environ.get("FORCE_GENERATE"):
     existing_week = existing_status.get("week_of")
     if existing_week == next_monday.isoformat():
         print(f"Plan already exists for week of {next_monday} (status: {existing_status.get('status','?')}).")
-        print("Skipping generation — delete plan_status.json or set FORCE_GENERATE=1 to override.")
-        print("TIP: The 'Generate plan' button in the app always forces a fresh plan.")
+        print("Skipping — coach edits are preserved. Set FORCE_GENERATE=1 to override (dev only).")
         raise SystemExit(0)  # Exit 0 = success, workflow marks as green
 
 week_schedule = "\n".join(

@@ -1532,9 +1532,7 @@ async function triggerGenerate(){
   try{
     var r=await fetch("https://api.github.com/repos/"+REPO+"/actions/workflows/generate_plan.yml/dispatches",{
       method:"POST",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
-      // Always force when triggered from the app — the user chose to generate,
-      // so we respect that even if a plan already exists for this week.
-      body:JSON.stringify({ref:"main",inputs:{force:"true"}})});
+      body:JSON.stringify({ref:"main"})});
     return r.status===204;
   }catch(e){return false;}
 }
