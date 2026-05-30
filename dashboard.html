@@ -832,8 +832,14 @@ function planStartOffset(){
   for(var off=0;off<=8;off++){if(mondayOf(off).toISOString().split("T")[0]===planMon)return off;}
   return 0;
 }
+function planEndOffset(){
+  if(!planBlock||!planBlock.length)return 4;
+  var lastWeekOf=planBlock[planBlock.length-1].week_of;
+  for(var off=0;off<=16;off++){if(mondayOf(off).toISOString().split("T")[0]===lastWeekOf)return off;}
+  return 4;
+}
 function updateWeekLabel(){
-  var base=planStartOffset(),max=base+(planBlock&&planBlock.length?planBlock.length-1:3);
+  var base=0,max=planEndOffset();
   var lbl=weekOffset===0?"This Week":weekOffset===1?"Next Week":weekOffset===-1?"Last Week":(weekOffset>0?"+"+weekOffset+" weeks":weekOffset+" weeks");
   document.getElementById("plan-wlabel").textContent=lbl;
   document.getElementById("plan-wdate").textContent="Week of "+mondayOf(weekOffset).toLocaleDateString("en-GB",{day:"numeric",month:"long"});
@@ -842,7 +848,7 @@ function updateWeekLabel(){
   if(next)next.disabled=weekOffset>=max;
 }
 function shiftWeek(dir){
-  var base=planStartOffset(),max=base+(planBlock&&planBlock.length?planBlock.length-1:3);
+  var base=0,max=planEndOffset();
   weekOffset=Math.max(base,Math.min(max,weekOffset+dir));
   updateWeekLabel();
   renderPlanForOffset();
@@ -1049,7 +1055,7 @@ async function generatePlan(){
     if(newSig!==beforeSig&&((r[0]&&r[0].length)||(r[1]&&r[1].length))){
       // New plan!
       planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
-      weekOffset=planStartOffset();updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
+      weekOffset=0;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
       btn.disabled=false;btn.classList.remove("spinning");label.textContent="✓ New plan ready";
       setTimeout(function(){label.textContent="Generate plan";},3500);
       return;
@@ -1316,7 +1322,7 @@ async function sendCoachMessage(){
           var wk=planBlock.find(function(w){return w.week_of===planMon;});
           if(wk){wk.sessions=newPlan;wk.detailed=true;}
         }
-        weekOffset=planStartOffset();updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();
+        weekOffset=0;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();
         addCoachMessage("✅ "+summary+"\n\nIt's updated here — review it and push to Garmin when ready.",false);
       }
     }
@@ -1547,7 +1553,7 @@ async function init(){
   planBlock=Array.isArray(r[7])?r[7]:[];
   if(prof){profile=prof;FTP=prof.cycling?.ftp_watts||FTP;LTHR=prof.running?.threshold_hr||LTHR;REST_HR=prof.running?.resting_hr||REST_HR;MAX_HR=prof.running?.max_hr||MAX_HR;}
   if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
-  weekOffset=planStartOffset();updateWeekLabel();
+  weekOffset=0;updateWeekLabel();
   renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
   renderPlanPreamble();renderBlockOverview();loadChatHistory();
   if(workouts.length)renderHome();
