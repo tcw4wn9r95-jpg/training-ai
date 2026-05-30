@@ -426,6 +426,8 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="gen-ic"><path d="M8 1.5l1.7 4.3 4.3.4-3.3 2.8 1 4.2L8 11l-3.7 2.2 1-4.2-3.3-2.8 4.3-.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
       <span id="gen-label">Generate plan</span>
     </button>
+    <div id="plan-preamble"></div>
+    <div id="block-overview"></div>
     <div id="plan-days"></div>
     <div id="push-zone" style="display:none;margin-top:6px">
       <div id="push-status" style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:12px;padding:11px;border-radius:10px;background:var(--bg2)"></div>
@@ -463,6 +465,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <button onclick="askQuick('I want to check in on how I am feeling and recovering.')">How I feel</button>
       <button onclick="askQuick('I have some pain I want to tell you about.')">Report pain</button>
     </div>
+    <div style="text-align:right;padding:0 2px 4px"><button onclick="clearChatHistory()" style="background:none;border:none;font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px">Clear history</button></div>
     <div id="coach-msgs"></div>
     <div class="coach-input-row">
       <textarea id="coach-input" placeholder="Ask Coach Claudio…"></textarea>
@@ -866,6 +869,67 @@ function weekObjForOffset(off){
 }
 function planForOffset(off){var w=weekObjForOffset(off);return w?w.sessions:null;}
 function renderPlan(){renderPlanForOffset();}
+function renderPlanPreamble(){
+  var box=document.getElementById("plan-preamble");
+  if(!planText){box.innerHTML="";return;}
+  var m=planText.match(/##\s*COACH'S PREAMBLE\s*\n+([\s\S]+?)(?=\n---|\n###|$)/i);
+  if(!m||!m[1].trim()){box.innerHTML="";return;}
+  var paras=m[1].trim().split(/\n\n+/).map(function(p){return '<p style="margin:0 0 10px">'+esc(p.replace(/\n/g,' '))+'</p>';}).join('');
+  box.innerHTML='<div class="card" style="margin-bottom:0"><div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:10px" onclick="togglePreamble()"><div class="card-h" style="margin:0">Coach\'s Notes</div><span id="preamble-chev" style="font-size:18px;color:var(--t3);line-height:1">−</span></div><div id="preamble-body" style="font-size:13px;color:var(--t2);line-height:1.65">'+paras+'</div></div>';
+}
+function togglePreamble(){
+  var b=document.getElementById("preamble-body"),c=document.getElementById("preamble-chev");
+  if(!b)return;var h=b.style.display==="none";b.style.display=h?"":"none";c.textContent=h?"−":"+";
+}
+function renderBlockOverview(){
+  var box=document.getElementById("block-overview");
+  if(!planBlock||!planBlock.length){box.innerHTML="";return;}
+  var currentWk=weekObjForOffset(0);
+  var rows=planBlock.map(function(w){
+    var ph=w.phase||"",phClr=ph==="recovery"?"#22c55e":ph==="peak"?"#ef4444":ph==="build"?"#f59e0b":"#3b82f6";
+    var phL=ph.charAt(0).toUpperCase()+ph.slice(1);
+    var wkLbl=w.week_of?new Date(w.week_of+"T00:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"}):"";
+    var isActive=currentWk&&currentWk.week_of===w.week_of;
+    return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)">'+
+      '<span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'+phClr+(isActive?';box-shadow:0 0 0 2px var(--bg),0 0 0 4px '+phClr:"")+'"></span>'+
+      '<div style="flex:1;min-width:0">'+
+        '<div style="font-size:12px;font-weight:600;color:'+phClr+'">'+phL+(isActive?' <span style="font-size:10px;background:rgba(59,130,246,.15);color:#3b82f6;padding:1px 5px;border-radius:4px;font-weight:700">NOW</span>':'')+' week</div>'+
+        (w.summary?'<div style="font-size:11px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(w.summary)+'</div>':'')+
+      '</div>'+
+      '<div style="text-align:right;flex-shrink:0">'+
+        (w.target_tss?'<div style="font-size:11px;color:var(--t3)">'+w.target_tss+' TSS</div>':'')+
+        '<div style="font-size:11px;color:var(--t3)">'+wkLbl+'</div>'+
+      '</div>'+
+    '</div>';
+  }).join('');
+  box.innerHTML='<div class="card" style="margin-bottom:0"><div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleBlock()"><div class="card-h" style="margin:0">4-Week Training Block</div><span id="block-chev" style="font-size:18px;color:var(--t3);line-height:1">+</span></div><div id="block-body" style="display:none;margin-top:10px">'+rows+'</div></div>';
+}
+function toggleBlock(){
+  var b=document.getElementById("block-body"),c=document.getElementById("block-chev");
+  if(!b)return;var h=b.style.display==="none";b.style.display=h?"":"none";c.textContent=h?"−":"+";
+}
+function saveChatHistory(){
+  try{localStorage.setItem("coach_history",JSON.stringify(coachHistory.slice(-20)));}catch(e){}
+}
+function loadChatHistory(){
+  try{
+    var h=localStorage.getItem("coach_history");
+    if(!h)return;
+    coachHistory=JSON.parse(h);
+    coachHistory.forEach(function(msg){
+      if(msg.role==="user"&&typeof msg.content==="string")addCoachMessage(msg.content,true);
+      else if(msg.role==="assistant"){
+        var parts=Array.isArray(msg.content)?msg.content:[{type:"text",text:String(msg.content||"")}];
+        var txt=parts.filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("");
+        if(txt)addCoachMessage(txt,false);
+      }
+    });
+  }catch(e){coachHistory=[];}
+}
+function clearChatHistory(){
+  coachHistory=[];document.getElementById("coach-msgs").innerHTML="";
+  try{localStorage.removeItem("coach_history");}catch(e){}
+}
 function renderPlanArray(arr,wk){
   var box=document.getElementById("plan-days");
   if(!arr||!arr.length){box.innerHTML='<div class="empty">No plan yet.<br><br>1️⃣ Set your availability in the <b>Avail</b> tab<br>2️⃣ Come back here and tap <b>Generate plan</b></div>';return;}
@@ -971,7 +1035,7 @@ async function generatePlan(){
     if(newSig!==beforeSig&&((r[0]&&r[0].length)||(r[1]&&r[1].length))){
       // New plan!
       planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
-      weekOffset=0;updateWeekLabel();renderPlan();renderHome();renderPushZone();updateGenLabel();
+      weekOffset=0;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
       btn.disabled=false;btn.classList.remove("spinning");label.textContent="✓ New plan ready";
       setTimeout(function(){label.textContent="Generate plan";},3500);
       return;
@@ -1238,7 +1302,7 @@ async function sendCoachMessage(){
           var wk=planBlock.find(function(w){return w.week_of===planMon;});
           if(wk){wk.sessions=newPlan;wk.detailed=true;}
         }
-        weekOffset=0;updateWeekLabel();renderPlan();renderHome();
+        weekOffset=0;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();
         addCoachMessage("✅ "+summary+"\n\nIt's updated here — review it and push to Garmin when ready.",false);
       }
     }
@@ -1247,6 +1311,7 @@ async function sendCoachMessage(){
       coachHistory.push({role:"user",content:toolResults});
     }
     if(coachHistory.length>20)coachHistory=coachHistory.slice(-20);
+    saveChatHistory();
   }catch(e){addCoachMessage("Network error: "+e.message,false);}
   finally{send.disabled=false;send.style.opacity="1";}
 }
@@ -1470,6 +1535,7 @@ async function init(){
   if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
   updateWeekLabel();
   renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
+  renderPlanPreamble();renderBlockOverview();loadChatHistory();
   if(workouts.length)renderHome();
   else if(goals)renderGoalBanner(0,0);
   var hasKeys=getToken()&&localStorage.getItem("anthropic_key");
