@@ -819,23 +819,26 @@ function mondayOf(offset){
 }
 // Alias — used everywhere for both label dates and data lookup
 function mondayForOffset(offset){ return mondayOf(offset); }
+function localDateStr(d){
+  return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
+}
 
 function getPlanJsonMon(){
   if(!planJson||!planJson.length||!planJson[0].date)return null;
   var d=new Date(planJson[0].date+"T00:00:00");
   var dw=d.getDay()===0?7:d.getDay();d.setDate(d.getDate()-dw+1);d.setHours(0,0,0,0);
-  return d.toISOString().split("T")[0];
+  return localDateStr(d);
 }
 function planStartOffset(){
   var planMon=getPlanJsonMon();
   if(!planMon)return 0;
-  for(var off=0;off<=8;off++){if(mondayOf(off).toISOString().split("T")[0]===planMon)return off;}
+  for(var off=0;off<=8;off++){if(localDateStr(mondayOf(off))===planMon)return off;}
   return 0;
 }
 function planEndOffset(){
   if(!planBlock||!planBlock.length)return 4;
   var lastWeekOf=planBlock[planBlock.length-1].week_of;
-  for(var off=0;off<=16;off++){if(mondayOf(off).toISOString().split("T")[0]===lastWeekOf)return off;}
+  for(var off=0;off<=16;off++){if(localDateStr(mondayOf(off))===lastWeekOf)return off;}
   return 4;
 }
 function updateWeekLabel(){
@@ -859,7 +862,7 @@ function renderPlanForOffset(){
   var box=document.getElementById("plan-days");
   // weekly_plan.json is authoritative for its plan week — prefer it over plan_block
   var planMon=getPlanJsonMon();
-  var viewMon=mondayOf(weekOffset).toISOString().split("T")[0];
+  var viewMon=localDateStr(mondayOf(weekOffset));
   if(planMon&&viewMon===planMon&&planJson.length){
     renderPlanArray(planJson,weekObjForOffset(weekOffset));
     return;
@@ -875,14 +878,14 @@ function renderPlanForOffset(){
 }
 function weekObjForOffset(off){
   if(!planBlock||!planBlock.length)return null;
-  var mon=mondayOf(off).toISOString().split("T")[0];
+  var mon=localDateStr(mondayOf(off));
   return planBlock.find(function(w){return w.week_of===mon;})||null;
 }
 function planForOffset(off){var w=weekObjForOffset(off);return w?w.sessions:null;}
 function renderPlan(){renderPlanForOffset();}
 function renderPlanPreamble(){
   var box=document.getElementById("plan-preamble");
-  var viewMon=mondayOf(weekOffset).toISOString().split("T")[0];
+  var viewMon=localDateStr(mondayOf(weekOffset));
   var planMon=getPlanJsonMon();
   var noteText="";
   if(planMon&&viewMon===planMon&&planText){
@@ -1055,7 +1058,9 @@ async function generatePlan(){
     if(newSig!==beforeSig&&((r[0]&&r[0].length)||(r[1]&&r[1].length))){
       // New plan!
       planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
-      weekOffset=0;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
+      weekOffset=planStartOffset()||0;
+      showPage("plan",document.querySelector(".nav button[onclick*=\"'plan'\"]"));
+      updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
       btn.disabled=false;btn.classList.remove("spinning");label.textContent="✓ New plan ready";
       setTimeout(function(){label.textContent="Generate plan";},3500);
       return;
