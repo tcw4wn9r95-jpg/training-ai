@@ -1,44 +1,28 @@
 [
   {
     "day": "Monday",
-    "date": "2026-06-15",
+    "date": "2026-06-23",
     "sport": "running",
-    "name": "Tempo Run Intro",
+    "name": "Easy Recovery Run",
     "total_duration_secs": 1800,
-    "planned_tss": 28,
-    "focus": "First Zone 3 tempo stimulus \u2014 aerobic sharpening",
+    "planned_tss": 18,
+    "focus": "Zone 1/2 aerobic flush, habit building",
     "steps": [
       {
         "type": "warmup",
-        "duration_secs": 480,
+        "duration_secs": 300,
         "target_type": "pace",
         "target_low": 480,
         "target_high": 420,
-        "description": "Z1 easy shuffle, HR <145 bpm \u2014 arrive at main set warm, not fatigued"
+        "description": "Walk to easy jog, Z1 <145 bpm, let legs wake up"
       },
       {
         "type": "interval",
-        "duration_secs": 300,
+        "duration_secs": 1200,
         "target_type": "pace",
         "target_low": 405,
         "target_high": 375,
-        "description": "Z2 aerobic transition, HR 146-162 bpm \u2014 let HR climb naturally"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 480,
-        "target_type": "pace",
-        "target_low": 360,
-        "target_high": 330,
-        "description": "Z3 tempo, HR 163-172 bpm \u2014 controlled effort, short phrases possible but not comfortable conversation"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 240,
-        "target_type": "pace",
-        "target_low": 405,
-        "target_high": 375,
-        "description": "Z2 come-down, HR 146-162 bpm \u2014 do not stop, keep moving"
+        "description": "Z2 aerobic, 146-162 bpm, conversational pace \u2014 slow down if HR exceeds 162"
       },
       {
         "type": "cooldown",
@@ -46,83 +30,104 @@
         "target_type": "pace",
         "target_low": 480,
         "target_high": 420,
-        "description": "Z1 easy walk/jog, HR back below 145 bpm"
+        "description": "Walk, HR back below 120 bpm, hip flexor and calf stretch"
       }
     ]
   },
   {
     "day": "Tuesday",
-    "date": "2026-06-16",
+    "date": "2026-06-24",
     "sport": "cycling_indoor",
-    "name": "Sweet Spot 2x6",
+    "name": "Easy Aerobic Spin",
     "total_duration_secs": 1800,
-    "planned_tss": 27,
-    "focus": "Peak cycling stimulus \u2014 sub-threshold sweet spot intervals",
+    "planned_tss": 15,
+    "focus": "Active recovery, aerobic flush, legs only",
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 480,
         "target_type": "power",
-        "target_low": 88,
-        "target_high": 130,
-        "description": "Build from Z1 to Z2, cadence 85-90 rpm, HR climbing toward 150-155 bpm by end"
+        "target_low": 60,
+        "target_high": 115,
+        "description": "Gradual build from 60W toward Z2 low, 90-95 rpm, keep HR below 150"
       },
       {
-        "type": "repeat",
-        "repeat_count": 2,
-        "steps": [
-          {
-            "type": "interval",
-            "duration_secs": 360,
-            "target_type": "power",
-            "target_low": 145,
-            "target_high": 160,
-            "description": "Sweet spot upper Z3/low Z4 boundary, cadence 88-92 rpm, HR expect 163-172 bpm in final 2 min"
-          },
-          {
-            "type": "recovery",
-            "duration_secs": 180,
-            "target_type": "power",
-            "target_low": 80,
-            "target_high": 95,
-            "description": "Easy spin recovery, let HR drop before next rep"
-          }
-        ]
+        "type": "interval",
+        "duration_secs": 1020,
+        "target_type": "power",
+        "target_low": 106,
+        "target_high": 141,
+        "description": "Steady Z2, 106-141W, HR 146-158 bpm, smooth cadence 90-95 rpm, no surges"
       },
       {
         "type": "cooldown",
-        "duration_secs": 420,
+        "duration_secs": 300,
         "target_type": "power",
-        "target_low": 70,
+        "target_low": 60,
         "target_high": 90,
-        "description": "Gradual wind-down, HR below 140 before stopping"
+        "description": "Easy spin below 90W, HR dropping under 130 bpm"
+      }
+    ]
+  },
+  {
+    "day": "Wednesday",
+    "date": "2026-06-25",
+    "sport": "strength",
+    "name": "Lower Body & Core Circuit",
+    "total_duration_secs": 1800,
+    "planned_tss": 14,
+    "focus": "Maintain neuromuscular stimulus, shoulder-safe, 2 rounds",
+    "notes": "2 rounds (recovery week volume). Circuit: 10x goblet squat 16kg, 10x RDL 16kg dumbbells, 8x/leg TRX split squat, 15x band glute bridge, 8x/side dead bug, 30s plank. 60s rest between exercises, 90s between rounds. No shoulder loading. Focus on controlled range of motion.",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "description": "Leg swings forward and lateral (10/leg), hip circles, 10 bodyweight squats, 10 glute bridges"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1260,
+        "description": "2 rounds: 10x goblet squat 16kg | 10x RDL 16kg | 8x/leg TRX split squat | 15x band glute bridge | 8x/side dead bug | 30s plank. 60s rest between exercises, 90s between rounds."
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "description": "Seated hamstring stretch, figure-4 glute stretch, hip flexor lunge hold \u2014 30-45s each"
       }
     ]
   },
   {
     "day": "Thursday",
-    "date": "2026-06-18",
-    "sport": "strength",
-    "name": "Lower Body & Core \u2014 Peak Week",
-    "total_duration_secs": 1800,
-    "planned_tss": 20,
-    "focus": "Progressive lower body and core \u2014 shoulder completely unloaded",
-    "notes": "3 rounds: 12x goblet squat 16kg, 10x Romanian deadlift 22kg, 10x TRX split squat per leg (TRX for balance only \u2014 zero load through shoulder), 20x banded glute bridge, 8x dead bug per side, 40s plank (substitute hollow body hold if any shoulder discomfort). 60s rest between rounds.",
+    "date": "2026-06-26",
+    "sport": "cycling_outdoor",
+    "name": "Long Easy Ride",
+    "total_duration_secs": 5400,
+    "planned_tss": 55,
+    "focus": "Aerobic base volume, sustained Z2 \u2014 anchor session of the week",
     "steps": [
       {
         "type": "warmup",
-        "duration_secs": 300,
-        "description": "Leg swings front/back and lateral 10 each leg, hip circles 10 each direction, bodyweight squats x15, glute bridges x15"
+        "duration_secs": 900,
+        "target_type": "heart_rate",
+        "target_low": 120,
+        "target_high": 150,
+        "description": "Easy rolling warm-up, HR building gradually \u2014 no hills, flat terrain for first 15 min"
       },
       {
         "type": "interval",
-        "duration_secs": 1200,
-        "description": "3 rounds: goblet squat 16kg x12, RDL 22kg x10, TRX split squat x10/leg, banded glute bridge x20, dead bug x8/side, plank 40s. 60s rest between rounds."
+        "duration_secs": 3600,
+        "target_type": "heart_rate",
+        "target_low": 146,
+        "target_high": 162,
+        "description": "Steady Z2, HR 146-162 bpm throughout \u2014 ease off on climbs if HR exceeds 163, flat to rolling route preferred"
       },
       {
         "type": "cooldown",
-        "duration_secs": 300,
-        "description": "90/90 hip stretch 45s/side, supine hamstring stretch 45s/side, pigeon pose or figure-four glute stretch 45s/side"
+        "duration_secs": 900,
+        "target_type": "heart_rate",
+        "target_low": 110,
+        "target_high": 140,
+        "description": "Easy spin/flat, HR dropping below 140 bpm \u2014 stop for 3 min quad and hip flexor stretch before finishing"
       }
     ]
   }

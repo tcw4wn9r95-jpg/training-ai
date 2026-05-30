@@ -97,5 +97,45 @@
         "focus": "Progressive lower body and core \u2014 shoulder completely unloaded"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-30",
+    "phase": "recovery",
+    "planned_tss": 102,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "running",
+        "name": "Easy Recovery Run",
+        "planned_tss": 18,
+        "focus": "Zone 1/2 aerobic flush, habit building"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Spin",
+        "planned_tss": 15,
+        "focus": "Active recovery, aerobic flush, legs only"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "strength",
+        "name": "Lower Body & Core Circuit",
+        "planned_tss": 14,
+        "focus": "Maintain neuromuscular stimulus, shoulder-safe, 2 rounds"
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_outdoor",
+        "name": "Long Easy Ride",
+        "planned_tss": 55,
+        "focus": "Aerobic base volume, sustained Z2 \u2014 anchor session of the week"
+      }
+    ]
   }
 ]
