@@ -422,16 +422,10 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="lbl"><div class="w" id="plan-wlabel">This Week</div><div class="d" id="plan-wdate"></div></div>
       <button onclick="shiftWeek(1)">›</button>
     </div>
-    <div style="display:flex;gap:8px;margin-bottom:14px">
-      <button class="refresh-btn" id="refresh-btn" onclick="refreshPlan()" style="flex:1;margin:0">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="refresh-ic"><path d="M13.5 8a5.5 5.5 0 11-1.6-3.9M13.5 2v3h-3" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
-        <span id="refresh-label">Refresh</span>
-      </button>
-      <button class="refresh-btn" id="gen-btn" onclick="generatePlan()" style="flex:1;margin:0;background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border-color:transparent">
-        <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="gen-ic"><path d="M8 1.5l1.7 4.3 4.3.4-3.3 2.8 1 4.2L8 11l-3.7 2.2 1-4.2-3.3-2.8 4.3-.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
-        <span id="gen-label">Generate plan</span>
-      </button>
-    </div>
+    <button class="refresh-btn" id="gen-btn" onclick="generatePlan()" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border-color:transparent">
+      <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="gen-ic"><path d="M8 1.5l1.7 4.3 4.3.4-3.3 2.8 1 4.2L8 11l-3.7 2.2 1-4.2-3.3-2.8 4.3-.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
+      <span id="gen-label">Generate plan</span>
+    </button>
     <div id="plan-days"></div>
     <div id="push-zone" style="display:none;margin-top:6px">
       <div id="push-status" style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:12px;padding:11px;border-radius:10px;background:var(--bg2)"></div>
@@ -466,6 +460,8 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <button onclick="askQuick('How does my training look this week?')">This week?</button>
       <button onclick="askQuick('Should I train today or rest?')">Train today?</button>
       <button onclick="askQuick('How is my fitness trending?')">Trend?</button>
+      <button onclick="askQuick('I want to check in on how I am feeling and recovering.')">How I feel</button>
+      <button onclick="askQuick('I have some pain I want to tell you about.')">Report pain</button>
     </div>
     <div id="coach-msgs"></div>
     <div class="coach-input-row">
@@ -806,27 +802,25 @@ function drawMix(){
 
 // ── PLAN ──────────────────────────────────────────────────────
 function fmtPace(secPerKm){var m=Math.floor(secPerKm/60),s=Math.round(secPerKm%60);return m+":"+(s<10?"0":"")+s;}
+
+// Always use the device clock — labels (This Week, Next Week…) must match what
+// the user sees on their calendar, regardless of which week the plan covers.
 function mondayOf(offset){
-  var t=new Date();var dw=t.getDay()||7;var m=new Date(t);m.setDate(t.getDate()-dw+1+offset*7);m.setHours(0,0,0,0);return m;
+  var t=new Date();
+  // Treat Sunday (0) as end of the previous week, not start of a new one
+  var dw=t.getDay()===0?7:t.getDay();
+  var m=new Date(t);
+  m.setDate(t.getDate()-dw+1+offset*7);
+  m.setHours(0,0,0,0);
+  return m;
 }
-function currentPlanMonday(){
-  // The "current" week is the one weekly_plan.json covers. Anchor to its first
-  // session date so navigation stays correct regardless of the device clock or
-  // whether today is the Sunday the plan was generated.
-  if(planJson&&planJson.length&&planJson[0].date){
-    var d=new Date(planJson[0].date+"T00:00:00");var dw=d.getDay()||7;
-    d.setDate(d.getDate()-dw+1);d.setHours(0,0,0,0);return d;
-  }
-  return mondayOf(0);
-}
-function mondayForOffset(offset){
-  var base=currentPlanMonday();var m=new Date(base);m.setDate(base.getDate()+offset*7);return m;
-}
+// Alias — used everywhere for both label dates and data lookup
+function mondayForOffset(offset){ return mondayOf(offset); }
+
 function updateWeekLabel(){
   var lbl=weekOffset===0?"This Week":weekOffset===1?"Next Week":weekOffset===-1?"Last Week":(weekOffset>0?"+"+weekOffset+" weeks":weekOffset+" weeks");
   document.getElementById("plan-wlabel").textContent=lbl;
-  var mon=mondayForOffset(weekOffset);
-  document.getElementById("plan-wdate").textContent="Week of "+mon.toLocaleDateString("en-GB",{day:"numeric",month:"long"});
+  document.getElementById("plan-wdate").textContent="Week of "+mondayOf(weekOffset).toLocaleDateString("en-GB",{day:"numeric",month:"long"});
 }
 function shiftWeek(dir){
   weekOffset+=dir;
@@ -835,16 +829,39 @@ function shiftWeek(dir){
   renderPushZone();
 }
 function renderPlanForOffset(){
-  // Determine which plan to show for the current weekOffset, using the 4-week block if available
   var box=document.getElementById("plan-days");
   var wk=weekObjForOffset(weekOffset);
-  if(wk&&wk.sessions&&wk.sessions.length){renderPlanArray(wk.sessions,wk);}
-  else if(weekOffset===0&&planJson&&planJson.length){renderPlanArray(planJson,null);}
-  else{box.innerHTML='<div class="empty">'+(weekOffset>0?"This week is part of your training block but the detailed plan firms up closer to the date.":"Past plans aren't stored yet.")+'</div>';}
+  if(wk&&wk.sessions&&wk.sessions.length){
+    renderPlanArray(wk.sessions,wk);
+  } else {
+    // No block entry for this real-world week. Show a context-appropriate message.
+    var mon=mondayOf(weekOffset).toISOString().split("T")[0];
+    var planWeekMon=planJson&&planJson.length&&planJson[0].date
+      ? (function(){var d=new Date(planJson[0].date+"T00:00:00");var dw=d.getDay()===0?7:d.getDay();d.setDate(d.getDate()-dw+1);return d.toISOString().split("T")[0];}())
+      : null;
+    var msg;
+    if(weekOffset<0){
+      msg="Past plans aren't stored yet.";
+    } else if(planWeekMon&&mon===planWeekMon){
+      // Plan covers this real-world week but wasn't in the block — fall back to planJson
+      renderPlanArray(planJson,null);
+      return;
+    } else if(!planBlock||!planBlock.length){
+      msg="No plan generated yet.<br><br>1️⃣ Set your availability in the <b>Avail</b> tab<br>2️⃣ Tap <b>Generate plan</b>";
+    } else {
+      // We have a block, but it covers a different week than the user is viewing.
+      // Show which week the plan is actually for, so the user knows where to navigate.
+      var planLabel=planWeekMon
+        ? "The current plan covers the week of "+new Date(planWeekMon+"T00:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"long"})+"."
+        : "";
+      msg="No plan for this week. "+planLabel;
+    }
+    box.innerHTML='<div class="empty">'+msg+'</div>';
+  }
 }
 function weekObjForOffset(off){
   if(!planBlock||!planBlock.length)return null;
-  var mon=mondayForOffset(off).toISOString().split("T")[0];
+  var mon=mondayOf(off).toISOString().split("T")[0];
   return planBlock.find(function(w){return w.week_of===mon;})||null;
 }
 function planForOffset(off){var w=weekObjForOffset(off);return w?w.sessions:null;}
@@ -918,26 +935,6 @@ function renderStep(step,sport,col){
 }
 function toggleDay(h){h.querySelector(".chev").classList.toggle("open");h.nextElementSibling.classList.toggle("open");}
 
-// ── REFRESH ───────────────────────────────────────────────────
-async function refreshPlan(){
-  var btn=document.getElementById("refresh-btn");
-  var label=document.getElementById("refresh-label");
-  btn.classList.add("spinning");label.textContent="Refreshing…";
-  var r=await Promise.all([fetchJSON("weekly_plan.json"),fetchText("weekly_plan.md"),fetchJSON("plan_status.json"),fetchJSON("workouts.json"),fetchJSON("profile.json"),fetchJSON("plan_block.json")]);
-  if(r[0])planJson=r[0];
-  if(r[1])planText=r[1];
-  planStatus=r[2];
-  if(r[3])workouts=r[3];
-  if(r[4]){profile=r[4];FTP=profile.cycling?.ftp_watts||FTP;LTHR=profile.running?.threshold_hr||LTHR;REST_HR=profile.running?.resting_hr||REST_HR;MAX_HR=profile.running?.max_hr||MAX_HR;}
-  if(Array.isArray(r[5]))planBlock=r[5];
-  weekOffset=0;
-  updateWeekLabel();
-  renderPlan();
-  if(workouts.length)renderHome();
-  btn.classList.remove("spinning");label.textContent="Updated ✓";
-  setTimeout(function(){label.textContent="Refresh";},2000);
-}
-
 // ── GENERATE NEW PLAN ─────────────────────────────────────────
 async function generatePlan(){
   var token=getToken();
@@ -974,7 +971,7 @@ async function generatePlan(){
     if(newSig!==beforeSig&&((r[0]&&r[0].length)||(r[1]&&r[1].length))){
       // New plan!
       planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
-      weekOffset=0;updateWeekLabel();renderPlan();renderHome();renderPushZone();
+      weekOffset=0;updateWeekLabel();renderPlan();renderHome();renderPushZone();updateGenLabel();
       btn.disabled=false;btn.classList.remove("spinning");label.textContent="✓ New plan ready";
       setTimeout(function(){label.textContent="Generate plan";},3500);
       return;
@@ -982,7 +979,7 @@ async function generatePlan(){
     if(tries>=maxTries){
       btn.disabled=false;btn.classList.remove("spinning");label.textContent="Still building…";
       setTimeout(function(){label.textContent="Generate plan";},3500);
-      alert("Plan is still being built — it can take a few minutes the first time (Garmin login + Claude generation). Tap Refresh in a minute or two.");
+      alert("Plan is still being built — it can take a few minutes the first time (Garmin login + Claude generation). Tap Generate plan again in a couple of minutes or check Actions on GitHub.");
       return;
     }
     setTimeout(poll,20000);  // poll every 20s
@@ -1014,6 +1011,12 @@ async function pushToGarmin(){
   var btn=document.getElementById("push-btn");
   var status=document.getElementById("push-status");
   if(!token){status.textContent="Add your GitHub token first (gear icon, top right).";status.style.color="var(--red)";return;}
+  // Guard: never push an empty plan
+  if(!planJson||!planJson.length){
+    status.textContent="There's no plan to push yet. Tap Generate plan first.";
+    status.style.color="var(--red)";
+    return;
+  }
   btn.disabled=true;btn.style.opacity="0.6";btn.textContent="Sending to Garmin…";
   status.style.color="var(--t2)";
   status.textContent="Triggering push… this takes ~1–2 minutes on Garmin's side.";
@@ -1116,6 +1119,19 @@ function addCoachMessage(text,isUser){
   c.appendChild(b);document.getElementById("scroll").scrollTop=document.getElementById("scroll").scrollHeight;
 }
 function askQuick(q){document.getElementById("coach-input").value=q;sendCoachMessage();}
+var LOG_CHECKIN_TOOL={
+  name:"log_checkin",
+  description:"Record a subjective check-in from Diego that should inform FUTURE plan generation — pain, niggles, illness, unusual fatigue, great form, life stress, sleep, motivation, or how recent sessions actually felt. Call this whenever Diego shares meaningful subjective state, IN ADDITION to any plan edit. This is persisted and read by the weekly plan generator so the next plan accounts for it. Keep it factual and specific.",
+  input_schema:{
+    type:"object",
+    properties:{
+      note:{type:"string",description:"The check-in, in your words as the coach. e.g. 'Reports mild left Achilles tightness after Tue run — monitor, avoid hard running, OK to bike.' or 'Felt flat all week, sleep poor from work stress — held back intensity.'"},
+      severity:{type:"string",enum:["info","caution","important"],description:"info=general note; caution=adjust training; important=pain/illness needing real change"},
+      affects_area:{type:"string",description:"Body area if injury/pain related, else empty (e.g. 'left Achilles', 'right knee', 'lower back')"}
+    },
+    required:["note","severity"]
+  }
+};
 var EDIT_PLAN_TOOL={
   name:"edit_plan",
   description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. You must return the COMPLETE updated plan (all sessions for the week, not just the changed one). Each session needs: day, date (YYYY-MM-DD), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, and a steps array. Step targets: running uses target_type 'pace' with target_low/target_high in SECONDS PER KM (low=slower, high=faster); cycling_indoor uses 'power' in watts; cycling_outdoor uses 'heart_rate' in bpm; strength steps need only a description plus a top-level notes field with the full circuit. Use repeat blocks {type:'repeat',repeat_count:N,steps:[...]} for intervals.",
@@ -1147,45 +1163,88 @@ async function sendCoachMessage(){
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
   var recentW=workouts.filter(w=>new Date(w.date)>=cutoff);
   var tss=recentW.reduce((s,w)=>s+getTSS(w),0), km=recentW.reduce((s,w)=>s+(w.distance_km||0),0);
-  var pmc=buildPMC(90),tsb=pmc.T[pmc.T.length-1],ctl=pmc.C[pmc.C.length-1];
-  var sys="You are Coach Claudio, Diego's personal AI endurance coach (running + cycling + strength). Expert, friendly, direct, data-driven. Keep chat replies to 2-4 sentences unless asked for detail.\n\n"+
-    "When Diego asks to change his plan in any way, call the edit_plan tool with the FULL updated plan. Keep all unchanged sessions intact. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\nContext:\n"+
-    "This week: "+recentW.length+" sessions, "+Math.round(tss)+" TSS, "+km.toFixed(1)+" km\n"+
-    "Fitness(CTL) "+Math.round(ctl)+", Form(TSB) "+Math.round(tsb)+"\n"+
+  var pmc=buildPMC(90),tsb=pmc.T[pmc.T.length-1],ctl=pmc.C[pmc.C.length-1],atl=pmc.A[pmc.A.length-1];
+  // Trend signals — an elite coach reasons from trajectory, not a snapshot
+  var ctl28=pmc.C.length>28?pmc.C[pmc.C.length-29]:ctl;
+  var ctlTrend=ctl-ctl28; // + = building fitness, - = detraining
+  var rampRate=Math.round(ctlTrend*10)/10;
+  var formState=tsb<-30?"very fatigued (injury/illness risk)":tsb<-10?"fatigued (productive training stress)":tsb<5?"neutral/fresh":tsb<25?"fresh (peaked/tapered)":"very fresh (detraining or well-rested)";
+  // Recent sessions detail so Coach can reference actual workouts
+  var last5=workouts.slice(-5).map(function(w){return (w.date||"")+": "+(w.type||w.sport||"session")+" "+(w.distance_km?w.distance_km.toFixed(1)+"km ":"")+(getTSS(w)?Math.round(getTSS(w))+"TSS":"");}).join(" | ");
+  var goalLine=goals?("Primary goal: "+(goals.primary_goal||"—")+(goals.target_event?("; event: "+goals.target_event+(goals.target_date?" on "+goals.target_date:"")):"")+"; sport priority: "+(goals.sport_priority||"balanced")+(goals.injuries&&goals.injuries!=="none"?"; known injuries: "+goals.injuries:"")):"No goals set yet.";
+
+  var sys="You are Coach Claudio, Diego's personal endurance coach — the calibre of coach who works with high-performing age-group and elite athletes. You combine deep exercise-physiology knowledge with the warmth and directness of a great human coach. You are friendly and encouraging but you never sugar-coat the science: every recommendation is grounded in training principles (progressive overload, polarised 80/20 intensity, specificity, periodisation, supercompensation, and adequate recovery).\n\n"+
+    "HOW YOU COMMUNICATE: Natural and conversational, like texting a coach who knows you well. Concise by default (2-4 sentences) but go deeper when Diego wants the 'why'. Reference his actual data and sessions, not generic advice. Ask a clarifying question when his input is ambiguous rather than assuming.\n\n"+
+    "TAKE HIS INPUT SERIOUSLY — this is the core of good coaching:\n"+
+    "• If Diego reports PAIN: distinguish soreness (normal, dull, symmetrical, eases with warm-up) from injury pain (sharp, localised, worsens with load, alters form). For anything beyond normal soreness, reduce or remove load on the affected area, suggest cross-training that avoids it, and recommend he see a physio if it persists >1 week or is sharp/worsening. NEVER tell him to push through real pain. Adjust the plan with edit_plan accordingly.\n"+
+    "• If he reports FATIGUE, poor sleep, high stress, or low motivation: respect it. These blunt adaptation. Pull back intensity, swap a hard session for easy/recovery, or add rest. A planned session is a hypothesis, not a contract.\n"+
+    "• If he reports a session felt HARDER than expected at normal numbers: a flag for accumulated fatigue or under-recovery — ease off. If EASIER: he may be fitter; consider nudging targets up.\n"+
+    "• Always weigh his subjective feedback ALONGSIDE the objective data below. When they conflict, the body wins.\n\n"+
+    "WHEN ADJUSTING THE PLAN: call edit_plan with the FULL updated plan, keeping unchanged sessions intact. Explain the reasoning briefly in your reply so he learns. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\n"+
+    "═══ DIEGO'S CURRENT PICTURE ═══\n"+
+    goalLine+"\n"+
+    "This week so far: "+recentW.length+" sessions, "+Math.round(tss)+" TSS, "+km.toFixed(1)+" km\n"+
+    "Fitness (CTL): "+Math.round(ctl)+" — 28-day trend "+(rampRate>=0?"+":"")+rampRate+" ("+(rampRate>1?"building":rampRate<-1?"detraining":"holding steady")+")\n"+
+    "Fatigue (ATL): "+Math.round(atl)+"\n"+
+    "Form (TSB): "+Math.round(tsb)+" — "+formState+"\n"+
+    "Last sessions: "+(last5||"none logged")+"\n"+
     "Current plan JSON: "+JSON.stringify(planJson);
   coachHistory.push({role:"user",content:msg});
   try{
     var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL],messages:coachHistory})});
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL],messages:coachHistory})});
     var data=await res.json();
     if(data.error){addCoachMessage("Error: "+data.error.message,false);return;}
 
-    // Process all content blocks: text + tool_use
-    var textParts=[], toolUse=null;
+    // Process all content blocks: text + tool_use (may be multiple tools in one turn)
+    var textParts=[], toolUse=null, checkinUse=null;
     (data.content||[]).forEach(function(b){
       if(b.type==="text")textParts.push(b.text);
       else if(b.type==="tool_use"&&b.name==="edit_plan")toolUse=b;
+      else if(b.type==="tool_use"&&b.name==="log_checkin")checkinUse=b;
     });
     coachHistory.push({role:"assistant",content:data.content});
 
     if(textParts.length)addCoachMessage(textParts.join("\n"),false);
 
+    // Collect tool_results so the turn is properly closed for every tool call
+    var toolResults=[];
+
+    if(checkinUse){
+      var okC=await commitCheckin(checkinUse.input);
+      toolResults.push({type:"tool_result",tool_use_id:checkinUse.id,content:okC?"Check-in saved — the next plan will account for this.":"Couldn't save check-in (no GitHub token)."});
+      if(okC){
+        var sev=checkinUse.input.severity;
+        var icon=sev==="important"?"🔴":sev==="caution"?"🟡":"📝";
+        addCoachMessage(icon+" Noted and saved to your record — I'll factor this into your training.",false);
+      }
+    }
+
     if(toolUse){
       var newPlan=toolUse.input.plan, summary=toolUse.input.summary||"Plan updated";
-      // Apply locally and persist to GitHub
       var ok=await commitPlanEdit(newPlan,summary);
-      // Give the tool result back to Claude so the turn is complete
-      coachHistory.push({role:"user",content:[{type:"tool_result",tool_use_id:toolUse.id,content:ok?"Plan saved successfully.":"Save failed — Diego must add a GitHub token."}]});
+      toolResults.push({type:"tool_result",tool_use_id:toolUse.id,content:ok?"Plan saved successfully.":"Save failed — Diego must add a GitHub token."});
       if(ok){
         planJson=newPlan;
-        // Keep the in-memory block's current week in sync so the Plan tab reflects the edit immediately
-        var curMon=currentPlanMonday().toISOString().split("T")[0];
-        var wk=planBlock.find(function(w){return w.week_of===curMon;});
-        if(wk){wk.sessions=newPlan;wk.detailed=true;}
+        var planMon=null;
+        if(newPlan.length&&newPlan[0].date){
+          var pd=new Date(newPlan[0].date+"T00:00:00");
+          var pdw=pd.getDay()===0?7:pd.getDay();
+          pd.setDate(pd.getDate()-pdw+1);pd.setHours(0,0,0,0);
+          planMon=pd.toISOString().split("T")[0];
+        }
+        if(planMon){
+          var wk=planBlock.find(function(w){return w.week_of===planMon;});
+          if(wk){wk.sessions=newPlan;wk.detailed=true;}
+        }
         weekOffset=0;updateWeekLabel();renderPlan();renderHome();
         addCoachMessage("✅ "+summary+"\n\nIt's updated here — review it and push to Garmin when ready.",false);
       }
+    }
+
+    if(toolResults.length){
+      coachHistory.push({role:"user",content:toolResults});
     }
     if(coachHistory.length>20)coachHistory=coachHistory.slice(-20);
   }catch(e){addCoachMessage("Network error: "+e.message,false);}
@@ -1205,6 +1264,34 @@ async function commitPlanEdit(newPlan,summary){
     return r.ok;
   }catch(e){addCoachMessage("Save error: "+e.message,false);return false;}
 }
+async function commitCheckin(input){
+  // Append a subjective check-in to checkins.json so the plan generator can read it.
+  var token=getToken();
+  if(!token)return false;
+  try{
+    var path="checkins.json";
+    var list=[],sha=null;
+    try{
+      var meta=await(await fetch(API+"/"+path,{headers:{Authorization:"Bearer "+token}})).json();
+      if(meta&&meta.sha){sha=meta.sha;list=JSON.parse(decodeURIComponent(escape(atob(meta.content))));if(!Array.isArray(list))list=[];}
+    }catch(e){list=[];}
+    list.push({
+      date:new Date().toISOString().split("T")[0],
+      note:input.note||"",
+      severity:input.severity||"info",
+      affects_area:input.affects_area||""
+    });
+    // Keep only the last 30 check-ins
+    if(list.length>30)list=list.slice(-30);
+    var body=JSON.stringify(list,null,2);
+    var put={message:"Check-in: "+(input.severity||"info"),content:btoa(unescape(encodeURIComponent(body)))};
+    if(sha)put.sha=sha;
+    var r=await fetch(API+"/"+path,{method:"PUT",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify(put)});
+    return r.ok;
+  }catch(e){return false;}
+}
 document.addEventListener("DOMContentLoaded",function(){
   var i=document.getElementById("coach-input");
   if(i)i.addEventListener("keydown",function(e){if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendCoachMessage();}});
@@ -1214,7 +1301,7 @@ document.addEventListener("DOMContentLoaded",function(){
 // ── ONBOARDING / GOALS ────────────────────────────────────────
 var SAVE_GOALS_TOOL={
   name:"save_goals",
-  description:"Save Diego's training goals once you've gathered enough detail across the conversation. Only call this when you have covered: primary goal, any target event and its date, weekly time budget and preferred training days, sport priority (run/bike/strength balance), injury history or physical limitations, and current weekly volume plus longest recent sessions. Summarise naturally — don't leave fields blank if Diego gave the info.",
+  description:"Save Diego's training goals once you've gathered enough detail. Only call this when you have covered: primary goal, any target event and its date, sport priority (run/bike/strength balance), injury history, and current weekly volume plus longest recent sessions. Do not leave fields blank if Diego gave the info.",
   input_schema:{
     type:"object",
     properties:{
@@ -1222,14 +1309,12 @@ var SAVE_GOALS_TOOL={
       goal_type:{type:"string",enum:["race","general_fitness","weight_loss","speed","endurance","other"]},
       target_event:{type:"string",description:"Name of the event, or empty if none"},
       target_date:{type:"string",description:"YYYY-MM-DD of the event, or empty if none"},
-      weekly_hours:{type:"number",description:"Total hours per week Diego can train"},
-      preferred_days:{type:"array",items:{type:"string"},description:"Optional. Only include if Diego volunteers it — he sets exact daily availability in the Availability tab, so leave empty otherwise."},
-      sport_priority:{type:"string",description:"e.g. 'running focus, bike for cross-training, 2x strength' "},
+      sport_priority:{type:"string",description:"e.g. 'running focus, bike for cross-training, 2x strength'"},
       injuries:{type:"string",description:"Injury history or limitations, or 'none'"},
       current_volume:{type:"string",description:"Current weekly volume and longest sessions, e.g. '25 km/week running, long run 10 km'"},
       coach_notes:{type:"string",description:"Any other context that helps tailor the plan"}
     },
-    required:["primary_goal","goal_type","weekly_hours","sport_priority","current_volume"]
+    required:["primary_goal","goal_type","sport_priority","current_volume"]
   }
 };
 
@@ -1265,10 +1350,11 @@ async function runOnboardingTurn(){
   var send=document.getElementById("ob-send");
   send.disabled=true;send.style.opacity="0.5";
   var sys="You are Coach Claudio, a warm, encouraging endurance coach onboarding a new athlete, Diego. "+
-    "Have a natural conversation to understand his goals. Ask ONE question at a time, conversationally — never interrogate with a list. "+
-    "Cover, over the course of the chat: his primary goal; any target event + date; roughly how many hours per week he can train (just a high-level total — do NOT ask which specific days, he sets exact daily availability in the Availability tab himself); how he wants to split running/cycling/strength; injuries or limitations; and his current weekly volume and longest sessions. "+
-    "Acknowledge each answer briefly before the next question. He does running, cycling (indoor power + outdoor HR) and home strength. "+
-    "When you have enough to build a tailored plan, call save_goals, then give a short, motivating sign-off telling him you're building his first plan now. Mention he can fine-tune his exact training days anytime in the Availability tab. Keep each message short.";
+    "Have a natural conversation to understand his goals. Ask ONE question at a time — never a list. "+
+    "Cover: his primary goal; any target event + date; how he wants to split running/cycling/strength; injuries or limitations; and his current weekly training volume and longest sessions. "+
+    "Do NOT ask about availability, preferred days, or hours per week — he sets that himself in the Availability tab each week. "+
+    "Acknowledge each answer briefly before the next question. He does running, cycling (indoor + outdoor) and home strength (TRX, bands, dumbbells). "+
+    "When you have enough to build a tailored plan, call save_goals, then give a short sign-off. Mention he can set his exact training schedule anytime in the Availability tab. Keep each message short.";
   try{
     var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
@@ -1312,9 +1398,16 @@ async function triggerGenerate(){
   try{
     var r=await fetch("https://api.github.com/repos/"+REPO+"/actions/workflows/generate_plan.yml/dispatches",{
       method:"POST",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
-      body:JSON.stringify({ref:"main"})});
+      // Always force when triggered from the app — the user chose to generate,
+      // so we respect that even if a plan already exists for this week.
+      body:JSON.stringify({ref:"main",inputs:{force:"true"}})});
     return r.status===204;
   }catch(e){return false;}
+}
+function updateGenLabel(){
+  var el=document.getElementById("gen-label");if(!el)return;
+  var hasExisting=planJson&&planJson.length;
+  el.textContent=hasExisting?"Regenerate plan":"Generate plan";
 }
 function renderGoalsSummary(){
   var el=document.getElementById("goals-summary");if(!el)return;
@@ -1322,7 +1415,6 @@ function renderGoalsSummary(){
   var bits=[];
   if(goals.primary_goal)bits.push("🎯 "+goals.primary_goal);
   if(goals.target_event&&goals.target_date)bits.push("📅 "+goals.target_event+" ("+goals.target_date+")");
-  if(goals.weekly_hours)bits.push("⏱ "+goals.weekly_hours+" h/week");
   if(goals.sport_priority)bits.push("🏃 "+goals.sport_priority);
   el.innerHTML=bits.join("<br>");
 }
@@ -1347,7 +1439,8 @@ async function doRestart(){
     ["plan_block.json","[]"],
     ["weekly_plan.json","[]"],
     ["weekly_plan.md",""],
-    ["plan_status.json","{}"]
+    ["plan_status.json","{}"],
+    ["checkins.json","[]"]
   ];
   for(var i=0;i<resets.length;i++){
     var fname=resets[i][0], empty=resets[i][1];
@@ -1376,7 +1469,7 @@ async function init(){
   if(prof){profile=prof;FTP=prof.cycling?.ftp_watts||FTP;LTHR=prof.running?.threshold_hr||LTHR;REST_HR=prof.running?.resting_hr||REST_HR;MAX_HR=prof.running?.max_hr||MAX_HR;}
   if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
   updateWeekLabel();
-  renderAvail();renderLog();renderPlan();renderGoalsSummary();
+  renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
   if(workouts.length)renderHome();
   else if(goals)renderGoalBanner(0,0);
   var hasKeys=getToken()&&localStorage.getItem("anthropic_key");

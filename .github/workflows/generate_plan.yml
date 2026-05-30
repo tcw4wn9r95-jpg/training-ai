@@ -1,8 +1,15 @@
 name: Generate Weekly Plan
 on:
   schedule:
-    - cron: '0 15 * * 0'   # Sunday 15:00 UTC = 16:00 (4pm) Luxembourg in winter, 17:00 in summer
-  workflow_dispatch:        # allow manual "regenerate" from the app or GitHub
+    - cron: '0 15 * * 0'   # Sunday 15:00 UTC = 16:00 (4pm) Luxembourg
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force regeneration even if a plan already exists for this week'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -25,6 +32,10 @@ jobs:
           GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
           GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          # FORCE_GENERATE is set when triggered by the app's Generate button,
+          # or when manually overriding from GitHub Actions UI.
+          # The Sunday cron never sets this, so existing plans are protected.
+          FORCE_GENERATE: ${{ github.event.inputs.force || 'false' }}
         run: python sync.py
       - name: Commit plan
         run: |
@@ -33,7 +44,6 @@ jobs:
           git add workouts.json weekly_plan.md weekly_plan.json profile.json plan_status.json plan_history.json plan_block.json
           git diff --staged --quiet && echo "No changes to commit" && exit 0
           git commit -m "Draft plan $(date +%Y-%m-%d)"
-          # Retry push with rebase in case the dashboard committed (Coach edits, goals) meanwhile
           for i in 1 2 3; do
             git pull --rebase origin main && git push && break
             echo "Push attempt $i failed, retrying..."

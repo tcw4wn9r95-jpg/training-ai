@@ -35,6 +35,43 @@ if os.path.exists("plan_history.json"):
     except Exception:
         plan_history = []
 
+# Load subjective check-ins (pain, fatigue, how sessions felt) logged via the
+# Coach chat. These are first-class inputs — an elite coach plans around how the
+# athlete is actually responding, not just the numbers.
+checkins = []
+if os.path.exists("checkins.json"):
+    try:
+        with open("checkins.json") as f:
+            checkins = json.load(f)
+        if not isinstance(checkins, list):
+            checkins = []
+    except Exception:
+        checkins = []
+
+# Only surface check-ins from the last ~21 days (older niggles are usually resolved)
+from datetime import datetime as _dt
+_recent_checkins = []
+_cutoff_iso = (date.today() - timedelta(days=21)).isoformat()
+for c in checkins[-15:]:
+    if str(c.get("date", "")) >= _cutoff_iso:
+        _recent_checkins.append(c)
+
+if _recent_checkins:
+    _ci_lines = []
+    for c in _recent_checkins:
+        _area = f" [{c.get('affects_area')}]" if c.get("affects_area") else ""
+        _ci_lines.append(f"  {c.get('date','?')} ({c.get('severity','info')}){_area}: {c.get('note','')}")
+    checkins_block = (
+        "The athlete logged these subjective check-ins recently. TREAT THESE AS HIGH PRIORITY — "
+        "if there is pain or an affected area, do NOT load it (avoid aggravating movements, "
+        "offer cross-training alternatives, keep intensity off it until resolved). If fatigue/illness/"
+        "poor sleep was reported, bias toward recovery. Address these explicitly in your coaching notes:\n"
+        + "\n".join(_ci_lines)
+    )
+else:
+    checkins_block = "  (no recent subjective check-ins — plan from the objective data)"
+
+
 # Determine where we are in the 4-week periodisation block
 _block_phases = ["base", "build", "peak", "recovery"]
 current_week_index = len(plan_history)
@@ -77,8 +114,6 @@ if goals.get("primary_goal"):
         f"PRIMARY GOAL: {_gd.get('primary_goal','')} (type: {_gd.get('goal_type','general')})\n"
         f"TARGET EVENT: {_gd.get('target_event') or 'none'}"
         + (f" on {_gd.get('target_date')} (~{weeks_to_event} weeks away)" if weeks_to_event is not None else "") + "\n"
-        f"WEEKLY TIME BUDGET: {_gd.get('weekly_hours','?')} h/week\n"
-        f"PREFERRED DAYS: {', '.join(_gd.get('preferred_days', [])) or 'flexible'}\n"
         f"SPORT PRIORITY: {_gd.get('sport_priority','balanced')}\n"
         f"INJURIES/LIMITS: {_gd.get('injuries','none')}\n"
         f"CURRENT VOLUME: {_gd.get('current_volume','unknown')}\n"
@@ -216,6 +251,25 @@ days_until_mon = (7 - today.weekday()) % 7 or 7
 next_monday = today + timedelta(days=days_until_mon)
 week_dates = {name: (next_monday + timedelta(days=i)).isoformat() for i, name in enumerate(DAY_NAMES)}
 
+# ── Skip if a plan already exists for this week ───────────────────────────────
+# Protects manually-generated plans (and coach edits) from being overwritten by
+# the Sunday auto-run. The Generate button in the app always passes FORCE=true
+# to override this guard.
+if not os.environ.get("FORCE_GENERATE"):
+    existing_status = {}
+    if os.path.exists("plan_status.json"):
+        try:
+            with open("plan_status.json") as f:
+                existing_status = json.load(f)
+        except Exception:
+            pass
+    existing_week = existing_status.get("week_of")
+    if existing_week == next_monday.isoformat():
+        print(f"Plan already exists for week of {next_monday} (status: {existing_status.get('status','?')}).")
+        print("Skipping generation — delete plan_status.json or set FORCE_GENERATE=1 to override.")
+        print("TIP: The 'Generate plan' button in the app always forces a fresh plan.")
+        raise SystemExit(0)  # Exit 0 = success, workflow marks as green
+
 week_schedule = "\n".join(
     f"  {name} {week_dates[name]}: "
     + (f"AVAILABLE — up to {hours_per_day.get(name, 1.0)}h" if name in available_days else "REST DAY")
@@ -230,7 +284,7 @@ last_wk_tss = round(sum(w["tss"] for w in workouts if (today - date.fromisoforma
 print("Calling Claude for training plan...")
 claude = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
-prompt = f"""You are Coach Claudio, Diego's expert endurance coach. You write structured, periodised weekly plans the way a professional human coach using TrainingPeaks would. Every session must have purpose, structure, and explicit targets.
+prompt = f"""You are Coach Claudio, Diego's endurance coach — the calibre who works with high-performing athletes. You write structured, periodised plans grounded in exercise physiology: progressive overload, polarised 80/20 intensity distribution, specificity to the goal, periodisation toward peak adaptation, supercompensation, and respect for recovery. Every session has a clear physiological purpose and explicit targets. You plan around how the athlete is actually responding — both the data AND their subjective feedback — never a generic template.
 
 ## ATHLETE
 Name: Diego | Device: Garmin Fenix
@@ -239,6 +293,9 @@ Resting HR {REST_HR} | Max HR {MAX_HR} | Running threshold HR {LTHR} bpm | FTP {
 ## GOALS & TARGETS (the athlete set these — tailor every plan toward them)
 {goals_block}
 {taper_note}
+
+## SUBJECTIVE CHECK-INS (pain / fatigue / how training felt) — WEIGH HEAVILY
+{checkins_block}
 
 ## RUNNING ZONES (pace is primary, HR is reference)
 Z1 Recovery: >7:00/km, <145 bpm
@@ -378,7 +435,7 @@ Project all 4 weeks with sensible progression (build weeks raise TSS, recovery w
 """
 
 message = claude.messages.create(
-    model="claude-haiku-4-5-20251001",
+    model="claude-sonnet-4-6",  # Sonnet for plan generation — deeper reasoning on periodisation, check-ins, injuries. ~+$0.25/mo vs Haiku.
     max_tokens=8000,
     messages=[{"role": "user", "content": prompt}],
 )
@@ -404,6 +461,7 @@ else:
     response_main = response
 
 # Parse the detailed weekly plan
+parse_error = None
 if "```json" in response_main:
     parts = response_main.split("```json")
     plan_md = parts[0].strip()
@@ -412,7 +470,23 @@ if "```json" in response_main:
         plan_json = json.loads(json_part)
         print(f"Parsed {len(plan_json)} sessions.")
     except json.JSONDecodeError as e:
+        parse_error = str(e)
         print(f"WARNING: JSON parse failed: {e}")
+
+# Fail loudly if we didn't get a usable plan — better than committing an empty one
+if not plan_json:
+    print("=" * 70)
+    print("ERROR: Plan generation produced 0 sessions.")
+    print("Parse error: " + (parse_error or "no ```json block found in response"))
+    print("=" * 70)
+    print("RAW CLAUDE RESPONSE (first 4000 chars):")
+    print(response[:4000])
+    print("=" * 70)
+    print("Likely causes:")
+    print("  (a) availability.json has no days selected → Claude has nothing to plan")
+    print("  (b) Claude returned malformed JSON")
+    print("  (c) prompt or template issue")
+    raise SystemExit("Plan generation failed — see error above")
 
 with open("weekly_plan.md", "w") as f:
     f.write(f"# Training Plan — Week of {next_monday.strftime('%d %B %Y')}\n\n")
