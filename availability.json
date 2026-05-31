@@ -1,7 +1,7 @@
 {
   "days": {
     "Monday": {
-      "available": true,
+      "available": false,
       "hours": 0.5
     },
     "Tuesday": {
