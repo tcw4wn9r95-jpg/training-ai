@@ -380,6 +380,8 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <div class="form-state" id="form-state">Form —</div>
         <div class="form-desc" id="form-desc">Sync your training to see readiness.</div>
         <div class="form-rec" id="form-rec"></div>
+        <div style="font-size:10px;color:var(--t3);margin-top:5px;cursor:pointer" onclick="toggleFormInfo()">ⓘ What do these mean?</div>
+        <div id="form-info-text" style="display:none;font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5;background:rgba(255,255,255,.03);border-radius:6px;padding:6px 8px">TSB = Fitness (CTL, 42-day avg) − Fatigue (ATL, 7-day avg). Positive = fresh; negative = under training load. −10 to +5 is the optimal zone. CTL rises with consistent training; ATL spikes after hard days and drops quickly on rest.</div>
       </div>
     </div>
 
@@ -447,12 +449,16 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
   <!-- LOG -->
   <div class="page" id="page-log">
-    <div class="chips">
-      <div class="chip active" onclick="filterLog('all',this)">All</div>
-      <div class="chip" onclick="filterLog('running',this)">Run</div>
-      <div class="chip" onclick="filterLog('cycling',this)">Bike</div>
-      <div class="chip" onclick="filterLog('strength',this)">Strength</div>
+    <div class="chips" style="display:flex;align-items:center;gap:8px">
+      <div style="display:flex;gap:8px;flex:1;flex-wrap:wrap">
+        <div class="chip active" onclick="filterLog('all',this)">All</div>
+        <div class="chip" onclick="filterLog('running',this)">Run</div>
+        <div class="chip" onclick="filterLog('cycling',this)">Bike</div>
+        <div class="chip" onclick="filterLog('strength',this)">Strength</div>
+      </div>
+      <button id="sync-btn" onclick="syncGarmin()" style="flex-shrink:0;font-size:12px;font-weight:600;background:rgba(59,130,246,.15);color:#3b82f6;border:1px solid rgba(59,130,246,.3);border-radius:20px;padding:5px 13px;cursor:pointer;white-space:nowrap">↻ Sync Garmin</button>
     </div>
+    <div id="sync-status" style="font-size:12px;color:var(--t3);padding:4px 0 2px;min-height:18px"></div>
     <div class="card"><div id="log-list"></div></div>
   </div>
 
@@ -613,6 +619,17 @@ function buildPMC(days){
 
 // ── RENDER HOME ───────────────────────────────────────────────
 function renderHome(){
+  if(!workouts.length){
+    document.getElementById("form-state").textContent="No training data";
+    document.getElementById("form-desc").textContent="Sync from Garmin in the Log tab to start tracking your fitness.";
+    document.getElementById("form-rec").textContent="";
+    document.getElementById("kpi-ctl").textContent="—";
+    document.getElementById("kpi-atl").textContent="—";
+    document.getElementById("kpi-week").textContent="—";
+    var rEl=document.getElementById("kpi-ramp");if(rEl)rEl.textContent="CTL";
+    renderTodayHero();renderGoalBanner(0,0);
+    return;
+  }
   var pmc=buildPMC(90);
   var ctl=pmc.C[pmc.C.length-1], atl=pmc.A[pmc.A.length-1], tsb=pmc.T[pmc.T.length-1];
   var ctl7ago=pmc.C[pmc.C.length-8]||ctl, ramp=(ctl-ctl7ago).toFixed(1);
@@ -942,6 +959,9 @@ function renderPlanPreamble(){
   if(planMon&&viewMon===planMon&&planText){
     var m=planText.match(/##\s*COACH'S PREAMBLE\s*\n+([\s\S]+?)(?=\n---|\n###|$)/i);
     if(m&&m[1].trim())noteText=m[1].trim();
+  } else if(planMon&&viewMon===planMon){
+    box.innerHTML='<div class="card" style="margin-bottom:14px"><div class="card-h">Coach\'s Notes</div><div style="font-size:13px;color:var(--t3);padding:4px 0">Notes will appear after the plan is generated. Tap Generate Plan above.</div></div>';
+    return;
   } else {
     box.innerHTML="";return;
   }
@@ -975,12 +995,13 @@ function renderBlockOverview(){
       '</div>'+
     '</div>';
   }).join('');
-  box.innerHTML='<div class="card" style="margin-bottom:0"><div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleBlock()"><div class="card-h" style="margin:0">4-Week Training Block</div><span id="block-chev" style="font-size:18px;color:var(--t3);line-height:1">+</span></div><div id="block-body" style="display:none;margin-top:10px">'+rows+'</div></div>';
+  box.innerHTML='<div class="card" style="margin-bottom:14px"><div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer" onclick="toggleBlock()"><div class="card-h" style="margin:0">4-Week Training Block</div><span id="block-chev" style="font-size:18px;color:var(--t3);line-height:1">+</span></div><div id="block-body" style="display:none;margin-top:10px">'+rows+'</div></div>';
 }
 function toggleBlock(){
   var b=document.getElementById("block-body"),c=document.getElementById("block-chev");
   if(!b)return;var h=b.style.display==="none";b.style.display=h?"":"none";c.textContent=h?"−":"+";
 }
+function toggleFormInfo(){var e=document.getElementById("form-info-text");if(e)e.style.display=e.style.display?"":"block";}
 function safeSliceHistory(hist,n){
   // Never let the trimmed window start on a tool_result-only user message —
   // that would orphan it from its paired tool_use in the preceding assistant turn.
@@ -1250,16 +1271,65 @@ function renderLog(){
   var list=document.getElementById("log-list");
   var acts=workouts.slice().reverse();
   if(logFilter!=="all")acts=acts.filter(w=>{var s=sportOf(w);return logFilter==="running"?s==="run":logFilter==="cycling"?s==="bike":logFilter==="strength"?s==="strength":true;});
-  if(!acts.length){list.innerHTML='<div class="empty">No activities yet.</div>';return;}
-  list.innerHTML=acts.map(w=>{
+  if(!acts.length){list.innerHTML='<div class="empty">No activities yet. Tap ↻ Sync Garmin to fetch your workouts.</div>';return;}
+  list.innerHTML=acts.map(function(w,i){
     var st=sportOf(w),cl=sportClr(st);
     var label={run:"Running",bike:"Cycling",strength:"Strength"}[st]||"Activity";
     var dt=new Date(w.date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
     var det=Math.round(w.duration_min||0)+" min"+(w.distance_km>0?" · "+w.distance_km.toFixed(1)+" km":"")+(w.avg_hr?" · "+w.avg_hr+" bpm":"")+(w.avg_power_watts>0?" · "+w.avg_power_watts+"W":"");
-    return '<div class="act" style="--act-clr:'+cl[1]+'"><div class="act-ic" style="background:'+cl[0]+';color:'+cl[1]+'">'+sportIcon(st)+'</div>'+
-      '<div class="act-info"><div class="act-sp">'+label+(w.name?' · '+w.name:"")+'</div><div class="act-dt">'+dt+' · '+det+'</div></div>'+
+    return '<div class="act" style="--act-clr:'+cl[1]+';cursor:pointer" onclick="toggleWorkoutDetail(this,\''+w.date+'_'+w.sport+'\')">'+
+      '<div class="act-ic" style="background:'+cl[0]+';color:'+cl[1]+'">'+sportIcon(st)+'</div>'+
+      '<div class="act-info"><div class="act-sp">'+label+(w.name?' · '+esc(w.name):"")+'</div><div class="act-dt">'+dt+' · '+det+'</div>'+
+      '<div class="act-detail-panel" id="adp_'+w.date+'_'+w.sport+'" style="display:none"></div></div>'+
       '<div class="act-tss"><div class="n">'+getTSS(w)+'</div><div class="u">TSS</div></div></div>';
   }).join("");
+}
+function toggleWorkoutDetail(el,key){
+  var panel=document.getElementById("adp_"+key);
+  if(!panel)return;
+  if(panel.style.display!=="none"){panel.style.display="none";return;}
+  var w=workouts.find(function(x){return (x.date+"_"+x.sport)===key;});
+  if(!w)return;
+  panel.style.display="block";
+  panel.innerHTML=buildWorkoutDetailHTML(w);
+  loadCoachWorkoutNote(w,key);
+}
+function buildWorkoutDetailHTML(w){
+  var st=sportOf(w);
+  var lines=[];
+  if(st==="run"&&w.avg_pace_min_km)lines.push("Avg pace: "+fmtPace(w.avg_pace_min_km*60)+"/km");
+  if(st==="bike"&&w.avg_power_watts>0){var fpct=FTP?Math.round(w.avg_power_watts/FTP*100)+"% FTP":"";lines.push("Avg power: "+w.avg_power_watts+"W"+(fpct?" ("+fpct+")"):"");}
+  if(w.max_hr>0)lines.push("Max HR: "+w.max_hr+" bpm");
+  if(w.calories>0)lines.push("Cals: "+Math.round(w.calories));
+  var tss=getTSS(w);
+  var today2=new Date(),dow=today2.getDay()||7,mon2=new Date(today2);mon2.setDate(today2.getDate()-dow+1);
+  var monStr=mon2.toISOString().split("T")[0];
+  var wkTss=workouts.filter(function(x){return x.date>=monStr;}).reduce(function(s,x){return s+getTSS(x);},0);
+  if(wkTss>0)lines.push("TSS "+tss+" = "+Math.round(tss/wkTss*100)+"% of week");
+  var pmc=buildPMC(90);var ctlNow=pmc.C[pmc.C.length-1];
+  lines.push("Fitness (CTL): "+ctlNow);
+  return '<div style="margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">'+
+    '<div style="font-size:12px;color:var(--t2);line-height:1.8">'+lines.join(" &nbsp;·&nbsp; ")+'</div>'+
+    '<div id="cwn_'+w.date+'_'+w.sport+'" style="font-size:12px;color:var(--t3);margin-top:8px;font-style:italic">Coach is reviewing this workout…</div>'+
+    '</div>';
+}
+async function loadCoachWorkoutNote(w,key){
+  var el=document.getElementById("cwn_"+w.date+"_"+w.sport);
+  if(!el)return;
+  var cacheKey="cwn_"+key;
+  var cached=localStorage.getItem(cacheKey);
+  if(cached){el.innerHTML='<span style="color:var(--t2)">🤖 '+esc(cached)+'</span>';return;}
+  var apiKey=localStorage.getItem("anthropic_key");
+  if(!apiKey){el.textContent="Add your Anthropic API key (gear icon) to get Coach notes.";return;}
+  var pmc=buildPMC(90);
+  var prompt="In 2-3 sentences give a brief coaching observation about this workout. Be specific — reference the actual numbers. Don't start with 'Great' or 'Nice'.\n\nWorkout: "+(w.name||w.sport)+" ("+w.sport+")\nDate: "+w.date+"\nDuration: "+Math.round(w.duration_min||0)+"min"+(w.distance_km>0?"\nDistance: "+w.distance_km+"km":"")+(w.avg_hr?"\nAvg HR: "+w.avg_hr+" bpm (LTHR: "+LTHR+")":"")+((sportOf(w)==="run"&&w.avg_pace_min_km)?"\nAvg pace: "+fmtPace(w.avg_pace_min_km*60)+"/km":"")+(w.avg_power_watts>0?"\nAvg power: "+w.avg_power_watts+"W (FTP: "+FTP+"W)":"")+"\nTSS: "+getTSS(w)+"\nCTL: "+pmc.C[pmc.C.length-1]+", ATL: "+pmc.A[pmc.A.length-1];
+  try{
+    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true","Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:200,messages:[{role:"user",content:prompt}]})});
+    var d=await res.json();
+    var note=d.content&&d.content[0]&&d.content[0].text?d.content[0].text.trim():null;
+    if(note){localStorage.setItem(cacheKey,note);if(el)el.innerHTML='<span style="color:var(--t2)">🤖 '+esc(note)+'</span>';}
+    else if(el)el.textContent="";
+  }catch(e){if(el)el.textContent="";}
 }
 
 // ── AVAILABILITY ──────────────────────────────────────────────
@@ -1601,6 +1671,42 @@ async function triggerGenerate(){
       body:JSON.stringify({ref:"main"})});
     return r.status===204;
   }catch(e){return false;}
+}
+async function syncGarmin(){
+  var token=getToken();
+  if(!token){document.getElementById("sync-status").textContent="Add your GitHub token first (gear icon).";return;}
+  var btn=document.getElementById("sync-btn");
+  btn.textContent="Syncing…";btn.disabled=true;
+  document.getElementById("sync-status").textContent="Triggering Garmin sync…";
+  try{
+    var r=await fetch("https://api.github.com/repos/"+REPO+"/actions/workflows/sync_activities.yml/dispatches",
+      {method:"POST",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
+       body:JSON.stringify({ref:"main"})});
+    if(r.status!==204){document.getElementById("sync-status").textContent="Failed to trigger sync ("+r.status+").";btn.textContent="↻ Sync Garmin";btn.disabled=false;return;}
+  }catch(e){document.getElementById("sync-status").textContent="Network error: "+e.message;btn.textContent="↻ Sync Garmin";btn.disabled=false;return;}
+  document.getElementById("sync-status").textContent="Syncing with Garmin — usually takes ~60s…";
+  var oldSha=null;
+  try{var meta=await(await fetch(API+"/workouts.json",{headers:{Authorization:"Bearer "+token}})).json();oldSha=meta.sha;}catch(e){}
+  var tries=0;
+  var poll=setInterval(async function(){
+    tries++;
+    if(tries>18){
+      clearInterval(poll);
+      btn.textContent="↻ Sync Garmin";btn.disabled=false;
+      document.getElementById("sync-status").textContent="Sync timed out — check GitHub Actions for details.";
+      return;
+    }
+    try{
+      var meta=await(await fetch(API+"/workouts.json",{headers:{Authorization:"Bearer "+token}})).json();
+      if(meta.sha&&meta.sha!==oldSha){
+        clearInterval(poll);
+        workouts=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
+        renderLog();renderHome();
+        btn.textContent="↻ Sync Garmin";btn.disabled=false;
+        document.getElementById("sync-status").textContent="Synced — "+workouts.length+" activities loaded.";
+      }
+    }catch(e){}
+  },5000);
 }
 function updateGenLabel(){
   var el=document.getElementById("gen-label");if(!el)return;

@@ -1,15 +1,6 @@
-name: Generate Weekly Plan
+name: Sync Activities from Garmin
 on:
-  workflow_dispatch:
-    inputs:
-      force:
-        description: 'Force regeneration even if a plan already exists for this week'
-        required: false
-        default: 'false'
-        type: choice
-        options: ['false', 'true']
-  schedule:
-    - cron: '0 20 * * 0'   # Sunday 20:00 UTC — auto-generate next week's plan
+  workflow_dispatch: {}
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -18,7 +9,7 @@ permissions:
   contents: write
 
 jobs:
-  generate:
+  sync:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -27,20 +18,20 @@ jobs:
           python-version: '3.12'
       - name: Install dependencies
         run: pip install -r requirements.txt
-      - name: Generate plan (no Garmin push)
+      - name: Fetch activities from Garmin
         env:
           GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
           GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-          FORCE_GENERATE: ${{ github.event.inputs.force || 'false' }}
+          ACTIVITIES_ONLY: "true"
         run: python sync.py
-      - name: Commit plan
+      - name: Commit activity data
         run: |
           git config user.name "Coach Claudio"
           git config user.email "bot@coachclaudio.local"
-          git add workouts.json weekly_plan.md weekly_plan.json profile.json plan_status.json plan_history.json plan_block.json journey_start.json
-          git diff --staged --quiet && echo "No changes to commit" && exit 0
-          git commit -m "Draft plan $(date +%Y-%m-%d)"
+          git add workouts.json profile.json
+          git diff --staged --quiet && echo "No new activities" && exit 0
+          git commit -m "Sync activities $(date +%Y-%m-%d)"
           for i in 1 2 3; do
             git pull --rebase origin main && git push && break
             echo "Push attempt $i failed, retrying..."

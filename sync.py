@@ -239,6 +239,13 @@ if ftp_changed or lthr_changed:
         json.dump(profile, f, indent=2)
     print("Profile updated.")
 
+# Activities-only mode: fetch Garmin data + update profile, then stop.
+# Used by the sync_activities workflow so the dashboard can refresh workouts
+# without triggering a full plan regeneration.
+if os.environ.get("ACTIVITIES_ONLY", "").strip().lower() in ("1", "true"):
+    print("ACTIVITIES_ONLY=true — skipping plan generation.")
+    raise SystemExit(0)
+
 # ── Build next-week date map ──────────────────────────────────────────────────
 today = date.today()
 days_until_mon = (7 - today.weekday()) % 7 or 7
