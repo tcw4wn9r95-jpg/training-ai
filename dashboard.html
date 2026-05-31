@@ -1298,7 +1298,7 @@ function buildWorkoutDetailHTML(w){
   var st=sportOf(w);
   var lines=[];
   if(st==="run"&&w.avg_pace_min_km)lines.push("Avg pace: "+fmtPace(w.avg_pace_min_km*60)+"/km");
-  if(st==="bike"&&w.avg_power_watts>0){var fpct=FTP?Math.round(w.avg_power_watts/FTP*100)+"% FTP":"";lines.push("Avg power: "+w.avg_power_watts+"W"+(fpct?" ("+fpct+")"):"");}
+  if(st==="bike"&&w.avg_power_watts>0){var fpct=FTP?Math.round(w.avg_power_watts/FTP*100)+"% FTP":"";lines.push("Avg power: "+w.avg_power_watts+"W"+(fpct?" ("+fpct+")":""));}
   if(w.max_hr>0)lines.push("Max HR: "+w.max_hr+" bpm");
   if(w.calories>0)lines.push("Cals: "+Math.round(w.calories));
   var tss=getTSS(w);
