@@ -7,12 +7,15 @@
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Coach Claudio</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
 <style>
 /* ── SPLASH ───────────────────────────────────────────────────── */
 #splash{
   position:fixed;inset:0;z-index:999;
   display:flex;align-items:center;justify-content:center;
-  background:radial-gradient(ellipse at 50% 40%, #0f1318 0%, #080a0d 100%);
+  background:radial-gradient(ellipse 60% 40% at 50% 45%, rgba(0,200,150,.05) 0%, #09090b 100%);
   transition:opacity .55s ease, visibility .55s ease;
 }
 #splash.hidden{opacity:0;visibility:hidden;pointer-events:none;}
@@ -41,7 +44,7 @@
 }
 @keyframes arcDraw{
   from{stroke-dashoffset:226}
-  to{stroke-dashoffset:56} /* ~¾ of circle visible */
+  to{stroke-dashoffset:56}
 }
 @keyframes arcSpin{
   from{transform:rotate(0deg)}
@@ -50,49 +53,48 @@
 
 /* Inner mark */
 .sp-mark{
-  width:48px;height:48px;border-radius:14px;
-  background:linear-gradient(135deg,#1e3a8a,#2563eb);
+  width:52px;height:52px;border-radius:50%;
+  background:#0e0e10;
+  border:1.5px solid rgba(0,200,150,.35);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 0 32px rgba(59,130,246,.35),0 0 8px rgba(59,130,246,.2);
+  box-shadow:0 0 32px rgba(0,200,150,.2),0 0 8px rgba(0,200,150,.1);
   animation:markPulse 2.4s ease 1.1s infinite;
 }
 @keyframes markPulse{
-  0%,100%{box-shadow:0 0 32px rgba(59,130,246,.35),0 0 8px rgba(59,130,246,.2);}
-  50%{box-shadow:0 0 44px rgba(59,130,246,.55),0 0 16px rgba(59,130,246,.3);}
+  0%,100%{box-shadow:0 0 32px rgba(0,200,150,.2),0 0 8px rgba(0,200,150,.1);}
+  50%{box-shadow:0 0 48px rgba(0,200,150,.35),0 0 16px rgba(0,200,150,.18);}
 }
-.sp-head,.sp-body{
-  stroke-dasharray:60;stroke-dashoffset:60;
-  animation:iconDraw .5s ease forwards;
+.sp-arc-mark{
+  stroke-dashoffset:47.1;
+  animation:arcMarkDraw .8s cubic-bezier(.4,0,.2,1) .4s forwards;
 }
-.sp-head{animation-delay:.5s;}
-.sp-body{animation-delay:.75s;}
-.sp-rays{opacity:0;animation:raysFade .4s ease 1s forwards;}
-@keyframes iconDraw{to{stroke-dashoffset:0}}
-@keyframes raysFade{to{opacity:1}}
+@keyframes arcMarkDraw{to{stroke-dashoffset:0}}
 
 /* Wordmark */
 .sp-wordmark{
-  font-size:22px;letter-spacing:-.3px;line-height:1;
+  font-size:24px;letter-spacing:-.5px;line-height:1;
   animation:spFade .5s ease .6s both;
+  font-family:var(--font);
 }
-.sp-coach{color:rgba(255,255,255,.55);font-weight:400;}
-.sp-name{color:#fff;font-weight:700;}
+.sp-coach{color:rgba(255,255,255,.45);font-weight:400;}
+.sp-name{color:#fff;font-weight:800;}
 @keyframes spFade{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
 
 /* Tagline */
 .sp-tagline{
-  font-size:12px;color:rgba(255,255,255,.3);letter-spacing:.5px;
+  font-size:12px;color:rgba(255,255,255,.22);letter-spacing:.5px;
   margin-top:8px;font-weight:500;
   animation:spFade .5s ease .85s both;
 }
 
 :root{
-  --bg:#0b0d10; --bg2:#13161b; --bg3:#1c2127; --line:rgba(255,255,255,.07);
-  --t1:#f4f6f8; --t2:#aeb6c0; --t3:#6b7480;
+  --bg:#09090b; --bg2:#111114; --bg3:#1a1a1f; --line:rgba(255,255,255,.06);
+  --t1:#f2f2f3; --t2:#a0a0aa; --t3:#62626e;
+  --brand:#00c896; --brand-dim:rgba(0,200,150,.15); --brand-glow:rgba(0,200,150,.25);
   --blue:#3b82f6; --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --violet:#8b5cf6;
   --run:#3b82f6; --bike:#22c55e; --strength:#f59e0b;
-  --r:14px;
-  --font:-apple-system,BlinkMacSystemFont,"SF Pro Display","Segoe UI",sans-serif;
+  --r:16px;
+  --font:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,monospace;
 }
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -100,20 +102,20 @@ html,body{height:100%}
 body{background:var(--bg);color:var(--t1);font-family:var(--font);
   font-size:15px;line-height:1.5;overflow:hidden;
   -webkit-font-smoothing:antialiased;
-  background-image:radial-gradient(circle at 50% 0%,rgba(59,130,246,.06),transparent 55%);}
+  background-image:radial-gradient(circle at 50% 0%,rgba(0,200,150,.04),transparent 55%);}
 
 /* Top bar */
 .topbar{position:fixed;top:0;left:0;right:0;height:calc(54px + env(safe-area-inset-top));
   padding-top:env(safe-area-inset-top);
   display:flex;align-items:center;gap:10px;padding-left:18px;padding-right:14px;
-  background:rgba(11,13,16,.82);backdrop-filter:saturate(180%) blur(20px);
+  background:rgba(9,9,11,.88);backdrop-filter:saturate(180%) blur(20px);
   border-bottom:1px solid var(--line);z-index:50}
 .logo-mark{width:30px;height:30px;border-radius:9px;
-  background:linear-gradient(135deg,#1e40af,#3b82f6);
+  background:linear-gradient(135deg,#003d2e,#00c896);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 10px rgba(59,130,246,.4)}
+  box-shadow:0 2px 10px rgba(0,200,150,.35)}
 .brand{font-size:16px;font-weight:700;letter-spacing:-.3px}
-.brand span{color:var(--t3);font-weight:500}
+.brand span{color:var(--brand);font-weight:700}
 .gear{margin-left:auto;width:36px;height:36px;border-radius:10px;border:none;
   background:var(--bg2);color:var(--t2);display:flex;align-items:center;justify-content:center;cursor:pointer}
 
@@ -128,12 +130,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 /* Bottom nav */
 .nav{position:fixed;bottom:0;left:0;right:0;height:calc(64px + env(safe-area-inset-bottom));
   padding-bottom:env(safe-area-inset-bottom);
-  display:flex;background:rgba(11,13,16,.9);backdrop-filter:saturate(180%) blur(20px);
+  display:flex;background:rgba(9,9,11,.92);backdrop-filter:saturate(180%) blur(20px);
   border-top:1px solid var(--line);z-index:50}
 .nav button{flex:1;background:none;border:none;color:var(--t3);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
   font-size:10px;font-weight:600;cursor:pointer;letter-spacing:.2px}
-.nav button.active{color:var(--blue)}
+.nav button.active{color:var(--brand)}
 .nav button svg{width:22px;height:22px}
 
 /* Cards */
@@ -155,7 +157,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .gb-msg{font-size:12px;color:var(--t2);line-height:1.5;margin-top:8px}
 .hero{background:linear-gradient(160deg,#13161b,#171b22);
   border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
-.hero::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--blue))}
+.hero::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--brand))}
 .hero-top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
 .hero-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--t3)}
 .hero-pill{margin-left:auto;font-size:11px;font-weight:700;padding:3px 9px;border-radius:20px}
@@ -228,7 +230,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .step-dur{margin-left:auto;font-size:12px;font-family:var(--mono);color:var(--t3)}
 .step-tgt{font-size:14px;font-weight:700;font-family:var(--mono);color:var(--sc,var(--t1));background:rgba(255,255,255,.04);border-radius:6px;padding:2px 8px;display:inline-block;margin-bottom:4px}
 .step-desc{font-size:12px;color:var(--t3);margin-top:2px}
-.coach-note{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);
+.coach-note{background:rgba(0,200,150,.07);border:1px solid rgba(0,200,150,.2);
   border-radius:10px;padding:11px 13px;margin-top:8px;font-size:13px;color:var(--t2);line-height:1.5}
 
 /* Activities log */
@@ -245,13 +247,13 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .chips{display:flex;gap:8px;margin-bottom:14px;flex-wrap:wrap}
 .chip{padding:7px 14px;border-radius:20px;border:1px solid var(--line);background:var(--bg2);
   color:var(--t2);font-size:12px;font-weight:600;cursor:pointer}
-.chip.active{background:var(--blue);border-color:var(--blue);color:#fff}
+.chip.active{background:var(--brand);border-color:var(--brand);color:#09090b}
 
 /* Availability */
 .av-grid{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
 .av-cell{display:flex;align-items:center;gap:13px;padding:13px 15px;border-radius:12px;
   border:1px solid var(--line);background:var(--bg2);cursor:pointer;transition:.2s}
-.av-cell.on{border-color:var(--blue);background:rgba(59,130,246,.08)}
+.av-cell.on{border-color:var(--brand);background:rgba(0,200,150,.07)}
 .av-day{font-size:15px;font-weight:600;width:90px}
 .av-date{font-size:12px;color:var(--t3)}
 .av-toggle{margin-left:auto;display:flex;align-items:center;gap:10px}
@@ -260,7 +262,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
   background:var(--bg3);color:var(--t1);font-size:16px;cursor:pointer}
 .stepper .val{font-size:14px;font-weight:700;font-family:var(--mono);width:42px;text-align:center}
 .av-off{font-size:12px;color:var(--t3);font-weight:600}
-.btn{width:100%;padding:15px;border-radius:13px;border:none;background:var(--blue);
+.btn{width:100%;padding:15px;border-radius:13px;border:none;
+  background:linear-gradient(135deg,#006e53,#00c896);
   color:#fff;font-size:15px;font-weight:700;cursor:pointer;margin-top:6px}
 .status{font-size:13px;text-align:center;margin-top:12px;padding:11px;border-radius:10px;display:none}
 .status.ok{display:block;background:rgba(34,197,94,.12);color:var(--green)}
@@ -276,7 +279,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .coach-input-row{display:flex;gap:9px;align-items:flex-end}
 .coach-input-row textarea{margin:0;min-height:46px;max-height:120px}
 .coach-send{width:46px;height:46px;min-width:46px;border-radius:12px;border:none;
-  background:var(--blue);color:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center}
+  background:var(--brand);color:#09090b;cursor:pointer;display:flex;align-items:center;justify-content:center}
 .quick-q{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
 .quick-q button{padding:8px 13px;border-radius:18px;border:1px solid var(--line);
   background:var(--bg2);color:var(--t2);font-size:12px;cursor:pointer}
@@ -294,7 +297,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .field label{font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px}
 .field input{width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:11px;
   padding:13px;color:var(--t1);font-size:14px;font-family:var(--mono)}
-.field a{color:var(--blue);font-size:12px;text-decoration:none}
+.field a{color:var(--brand);font-size:12px;text-decoration:none}
 .empty{color:var(--t3);text-align:center;padding:40px 20px;font-size:14px;line-height:1.6}
 .spin{animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
@@ -312,24 +315,26 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <div class="sp-inner">
     <div class="sp-logo">
       <svg class="sp-ring" viewBox="0 0 80 80" fill="none">
-        <circle cx="40" cy="40" r="36" stroke="rgba(255,255,255,.07)" stroke-width="1.5"/>
+        <circle cx="40" cy="40" r="36" stroke="rgba(255,255,255,.05)" stroke-width="1.5"/>
         <circle cx="40" cy="40" r="36" stroke="url(#ringGrad)" stroke-width="1.5"
           stroke-linecap="round" stroke-dasharray="226" stroke-dashoffset="226"
           class="sp-arc"/>
         <defs>
           <linearGradient id="ringGrad" x1="0" y1="0" x2="80" y2="80" gradientUnits="userSpaceOnUse">
-            <stop offset="0%" stop-color="#3b82f6"/>
-            <stop offset="100%" stop-color="#8b5cf6"/>
+            <stop offset="0%" stop-color="#00c896"/>
+            <stop offset="100%" stop-color="#00e5b0"/>
           </linearGradient>
         </defs>
       </svg>
       <div class="sp-mark">
-        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
-          <circle cx="14" cy="9" r="4.5" stroke="white" stroke-width="1.6" class="sp-head"/>
-          <path d="M5 26c0-5 4-9 9-9s9 4 9 9" stroke="white" stroke-width="1.6"
-            stroke-linecap="round" class="sp-body"/>
-          <path d="M20.5 8l2.5-2.5M23.5 12h3M20.5 16l2.5 2.5"
-            stroke="rgba(255,255,255,.45)" stroke-width="1.2" stroke-linecap="round" class="sp-rays"/>
+        <!-- Brand arc mark: 270° open circle, gap at top-right, animated draw-in -->
+        <svg width="32" height="32" viewBox="0 0 32 32" fill="none">
+          <circle cx="16" cy="16" r="10"
+            stroke="#00c896" stroke-width="2.5" stroke-linecap="round"
+            stroke-dasharray="47.1 15.7"
+            transform="rotate(135 16 16)"
+            class="sp-arc-mark"/>
+          <circle cx="22.7" cy="9.3" r="1.6" fill="#00c896" opacity="0" class="sp-arc-mark"/>
         </svg>
       </div>
     </div>
@@ -342,9 +347,12 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <div class="topbar">
   <div class="logo-mark">
-    <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-      <circle cx="9" cy="6.5" r="3" stroke="#fff" stroke-width="1.5"/>
-      <path d="M3.5 15.5c0-3 2.5-5.5 5.5-5.5s5.5 2.5 5.5 5.5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+    <!-- Brand arc mark at small size -->
+    <svg width="18" height="18" viewBox="0 0 20 20" fill="none">
+      <circle cx="10" cy="10" r="6.5"
+        stroke="#fff" stroke-width="2" stroke-linecap="round"
+        stroke-dasharray="30.6 10.2"
+        transform="rotate(135 10 10)"/>
     </svg>
   </div>
   <div class="brand">Coach <span>Claudio</span></div>
@@ -361,7 +369,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <div class="hero" id="today-hero" style="--accent:var(--blue)">
       <div class="hero-top">
         <span class="hero-eyebrow">Today · <span id="today-date">—</span></span>
-        <span class="hero-pill" id="today-pill" style="background:rgba(59,130,246,.15);color:var(--blue)">—</span>
+        <span class="hero-pill" id="today-pill" style="background:var(--brand-dim);color:var(--brand)">—</span>
       </div>
       <div class="hero-title" id="today-title">Loading…</div>
       <div class="hero-sub" id="today-sub">Fetching your plan</div>
@@ -403,7 +411,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="chart-box"><canvas id="pmcChart"></canvas></div>
     </div>
 
-    <div class="card" id="proj-card" style="display:none;background:linear-gradient(160deg,#13161b,#15191f);border-color:rgba(59,130,246,.18)">
+    <div class="card" id="proj-card" style="display:none;background:linear-gradient(160deg,#111114,#141418);border-color:rgba(0,200,150,.18)">
       <div class="card-h" style="color:var(--blue)">📈 If you stick to the plan</div>
       <div class="proj-stats">
         <div class="proj-stat">
@@ -420,7 +428,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         </div>
       </div>
       <div class="chart-sm" style="margin-top:6px"><canvas id="projChart"></canvas></div>
-      <div id="proj-msg" style="font-size:13px;color:var(--t2);line-height:1.5;margin-top:12px;padding:12px;background:rgba(59,130,246,.08);border-radius:10px"></div>
+      <div id="proj-msg" style="font-size:13px;color:var(--t2);line-height:1.5;margin-top:12px;padding:12px;background:rgba(0,200,150,.07);border-radius:10px"></div>
     </div>
 
     <div class="card">
@@ -445,7 +453,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="lbl"><div class="w" id="plan-wlabel">This Week</div><div class="d" id="plan-wdate"></div></div>
       <button id="plan-next" onclick="shiftWeek(1)">›</button>
     </div>
-    <button class="refresh-btn" id="gen-btn" onclick="generatePlan()" style="background:linear-gradient(135deg,#7c3aed,#a78bfa);color:#fff;border-color:transparent">
+    <button class="refresh-btn" id="gen-btn" onclick="generatePlan()" style="background:linear-gradient(135deg,#006e53,#00c896);color:#fff;border-color:transparent">
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="gen-ic"><path d="M8 1.5l1.7 4.3 4.3.4-3.3 2.8 1 4.2L8 11l-3.7 2.2 1-4.2-3.3-2.8 4.3-.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
       <span id="gen-label">Generate plan</span>
     </button>
@@ -453,7 +461,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <div id="plan-days"></div>
     <div id="push-zone" style="display:none;margin-top:6px">
       <div id="push-status" style="font-size:13px;color:var(--t2);text-align:center;margin-bottom:12px;padding:11px;border-radius:10px;background:var(--bg2)"></div>
-      <button class="btn" id="push-btn" onclick="pushToGarmin()" style="font-size:16px;background:linear-gradient(135deg,#2563eb,#3b82f6)">Let's do this! 🚀</button>
+      <button class="btn" id="push-btn" onclick="pushToGarmin()" style="font-size:16px;background:linear-gradient(135deg,#006e53,#00c896)">Let's do this! 🚀</button>
       <div style="font-size:11px;color:var(--t3);text-align:center;margin-top:10px;line-height:1.5">Pushes this plan to your Garmin calendar and replaces what's there. Sync your Fenix afterwards.</div>
     </div>
   </div>
@@ -468,7 +476,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <div class="chip" onclick="filterLog('strength',this)">Strength</div>
         <div class="chip" onclick="filterLog('other',this)">Other</div>
       </div>
-      <button id="sync-btn" onclick="syncGarmin()" style="flex-shrink:0;font-size:12px;font-weight:600;background:rgba(59,130,246,.15);color:#3b82f6;border:1px solid rgba(59,130,246,.3);border-radius:20px;padding:5px 13px;cursor:pointer;white-space:nowrap">↻ Sync Garmin</button>
+      <button id="sync-btn" onclick="syncGarmin()" style="flex-shrink:0;font-size:12px;font-weight:600;background:rgba(0,200,150,.12);color:#00c896;border:1px solid rgba(0,200,150,.3);border-radius:20px;padding:5px 13px;cursor:pointer;white-space:nowrap">↻ Sync Garmin</button>
     </div>
     <div id="sync-status" style="font-size:12px;color:var(--t3);padding:4px 0 2px;min-height:18px"></div>
     <div class="card"><div id="log-list"></div></div>
