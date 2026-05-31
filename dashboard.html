@@ -544,6 +544,12 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <button class="btn" onclick="saveKeys()">Save</button>
 
   <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+    <label style="font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px">Daily notification</label>
+    <div style="font-size:13px;color:var(--t3);margin-bottom:10px">Get tomorrow's training summary at 9:30pm.</div>
+    <button class="btn" id="notif-btn" style="background:var(--bg3);color:var(--t1)" onclick="toggleNotifications()">Enable notifications</button>
+  </div>
+
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
     <label style="font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px">Training goals</label>
     <div id="goals-summary" style="font-size:13px;color:var(--t3);line-height:1.5;margin-bottom:12px">No goals set yet.</div>
     <button class="btn" style="background:var(--bg3);color:var(--t1)" onclick="startOnboarding()">Set / review my goals with Coach</button>
@@ -579,6 +585,7 @@ const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
 const API="https://api.github.com/repos/"+REPO+"/contents";
+const VAPID_PUBLIC_KEY="BOLPSehyHLJnEvUm5VWYBHYsp4-TmZUPRy8jsYLzPt_EDuXtPdoepdFdIj9EZDs1oB2uK4Filhc4SDydGjrk5Mg";
 const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
 
 // ── STATE ─────────────────────────────────────────────────────
@@ -1910,8 +1917,83 @@ async function init(){
     // New athlete with keys but no goals yet → start onboarding
     setTimeout(startOnboarding,500);
   }
+  // Register service worker for push notifications
+  if('serviceWorker' in navigator){
+    navigator.serviceWorker.register('./sw.js').then(function(){
+      updateNotifBtn();
+    }).catch(function(e){console.warn('SW registration failed:',e);});
+  }
 }
 init();
+
+// ── PUSH NOTIFICATIONS ────────────────────────────────────────
+function urlBase64ToUint8Array(b64){
+  var pad='='.repeat((4-b64.length%4)%4);
+  var raw=atob((b64+pad).replace(/-/g,'+').replace(/_/g,'/'));
+  return Uint8Array.from(Array.from(raw).map(function(c){return c.charCodeAt(0);}));
+}
+
+function updateNotifBtn(){
+  var btn=document.getElementById('notif-btn');
+  if(!btn)return;
+  if(!('Notification' in window)||!('PushManager' in window)){
+    btn.textContent='Notifications not supported';btn.disabled=true;return;
+  }
+  if(Notification.permission==='granted'&&localStorage.getItem('notif_subscribed')==='1'){
+    btn.textContent='✓ Notifications enabled';btn.style.background='var(--brand-dim)';btn.style.color='var(--brand)';
+  } else if(Notification.permission==='denied'){
+    btn.textContent='Notifications blocked — enable in Settings';btn.disabled=true;
+  } else {
+    btn.textContent='Enable notifications';btn.style.background='';btn.style.color='';
+  }
+}
+
+async function toggleNotifications(){
+  if(!('serviceWorker' in navigator)||!('PushManager' in window)){
+    alert('Push notifications are not supported in this browser.\nOn iPhone, open the app from your Home Screen (not Safari).'); return;
+  }
+  var perm=await Notification.requestPermission();
+  if(perm!=='granted'){updateNotifBtn();return;}
+  var reg=await navigator.serviceWorker.ready;
+  var existing=await reg.pushManager.getSubscription();
+  if(existing){
+    // Already subscribed — offer to disable
+    await existing.unsubscribe();
+    localStorage.removeItem('notif_subscribed');
+    updateNotifBtn();
+    return;
+  }
+  try{
+    var sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(VAPID_PUBLIC_KEY)});
+    await saveNotifSubscription(sub.toJSON());
+    localStorage.setItem('notif_subscribed','1');
+    updateNotifBtn();
+  }catch(e){
+    console.error('Push subscribe failed:',e);
+    alert('Could not subscribe: '+e.message);
+  }
+}
+
+async function saveNotifSubscription(sub){
+  var token=getToken();
+  if(!token){alert('Add your GitHub token in settings first.');return;}
+  // Read current file (may not exist yet)
+  var meta=null,subs=[];
+  try{
+    var resp=await fetch(API+'/push_subscriptions.json',{headers:{Authorization:'Bearer '+token}});
+    if(resp.ok){
+      meta=await resp.json();
+      subs=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
+    }
+  }catch(e){}
+  // Add if not already present
+  if(!subs.find(function(s){return s.endpoint===sub.endpoint;})){subs.push(sub);}
+  var body={message:'Add push subscription',content:btoa(unescape(encodeURIComponent(JSON.stringify(subs,null,2))))};
+  if(meta&&meta.sha)body.sha=meta.sha;
+  await fetch(API+'/push_subscriptions.json',{method:'PUT',
+    headers:{Authorization:'Bearer '+token,'Content-Type':'application/json'},
+    body:JSON.stringify(body)});
+}
 
 // ── SPLASH DISMISS ─────────────────────────────────────────────
 (function(){

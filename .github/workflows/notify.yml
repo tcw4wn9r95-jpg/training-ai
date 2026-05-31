@@ -1,0 +1,37 @@
+name: Send Daily Training Notification
+on:
+  schedule:
+    - cron: '30 21 * * *'  # 21:30 UTC — adjust for your timezone
+  workflow_dispatch: {}
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: write
+
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - name: Install dependencies
+        run: pip install pywebpush
+      - name: Send push notifications
+        env:
+          VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
+        run: python notify.py
+      - name: Remove expired subscriptions
+        run: |
+          git config user.name "Coach Claudio"
+          git config user.email "bot@coachclaudio.local"
+          git add push_subscriptions.json
+          git diff --staged --quiet && echo "No changes" && exit 0
+          git commit -m "Clean up expired push subscriptions $(date +%Y-%m-%d)"
+          for i in 1 2 3; do
+            git pull --rebase origin main && git push && break
+            echo "Retry $i…"; sleep 3
+          done
