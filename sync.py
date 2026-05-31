@@ -72,37 +72,6 @@ else:
     checkins_block = "  (no recent subjective check-ins — plan from the objective data)"
 
 
-# Determine where we are in the 4-week periodisation block.
-# Week index is based on real elapsed time since the journey started (the Monday
-# of the first-ever generated plan). Generating multiple plans in one week does
-# NOT advance the index — only the passage of time does.
-_block_phases = ["base", "build", "peak", "recovery"]
-
-journey_start_file = "journey_start.json"
-# Reset journey on forced regeneration so block numbering restarts from week 1.
-# Also reset if stored start is in the future relative to next_monday (data anomaly).
-_force_journey = os.environ.get("FORCE_GENERATE", "").strip().lower() in ("1", "true")
-if os.path.exists(journey_start_file):
-    with open(journey_start_file) as _f:
-        _stored_start = date.fromisoformat(json.load(_f)["started"])
-    if _force_journey or _stored_start > next_monday:
-        os.remove(journey_start_file)
-        print(f"Journey reset — starting from week 1 (force={_force_journey}, stored={_stored_start}, next_monday={next_monday})")
-
-if not os.path.exists(journey_start_file):
-    # First-ever plan (or after reset): record next_monday as the journey start.
-    journey_start = next_monday
-    with open(journey_start_file, "w") as _f:
-        json.dump({"started": journey_start.isoformat()}, _f)
-    print(f"Journey start recorded: {journey_start}")
-else:
-    with open(journey_start_file) as _f:
-        journey_start = date.fromisoformat(json.load(_f)["started"])
-
-current_week_index = max(0, (today - journey_start).days // 7)
-current_phase = _block_phases[current_week_index % 4]
-next_phase = _block_phases[(current_week_index + 1) % 4]
-
 # Build a compact multi-week summary for the prompt
 if plan_history:
     history_lines = []
@@ -275,6 +244,37 @@ today = date.today()
 days_until_mon = (7 - today.weekday()) % 7 or 7
 next_monday = today + timedelta(days=days_until_mon)
 week_dates = {name: (next_monday + timedelta(days=i)).isoformat() for i, name in enumerate(DAY_NAMES)}
+
+# Determine where we are in the 4-week periodisation block.
+# Week index is based on real elapsed time since the journey started (the Monday
+# of the first-ever generated plan). Generating multiple plans in one week does
+# NOT advance the index — only the passage of time does.
+_block_phases = ["base", "build", "peak", "recovery"]
+
+journey_start_file = "journey_start.json"
+# Reset journey on forced regeneration so block numbering restarts from week 1.
+# Also reset if stored start is in the future relative to next_monday (data anomaly).
+_force_journey = os.environ.get("FORCE_GENERATE", "").strip().lower() in ("1", "true")
+if os.path.exists(journey_start_file):
+    with open(journey_start_file) as _f:
+        _stored_start = date.fromisoformat(json.load(_f)["started"])
+    if _force_journey or _stored_start > next_monday:
+        os.remove(journey_start_file)
+        print(f"Journey reset — starting from week 1 (force={_force_journey}, stored={_stored_start}, next_monday={next_monday})")
+
+if not os.path.exists(journey_start_file):
+    # First-ever plan (or after reset): record next_monday as the journey start.
+    journey_start = next_monday
+    with open(journey_start_file, "w") as _f:
+        json.dump({"started": journey_start.isoformat()}, _f)
+    print(f"Journey start recorded: {journey_start}")
+else:
+    with open(journey_start_file) as _f:
+        journey_start = date.fromisoformat(json.load(_f)["started"])
+
+current_week_index = max(0, (today - journey_start).days // 7)
+current_phase = _block_phases[current_week_index % 4]
+next_phase = _block_phases[(current_week_index + 1) % 4]
 
 # ── Skip if a plan already exists for this week ───────────────────────────────
 # A plan, once generated, is never automatically regenerated mid-block.
