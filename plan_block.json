@@ -7,52 +7,51 @@
     "summary": "First structured intensity introduced — 2x6min sweet-spot on Tuesday embedded in an otherwise aerobic week, anchored by a 90-min Zone 2 ride on Thursday.",
     "sessions": [
       {
-        "day": "Monday",
-        "date": "2026-06-01",
+        "day": "Tuesday",
+        "date": "2026-06-02",
         "sport": "running",
-        "name": "Fartlek Run — Aerobic Surges",
-        "total_duration_secs": 2340,
-        "planned_tss": 32,
-        "focus": "Aerobic development with surges, builds neuromuscular pop without heavy threshold",
+        "name": "Threshold Run",
+        "total_duration_secs": 2700,
+        "planned_tss": 38,
+        "focus": "Lactate threshold development, builds sustainable hard-effort capacity",
         "steps": [
           {
             "type": "warmup",
-            "duration_secs": 300,
-            "description": "5 min easy jog, leg swings 10 forward/back each leg, 10 bodyweight squats"
+            "duration_secs": 600,
+            "description": "10 min easy jog, leg swings 10 forward/back each leg, 10 bodyweight squats, dynamic stretching"
           },
           {
-            "type": "interval",
-            "duration_secs": 1800,
-            "repeat_count": 6,
+            "type": "repeat",
+            "repeat_count": 3,
             "steps": [
               {
                 "type": "interval",
-                "duration_secs": 180,
+                "duration_secs": 480,
                 "target_type": "pace",
-                "target_low": 360,
-                "target_high": 380,
-                "description": "3 min surge, 6:00–6:20/km, HR 160–172 bpm, hard but controlled"
+                "target_low": 315,
+                "target_high": 300,
+                "description": "8 min threshold @ 5:00–5:15/km (Z4), comfortably hard, controlled breathing"
               },
               {
-                "type": "interval",
+                "type": "recovery",
                 "duration_secs": 120,
                 "target_type": "pace",
-                "target_low": 390,
-                "target_high": 410,
-                "description": "2 min easy recovery, 6:30–6:50/km, HR 145–155 bpm, catch breath"
+                "target_low": 420,
+                "target_high": 390,
+                "description": "2 min easy jog recovery @ 6:30/km (Z1), catch breath fully"
               }
             ]
           },
           {
             "type": "cooldown",
-            "duration_secs": 240,
-            "description": "4 min easy jog, walking cool-down, quad and hamstring stretches 30s each"
+            "duration_secs": 300,
+            "description": "5 min easy jog, quad and hamstring stretches 30s each"
           }
         ]
       },
       {
-        "day": "Monday",
-        "date": "2026-06-01",
+        "day": "Tuesday",
+        "date": "2026-06-02",
         "sport": "strength",
         "name": "Core Finisher — Shoulder-Safe",
         "total_duration_secs": 600,
@@ -74,41 +73,6 @@
             "type": "cooldown",
             "duration_secs": 80,
             "description": "Quad and hip flexor stretch 30s each"
-          }
-        ]
-      },
-      {
-        "day": "Tuesday",
-        "date": "2026-06-02",
-        "sport": "cycling_indoor",
-        "name": "Easy Aerobic Spin",
-        "total_duration_secs": 1800,
-        "planned_tss": 15,
-        "focus": "Active recovery, aerobic flush, legs only",
-        "steps": [
-          {
-            "type": "warmup",
-            "duration_secs": 480,
-            "target_type": "power",
-            "target_low": 60,
-            "target_high": 115,
-            "description": "Gradual build from 60W toward Z2 low, 90-95 rpm, keep HR below 150"
-          },
-          {
-            "type": "interval",
-            "duration_secs": 1020,
-            "target_type": "power",
-            "target_low": 106,
-            "target_high": 141,
-            "description": "Steady Z2, 106-141W, HR 146-158 bpm, smooth cadence 90-95 rpm, no surges"
-          },
-          {
-            "type": "cooldown",
-            "duration_secs": 300,
-            "target_type": "power",
-            "target_low": 60,
-            "target_high": 90,
-            "description": "Easy spin below 90W, HR dropping under 130 bpm"
           }
         ]
       },
@@ -171,6 +135,33 @@
             "target_low": 110,
             "target_high": 140,
             "description": "Easy spin/flat, HR dropping below 140 bpm — stop for 3 min quad and hip flexor stretch before finishing"
+          }
+        ]
+      },
+      {
+        "day": "Friday",
+        "date": "2026-06-05",
+        "sport": "strength",
+        "name": "Lower Body & Core Circuit",
+        "total_duration_secs": 1500,
+        "planned_tss": 12,
+        "focus": "Neuromuscular maintenance, shoulder-safe, lighter volume",
+        "notes": "1.5 rounds to keep Friday fresh before potential weekend sessions. Circuit: 10x goblet squat 16kg, 8x RDL 16kg dumbbells, 6x/leg TRX split squat, 12x band glute bridge, 6x/side dead bug, 20s plank. 60s rest between exercises. Focus on movement quality.",
+        "steps": [
+          {
+            "type": "warmup",
+            "duration_secs": 250,
+            "description": "Leg swings forward and lateral (8/leg), hip circles, 8 bodyweight squats"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 1050,
+            "description": "1.5 rounds: 10x goblet squat 16kg | 8x RDL 16kg | 6x/leg TRX split squat | 12x band glute bridge | 6x/side dead bug | 20s plank. 60s rest between exercises."
+          },
+          {
+            "type": "cooldown",
+            "duration_secs": 200,
+            "description": "Seated hamstring stretch, figure-4 glute stretch—30s each"
           }
         ]
       }
