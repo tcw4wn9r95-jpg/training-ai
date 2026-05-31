@@ -38,7 +38,7 @@ jobs:
         run: |
           git config user.name "Coach Claudio"
           git config user.email "bot@coachclaudio.local"
-          git add workouts.json weekly_plan.md weekly_plan.json profile.json plan_status.json plan_history.json plan_block.json journey_start.json
+          git add workouts.json weekly_plan.md weekly_plan.json profile.json plan_status.json plan_history.json plan_block.json journey_start.json sleep.json
           git diff --staged --quiet && echo "No changes to commit" && exit 0
           git commit -m "Draft plan $(date +%Y-%m-%d)"
           for i in 1 2 3; do

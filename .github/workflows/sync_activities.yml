@@ -29,7 +29,7 @@ jobs:
         run: |
           git config user.name "Coach Claudio"
           git config user.email "bot@coachclaudio.local"
-          git add workouts.json profile.json
+          git add workouts.json profile.json sleep.json
           git diff --staged --quiet && echo "No new activities" && exit 0
           git commit -m "Sync activities $(date +%Y-%m-%d)"
           for i in 1 2 3; do

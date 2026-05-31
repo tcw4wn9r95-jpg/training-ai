@@ -180,6 +180,16 @@ SPORT_MAP = {
     "cycling": "cycling", "road_biking": "cycling", "mountain_biking": "cycling",
     "indoor_cycling": "cycling_indoor", "virtual_ride": "cycling_indoor",
     "strength_training": "strength", "fitness_equipment": "strength",
+    "swimming": "swimming", "lap_swimming": "swimming", "open_water_swimming": "swimming",
+    "yoga": "yoga", "pilates": "yoga",
+    "hiking": "hiking",
+    "walking": "walking",
+    "rowing": "rowing",
+    "elliptical": "elliptical",
+    "tennis": "tennis", "squash": "tennis", "badminton": "tennis", "racquet_sports": "tennis",
+    "skiing": "skiing", "alpine_skiing": "skiing", "snowboarding": "skiing",
+    "soccer": "soccer", "football_soccer": "soccer",
+    "boxing_or_mma": "boxing",
 }
 
 workouts = []
@@ -207,6 +217,33 @@ for a in activities:
 with open("workouts.json", "w") as f:
     json.dump(workouts, f, indent=2)
 print("Workout history saved.")
+
+# ── Fetch sleep data ──────────────────────────────────────────────────────────
+sleep_data = []
+for offset in range(14):
+    d = (date.today() - timedelta(days=offset)).isoformat()
+    try:
+        raw = client.get_sleep_data(d)
+        dto = (raw or {}).get("dailySleepDTO", {})
+        score_obj = (dto.get("sleepScores") or {}).get("overall", {})
+        score = score_obj.get("value") if isinstance(score_obj, dict) else score_obj
+        total_secs = dto.get("sleepTimeSeconds", 0) or 0
+        if score or total_secs:
+            sleep_data.append({
+                "date": d,
+                "score": int(score) if score else None,
+                "duration_h": round(total_secs / 3600, 2),
+                "deep_h": round((dto.get("deepSleepSeconds", 0) or 0) / 3600, 2),
+                "light_h": round((dto.get("lightSleepSeconds", 0) or 0) / 3600, 2),
+                "rem_h": round((dto.get("remSleepSeconds", 0) or 0) / 3600, 2),
+                "awake_h": round((dto.get("awakeSleepSeconds", 0) or 0) / 3600, 2),
+            })
+    except Exception as e:
+        print(f"Sleep data not available for {d}: {e}")
+sleep_data.sort(key=lambda x: x["date"])
+with open("sleep.json", "w") as f:
+    json.dump(sleep_data, f, indent=2)
+print(f"Sleep data saved ({len(sleep_data)} days).")
 
 # ── Auto-detect FTP & LTHR ────────────────────────────────────────────────────
 print("\n--- Checking FTP (Cycling) ---")
@@ -313,6 +350,27 @@ recent_4wk = [w for w in workouts if (today - date.fromisoformat(w["date"])).day
 last_4wk_tss = round(sum(w["tss"] for w in recent_4wk))
 last_wk_tss = round(sum(w["tss"] for w in workouts if (today - date.fromisoformat(w["date"])).days <= 7)) if workouts else 0
 
+# Sleep context for the plan prompt
+_sleep_now = []
+if os.path.exists("sleep.json"):
+    try:
+        with open("sleep.json") as _sf:
+            _sleep_now = json.load(_sf)
+    except Exception:
+        pass
+if _sleep_now:
+    _recent_sleep = [d for d in _sleep_now if d.get("score")][-7:]
+    _avg_score = round(sum(d["score"] for d in _recent_sleep) / max(1, len(_recent_sleep))) if _recent_sleep else None
+    _poor_nights = [d["date"] for d in _recent_sleep if d["score"] < 65]
+    _last_night = _sleep_now[-1] if _sleep_now else None
+    sleep_block = (
+        f"7-day avg sleep score: {_avg_score}/100. "
+        + (f"Last night: {_last_night['score']}/100, {_last_night['duration_h']}h total, {_last_night['deep_h']}h deep. " if _last_night else "")
+        + (f"Poor nights (<65): {', '.join(_poor_nights)}." if _poor_nights else "Sleep quality looks consistent.")
+    )
+else:
+    sleep_block = "No sleep data available yet."
+
 # ── Build the prompt ──────────────────────────────────────────────────────────
 print("Calling Claude for training plan...")
 claude = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
@@ -346,6 +404,9 @@ TRX, resistance bands, dumbbells 6/11/16/22 kg
 
 ## RECENT LOAD
 Last 7 days: ~{last_wk_tss} TSS | Last 28 days: ~{last_4wk_tss} TSS
+
+## SLEEP & RECOVERY (from Garmin — factor this into session intensity and weekly structure)
+{sleep_block}
 
 ## MULTI-WEEK HISTORY (this is week {current_week_index + 1} of the athlete's journey)
 You have planned the following weeks already. The plan must CONTINUE this arc — never restart from scratch:
