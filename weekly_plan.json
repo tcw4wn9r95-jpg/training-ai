@@ -3,10 +3,10 @@
     "day": "Monday",
     "date": "2026-06-01",
     "sport": "running",
-    "name": "Easy Aerobic Run",
-    "total_duration_secs": 1800,
-    "planned_tss": 18,
-    "focus": "Zone 1/2 aerobic base, conversational pace",
+    "name": "Fartlek Run — Aerobic Surges",
+    "total_duration_secs": 2340,
+    "planned_tss": 32,
+    "focus": "Aerobic development with surges, builds neuromuscular pop without heavy threshold",
     "steps": [
       {
         "type": "warmup",
@@ -15,16 +15,31 @@
       },
       {
         "type": "interval",
-        "duration_secs": 1200,
-        "target_type": "pace",
-        "target_low": 390,
-        "target_high": 410,
-        "description": "20 min easy steady running, 6:30–6:50/km, HR 140–155 bpm, conversational effort"
+        "duration_secs": 1800,
+        "repeat_count": 6,
+        "steps": [
+          {
+            "type": "interval",
+            "duration_secs": 180,
+            "target_type": "pace",
+            "target_low": 360,
+            "target_high": 380,
+            "description": "3 min surge, 6:00–6:20/km, HR 160–172 bpm, hard but controlled"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 120,
+            "target_type": "pace",
+            "target_low": 390,
+            "target_high": 410,
+            "description": "2 min easy recovery, 6:30–6:50/km, HR 145–155 bpm, catch breath"
+          }
+        ]
       },
       {
         "type": "cooldown",
-        "duration_secs": 300,
-        "description": "5 min easy jog, walking cool-down, quad and hamstring stretches 30s each"
+        "duration_secs": 240,
+        "description": "4 min easy jog, walking cool-down, quad and hamstring stretches 30s each"
       }
     ]
   },
@@ -32,26 +47,26 @@
     "day": "Monday",
     "date": "2026-06-01",
     "sport": "strength",
-    "name": "Morning Strength — Run Complement",
-    "total_duration_secs": 1800,
-    "planned_tss": 14,
-    "focus": "Shoulder-safe lower body + core circuit — complements the morning run, 2 rounds",
-    "notes": "2 rounds. Circuit: 10x goblet squat 16kg, 10x RDL 16kg, 8x/leg TRX split squat, 15x band glute bridge, 8x/side dead bug, 30s plank. 60s rest between exercises, 90s between rounds. No shoulder loading.",
+    "name": "Core Finisher — Shoulder-Safe",
+    "total_duration_secs": 600,
+    "planned_tss": 6,
+    "focus": "Brief neuromuscular stimulus, no fatigue accumulation",
+    "notes": "Quick circuit after run. 2 rounds: 10x glute bridge, 8x/side dead bug, 20s plank. 45s rest between exercises, 60s between rounds. No heavy loading or shoulder work—recovery-focused finisher.",
     "steps": [
       {
         "type": "warmup",
-        "duration_secs": 300,
-        "description": "Leg swings forward/lateral (10/leg), hip circles, 10 bodyweight squats, 10 glute bridges"
+        "duration_secs": 100,
+        "description": "Hip circles, 5 glute bridges, light dynamic stretching"
       },
       {
         "type": "interval",
-        "duration_secs": 1260,
-        "description": "2 rounds: 10x goblet squat 16kg | 10x RDL 16kg | 8x/leg TRX split squat | 15x band glute bridge | 8x/side dead bug | 30s plank. 60s rest between exercises, 90s between rounds."
+        "duration_secs": 420,
+        "description": "2 rounds: 10x glute bridge | 8x/side dead bug | 20s plank. 45s rest between exercises, 60s between rounds."
       },
       {
         "type": "cooldown",
-        "duration_secs": 300,
-        "description": "Seated hamstring stretch, figure-4 glute stretch, hip flexor lunge hold — 30-45s each"
+        "duration_secs": 80,
+        "description": "Quad and hip flexor stretch 30s each"
       }
     ]
   },
