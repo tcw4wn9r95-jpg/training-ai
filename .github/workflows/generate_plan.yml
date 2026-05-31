@@ -1,8 +1,13 @@
 name: Generate Weekly Plan
 on:
-  schedule:
-    - cron: '0 15 * * 0'   # Sunday 15:00 UTC = 16:00 (4pm) Luxembourg
-  workflow_dispatch: {}   # manual trigger — guard in sync.py always applies
+  workflow_dispatch:
+    inputs:
+      force:
+        description: 'Force regeneration even if a plan already exists for this week'
+        required: false
+        default: 'false'
+        type: choice
+        options: ['false', 'true']
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -25,6 +30,7 @@ jobs:
           GARMIN_EMAIL: ${{ secrets.GARMIN_EMAIL }}
           GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FORCE_GENERATE: ${{ github.event.inputs.force || 'false' }}
         run: python sync.py
       - name: Commit plan
         run: |

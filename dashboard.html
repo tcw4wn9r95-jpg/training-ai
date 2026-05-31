@@ -449,7 +449,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
   <!-- AVAILABILITY -->
   <div class="page" id="page-avail">
-    <div class="card-h" style="margin-bottom:14px">Next week · tap a day to toggle, set hours</div>
+    <div class="card-h" style="margin-bottom:14px">Typical training week · tap a day to toggle</div>
     <div class="av-grid" id="av-grid"></div>
     <textarea id="av-notes" placeholder="Notes for Coach Claudio (e.g. travelling Thu, long ride Sat with friends)…"></textarea>
     <button class="btn" onclick="saveAvail()">Save to Coach Claudio</button>
@@ -568,6 +568,7 @@ function showPage(id,btn){
 }
 async function fetchJSON(p){try{var r=await fetch(RAW+"/"+p+"?t="+Date.now());return r.ok?await r.json():null;}catch(e){return null;}}
 async function fetchText(p){try{var r=await fetch(RAW+"/"+p+"?t="+Date.now());return r.ok?await r.text():"";}catch(e){return "";}}
+async function apiGetJSON(path,tok){try{var m=await(await fetch(API+"/"+path,{headers:{Authorization:"Bearer "+tok}})).json();if(!m||!m.content)return null;return JSON.parse(decodeURIComponent(escape(atob(m.content.replace(/\n/g,'')))));}catch(e){return null;}}
 
 function getTSS(w){
   if(w.tss&&w.tss>0)return Math.round(w.tss);
@@ -912,28 +913,13 @@ function renderPlanPreamble(){
       '<span style="font-size:12px;font-weight:700;color:'+phClr+'">'+phL+' week</span>'+
       (wk.target_tss?'<span style="font-size:11px;color:var(--t3);margin-left:auto">'+wk.target_tss+' TSS target</span>':'')+
     '</div>';
-    var summ=wk.summary?'<p style="font-size:13px;color:var(--t2);line-height:1.6;margin:0 0 12px">'+esc(wk.summary)+'</p>':"";
-    var sess="";
-    if(wk.sessions&&wk.sessions.length){
-      sess='<div style="border-top:1px solid var(--line);padding-top:10px">';
-      wk.sessions.forEach(function(s){
-        var sp=s.sport||"running",st=sp==="running"?"run":sp.indexOf("cycl")>-1?"bike":sp==="strength"?"strength":"other";
-        var cl=sportClr(st),bg=cl[0],col=cl[1];
-        sess+='<div style="display:flex;align-items:flex-start;gap:8px;margin-bottom:8px">'+
-          '<div style="min-width:28px;height:28px;border-radius:7px;background:'+bg+';color:'+col+';display:flex;align-items:center;justify-content:center;font-size:13px">'+sportIcon(st)+'</div>'+
-          '<div><div style="font-size:12px;font-weight:600;color:var(--t1)">'+esc(s.day||"")+(s.name?' — '+esc(s.name):"")+'</div>'+
-          (s.focus?'<div style="font-size:11px;color:var(--t3);line-height:1.4">'+esc(s.focus)+'</div>':"")+
-          (s.planned_tss?'<div style="font-size:11px;color:var(--t3)">'+s.planned_tss+' TSS</div>':"")+
-          '</div></div>';
-      });
-      sess+='</div>';
-    }
+    var summ=wk.summary?'<p style="font-size:13px;color:var(--t2);line-height:1.6;margin:0">'+esc(wk.summary)+'</p>':"";
     box.innerHTML='<div class="card" style="margin-bottom:0">'+
       '<div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:0" onclick="togglePreamble()">'+
         '<div class="card-h" style="margin:0">Coach\'s Notes</div>'+
         '<span id="preamble-chev" style="font-size:18px;color:var(--t3);line-height:1">+</span>'+
       '</div>'+
-      '<div id="preamble-body" style="display:none;margin-top:10px">'+hdr+summ+sess+'</div>'+
+      '<div id="preamble-body" style="display:none;margin-top:10px">'+hdr+summ+'</div>'+
     '</div>';
     return;
   }
@@ -1074,7 +1060,7 @@ async function generatePlan(){
   // If a plan already exists, just refresh from the backend — no regeneration
   if(planJson&&planJson.length){
     btn.disabled=true;btn.classList.add("spinning");label.textContent="Refreshing…";
-    var r=await Promise.all([fetchJSON("weekly_plan.json"),fetchJSON("plan_block.json"),fetchJSON("plan_status.json"),fetchText("weekly_plan.md")]);
+    var r=await Promise.all([apiGetJSON("weekly_plan.json",token),apiGetJSON("plan_block.json",token),apiGetJSON("plan_status.json",token),fetchText("weekly_plan.md")]);
     planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
     weekOffset=planStartOffset()||0;
     showPage("plan",document.querySelector(".nav button[onclick*=\"'plan'\"]"));
@@ -1108,7 +1094,8 @@ async function generatePlan(){
   var maxTries=15, tries=0;
   var poll=async function(){
     tries++;
-    var r=await Promise.all([fetchJSON("weekly_plan.json"),fetchJSON("plan_block.json"),fetchJSON("plan_status.json"),fetchText("weekly_plan.md")]);
+    var _tok=getToken();
+    var r=await Promise.all([apiGetJSON("weekly_plan.json",_tok),apiGetJSON("plan_block.json",_tok),apiGetJSON("plan_status.json",_tok),fetchText("weekly_plan.md")]);
     var newSig=JSON.stringify(r[0]||[])+"|"+JSON.stringify(r[1]||[]);
     if(newSig!==beforeSig&&((r[0]&&r[0].length)||(r[1]&&r[1].length))){
       // New plan!
@@ -1226,12 +1213,11 @@ function renderLog(){
 // ── AVAILABILITY ──────────────────────────────────────────────
 function nextMonday(){var d=new Date(),day=d.getDay()||7;d.setDate(d.getDate()+(8-day));d.setHours(0,0,0,0);return d;}
 function renderAvail(){
-  var grid=document.getElementById("av-grid"),mon=nextMonday();
-  grid.innerHTML=DAYS.map((name,i)=>{
-    var d=new Date(mon);d.setDate(mon.getDate()+i);
+  var grid=document.getElementById("av-grid");
+  grid.innerHTML=DAYS.map(name=>{
     var s=avState[name],h=s.hours>=1?s.hours+"h":Math.round(s.hours*60)+"m";
     return '<div class="av-cell '+(s.available?"on":"")+'" onclick="toggleAv(\''+name+'\')">'+
-      '<div><div class="av-day">'+name+'</div><div class="av-date">'+d.toLocaleDateString("en-GB",{day:"numeric",month:"short"})+'</div></div>'+
+      '<div class="av-day">'+name+'</div>'+
       '<div class="av-toggle" onclick="event.stopPropagation()">'+
         (s.available?'<div class="stepper"><button onclick="adjH(\''+name+'\',-0.5)">−</button><span class="val">'+h+'</span><button onclick="adjH(\''+name+'\',0.5)">+</button></div>':'<span class="av-off" onclick="toggleAv(\''+name+'\')">Rest</span>')+
       '</div></div>';
@@ -1242,15 +1228,14 @@ function adjH(n,d){avState[n].hours=Math.max(0.5,Math.min(4,+(avState[n].hours+d
 async function saveAvail(){
   var token=getToken();
   if(!token){showStatus("Add your GitHub token first (gear icon).","err");return;}
-  var mon=nextMonday(),weekOf=mon.toISOString().split("T")[0];
-  var payload={week_of:weekOf,days:{},notes:document.getElementById("av-notes").value.trim()};
+  var payload={days:{},notes:document.getElementById("av-notes").value.trim()};
   DAYS.forEach(d=>payload.days[d]={available:avState[d].available,hours:avState[d].hours});
   showStatus("Saving…","");
   try{
     var g=await(await fetch(API+"/availability.json",{headers:{Authorization:"Bearer "+token}})).json();
     var r=await fetch(API+"/availability.json",{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
-      body:JSON.stringify({message:"Availability "+weekOf,content:btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2)))),sha:g.sha})});
-    if(r.ok){var ds=DAYS.filter(d=>avState[d].available);showStatus("Saved · "+ds.join(", ")+". Coach Claudio plans Sunday 8pm.","ok");}
+      body:JSON.stringify({message:"Availability update",content:btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2)))),sha:g.sha})});
+    if(r.ok){var ds=DAYS.filter(d=>avState[d].available);showStatus("Saved · "+ds.join(", ")+". Mid-week changes? Ask Coach below.","ok");}
     else{var e=await r.json();showStatus("Error: "+(e.message||"failed"),"err");}
   }catch(e){showStatus("Network error: "+e.message,"err");}
 }
@@ -1527,7 +1512,7 @@ async function runOnboardingTurn(){
         renderGoalsSummary();
         document.getElementById("ob-close").textContent="Done";
         setTimeout(function(){
-          obMsg("Goals are saved ✨\n\nTwo quick steps before your first plan:\n\n1️⃣ Open the **Avail** tab and set your availability for next week (which days, how many hours).\n\n2️⃣ Come back to the **Plan** tab and tap **Generate plan**. I'll build you a tailored 4-week block based on your goals and availability.\n\nWelcome aboard, Diego.",false);
+          obMsg("Goals are saved ✨\n\nTwo quick steps before your first plan:\n\n1️⃣ Open the **Avail** tab and set your typical weekly availability (which days, how many hours).\n\n2️⃣ Come back to the **Plan** tab and tap **Generate plan**. I'll build you a tailored 4-week block based on your goals and availability.\n\nWelcome aboard, Diego.",false);
         },400);
       }
     }
@@ -1614,7 +1599,8 @@ async function doRestart(){
   startOnboarding();
 }
 async function init(){
-  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),fetchJSON("weekly_plan.json"),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json"),fetchJSON("plan_block.json")]);
+  var _t=getToken();
+  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),apiGetJSON("weekly_plan.json",_t),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json"),apiGetJSON("plan_block.json",_t)]);
   workouts=r[0]||[];planText=r[1]||"";planJson=r[2]||[];
   var avail=r[3],prof=r[4];planStatus=r[5];
   goals=(r[6]&&r[6].primary_goal)?r[6]:null;
