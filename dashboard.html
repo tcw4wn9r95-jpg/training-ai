@@ -186,6 +186,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .kpi .d{font-size:10px;font-weight:600;margin-top:3px}
 
 .chart-box{height:200px;position:relative}
+.pmc-rb{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--t3);cursor:pointer;letter-spacing:.3px}
+.pmc-rb.active{background:rgba(59,130,246,.18);border-color:rgba(59,130,246,.4);color:#3b82f6}
 .chart-sm{height:150px;position:relative}
 .proj-stats{display:flex;gap:12px;margin-bottom:8px}
 .proj-stat{flex:1;background:var(--bg3);border-radius:12px;padding:13px;text-align:center;position:relative}
@@ -392,7 +394,14 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     </div>
 
     <div class="card">
-      <div class="card-h">Fitness Trend · 90 days</div>
+      <div class="card-h" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+        <span>Fitness Trend</span>
+        <div style="display:flex;gap:4px">
+          <button class="pmc-rb" id="pmc-7" onclick="setPmcRange(7)">1W</button>
+          <button class="pmc-rb" id="pmc-30" onclick="setPmcRange(30)">1M</button>
+          <button class="pmc-rb active" id="pmc-90" onclick="setPmcRange(90)">3M</button>
+        </div>
+      </div>
       <div class="chart-box"><canvas id="pmcChart"></canvas></div>
     </div>
 
@@ -561,7 +570,7 @@ const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunda
 let workouts=[], planText="", planJson=[], profile={cycling:{ftp_watts:177},running:{max_hr:196,resting_hr:60,threshold_hr:173}};
 let FTP=177, LTHR=173, REST_HR=60, MAX_HR=196;
 let avState={}, weekOffset=0, logFilter="all", coachHistory=[];
-let planBlock=[];
+let planBlock=[], pmcDays=90;
 let goals=null, obHistory=[];
 DAYS.forEach(d=>avState[d]={available:false,hours:(d==="Saturday"||d==="Sunday")?2:1});
 
@@ -630,7 +639,7 @@ function renderHome(){
     renderTodayHero();renderGoalBanner(0,0);
     return;
   }
-  var pmc=buildPMC(90);
+  var pmc=buildPMC(pmcDays);
   var ctl=pmc.C[pmc.C.length-1], atl=pmc.A[pmc.A.length-1], tsb=pmc.T[pmc.T.length-1];
   var ctl7ago=pmc.C[pmc.C.length-8]||ctl, ramp=(ctl-ctl7ago).toFixed(1);
 
@@ -842,6 +851,11 @@ var CD={responsive:true,maintainAspectRatio:false,
   scales:{x:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7480",font:{size:9},maxTicksLimit:6}},y:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7480",font:{size:9}},beginAtZero:true}}};
 function mk(id,cfg){var c=document.getElementById(id);if(c){if(c._ch)c._ch.destroy();c._ch=new Chart(c,cfg);}}
 
+function setPmcRange(days){
+  pmcDays=days;
+  [7,30,90].forEach(function(d){var b=document.getElementById("pmc-"+d);if(b)b.classList.toggle("active",d===days);});
+  if(workouts.length)drawPMC(buildPMC(days));
+}
 function drawPMC(p){
   mk("pmcChart",{type:"line",data:{labels:p.L,datasets:[
     {label:"Fitness",data:p.C,borderColor:"#3b82f6",backgroundColor:"rgba(59,130,246,.1)",borderWidth:2,fill:true,tension:.35,pointRadius:0},
