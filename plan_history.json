@@ -1,1 +1,56 @@
-[]
+[
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-31",
+    "phase": "base",
+    "planned_tss": 151,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Spin",
+        "planned_tss": 22,
+        "focus": "Aerobic base activation, establish Z2 feel on the bike"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Shoulder-Safe",
+        "planned_tss": 18,
+        "focus": "Establish lower body movement patterns and core stability without shoulder loading"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Spin + Cadence Focus",
+        "planned_tss": 22,
+        "focus": "Aerobic continuity and neuromuscular efficiency through structured cadence variation"
+      },
+      {
+        "day": "Thursday",
+        "sport": "running",
+        "name": "Easy Z2 Run",
+        "planned_tss": 25,
+        "focus": "Introduce weekly running stimulus, aerobic base, HR compliance over pace"
+      },
+      {
+        "day": "Friday",
+        "sport": "cycling_indoor",
+        "name": "Active Recovery Spin",
+        "planned_tss": 12,
+        "focus": "Flush Thursday run, promote recovery, maintain aerobic habit without adding load"
+      },
+      {
+        "day": "Saturday",
+        "sport": "cycling_indoor",
+        "name": "Base Endurance Ride",
+        "planned_tss": 52,
+        "focus": "Key aerobic base session \u2014 sustained Z2 to drive mitochondrial adaptation and fat oxidation"
+      }
+    ]
+  }
+]
