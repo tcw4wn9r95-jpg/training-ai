@@ -822,6 +822,17 @@ function mondayForOffset(offset){ return mondayOf(offset); }
 function localDateStr(d){
   return d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0')+'-'+String(d.getDate()).padStart(2,'0');
 }
+var DAY_NAMES_WEEK=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+function weekDatesFrom(monIso){
+  var base=new Date(monIso+"T00:00:00"),map={};
+  for(var i=0;i<7;i++){var d=new Date(base);d.setDate(base.getDate()+i);map[DAY_NAMES_WEEK[i]]=localDateStr(d);}
+  return map;
+}
+function planAnchorMon(){
+  var dw=(planBlock||[]).find(function(w){return w.detailed===true;});
+  if(dw&&dw.week_of)return dw.week_of;
+  return getPlanJsonMon()||localDateStr(mondayOf(0));
+}
 
 function getPlanJsonMon(){
   if(!planJson||!planJson.length||!planJson[0].date)return null;
@@ -1267,7 +1278,7 @@ var LOG_CHECKIN_TOOL={
 };
 var EDIT_PLAN_TOOL={
   name:"edit_plan",
-  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. You must return the COMPLETE updated plan (all sessions for the week, not just the changed one). Each session needs: day, date (YYYY-MM-DD), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, and a steps array. Step targets: running uses target_type 'pace' with target_low/target_high in SECONDS PER KM (low=slower, high=faster); cycling_indoor uses 'power' in watts; cycling_outdoor uses 'heart_rate' in bpm; strength steps need only a description plus a top-level notes field with the full circuit. Use repeat blocks {type:'repeat',repeat_count:N,steps:[...]} for intervals.",
+  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. You must return the COMPLETE updated plan (all sessions for the week, not just the changed one). IMPORTANT: keep every session on its existing day — do not move sessions to a different week or change dates. Each session needs: day, date (YYYY-MM-DD — copy the existing date for that day, do not invent new ones), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, and a steps array. Step targets: running uses target_type 'pace' with target_low/target_high in SECONDS PER KM (low=slower, high=faster); cycling_indoor uses 'power' in watts; cycling_outdoor uses 'heart_rate' in bpm; strength steps need only a description plus a top-level notes field with the full circuit. Use repeat blocks {type:'repeat',repeat_count:N,steps:[...]} for intervals.",
   input_schema:{
     type:"object",
     properties:{
@@ -1356,22 +1367,14 @@ async function sendCoachMessage(){
 
     if(toolUse){
       var newPlan=toolUse.input.plan, summary=toolUse.input.summary||"Plan updated";
-      var ok=await commitPlanEdit(newPlan,summary);
-      toolResults.push({type:"tool_result",tool_use_id:toolUse.id,content:ok?"Plan saved successfully.":"Save failed — Diego must add a GitHub token."});
-      if(ok){
-        planJson=newPlan;
-        var planMon=null;
-        if(newPlan.length&&newPlan[0].date){
-          var pd=new Date(newPlan[0].date+"T00:00:00");
-          var pdw=pd.getDay()===0?7:pd.getDay();
-          pd.setDate(pd.getDate()-pdw+1);pd.setHours(0,0,0,0);
-          planMon=pd.toISOString().split("T")[0];
-        }
-        if(planMon){
-          var wk=planBlock.find(function(w){return w.week_of===planMon;});
-          if(wk){wk.sessions=newPlan;wk.detailed=true;}
-        }
-        weekOffset=0;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();
+      var result=await commitPlanEdit(newPlan,summary);
+      var okEdit=result&&result.ok;
+      toolResults.push({type:"tool_result",tool_use_id:toolUse.id,content:okEdit?"Plan saved successfully.":"Save failed — Diego must add a GitHub token."});
+      if(okEdit){
+        planJson=result.fixed;
+        var wk=planBlock.find(function(w){return w.week_of===result.anchorMon;});
+        if(wk){wk.sessions=result.fixed;wk.detailed=true;}
+        weekOffset=planStartOffset();updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();
         addCoachMessage("✅ "+summary+"\n\nIt's updated here — review it and push to Garmin when ready.",false);
       }
     }
@@ -1389,13 +1392,31 @@ async function commitPlanEdit(newPlan,summary){
   var token=getToken();
   if(!token){addCoachMessage("⚠️ To save plan edits I need your GitHub token (gear icon, top right).",false);return false;}
   try{
-    var path="weekly_plan.json";
-    var meta=await(await fetch(API+"/"+path,{headers:{Authorization:"Bearer "+token}})).json();
-    var body=JSON.stringify(newPlan,null,2);
-    var r=await fetch(API+"/"+path,{method:"PUT",
+    // Enforce dates from the trusted block anchor — never trust the model's dates
+    var anchorMon=planAnchorMon();
+    var wd=weekDatesFrom(anchorMon);
+    var fixed=newPlan.map(function(s){var c=Object.assign({},s);if(c.day&&wd[c.day])c.date=wd[c.day];return c;});
+
+    // Fetch shas for both files before writing anything
+    var wpMeta=await(await fetch(API+"/weekly_plan.json",{headers:{Authorization:"Bearer "+token}})).json();
+    var pbMeta=await(await fetch(API+"/plan_block.json",{headers:{Authorization:"Bearer "+token}})).json();
+
+    // PUT weekly_plan.json first
+    var r1=await fetch(API+"/weekly_plan.json",{method:"PUT",
       headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
-      body:JSON.stringify({message:"Coach edit: "+summary,content:btoa(unescape(encodeURIComponent(body))),sha:meta.sha})});
-    return r.ok;
+      body:JSON.stringify({message:"Coach edit: "+summary,content:btoa(unescape(encodeURIComponent(JSON.stringify(fixed,null,2)))),sha:wpMeta.sha})});
+    if(!r1.ok){addCoachMessage("Save error — plan not changed.",false);return false;}
+
+    // PUT plan_block.json — patch the active week's sessions in place
+    var block=JSON.parse(decodeURIComponent(escape(atob(pbMeta.content))));
+    var wk=block.find(function(w){return w.week_of===anchorMon;});
+    if(wk){wk.sessions=fixed;wk.detailed=true;}
+    var r2=await fetch(API+"/plan_block.json",{method:"PUT",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify({message:"Coach edit (block): "+summary,content:btoa(unescape(encodeURIComponent(JSON.stringify(block,null,2)))),sha:pbMeta.sha})});
+    if(!r2.ok){addCoachMessage("⚠️ Plan saved but the block overview didn't update — tap Refresh if needed.",false);}
+
+    return {ok:true,fixed:fixed,anchorMon:anchorMon};
   }catch(e){addCoachMessage("Save error: "+e.message,false);return false;}
 }
 async function commitCheckin(input){

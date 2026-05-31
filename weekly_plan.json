@@ -1,9 +1,9 @@
 [
   {
     "day": "Monday",
-    "date": "2026-06-23",
+    "date": "2026-06-01",
     "sport": "strength",
-    "name": "Upper Body & Core — Shoulder-Friendly",
+    "name": "Upper Body & Core \u2014 Shoulder-Friendly",
     "total_duration_secs": 1800,
     "planned_tss": 15,
     "focus": "Upper-body strength endurance, core stability, shoulder-safe movements",
@@ -28,7 +28,7 @@
   },
   {
     "day": "Tuesday",
-    "date": "2026-06-24",
+    "date": "2026-06-02",
     "sport": "cycling_indoor",
     "name": "Easy Aerobic Spin",
     "total_duration_secs": 1800,
@@ -63,7 +63,7 @@
   },
   {
     "day": "Wednesday",
-    "date": "2026-06-25",
+    "date": "2026-06-03",
     "sport": "strength",
     "name": "Lower Body & Core Circuit",
     "total_duration_secs": 1800,
@@ -84,18 +84,18 @@
       {
         "type": "cooldown",
         "duration_secs": 300,
-        "description": "Seated hamstring stretch, figure-4 glute stretch, hip flexor lunge hold — 30-45s each"
+        "description": "Seated hamstring stretch, figure-4 glute stretch, hip flexor lunge hold \u2014 30-45s each"
       }
     ]
   },
   {
     "day": "Thursday",
-    "date": "2026-06-26",
+    "date": "2026-06-04",
     "sport": "cycling_outdoor",
     "name": "Long Easy Ride",
     "total_duration_secs": 5400,
     "planned_tss": 55,
-    "focus": "Aerobic base volume, sustained Z2 — anchor session of the week",
+    "focus": "Aerobic base volume, sustained Z2 \u2014 anchor session of the week",
     "steps": [
       {
         "type": "warmup",
@@ -103,7 +103,7 @@
         "target_type": "heart_rate",
         "target_low": 120,
         "target_high": 150,
-        "description": "Easy rolling warm-up, HR building gradually — no hills, flat terrain for first 15 min"
+        "description": "Easy rolling warm-up, HR building gradually \u2014 no hills, flat terrain for first 15 min"
       },
       {
         "type": "interval",
@@ -111,7 +111,7 @@
         "target_type": "heart_rate",
         "target_low": 146,
         "target_high": 162,
-        "description": "Steady Z2, HR 146-162 bpm throughout — ease off on climbs if HR exceeds 163, flat to rolling route preferred"
+        "description": "Steady Z2, HR 146-162 bpm throughout \u2014 ease off on climbs if HR exceeds 163, flat to rolling route preferred"
       },
       {
         "type": "cooldown",
@@ -119,7 +119,7 @@
         "target_type": "heart_rate",
         "target_low": 110,
         "target_high": 140,
-        "description": "Easy spin/flat, HR dropping below 140 bpm — stop for 3 min quad and hip flexor stretch before finishing"
+        "description": "Easy spin/flat, HR dropping below 140 bpm \u2014 stop for 3 min quad and hip flexor stretch before finishing"
       }
     ]
   }
