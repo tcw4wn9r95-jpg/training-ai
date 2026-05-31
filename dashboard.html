@@ -176,6 +176,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .form-info{flex:1}
 .form-state{font-size:16px;font-weight:700}
 .form-desc{font-size:12px;color:var(--t2);margin-top:2px;line-height:1.4}
+.form-rec{font-size:12px;font-weight:600;margin-top:5px}
 
 /* KPI strip */
 .kpi-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px;margin-bottom:14px}
@@ -220,24 +221,24 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .day-body{max-height:0;overflow:hidden;transition:max-height .3s ease}
 .day-body.open{max-height:1500px}
 .day-inner{padding:0 14px 14px}
-.step{background:var(--bg3);border-radius:10px;padding:11px 13px;margin-bottom:8px}
+.step{background:var(--bg3);border-radius:10px;padding:11px 13px;margin-bottom:8px;border-left:2px solid var(--sc,var(--line))}
 .step-h{display:flex;align-items:center;gap:8px;margin-bottom:5px}
 .step-dot{width:8px;height:8px;border-radius:50%}
-.step-t{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--t2)}
+.step-t{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px;color:var(--t3)}
 .step-dur{margin-left:auto;font-size:12px;font-family:var(--mono);color:var(--t3)}
-.step-tgt{font-size:14px;font-weight:600;font-family:var(--mono);color:var(--t1)}
-.step-desc{font-size:12px;color:var(--t3);margin-top:3px}
+.step-tgt{font-size:14px;font-weight:700;font-family:var(--mono);color:var(--sc,var(--t1));background:rgba(255,255,255,.04);border-radius:6px;padding:2px 8px;display:inline-block;margin-bottom:4px}
+.step-desc{font-size:12px;color:var(--t3);margin-top:2px}
 .coach-note{background:rgba(59,130,246,.08);border:1px solid rgba(59,130,246,.2);
   border-radius:10px;padding:11px 13px;margin-top:8px;font-size:13px;color:var(--t2);line-height:1.5}
 
 /* Activities log */
-.act{display:flex;align-items:center;gap:12px;padding:12px 0;border-bottom:1px solid var(--line)}
+.act{display:flex;align-items:center;gap:12px;padding:12px 0 12px 10px;border-bottom:1px solid var(--line);border-left:3px solid var(--act-clr,transparent);margin-left:-16px}
 .act:last-child{border-bottom:none}
 .act-ic{width:40px;height:40px;min-width:40px;border-radius:11px;display:flex;align-items:center;justify-content:center}
 .act-ic svg{width:20px;height:20px}
 .act-info{flex:1;min-width:0}
-.act-sp{font-size:14px;font-weight:600}
-.act-dt{font-size:12px;color:var(--t3);margin-top:1px}
+.act-sp{font-size:14px;font-weight:700;color:var(--t1)}
+.act-dt{font-size:12px;color:var(--t3);margin-top:2px}
 .act-tss{text-align:right}
 .act-tss .n{font-size:16px;font-weight:800;font-family:var(--mono)}
 .act-tss .u{font-size:9px;color:var(--t3);text-transform:uppercase}
@@ -369,6 +370,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <div class="hero-stat"><div class="v" id="today-tss">—</div><div class="l">Planned TSS</div></div>
         <div class="hero-stat"><div class="v" id="today-focus" style="font-size:13px">—</div><div class="l">Focus</div></div>
       </div>
+      <div id="today-synopsis" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--t2);line-height:1.55;font-family:var(--mono)"></div>
     </div>
     <div id="block-overview"></div>
 
@@ -377,6 +379,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="form-info">
         <div class="form-state" id="form-state">Form —</div>
         <div class="form-desc" id="form-desc">Sync your training to see readiness.</div>
+        <div class="form-rec" id="form-rec"></div>
       </div>
     </div>
 
@@ -617,17 +620,19 @@ function renderHome(){
   // Form gauge
   var g=document.getElementById("form-gauge");
   var clr,state,desc;
-  if(tsb>15){clr="#3b82f6";state="Fresh / Tapered";desc="High form. Great for racing or a hard key session. If not racing, you may be detraining slightly.";}
-  else if(tsb>5){clr="#22c55e";state="Good Form";desc="Well-balanced and ready. A good day for quality work or an event.";}
-  else if(tsb>-10){clr="#22c55e";state="Optimal Training";desc="Productive zone — you're absorbing load well. Keep the rhythm.";}
-  else if(tsb>-20){clr="#f59e0b";state="Building / Tired";desc="Carrying real fatigue. Normal mid-block. Keep easy days easy.";}
-  else{clr="#ef4444";state="Deep Fatigue";desc="You're deep in the hole. Prioritise recovery to avoid overtraining.";}
+  var rec;
+  if(tsb>15){clr="#3b82f6";state="Fresh / Tapered";desc="High form. Great for racing or a hard key session. If not racing, you may be detraining slightly.";rec="Hit targets — you're primed for quality";}
+  else if(tsb>5){clr="#22c55e";state="Good Form";desc="Well-balanced and ready. A good day for quality work or an event.";rec="Execute your zones precisely today";}
+  else if(tsb>-10){clr="#22c55e";state="Optimal Training";desc="Productive zone — you're absorbing load well. Keep the rhythm.";rec="Good productive load — don't add volume";}
+  else if(tsb>-20){clr="#f59e0b";state="Building / Tired";desc="Carrying real fatigue. Normal mid-block. Keep easy days easy.";rec="Back off 10-15% if feeling heavy today";}
+  else{clr="#ef4444";state="Deep Fatigue";desc="You're deep in the hole. Prioritise recovery to avoid overtraining.";rec="Prioritise recovery — reduce or rest today";}
   g.textContent=(tsb>0?"+":"")+Math.round(tsb);
   g.style.background="conic-gradient("+clr+" "+Math.min(100,Math.abs(tsb)*2.5)+"%,var(--bg3) 0)";
   g.style.color=clr;
   g.innerHTML='<div style="position:absolute;inset:5px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center">'+(tsb>0?"+":"")+Math.round(tsb)+'</div>';
   document.getElementById("form-state").textContent=state;
   document.getElementById("form-desc").textContent=desc;
+  var recEl=document.getElementById("form-rec");if(recEl){recEl.textContent=rec;recEl.style.color=clr;}
 
   // KPIs
   document.getElementById("kpi-ctl").textContent=Math.round(ctl);
@@ -760,6 +765,31 @@ function drawProjection(labels,ctlLine,tsbLine){
   ]},options:Object.assign({},CD,{plugins:Object.assign({},CD.plugins,{legend:{display:true,position:"bottom",labels:{color:"#6b7480",font:{size:10},boxWidth:8,padding:12,usePointStyle:true}}})})});
 }
 
+function workoutSynopsis(session){
+  var parts=[],steps=session.steps||[];
+  steps.forEach(function(s){
+    var d=s.duration_secs||0,dm=d<120?(d+"s"):(Math.round(d/60)+"min");
+    if(s.type==="warmup"){parts.push("Warmup "+dm);}
+    else if(s.type==="cooldown"){parts.push("Cooldown "+dm);}
+    else if(s.type==="repeat"){
+      var n=s.repeat_count||2;
+      var ws=(s.steps||[]).find(function(x){return x.type==="interval";});
+      var rs=(s.steps||[]).find(function(x){return x.type==="recovery";});
+      var wd=ws?(ws.duration_secs<120?ws.duration_secs+"s":Math.round(ws.duration_secs/60)+"min"):"";
+      var wt="";
+      if(ws&&ws.target_type==="pace"&&ws.target_high)wt=" @ "+fmtPace(ws.target_high)+"/km";
+      else if(ws&&ws.target_type==="power"&&ws.target_low)wt=" @ "+ws.target_low+"W";
+      var rd=rs?(rs.duration_secs<120?rs.duration_secs+"s":Math.round(rs.duration_secs/60)+"min"):"";
+      parts.push(n+"×"+wd+wt+(rd?" / "+rd+" rec":""));
+    }else if(s.type==="interval"){
+      var wt="";
+      if(s.target_type==="pace"&&s.target_high)wt=" @ "+fmtPace(s.target_high)+"/km";
+      else if(s.target_type==="power"&&s.target_low)wt=" @ "+s.target_low+"–"+s.target_high+"W";
+      parts.push(dm+wt);
+    }
+  });
+  return parts.join(" → ");
+}
 function renderTodayHero(){
   var today=new Date().toISOString().split("T")[0];
   var dayName=DAYS[(new Date().getDay()+6)%7];
@@ -778,12 +808,15 @@ function renderTodayHero(){
     document.getElementById("today-tss").textContent=session.planned_tss||"—";
     document.getElementById("today-focus").textContent=(session.focus||"—").split(",")[0];
     stats.style.display="flex";
+    var syn=workoutSynopsis(session),synEl=document.getElementById("today-synopsis");
+    if(synEl){synEl.style.display=syn?"":"none";synEl.textContent=syn;}
   }else{
     hero.style.setProperty("--accent","#6b7480");
     pill.textContent="Rest";pill.style.background="rgba(255,255,255,.06)";pill.style.color="var(--t3)";
     document.getElementById("today-title").textContent="Rest Day";
     document.getElementById("today-sub").textContent="Recovery is where adaptation happens. Easy walk or full rest.";
     stats.style.display="none";
+    var synEl=document.getElementById("today-synopsis");if(synEl)synEl.style.display="none";
   }
 }
 
@@ -984,6 +1017,20 @@ function clearChatHistory(){
   coachHistory=[];document.getElementById("coach-msgs").innerHTML="";
   try{localStorage.removeItem("coach_history");}catch(e){}
 }
+function intensityBadge(s){
+  if(s.sport==="strength")return null;
+  var t=((s.name||"")+" "+(s.focus||"")).toLowerCase();
+  var hasRepeat=(s.steps||[]).some(function(x){return x.type==="repeat";});
+  if(/fartlek/.test(t))return{l:"Fartlek",bg:"rgba(245,158,11,.15)",c:"#f59e0b"};
+  if(/threshold/.test(t))return{l:"Threshold",bg:"rgba(239,68,68,.15)",c:"#ef4444"};
+  if(/tempo/.test(t))return{l:"Tempo",bg:"rgba(239,68,68,.12)",c:"#f87171"};
+  if(/sweet[\s-]spot|sweetspot/.test(t))return{l:"Sweet Spot",bg:"rgba(245,158,11,.15)",c:"#f59e0b"};
+  if(/vo2/.test(t))return{l:"VO2",bg:"rgba(239,68,68,.18)",c:"#ef4444"};
+  if(/interval/.test(t)||hasRepeat)return{l:"Intervals",bg:"rgba(59,130,246,.15)",c:"#3b82f6"};
+  if(/recovery/.test(t))return{l:"Recovery",bg:"rgba(34,197,94,.12)",c:"#22c55e"};
+  if(/easy|aerobic|z2|zone 2/.test(t))return{l:"Easy Z2",bg:"rgba(34,197,94,.10)",c:"#4ade80"};
+  return null;
+}
 function renderPlanArray(arr,wk){
   var box=document.getElementById("plan-days");
   if(!arr||!arr.length){box.innerHTML='<div class="empty">No plan yet.<br><br>1️⃣ Set your availability in the <b>Avail</b> tab<br>2️⃣ Come back here and tap <b>Generate plan</b></div>';return;}
@@ -1010,13 +1057,15 @@ function renderPlanArray(arr,wk){
     var stepsHTML=(s.steps||[]).map(function(step){return renderStep(step,sp,col);}).join("");
     var noteHTML=s.notes?'<div class="coach-note">'+s.notes+'</div>':"";
     var metaLine=dayLabel+(dur?' · '+dur+' min':"")+(s.planned_tss?' · '+s.planned_tss+' TSS':"");
+    var ib=intensityBadge(s);
+    var ibHTML=ib?'<span class="tag" style="background:'+ib.bg+';color:'+ib.c+'">'+ib.l+'</span>':"";
 
     var el=document.createElement("div");el.className="day";
     el.innerHTML=
       '<div class="day-head" onclick="toggleDay(this)">'+
         '<div class="day-ic" style="background:'+bg+';color:'+col+'">'+sportIcon(st)+'</div>'+
         '<div class="day-meta"><div class="day-name">'+(s.name||"Session")+
-          ' <span class="tag" style="background:'+bg+';color:'+col+'">'+sp.replace("_"," ")+'</span></div>'+
+          ' <span class="tag" style="background:'+bg+';color:'+col+'">'+sp.replace("_"," ")+'</span>'+ibHTML+'</div>'+
           '<div class="day-line">'+metaLine+'</div></div>'+
         '<div class="chev"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
       '</div>'+
@@ -1044,7 +1093,7 @@ function renderStep(step,sport,col){
     tgt=step.target_low+"–"+step.target_high+" W";
   else if(step.target_type==="heart_rate"&&step.target_low)
     tgt=step.target_low+"–"+step.target_high+" bpm";
-  return '<div class="step">'+
+  return '<div class="step" style="--sc:'+col+'">'+
     '<div class="step-h"><span class="step-dot" style="background:'+dotColor+'"></span>'+
       '<span class="step-t">'+label+'</span><span class="step-dur">'+dur+'</span></div>'+
     (tgt?'<div class="step-tgt">'+tgt+'</div>':"")+
@@ -1206,9 +1255,9 @@ function renderLog(){
     var st=sportOf(w),cl=sportClr(st);
     var label={run:"Running",bike:"Cycling",strength:"Strength"}[st]||"Activity";
     var dt=new Date(w.date).toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
-    var det=Math.round(w.duration_min||0)+" min"+(w.distance_km>0?" · "+w.distance_km.toFixed(1)+" km":"")+(w.avg_hr?" · "+w.avg_hr+" bpm":"")+(w.avg_power_watts>0?" · "+w.avg_power_watts+" W":"");
-    return '<div class="act"><div class="act-ic" style="background:'+cl[0]+';color:'+cl[1]+'">'+sportIcon(st)+'</div>'+
-      '<div class="act-info"><div class="act-sp">'+label+'</div><div class="act-dt">'+dt+' · '+det+'</div></div>'+
+    var det=Math.round(w.duration_min||0)+" min"+(w.distance_km>0?" · "+w.distance_km.toFixed(1)+" km":"")+(w.avg_hr?" · "+w.avg_hr+" bpm":"")+(w.avg_power_watts>0?" · "+w.avg_power_watts+"W":"");
+    return '<div class="act" style="--act-clr:'+cl[1]+'"><div class="act-ic" style="background:'+cl[0]+';color:'+cl[1]+'">'+sportIcon(st)+'</div>'+
+      '<div class="act-info"><div class="act-sp">'+label+(w.name?' · '+w.name:"")+'</div><div class="act-dt">'+dt+' · '+det+'</div></div>'+
       '<div class="act-tss"><div class="n">'+getTSS(w)+'</div><div class="u">TSS</div></div></div>';
   }).join("");
 }
