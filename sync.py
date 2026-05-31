@@ -79,8 +79,18 @@ else:
 _block_phases = ["base", "build", "peak", "recovery"]
 
 journey_start_file = "journey_start.json"
+# Reset journey on forced regeneration so block numbering restarts from week 1.
+# Also reset if stored start is in the future relative to next_monday (data anomaly).
+_force_journey = os.environ.get("FORCE_GENERATE", "").strip().lower() in ("1", "true")
+if os.path.exists(journey_start_file):
+    with open(journey_start_file) as _f:
+        _stored_start = date.fromisoformat(json.load(_f)["started"])
+    if _force_journey or _stored_start > next_monday:
+        os.remove(journey_start_file)
+        print(f"Journey reset — starting from week 1 (force={_force_journey}, stored={_stored_start}, next_monday={next_monday})")
+
 if not os.path.exists(journey_start_file):
-    # First-ever plan: record the Monday of this plan's week as the journey start.
+    # First-ever plan (or after reset): record next_monday as the journey start.
     journey_start = next_monday
     with open(journey_start_file, "w") as _f:
         json.dump({"started": journey_start.isoformat()}, _f)

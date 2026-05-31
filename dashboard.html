@@ -297,6 +297,12 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .empty{color:var(--t3);text-align:center;padding:40px 20px;font-size:14px;line-height:1.6}
 .spin{animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
+@keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}
+#coach-thinking{display:flex;align-items:center;gap:8px}
+#coach-thinking .label{font-size:12px;color:var(--t3)}
+#coach-thinking .dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--t2);margin:0 2px;animation:tdot 1s ease-in-out infinite}
+#coach-thinking .dots span:nth-child(2){animation-delay:.15s}
+#coach-thinking .dots span:nth-child(3){animation-delay:.3s}
 </style>
 </head>
 <body>
@@ -1260,7 +1266,7 @@ var LOG_CHECKIN_TOOL={
 };
 var EDIT_PLAN_TOOL={
   name:"edit_plan",
-  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. You must return the COMPLETE updated plan (all sessions for the week, not just the changed one). IMPORTANT: keep every session on its existing day — do not move sessions to a different week or change dates. MULTIPLE SESSIONS PER DAY are supported: if adding a second session on Monday, use day:'Monday' (the exact same value) for both — NEVER use 'Monday Morning', 'Monday Evening', 'Monday AM' etc. as day values; only the 7 standard day names are valid (Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday). Each session needs: day, date (YYYY-MM-DD — copy the existing date for that day, do not invent new ones), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, and a steps array. Step targets: running uses target_type 'pace' with target_low/target_high in SECONDS PER KM (low=slower, high=faster); cycling_indoor uses 'power' in watts; cycling_outdoor uses 'heart_rate' in bpm; strength steps need only a description plus a top-level notes field with the full circuit. Use repeat blocks {type:'repeat',repeat_count:N,steps:[...]} for intervals.",
+  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. Return the COMPLETE updated plan — every session for the week, not just the changed one.\n\nDAY RULES: Keep every session on its existing day. Do not move sessions to a different week or change dates. MULTIPLE SESSIONS PER DAY: use day:'Monday' for both entries — NEVER 'Monday Morning', 'Monday Evening', 'Monday AM'. Valid day values ONLY: Monday Tuesday Wednesday Thursday Friday Saturday Sunday.\n\nREQUIRED SESSION FIELDS: day, date (YYYY-MM-DD — copy the existing date; NEVER invent a new one), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, steps array.\n\nWORKOUT STRUCTURE — MANDATORY FOR ALL RUNNING AND CYCLING SESSIONS:\nEvery session must have: warmup step → main block → cooldown step. A single monolithic 'work' block is NEVER acceptable — Diego sees each step on his Garmin and needs to know exactly what to do.\n\nTARGET TYPES (required on every running/cycling step):\n• running → target_type:'pace', target_low/target_high in SECONDS PER KM (low=slower number, high=faster number; easy=390-360, threshold=315-300, Z4=285-270, Z5=270-250)\n• cycling_indoor → target_type:'power', target_low/target_high in watts\n• cycling_outdoor → target_type:'heart_rate', target_low/target_high in bpm\n• strength → description only; top-level notes field with full circuit\n\nStep types available: 'warmup' | 'interval' | 'recovery' | 'cooldown' | 'rest'\n\nSTEP DESCRIPTIONS must be specific — include effort label + zone + target. Examples: 'Surge @ 4:30/km (Z4-5)', 'Float recovery @ 6:30/km (Z1)', 'Threshold @ 175W (Z4)', 'Easy Z2 @ 130W'. NEVER write 'work', 'effort', or 'main set'.\n\nINTERVAL/FARTLEK/TEMPO/SWEET-SPOT/THRESHOLD: ALWAYS use repeat blocks {type:'repeat',repeat_count:N,steps:[workStep,recoveryStep]}. Inside a repeat: one interval step (the hard effort) + one recovery step. Never flatten intervals into a single step.\n\nEXAMPLE — Fartlek run 35 min (8×1min surges):\n[{type:'warmup',duration_secs:600,target_type:'pace',target_low:420,target_high:390,description:'Easy warm-up jog @ 6:30/km, leg swings, skips'},\n {type:'repeat',repeat_count:8,steps:[\n  {type:'interval',duration_secs:60,target_type:'pace',target_low:275,target_high:260,description:'Surge @ 4:20/km (Z4-5) — controlled and fast'},\n  {type:'recovery',duration_secs:90,target_type:'pace',target_low:400,target_high:380,description:'Float @ 6:20/km (Z1-2) — easy jog, recover fully'}\n ]},\n {type:'cooldown',duration_secs:450,target_type:'pace',target_low:430,target_high:400,description:'Easy cool-down @ 6:40/km, quad and calf stretches'}]\n\nEXAMPLE — Threshold run 45 min (3×8min):\n[{type:'warmup',duration_secs:900,...},\n {type:'repeat',repeat_count:3,steps:[\n  {type:'interval',duration_secs:480,target_type:'pace',target_low:315,target_high:300,description:'Threshold @ 5:00-5:15/km (Z4) — comfortably hard, controlled breathing'},\n  {type:'recovery',duration_secs:120,target_type:'pace',target_low:420,target_high:390,description:'Easy jog recovery @ 6:30/km (Z1)'}\n ]},\n {type:'cooldown',duration_secs:600,...}]\n\nEXAMPLE — Sweet-spot cycling 60 min (2×20min):\n[{type:'warmup',duration_secs:600,target_type:'power',target_low:80,target_high:130,description:'Gradual build, 90rpm'},\n {type:'repeat',repeat_count:2,steps:[\n  {type:'interval',duration_secs:1200,target_type:'power',target_low:158,target_high:175,description:'Sweet-spot 88% FTP @ 158-175W (Z3-4) — steady, controlled effort'},\n  {type:'recovery',duration_secs:300,target_type:'power',target_low:80,target_high:110,description:'Easy spin @ 80-110W (Z1), recover HR below 140'}\n ]},\n {type:'cooldown',duration_secs:600,target_type:'power',target_low:60,target_high:100,description:'Easy cool-down spin @ 60-100W'}]\n\nEasy/Z2 sessions: warmup + one steady interval step + cooldown is acceptable (no repeat block needed for continuous efforts).",
   input_schema:{
     type:"object",
     properties:{
@@ -1286,6 +1292,10 @@ async function sendCoachMessage(){
   var apiKey=localStorage.getItem("anthropic_key")||"";
   if(!apiKey){addCoachMessage("Add your Anthropic API key in setup (gear icon, top right).",false);return;}
   send.disabled=true;send.style.opacity="0.5";addCoachMessage(msg,true);input.value="";
+  var _tb=document.createElement("div");_tb.id="coach-thinking";_tb.className="bubble ai";
+  _tb.innerHTML='<span class="label">Coach Claudio is thinking</span><span class="dots"><span></span><span></span><span></span></span>';
+  document.getElementById("coach-msgs").appendChild(_tb);
+  document.getElementById("scroll").scrollTop=document.getElementById("scroll").scrollHeight;
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
   var recentW=workouts.filter(w=>new Date(w.date)>=cutoff);
   var tss=recentW.reduce((s,w)=>s+getTSS(w),0), km=recentW.reduce((s,w)=>s+(w.distance_km||0),0);
@@ -1307,6 +1317,7 @@ async function sendCoachMessage(){
     "• If he reports a session felt HARDER than expected at normal numbers: a flag for accumulated fatigue or under-recovery — ease off. If EASIER: he may be fitter; consider nudging targets up.\n"+
     "• Always weigh his subjective feedback ALONGSIDE the objective data below. When they conflict, the body wins.\n\n"+
     "WHEN ADJUSTING THE PLAN: call edit_plan with the FULL updated plan, keeping unchanged sessions intact. Explain the reasoning briefly in your reply so he learns. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\n"+
+    "WORKOUT DESIGN: Build every session like you're handing it to a serious athlete. Warmup and cooldown are non-negotiable. For any session with structured intensity (fartlek, intervals, tempo, sweet-spot, threshold, VO2) ALWAYS use repeat blocks so the Garmin shows each step individually. Every step needs a specific description with zone label + target number — never write 'work' or 'effort'. A world-class coach writes '6×3min threshold @ 5:05/km (Z4), 90s easy jog between' — not 'main set 18min'.\n\n"+
     "═══ DIEGO'S CURRENT PICTURE ═══\n"+
     goalLine+"\n"+
     "This week so far: "+recentW.length+" sessions, "+Math.round(tss)+" TSS, "+km.toFixed(1)+" km\n"+
@@ -1321,6 +1332,7 @@ async function sendCoachMessage(){
       headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
       body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL],messages:coachHistory})});
     var data=await res.json();
+    var _th=document.getElementById("coach-thinking");if(_th)_th.remove();
     if(data.error){addCoachMessage("Error: "+data.error.message,false);return;}
 
     // Process all content blocks: text + tool_use (may be multiple tools in one turn)
@@ -1366,7 +1378,7 @@ async function sendCoachMessage(){
     }
     if(coachHistory.length>20)coachHistory=safeSliceHistory(coachHistory,20);
     saveChatHistory();
-  }catch(e){addCoachMessage("Network error: "+e.message,false);}
+  }catch(e){var _th=document.getElementById("coach-thinking");if(_th)_th.remove();addCoachMessage("Network error: "+e.message,false);}
   finally{send.disabled=false;send.style.opacity="1";}
 }
 
