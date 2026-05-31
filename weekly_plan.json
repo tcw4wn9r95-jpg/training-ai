@@ -2,35 +2,64 @@
   {
     "day": "Monday",
     "date": "2026-06-01",
-    "sport": "cycling_indoor",
-    "name": "Easy Aerobic Spin",
+    "sport": "running",
+    "name": "Easy Aerobic Run",
     "total_duration_secs": 1800,
     "planned_tss": 18,
-    "focus": "Zone 1/2 aerobic flush, habit building",
+    "focus": "Zone 1/2 aerobic base, conversational pace",
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 60,
-        "target_high": 115,
-        "description": "Gradual build from 60W toward Z2 low, 90-95 rpm, let legs wake up, HR below 145"
+        "description": "5 min easy jog, leg swings 10 forward/back each leg, 10 bodyweight squats"
       },
       {
         "type": "interval",
         "duration_secs": 1200,
-        "target_type": "power",
-        "target_low": 106,
-        "target_high": 141,
-        "description": "Steady Z2 aerobic, 106-141W, HR 146-162 bpm, smooth cadence 90-95 rpm, conversational effort"
+        "target_type": "pace",
+        "target_low": 390,
+        "target_high": 410,
+        "description": "20 min easy steady running, 6:30–6:50/km, HR 140–155 bpm, conversational effort"
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
+        "description": "5 min easy jog, walking cool-down, quad and hamstring stretches 30s each"
+      }
+    ]
+  },
+  {
+    "day": "Monday Evening",
+    "date": "2026-06-23",
+    "sport": "cycling_indoor",
+    "name": "Easy Spin Recovery Flush",
+    "total_duration_secs": 900,
+    "planned_tss": 8,
+    "focus": "Light aerobic recovery, active flush between sessions",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 150,
         "target_type": "power",
         "target_low": 60,
-        "target_high": 90,
-        "description": "Easy spin below 90W, HR back below 130 bpm, stretch quads and hip flexors"
+        "target_high": 100,
+        "description": "Easy build, 60–100W, 90–95 rpm, HR below 140 bpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 600,
+        "target_type": "power",
+        "target_low": 90,
+        "target_high": 120,
+        "description": "Steady light Z2, 90–120W, HR 130–145 bpm, smooth spin"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 150,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 80,
+        "description": "Easy spin below 80W, HR dropping"
       }
     ]
   },
