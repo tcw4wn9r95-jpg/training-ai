@@ -150,8 +150,6 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .gb-count{display:flex;align-items:baseline;gap:6px;margin:10px 0}
 .gb-count .n{font-size:38px;font-weight:800;font-family:var(--mono);line-height:1;letter-spacing:-1px}
 .gb-count .u{font-size:14px;color:var(--t2);font-weight:600}
-.gb-prog{height:8px;border-radius:5px;background:var(--bg3);overflow:hidden;margin:12px 0 8px}
-.gb-prog-fill{height:100%;border-radius:5px;transition:width .6s ease}
 .gb-readiness{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-top:8px}
 .gb-dot{width:9px;height:9px;border-radius:50%}
 .gb-msg{font-size:12px;color:var(--t2);line-height:1.5;margin-top:8px}
@@ -720,32 +718,36 @@ function renderGoalBanner(ctlNow,atlNow){
         '<div class="gb-msg">'+rmsg+'</div>'+
       '</div>';
   } else {
-    // Open-ended goal — progress on the metric that fits the goal type
+    // Open-ended goal — key metric for the goal type
     var gt=(goals.goal_type||"").toLowerCase();
-    var metricLabel,curVal,targetHint,pct,mclr="#8b5cf6",msg;
+    var metricLabel,curVal,trendStr="",msg;
     var monStr2=(function(){var t=new Date(),dw=t.getDay()||7,m=new Date(t);m.setDate(t.getDate()-dw+1);return m.toISOString().split("T")[0];})();
     var wkKm=workouts.filter(w=>w.date>=monStr2).reduce((s,w)=>s+(w.distance_km||0),0);
 
     if(gt.indexOf("weight")>-1){
       metricLabel="Weekly training load";curVal=Math.round(weekTSS||0)+" TSS planned";
-      pct=Math.min(100,(weekTSS/350)*100);msg="Consistent calorie burn comes from steady weekly load. Hitting your sessions is the lever — keep the streak going.";
-    } else if(gt.indexOf("speed")>-1){
-      metricLabel="Fitness (CTL)";curVal=Math.round(ctlNow);
-      pct=Math.min(100,(ctlNow/60)*100);msg="Speed rides on a strong aerobic base plus sharp intervals. Watch fitness climb while you keep the quality sessions in.";
+      msg="Consistent calorie burn comes from steady weekly load. Hitting your sessions is the lever — keep the streak going.";
     } else if(gt.indexOf("endurance")>-1){
       metricLabel="This week's volume";curVal=wkKm.toFixed(1)+" km";
-      pct=Math.min(100,(wkKm/50)*100);msg="Endurance is built by progressive volume. Each week's long session is the one that moves the needle.";
-    } else { // general fitness / other
+      msg="Endurance is built by progressive volume. Each week's long session is the one that moves the needle.";
+    } else { // speed / general fitness / other → CTL-based
+      var pmc2=buildPMC(90),ctl7ago=pmc2.C[pmc2.C.length-8]||ctlNow;
+      var ramp2=(ctlNow-ctl7ago).toFixed(1);
       metricLabel="Fitness (CTL)";curVal=Math.round(ctlNow);
-      pct=Math.min(100,(ctlNow/50)*100);msg="General fitness tracks your CTL — the steady climb of consistent training. You're building it week on week.";
+      trendStr=(ramp2>=0?" ▲ +":" ▼ ")+Math.abs(ramp2)+"/wk";
+      msg=gt.indexOf("speed")>-1?"Speed rides on a strong aerobic base plus sharp intervals. Watch fitness climb while you keep the quality sessions in.":"General fitness tracks your CTL — the steady climb of consistent training. You're building it week on week.";
     }
     el.innerHTML=
       '<div class="gb">'+
         '<div class="gb-top"><span class="gb-eyebrow">🎯 Goal</span></div>'+
         '<div class="gb-goal">'+esc(goals.primary_goal)+'</div>'+
-        '<div style="font-size:13px;color:var(--t2);margin-top:4px">'+metricLabel+': <strong style="color:var(--t1)">'+curVal+'</strong></div>'+
-        '<div class="gb-prog"><div class="gb-prog-fill" style="width:'+pct+'%;background:linear-gradient(90deg,#8b5cf6,#3b82f6)"></div></div>'+
-        '<div class="gb-msg">'+msg+'</div>'+
+        '<div style="margin-top:10px">'+
+          '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3)">'+metricLabel+'</div>'+
+          '<div style="font-size:22px;font-weight:800;font-family:var(--mono);color:var(--t1);margin-top:3px">'+
+            curVal+'<span style="font-size:12px;font-weight:600;color:var(--t2);margin-left:6px">'+trendStr+'</span>'+
+          '</div>'+
+        '</div>'+
+        '<div class="gb-msg" style="margin-top:8px">'+msg+'</div>'+
       '</div>';
   }
 }
