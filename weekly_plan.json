@@ -29,6 +29,41 @@
     ]
   },
   {
+    "day": "Monday",
+    "date": "2026-06-01",
+    "sport": "cycling_indoor",
+    "name": "Easy Spin Recovery Flush",
+    "total_duration_secs": 900,
+    "planned_tss": 8,
+    "focus": "Light aerobic recovery flush between sessions — legs only, no intensity",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 150,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 100,
+        "description": "Easy build, 60–100W, 90–95 rpm, HR below 140 bpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 600,
+        "target_type": "power",
+        "target_low": 90,
+        "target_high": 120,
+        "description": "Steady light Z2, 90–120W, HR 130–145 bpm, smooth spin"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 150,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 80,
+        "description": "Easy spin below 80W, HR dropping"
+      }
+    ]
+  },
+  {
     "day": "Tuesday",
     "date": "2026-06-02",
     "sport": "cycling_indoor",
