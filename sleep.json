@@ -1,0 +1,119 @@
+[
+  {
+    "date": "2026-05-18",
+    "score": 82,
+    "duration_h": 7.77,
+    "deep_h": 1.58,
+    "light_h": 5.07,
+    "rem_h": 1.12,
+    "awake_h": 0.05
+  },
+  {
+    "date": "2026-05-19",
+    "score": 83,
+    "duration_h": 7.55,
+    "deep_h": 0.9,
+    "light_h": 5.48,
+    "rem_h": 1.17,
+    "awake_h": 0.28
+  },
+  {
+    "date": "2026-05-20",
+    "score": 82,
+    "duration_h": 8.1,
+    "deep_h": 1.57,
+    "light_h": 5.52,
+    "rem_h": 1.02,
+    "awake_h": 0.03
+  },
+  {
+    "date": "2026-05-21",
+    "score": 87,
+    "duration_h": 8.85,
+    "deep_h": 1.15,
+    "light_h": 6.23,
+    "rem_h": 1.47,
+    "awake_h": 0.05
+  },
+  {
+    "date": "2026-05-22",
+    "score": 82,
+    "duration_h": 8.23,
+    "deep_h": 1.63,
+    "light_h": 5.55,
+    "rem_h": 1.05,
+    "awake_h": 0.05
+  },
+  {
+    "date": "2026-05-23",
+    "score": 30,
+    "duration_h": 5.65,
+    "deep_h": 1.12,
+    "light_h": 4.53,
+    "rem_h": 0.0,
+    "awake_h": 2.05
+  },
+  {
+    "date": "2026-05-24",
+    "score": 76,
+    "duration_h": 8.48,
+    "deep_h": 1.2,
+    "light_h": 6.62,
+    "rem_h": 0.67,
+    "awake_h": 0.12
+  },
+  {
+    "date": "2026-05-25",
+    "score": 64,
+    "duration_h": 7.07,
+    "deep_h": 1.28,
+    "light_h": 5.53,
+    "rem_h": 0.25,
+    "awake_h": 0.05
+  },
+  {
+    "date": "2026-05-26",
+    "score": 71,
+    "duration_h": 6.95,
+    "deep_h": 1.15,
+    "light_h": 5.33,
+    "rem_h": 0.47,
+    "awake_h": 0.3
+  },
+  {
+    "date": "2026-05-28",
+    "score": 89,
+    "duration_h": 7.92,
+    "deep_h": 1.42,
+    "light_h": 5.27,
+    "rem_h": 1.23,
+    "awake_h": 0.17
+  },
+  {
+    "date": "2026-05-29",
+    "score": 64,
+    "duration_h": 6.0,
+    "deep_h": 0.92,
+    "light_h": 4.62,
+    "rem_h": 0.47,
+    "awake_h": 0.75
+  },
+  {
+    "date": "2026-05-30",
+    "score": 58,
+    "duration_h": 7.87,
+    "deep_h": 1.07,
+    "light_h": 5.53,
+    "rem_h": 1.27,
+    "awake_h": 1.78
+  },
+  {
+    "date": "2026-05-31",
+    "score": 75,
+    "duration_h": 7.78,
+    "deep_h": 1.2,
+    "light_h": 5.78,
+    "rem_h": 0.8,
+    "awake_h": 0.42
+  }
+]
