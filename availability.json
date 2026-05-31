@@ -1,11 +1,11 @@
 {
   "days": {
     "Monday": {
-      "available": false,
+      "available": true,
       "hours": 0.5
     },
     "Tuesday": {
-      "available": false,
+      "available": true,
       "hours": 0.5
     },
     "Wednesday": {
@@ -13,15 +13,15 @@
       "hours": 0.5
     },
     "Thursday": {
-      "available": false,
-      "hours": 2
+      "available": true,
+      "hours": 0.5
     },
     "Friday": {
       "available": true,
-      "hours": 1
+      "hours": 0.5
     },
     "Saturday": {
-      "available": false,
+      "available": true,
       "hours": 1
     },
     "Sunday": {
