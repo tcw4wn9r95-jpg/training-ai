@@ -52,5 +52,59 @@
         "focus": "Key aerobic base session \u2014 sustained Z2 to drive mitochondrial adaptation and fat oxidation"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-05-31",
+    "phase": "base",
+    "planned_tss": 138,
+    "last_7d_actual_tss": 27,
+    "last_28d_actual_tss": 27,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Foundation Spin",
+        "planned_tss": 22,
+        "focus": "Re-establish Z2 feel on the bike, aerobic base activation"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 20,
+        "focus": "Single weekly run \u2014 easy aerobic, movement pattern, Z1/Z2"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Active Recovery Spin",
+        "planned_tss": 14,
+        "focus": "Flush Monday and Tuesday load, active recovery, stay below Z2"
+      },
+      {
+        "day": "Thursday",
+        "sport": "strength",
+        "name": "Lower Body & Core Strength",
+        "planned_tss": 18,
+        "focus": "Leg and core strength foundation \u2014 shoulder protected throughout"
+      },
+      {
+        "day": "Friday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Spin with Cadence Focus",
+        "planned_tss": 22,
+        "focus": "Aerobic base plus neuromuscular cadence drill, end-of-week activation"
+      },
+      {
+        "day": "Saturday",
+        "sport": "cycling_indoor",
+        "name": "Longer Aerobic Endurance Ride",
+        "planned_tss": 42,
+        "focus": "Weekly long aerobic ride \u2014 extend Z2 duration, fat oxidation, aerobic ceiling"
+      }
+    ]
   }
 ]

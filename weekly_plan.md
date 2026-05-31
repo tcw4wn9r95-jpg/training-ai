@@ -5,157 +5,149 @@
 
 ---
 
+# Training Plan — Week of 01 June 2026
+
+**Generated:** 01 June 2026
+**Available days:** Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
+
+---
+
 # Week 1 — Base Phase | 2026-06-01 to 2026-06-07
 
 ---
 
-> **Coach's framing:** Diego, you're starting from scratch with a shoulder in recovery, a flexible schedule capped at 30 minutes on weekdays and 60 minutes Saturday. That's actually a gift — short, purposeful sessions build the habit before they build the fitness. This week is entirely about laying aerobic foundations, moving daily without accumulating fatigue, and giving your body a reason to adapt. Every session has a job. Nothing is junk. The one piece of history I have is a 2.5-hour hike at 125 bpm average — your aerobic system can handle low-intensity work, so we'll use that as our baseline and build from there. Week 1 TSS target: ~90–100. Easy, deliberate, consistent.
+> **Coach's framing:** Diego, here's the honest picture: last week was planned at ~151 TSS and the actual came in at 0 TSS from structured training. That's not a failure — it's information. What I *do* see is a paddleball session on May 31st (83 min, avg HR 110 bpm, 27 TSS) — so your body moved, just not in the planned sessions. We're not resetting; we're adjusting. This week I'm keeping the TSS target conservative (~90–105) to match where you actually are, not where the plan hoped you'd be. The sessions are short, purposeful, and designed to build the *habit* before the fitness. Your aerobic base is intact — the hike and paddleball both confirm you can sustain low-to-moderate effort. We'll build on that. Sleep has been patchy (two poor nights last week) so I'm deliberately keeping intensity low — no threshold work yet. Every session this week has one job: move, breathe, adapt.
 
 ---
 
-### Monday 2026-06-01 — Easy Aerobic Spin
+### Monday 2026-06-01 — Aerobic Foundation Spin
 
 **Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Aerobic base activation — get blood moving, establish Z2 feel on the bike
+**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Re-establish Z2 feel on the bike, aerobic base activation
 
 #### Warm-up
-- **5 min @ Z1 (<106W)** — Start with a light, unloaded spin. Find your seat, settle your breathing. Cadence 85–90 rpm. No pressure on the pedals yet.
+- **5 min @ Z1 (<106W)** — Unloaded spin, cadence 85–90 rpm. Just find the pedals. Let your HR settle before asking anything of it.
 
 #### Main set
-- **20 min @ Z2 (106–141W)** — Steady aerobic effort. This should feel genuinely easy — you can hold a conversation without gasping. Lock in cadence 88–92 rpm. HR should drift up to 146–162 bpm but don't chase it. Power is the guide today.
+- **20 min @ Z2 (106–141W)** — Steady, genuinely easy aerobic effort. HR should drift into 146–162 bpm naturally — don't chase it. Cadence 88–92 rpm. You should be able to speak in full sentences. If power drifts above 141W, back off immediately.
 
 #### Cool-down
-- **5 min @ Z1 (<100W)** — Drop resistance, spin freely. Let HR fall back below 130 bpm before you stop.
+- **5 min @ Z1 (<106W)** — Wind it down, reduce cadence to 80 rpm, let HR drop back below 140 bpm before stopping.
 
-**Coach notes:** Your only job today is to finish feeling like you could have done more. If it feels too easy, that's correct. Resist the urge to push — week 1 base work done right means you're fresh and hungry by Thursday.
+**Coach notes:** This is your first structured session of the block. Resist the urge to push — the physiological target here is mitochondrial stimulation at low intensity, not cardiovascular stress. Consistency over the week matters far more than effort on day one.
 
 ---
 
-### Tuesday 2026-06-02 — Strength: Lower Body & Core (Shoulder-Safe)
-
-**Sport:** Strength
-**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Establish movement patterns — lower body strength and core stability without loading the shoulder
-
-#### Warm-up
-- **5 min** — Leg swings (front/back and lateral, 10 reps each leg), bodyweight hip circles, 10 slow bodyweight squats, 10 glute bridges on the floor. Get the hips and hamstrings awake.
-
-#### Main set
-- **2 rounds** of the following circuit with 60 seconds rest between rounds:
-  - **Goblet Squat × 10 @ 16 kg** — Hold dumbbell at chest with both hands, elbows tucked. Slow 3-second descent. Drive through the full foot on the way up.
-  - **Romanian Deadlift × 10 @ 16 kg** — Hinge at the hip, soft knee bend, feel the hamstring load. Keep the spine neutral. Do not rush.
-  - **TRX Split Squat × 8 each leg** — Rear foot in TRX strap, front foot flat on floor. Controlled descent. TRX holds you honest on balance.
-  - **Resistance Band Glute Bridge × 15** — Band just above knees, drive knees out against resistance at the top. Full glute squeeze at the top for 1 second.
-  - **Dead Bug × 8 each side** — On your back, opposite arm/leg extension, lower back pressed firmly into the floor. This is your core work — no shoulder loading at all.
-
-#### Cool-down
-- **5 min** — Seated hamstring stretch (30s each leg), lying hip flexor stretch (30s each side), child's pose (30s). Breathe into each stretch.
-
-**Coach notes:** The loads are intentionally conservative — we're building the movement patterns, not testing your max. If the 16 kg goblet squat feels light by the end of round 2, note it. We'll bump loads in week 2 once we know how you respond. The dead bug is non-negotiable for shoulder rehab athletes — it builds the deep core stability that protects everything else.
-
----
-
-### Wednesday 2026-06-03 — Easy Aerobic Spin + Cadence Focus
-
-**Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Aerobic continuity + neuromuscular efficiency through cadence work
-
-#### Warm-up
-- **5 min @ Z1 (<106W)** — Same easy entry as Monday. Spin freely at 85 rpm to start.
-
-#### Main set
-- **4 × 3 min cadence blocks @ Z2 (106–141W)** with 1 min easy Z1 spin between each:
-  - Block 1: 85 rpm
-  - Block 2: 90 rpm
-  - Block 3: 95 rpm
-  - Block 4: 88–90 rpm (settle back to natural cadence)
-  - The power target stays the same — only the cadence changes. Watch how your HR responds at different cadences. This is data-gathering as much as training.
-- **5 min steady Z2 (106–141W)** @ your most comfortable cadence — whatever felt smoothest in the blocks above.
-
-#### Cool-down
-- **5 min @ Z1 (<100W)** — Easy spin, cadence free. HR below 130 bpm before stopping.
-
-**Coach notes:** This session has a dual purpose — aerobic continuity from Monday AND teaching your body to be efficient at different cadences. Most beginners on indoor bikes default to 70–75 rpm and mash the pedals. Finding 90 rpm at the same power is a skill that pays dividends for months. Note which cadence felt most natural.
-
----
-
-### Thursday 2026-06-04 — Weekly Run (Easy Z2)
+### Tuesday 2026-06-02 — Easy Aerobic Run
 
 **Sport:** Running
-**Duration:** 30 min | **Planned TSS:** 25 | **Focus:** Introduce running stimulus, establish aerobic base running feel
+**Duration:** 30 min | **Planned TSS:** 20 | **Focus:** Single weekly run — easy aerobic, movement pattern, Z1/Z2
 
 #### Warm-up
-- **5 min walk/jog @ Z1 (>7:00/km, <145 bpm)** — Walk the first 2 minutes, then jog gently. Let the legs find the rhythm. No pressure on pace.
+- **5 min walk/very easy jog @ Z1 (>7:00/km, <145 bpm)** — Start walking, transition to a very light shuffle. No hurry. Let the legs wake up.
 
 #### Main set
-- **20 min @ Z2 (6:15–6:45/km, 146–162 bpm)** — Steady aerobic running. This is a conversational effort — you should be able to speak in full sentences. If HR climbs above 162 bpm, slow down immediately; pace is secondary to staying in zone. In week 1, HR compliance matters more than hitting the pace target. The aerobic system adapts faster when it's not overloaded.
+- **20 min @ Z1–Z2 (6:30–7:00/km, 145–158 bpm)** — Conversational pace throughout. If HR climbs above 160 bpm, slow down or walk briefly. This is not a workout that should feel hard. Focus on relaxed form: soft foot strike, upright posture, relaxed shoulders (mindful of the injury).
 
 #### Cool-down
-- **5 min walk @ Z1 (<145 bpm)** — Walk it out. Let HR fall below 120 bpm before you stop moving.
+- **5 min walk @ Z1** — Walk it out, don't stop abruptly. Let HR come below 130 bpm.
 
-**Coach notes:** If your HR spikes early (common after time off), use the first 5–6 minutes of the main set as an extended warm-up at Z1 pace and don't stress about the time lost. Aerobic running fitness comes from time in zone, not from hitting exact paces. This is your one run of the week — make it count by running it easy enough to do again.
+**Coach notes:** One run per week is the right call right now. Keep the shoulder completely relaxed — no arm tension. If you feel any shoulder discomfort during the arm swing, reduce arm drive and carry hands lower.
 
 ---
 
-### Friday 2026-06-05 — Active Recovery Spin
+### Wednesday 2026-06-03 — Active Recovery Spin
 
 **Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 12 | **Focus:** Flush Thursday's run, promote recovery, stay aerobically active without adding load
+**Duration:** 30 min | **Planned TSS:** 14 | **Focus:** Flush Monday and Tuesday load, active recovery, stay below Z2
 
 #### Warm-up
-- **3 min @ Z1 (<106W)** — Purely easy. No targets beyond getting the legs moving.
+- **5 min @ Z1 (<106W)** — Very light spin, cadence 80–85 rpm.
 
 #### Main set
-- **24 min @ Z1 (88–106W)** — This is recovery riding. The power ceiling is 106W. If you find yourself drifting above it, back off. Cadence 85–90 rpm. HR should stay under 140 bpm throughout. This is not fitness work — it is recovery enhancement. Blood flow, lactate clearance, keeping the aerobic habit alive without taxing the system.
+- **20 min @ Z1 (88–105W)** — Deliberately easy. Stay well below Z2. HR should stay under 145 bpm throughout. Think of this as moving blood through the legs, not training them. Cadence can be slightly lower, 82–88 rpm.
 
 #### Cool-down
-- **3 min @ Z1 (<90W)** — Wind down completely.
+- **5 min @ Z1 (<88W)** — Ease off completely, gentle spin to close.
 
-**Coach notes:** Friday's session exists specifically so Saturday's longer ride is fresh. The temptation after a week of short, easy work is to push here — don't. The adaptation from Monday–Thursday happens during rest and low-intensity movement like this. Treat it as active recovery, not training.
+**Coach notes:** This session exists because you're building from zero — recovery sessions are training too. They promote blood flow, reduce next-day soreness, and reinforce the daily movement habit without adding fatigue. Do not be tempted to push into Z2.
 
 ---
 
-### Saturday 2026-06-06 — Base Endurance Ride (Longest Session of the Week)
+### Thursday 2026-06-04 — Lower Body & Core Strength
+
+**Sport:** Strength
+**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Leg and core strength foundation — shoulder protected throughout
+
+#### Warm-up
+- **5 min** — Leg swings (front/back, lateral), hip circles, 10x bodyweight squat, 10x glute bridge bodyweight. Get the hips and knees warm.
+
+#### Main set
+- **2 rounds of the following circuit (60 sec rest between exercises, 90 sec between rounds):**
+  - 12x Goblet Squat — 16 kg dumbbell (held at chest, elbows tucked — no shoulder load)
+  - 10x Romanian Deadlift — 16 kg dumbbells (hinge at hips, soft knees, neutral spine)
+  - 10x TRX Split Squat per leg (TRX for balance only — don't pull with the arms; keep shoulder passive)
+  - 15x Banded Glute Bridge (band just above knees, drive knees out against band at top)
+  - 30 sec Dead Bug (core, lying on back — zero shoulder involvement)
+
+#### Cool-down
+- **5 min** — Hip flexor stretch (kneeling, 30 sec per side), hamstring stretch (standing or seated), glute figure-4 stretch (30 sec per side).
+
+**Coach notes:** Two rounds only this week — we're establishing the movement patterns before loading them. The TRX split squat is for balance assist, not pulling; keep the injured shoulder passive and relaxed throughout. If the 16 kg goblet squat feels heavy on form, drop to 11 kg — perfect hinge and squat mechanics are the priority.
+
+---
+
+### Friday 2026-06-05 — Aerobic Spin with Cadence Focus
 
 **Sport:** Cycling Indoor
-**Duration:** 60 min | **Planned TSS:** 52 | **Focus:** Build aerobic base volume — this is the week's key metabolic session
+**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Aerobic base + neuromuscular cadence drill, end-of-week activation
 
 #### Warm-up
-- **8 min @ Z1 (<106W)** — Gradual build. Start at 80W and add a little resistance every 2 minutes. By minute 8 you should be at the bottom of Z2. Cadence 85–90 rpm.
+- **5 min @ Z1 (<106W)** — Easy build-up, cadence 85–90 rpm.
 
 #### Main set
-- **40 min steady @ Z2 (106–141W)** — This is your long aerobic block. Split it mentally into two 20-minute halves:
-  - **First 20 min:** Target the lower half of Z2 (106–125W). Stay patient, let the aerobic system warm into the effort. HR will be in the 146–155 bpm range — that's correct.
-  - **Second 20 min:** Allow natural drift toward the upper half of Z2 (125–141W). Don't force it — let fatigue and cardiovascular drift bring you there organically. If HR pushes above 162 bpm, reduce power.
-  - Cadence: 88–92 rpm throughout. This is the cadence range that best trains the aerobic cycling system.
+- **4 x 3 min @ Z2 (106–141W) with 2 min @ Z1 between each** — Same power target as Monday but with a cadence focus: aim for 90–95 rpm during the Z2 blocks. The higher cadence at the same power reduces muscular demand and shifts load to the cardiovascular system — exactly what base phase needs. HR should stay 146–162 bpm.
 
 #### Cool-down
-- **12 min @ Z1 (<100W)** — Gradual step-down: 8 minutes at 95W, then 4 minutes free spinning at minimal resistance. HR target below 120 bpm at the stop.
+- **3 min @ Z1 (<88W)** — Wind down, let HR settle.
 
-**Coach notes:** This is the physiologically most important session of week 1. Forty minutes of continuous Z2 cycling directly stimulates mitochondrial biogenesis — the cellular machinery behind aerobic fitness and fat oxidation, both critical for your weight loss goal. Keep it disciplined and easy. If you feel strong at 35 minutes, stay exactly where you are. The reward comes from consistency over weeks, not from one heroic effort.
+**Coach notes:** The cadence drill is subtle but important — training your neuromuscular system to pedal efficiently at higher RPM now pays dividends when we add power later in the block. If your HR spikes above 162 during the Z2 blocks, reduce power slightly rather than dropping cadence.
 
 ---
 
-### Sunday 2026-06-07 — Rest Day
+### Saturday 2026-06-06 — Longer Aerobic Endurance Ride
 
-Full rest. No sessions. This is not optional — supercompensation (the actual fitness adaptation) happens during recovery, not during training. Sleep well, move gently if you want (a walk is fine), and eat to support adaptation.
+**Sport:** Cycling Indoor
+**Duration:** 60 min | **Planned TSS:** 42 | **Focus:** Weekly long aerobic ride — extend Z2 duration, fat oxidation, aerobic ceiling
+
+#### Warm-up
+- **8 min @ Z1 (<106W)** — Gradual build, cadence 85–90 rpm. Take your time getting into this one.
+
+#### Main set
+- **44 min @ Z2 (106–141W)** — The longest continuous aerobic effort of the week. Stay disciplined in the lower half of Z2 (106–125W) for the first 20 minutes, then allow drift toward 130–141W if it feels natural and HR is still below 162 bpm. Cadence 88–92 rpm throughout. This is your aerobic engine session — the longest duration at fat-burning intensity. Do not let it drift into Z3.
+
+#### Cool-down
+- **8 min @ Z1 (<106W)** — Gradual step-down. Reduce power every 2 minutes. HR should be back below 135 bpm before you stop.
+
+**Coach notes:** Forty-four minutes of clean Z2 is genuinely meaningful base work — this is where aerobic adaptation happens. Fuelling: have a small meal 90 minutes before, sip water throughout. If you're feeling fatigued from the week, drop to 100–115W and keep the duration — duration matters more than power at this stage.
 
 ---
 
 ## Week Summary
 
-| Day | Session | TSS |
-|---|---|---|
-| Monday | Easy Aerobic Spin | 22 |
-| Tuesday | Strength — Lower Body & Core | 18 |
-| Wednesday | Aerobic Spin + Cadence | 22 |
-| Thursday | Easy Z2 Run | 25 |
-| Friday | Active Recovery Spin | 12 |
-| Saturday | Base Endurance Ride | 52 |
-| Sunday | REST | — |
-| **TOTAL** | | **~151** |
+| Day | Session | Sport | Duration | Planned TSS |
+|---|---|---|---|---|
+| Monday | Aerobic Foundation Spin | Cycling Indoor | 30 min | 22 |
+| Tuesday | Easy Aerobic Run | Running | 30 min | 20 |
+| Wednesday | Active Recovery Spin | Cycling Indoor | 30 min | 14 |
+| Thursday | Lower Body & Core Strength | Strength | 30 min | 18 |
+| Friday | Aerobic Spin with Cadence Focus | Cycling Indoor | 30 min | 22 |
+| Saturday | Longer Aerobic Endurance Ride | Cycling Indoor | 60 min | 42 |
+| Sunday | Rest | — | — | — |
 
-**Phase:** Base | **Weekly TSS:** ~151 | **80/20 split:** ~100% easy this week (all Z1–Z2, appropriate for week 1 from zero)
+**Total Planned TSS: ~138**
+**Week Focus: Base — aerobic foundation**
 
-> **Coaching summary:** Week 1 is about installing the habit, not building the engine — six sessions in six days teaches your body (and your schedule) that training is non-negotiable, while every session stays aerobic and shoulder-safe. The Saturday ride is your anchor session: 40 minutes of continuous Z2 work is where the fat-burning aerobic base begins. Execute this week exactly as written, check in with how your body responds, and week 2 builds directly on this foundation.
+> This week is about building the habit as much as the fitness. Six sessions, all purposeful, none punishing — by Sunday your body will have had its first real week of structured stimulus and you'll be ready to layer on something slightly more demanding next week. Show up, keep it easy, and trust the process.
 
 ---
