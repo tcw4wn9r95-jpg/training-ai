@@ -1363,7 +1363,9 @@ async function commitPlanEdit(newPlan,summary){
     // Enforce dates from the trusted block anchor — never trust the model's dates
     var anchorMon=planAnchorMon();
     var wd=weekDatesFrom(anchorMon);
-    var fixed=newPlan.filter(function(s){return s.day&&wd[s.day];}).map(function(s){var c=Object.assign({},s);c.date=wd[c.day];return c;});
+    // Normalize day names (model occasionally returns lowercase or mixed case)
+    function normDay(d){if(!d)return "";return d.charAt(0).toUpperCase()+d.slice(1).toLowerCase();}
+    var fixed=newPlan.filter(function(s){return normDay(s.day)&&wd[normDay(s.day)];}).map(function(s){var c=Object.assign({},s);c.day=normDay(c.day);c.date=wd[c.day];return c;});
 
     // Fetch shas for both files before writing anything
     var wpMeta=await(await fetch(API+"/weekly_plan.json",{headers:{Authorization:"Bearer "+token}})).json();
