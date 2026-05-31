@@ -942,14 +942,28 @@ function toggleBlock(){
   var b=document.getElementById("block-body"),c=document.getElementById("block-chev");
   if(!b)return;var h=b.style.display==="none";b.style.display=h?"":"none";c.textContent=h?"−":"+";
 }
+function safeSliceHistory(hist,n){
+  // Never let the trimmed window start on a tool_result-only user message —
+  // that would orphan it from its paired tool_use in the preceding assistant turn.
+  var s=hist.slice(-n);
+  for(var i=0;i<s.length;i++){
+    var m=s[i];
+    if(m.role!=="user")continue;
+    var c=m.content;
+    if(typeof c==="string")return s.slice(i);
+    if(Array.isArray(c)&&c.some(function(b){return b.type!=="tool_result";}))return s.slice(i);
+  }
+  return [];
+}
 function saveChatHistory(){
-  try{localStorage.setItem("coach_history",JSON.stringify(coachHistory.slice(-20)));}catch(e){}
+  try{localStorage.setItem("coach_history",JSON.stringify(safeSliceHistory(coachHistory,20)));}catch(e){}
 }
 function loadChatHistory(){
   try{
     var h=localStorage.getItem("coach_history");
     if(!h)return;
     coachHistory=JSON.parse(h);
+    coachHistory=safeSliceHistory(coachHistory,20);
     coachHistory.forEach(function(msg){
       if(msg.role==="user"&&typeof msg.content==="string")addCoachMessage(msg.content,true);
       else if(msg.role==="assistant"){
@@ -1350,7 +1364,7 @@ async function sendCoachMessage(){
     if(toolResults.length){
       coachHistory.push({role:"user",content:toolResults});
     }
-    if(coachHistory.length>20)coachHistory=coachHistory.slice(-20);
+    if(coachHistory.length>20)coachHistory=safeSliceHistory(coachHistory,20);
     saveChatHistory();
   }catch(e){addCoachMessage("Network error: "+e.message,false);}
   finally{send.disabled=false;send.style.opacity="1";}
