@@ -1408,7 +1408,7 @@ async function commitPlanEdit(newPlan,summary){
     if(!r1.ok){addCoachMessage("Save error — plan not changed.",false);return false;}
 
     // PUT plan_block.json — patch the active week's sessions in place
-    var block=JSON.parse(decodeURIComponent(escape(atob(pbMeta.content))));
+    var block=JSON.parse(decodeURIComponent(escape(atob(pbMeta.content.replace(/\n/g,'')))));
     var wk=block.find(function(w){return w.week_of===anchorMon;});
     if(wk){wk.sessions=fixed;wk.detailed=true;}
     var r2=await fetch(API+"/plan_block.json",{method:"PUT",
@@ -1428,7 +1428,7 @@ async function commitCheckin(input){
     var list=[],sha=null;
     try{
       var meta=await(await fetch(API+"/"+path,{headers:{Authorization:"Bearer "+token}})).json();
-      if(meta&&meta.sha){sha=meta.sha;list=JSON.parse(decodeURIComponent(escape(atob(meta.content))));if(!Array.isArray(list))list=[];}
+      if(meta&&meta.sha){sha=meta.sha;list=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));if(!Array.isArray(list))list=[];}
     }catch(e){list=[];}
     list.push({
       date:new Date().toISOString().split("T")[0],

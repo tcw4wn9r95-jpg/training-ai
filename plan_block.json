@@ -9,27 +9,29 @@
       {
         "day": "Monday",
         "date": "2026-06-01",
-        "sport": "strength",
-        "name": "Upper Body & Core \u2014 Shoulder-Friendly",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
         "total_duration_secs": 1800,
-        "planned_tss": 15,
-        "focus": "Upper-body strength endurance, core stability, shoulder-safe movements",
-        "notes": "2 rounds: 12x dumbbell bench press 8kg each hand, 10x dumbbell row 8kg each hand, 8x TRX chest fly (bodyweight), 10x TRX low row (bodyweight), 12x band pull-apart (light band), 15x dead bug each side, 30s plank. 60s rest between exercises, 90s between rounds. No overhead pressing, no heavy shoulder loading.",
+        "planned_tss": 18,
+        "focus": "Zone 1/2 aerobic base, conversational pace",
         "steps": [
           {
             "type": "warmup",
             "duration_secs": 300,
-            "description": "Arm circles 10 forward/back each arm, band pull-aparts 15 reps, 10 bodyweight push-ups, 10 TRX rows light"
+            "description": "5 min easy jog, leg swings 10 forward/back each leg, 10 bodyweight squats"
           },
           {
             "type": "interval",
             "duration_secs": 1200,
-            "description": "2 rounds: dumbbell bench press 8kg x12 | dumbbell row 8kg x10 | TRX chest fly x8 | TRX low row x10 | band pull-apart light x12 | dead bug x15 each side | plank 30s. 60s rest between exercises, 90s between rounds."
+            "target_type": "pace",
+            "target_low": 390,
+            "target_high": 410,
+            "description": "20 min easy steady running, 6:30\u20136:50/km, HR 140\u2013155 bpm, conversational effort"
           },
           {
             "type": "cooldown",
             "duration_secs": 300,
-            "description": "Chest doorway stretch 30s each side, triceps overhead stretch 30s each, shoulder rolls, deep breathing"
+            "description": "5 min easy jog, walking cool-down, quad and hamstring stretches 30s each"
           }
         ]
       },
