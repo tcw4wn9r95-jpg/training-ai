@@ -904,24 +904,7 @@ function renderPlanPreamble(){
     var m=planText.match(/##\s*COACH'S PREAMBLE\s*\n+([\s\S]+?)(?=\n---|\n###|$)/i);
     if(m&&m[1].trim())noteText=m[1].trim();
   } else {
-    var wk=weekObjForOffset(weekOffset);
-    if(!wk){box.innerHTML="";return;}
-    var ph=wk.phase||"",phClr=ph==="recovery"?"#22c55e":ph==="peak"?"#ef4444":ph==="build"?"#f59e0b":"#3b82f6";
-    var phL=ph.charAt(0).toUpperCase()+ph.slice(1);
-    var hdr='<div style="display:flex;align-items:center;gap:8px;margin-bottom:10px">'+
-      '<span style="width:8px;height:8px;border-radius:50%;background:'+phClr+'"></span>'+
-      '<span style="font-size:12px;font-weight:700;color:'+phClr+'">'+phL+' week</span>'+
-      (wk.target_tss?'<span style="font-size:11px;color:var(--t3);margin-left:auto">'+wk.target_tss+' TSS target</span>':'')+
-    '</div>';
-    var summ=wk.summary?'<p style="font-size:13px;color:var(--t2);line-height:1.6;margin:0">'+esc(wk.summary)+'</p>':"";
-    box.innerHTML='<div class="card" style="margin-bottom:0">'+
-      '<div style="display:flex;align-items:center;justify-content:space-between;cursor:pointer;margin-bottom:0" onclick="togglePreamble()">'+
-        '<div class="card-h" style="margin:0">Coach\'s Notes</div>'+
-        '<span id="preamble-chev" style="font-size:18px;color:var(--t3);line-height:1">+</span>'+
-      '</div>'+
-      '<div id="preamble-body" style="display:none;margin-top:10px">'+hdr+summ+'</div>'+
-    '</div>';
-    return;
+    box.innerHTML="";return;
   }
   if(!noteText){box.innerHTML="";return;}
   var paras=noteText.split(/\n\n+/).map(function(p){return '<p style="margin:0 0 10px">'+esc(p.replace(/\n/g,' '))+'</p>';}).join('');
