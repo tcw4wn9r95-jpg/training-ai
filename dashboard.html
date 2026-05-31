@@ -1363,7 +1363,7 @@ async function commitPlanEdit(newPlan,summary){
     // Enforce dates from the trusted block anchor — never trust the model's dates
     var anchorMon=planAnchorMon();
     var wd=weekDatesFrom(anchorMon);
-    var fixed=newPlan.map(function(s){var c=Object.assign({},s);if(c.day&&wd[c.day])c.date=wd[c.day];return c;});
+    var fixed=newPlan.filter(function(s){return s.day&&wd[s.day];}).map(function(s){var c=Object.assign({},s);c.date=wd[c.day];return c;});
 
     // Fetch shas for both files before writing anything
     var wpMeta=await(await fetch(API+"/weekly_plan.json",{headers:{Authorization:"Bearer "+token}})).json();
