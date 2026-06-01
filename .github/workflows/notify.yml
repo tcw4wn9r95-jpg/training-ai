@@ -1,11 +1,8 @@
 name: Send Daily Training Notification
 on:
   schedule:
-    - cron: '30 21 * * *'  # 21:30 UTC — adjust for your timezone
+    - cron: '30 21 * * *'  # 21:30 UTC daily — adjust for your timezone
   workflow_dispatch: {}
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
 permissions:
   contents: write
@@ -15,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-node@v4
         with:
-          python-version: '3.12'
-      - name: Install dependencies
-        run: pip install pywebpush
+          node-version: '22'
+      - name: Install web-push
+        run: npm install web-push
       - name: Send push notifications
         env:
           VAPID_PRIVATE_KEY: ${{ secrets.VAPID_PRIVATE_KEY }}
-        run: python notify.py
+        run: node notify.js
       - name: Remove expired subscriptions
         run: |
           git config user.name "Coach Claudio"
