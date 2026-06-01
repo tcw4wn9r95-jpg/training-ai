@@ -37,35 +37,35 @@
   {
     "day": "Tuesday",
     "date": "2026-06-02",
-    "sport": "running",
-    "name": "Easy Aerobic Run",
-    "total_duration_secs": 1800,
-    "planned_tss": 20,
-    "focus": "Single weekly run \u2014 easy aerobic, movement pattern, Z1/Z2",
+    "sport": "cycling_indoor",
+    "name": "Steady Z2 Aerobic Spin",
+    "total_duration_secs": 2700,
+    "planned_tss": 28,
+    "focus": "Extended aerobic base, indoor alternative to run, Z2 steady effort",
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 300,
-        "target_type": "pace",
-        "target_low": 480,
-        "target_high": 420,
-        "description": "Z1 walk to easy jog, <145 bpm, let legs wake up"
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 105,
+        "description": "Z1 easy spin, cadence 85-90 rpm, HR settle below 140 bpm"
       },
       {
         "type": "interval",
-        "duration_secs": 1200,
-        "target_type": "pace",
-        "target_low": 420,
-        "target_high": 390,
-        "description": "Z1-Z2 conversational pace, 145-158 bpm, relaxed shoulders, walk if HR exceeds 160 bpm"
+        "duration_secs": 2100,
+        "target_type": "power",
+        "target_low": 106,
+        "target_high": 141,
+        "description": "Z2 steady aerobic, cadence 88-92 rpm, HR 146-162 bpm, smooth and conversational — dial in a rhythm you can hold"
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
-        "target_type": "pace",
-        "target_low": 540,
-        "target_high": 480,
-        "description": "Z1 walk, HR below 130 bpm before stopping"
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 105,
+        "description": "Z1 wind down, cadence 80 rpm, HR below 140 bpm before stopping"
       }
     ]
   },
@@ -92,7 +92,7 @@
         "target_type": "power",
         "target_low": 88,
         "target_high": 105,
-        "description": "Z1 recovery ride, cadence 82-88 rpm, HR below 145 bpm throughout \u2014 blood flow only"
+        "description": "Z1 recovery ride, cadence 82-88 rpm, HR below 145 bpm throughout — blood flow only"
       },
       {
         "type": "cooldown",
@@ -111,8 +111,8 @@
     "name": "Lower Body & Core Strength",
     "total_duration_secs": 1800,
     "planned_tss": 18,
-    "focus": "Leg and core strength foundation \u2014 shoulder protected throughout",
-    "notes": "2 rounds: 12x goblet squat 16kg (held at chest), 10x Romanian deadlift 16kg, 10x TRX split squat per leg (balance assist only \u2014 keep shoulder passive), 15x banded glute bridge (band above knees), 30s dead bug. 60s rest between exercises, 90s between rounds. Drop to 11kg if form breaks on goblet squat or RDL.",
+    "focus": "Leg and core strength foundation — shoulder protected throughout",
+    "notes": "2 rounds: 12x goblet squat 16kg (held at chest), 10x Romanian deadlift 16kg, 10x TRX split squat per leg (balance assist only — keep shoulder passive), 15x banded glute bridge (band above knees), 30s dead bug. 60s rest between exercises, 90s between rounds. Drop to 11kg if form breaks on goblet squat or RDL.",
     "steps": [
       {
         "type": "warmup",
@@ -158,7 +158,7 @@
             "target_type": "power",
             "target_low": 106,
             "target_high": 141,
-            "description": "Z2 cadence focus 90-95 rpm, HR 146-162 bpm \u2014 shift load to cardiovascular system"
+            "description": "Z2 cadence focus 90-95 rpm, HR 146-162 bpm — shift load to cardiovascular system"
           },
           {
             "type": "recovery",
@@ -187,7 +187,7 @@
     "name": "Longer Aerobic Endurance Ride",
     "total_duration_secs": 3600,
     "planned_tss": 42,
-    "focus": "Weekly long aerobic ride \u2014 extend Z2 duration, fat oxidation, aerobic ceiling",
+    "focus": "Weekly long aerobic ride — extend Z2 duration, fat oxidation, aerobic ceiling",
     "steps": [
       {
         "type": "warmup",
@@ -203,7 +203,7 @@
         "target_type": "power",
         "target_low": 106,
         "target_high": 141,
-        "description": "Z2 long aerobic block \u2014 start lower half 106-125W for first 20 min, allow natural drift to 130-141W if HR stays below 162 bpm. Cadence 88-92 rpm. Do not drift into Z3."
+        "description": "Z2 long aerobic block — start lower half 106-125W for first 20 min, allow natural drift to 130-141W if HR stays below 162 bpm. Cadence 88-92 rpm. Do not drift into Z3."
       },
       {
         "type": "cooldown",
