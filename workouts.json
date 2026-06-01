@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-06-01",
+    "sport": "cycling_indoor",
+    "duration_min": 30.7,
+    "distance_km": 9.67,
+    "avg_hr": 137.0,
+    "max_hr": 157.0,
+    "avg_pace_min_km": null,
+    "avg_power_watts": 110.0,
+    "calories": 252.0,
+    "tss": 19.8
+  },
+  {
     "date": "2026-05-31",
     "sport": "paddelball",
     "duration_min": 83.0,
