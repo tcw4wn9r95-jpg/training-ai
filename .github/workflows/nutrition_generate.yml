@@ -12,6 +12,12 @@ on:
         options: ["false", "true"]
         default: "false"
 
+# Required so the GITHUB_TOKEN can push the generated plan back to the repo.
+# Without this, repos whose default workflow permission is read-only make every
+# `git push` 403 — which silently fails the whole run.
+permissions:
+  contents: write
+
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
 
@@ -28,26 +34,32 @@ jobs:
       - name: Install dependencies
         # generate.py only needs the Anthropic SDK. Don't pull in pywebpush/pypdf
         # (notify.py / parse_plan.py deps) — a build failure there must not block
-        # plan generation.
-        run: pip install "anthropic>=0.40.0"
+        # plan generation. Tee output so install errors land in the run log too.
+        run: |
+          set -o pipefail
+          pip install "anthropic>=0.40.0" 2>&1 | tee nutrition/_run.log
 
       - name: Generate meal plan
         env:
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FORCE_GENERATE: ${{ github.event.inputs.force || 'false' }}
-        run: python nutrition/generate.py
+        run: |
+          set -o pipefail
+          python nutrition/generate.py 2>&1 | tee -a nutrition/_run.log
 
-      - name: Commit plan
+      - name: Commit results (always)
+        if: always()
         run: |
           git config user.name "Coach Léa"
           git config user.email "lea@nutriprep.local"
-          # Stage whatever generate.py produced (don't fail on a missing file).
+          # Stage everything generate.py produced PLUS the run log / error log, so
+          # we always capture diagnostics — whether the run succeeded or failed.
           git add -A nutrition/
           if git diff --staged --quiet; then
             echo "Nothing to commit."
             exit 0
           fi
-          git commit -m "Meal plan $(date +%Y-%m-%d)"
+          git commit -m "NutriPrep run $(date -u +%Y-%m-%dT%H:%MZ)"
           # main moves often (the app commits push subs / coach history), so
           # rebase onto the latest and retry the push a few times to win races.
           for i in 1 2 3 4 5; do
@@ -59,22 +71,5 @@ jobs:
             echo "Push attempt $i failed; retrying after sync…"
             sleep $((i * 3))
           done
-          echo "::error::Could not push the generated plan after 5 attempts."
+          echo "::error::Could not push results after 5 attempts."
           exit 1
-
-      - name: Commit diagnostics on failure
-        if: failure()
-        run: |
-          if [ -f nutrition/_generation_error.txt ]; then
-            git config user.name "Coach Léa"
-            git config user.email "lea@nutriprep.local"
-            git add nutrition/_generation_error.txt
-            git commit -m "Generation error log $(date +%Y-%m-%dT%H:%M)" || true
-            for i in 1 2 3; do
-              git pull --rebase --autostash origin main || true
-              git push origin HEAD:main && break
-              sleep $((i * 3))
-            done
-          else
-            echo "No diagnostic file was written (failure happened before generation)."
-          fi
