@@ -1,0 +1,15 @@
+{
+  "members": ["diego", "diana"],
+  "allergies": [],
+  "intolerances": [],
+  "dislikes": [],
+  "diet_style": "omnivore",
+  "cuisines_loved": ["mediterranean", "asian", "mexican", "french"],
+  "spice_tolerance": "medium",
+  "budget_eur_per_week": 130,
+  "cooking_skill": "intermediate",
+  "tz": "Europe/Luxembourg",
+  "max_prep_minutes_sunday": 150,
+  "max_cook_minutes_weekday": 25,
+  "kitchen_equipment": ["oven", "hob", "air fryer", "instant pot", "food processor", "blender"]
+}

@@ -1,0 +1,54 @@
+name: "NutriPrep — Generate Weekly Meal Plan"
+
+on:
+  schedule:
+    # Every Sunday at 18:00 UTC = ~20:00 Luxembourg time (CEST)
+    - cron: "0 18 * * 0"
+  workflow_dispatch:
+    inputs:
+      force:
+        description: "Force regeneration even if plan exists this week"
+        type: choice
+        options: ["false", "true"]
+        default: "false"
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install dependencies
+        run: pip install -r nutrition/requirements.txt
+
+      - name: Generate meal plan
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+          FORCE_GENERATE: ${{ github.event.inputs.force || 'false' }}
+        run: python nutrition/generate.py
+
+      - name: Commit plan
+        run: |
+          git config user.name "Coach Léa"
+          git config user.email "lea@nutriprep.local"
+          git add \
+            nutrition/weekly_menu.json \
+            nutrition/weekly_menu.md \
+            nutrition/shopping_list.json \
+            nutrition/prep_plan.json \
+            nutrition/notif_schedule.json \
+            nutrition/plan_status.json \
+            nutrition/menu_history.json \
+            nutrition/users/diego/macro_targets.json \
+            nutrition/users/diana/macro_targets.json
+          git diff --staged --quiet && echo "Nothing to commit." && exit 0
+          git commit -m "Meal plan $(date +%Y-%m-%d)"
+          git pull --rebase origin main
+          git push
