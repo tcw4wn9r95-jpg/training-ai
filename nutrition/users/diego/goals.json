@@ -1,0 +1,10 @@
+{
+  "name": "Diego",
+  "goal_type": "weight_loss",
+  "start_weight_kg": 82.0,
+  "target_weight_kg": 76.0,
+  "target_rate_kg_per_week": 0.5,
+  "target_date": "2026-09-01",
+  "notes": "Sustainable weight loss, no crash diets. Also eating with partner Diana.",
+  "set_on": "2026-06-01"
+}
