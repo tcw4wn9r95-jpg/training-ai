@@ -420,11 +420,17 @@ if not menu_json:
     print(response[:3000])
     sys.exit("Plan generation failed.")
 
-# Enforce correct dates (LLM sometimes drifts)
-for day_data in menu_json:
-    day_label = day_data.get("day", "")
-    if day_label in week_dates:
-        day_data["date"] = week_dates[day_label]
+# Enforce correct dates (LLM drifts: wrong/missing dates, day-name casing, extra days)
+_week_by_lc = {name.lower(): iso for name, iso in week_dates.items()}
+for i, day_data in enumerate(menu_json):
+    day_label = str(day_data.get("day", "")).strip()
+    iso = _week_by_lc.get(day_label.lower())
+    if iso is None and i < len(DAY_NAMES):
+        # Fall back to position in the week and normalise the day name too.
+        iso = week_dates[DAY_NAMES[i]]
+        day_data["day"] = DAY_NAMES[i]
+    if iso:
+        day_data["date"] = iso
     # Attach the day's training session (for Diego) so the app can show fuelling
     t = training_week.get(day_data.get("date"))
     if t:
@@ -536,8 +542,12 @@ def to_lux_dt(day_date: date, time_str: str) -> str:
 
 events: list[dict] = []
 for day_data in menu_json:
-    day_date = date.fromisoformat(day_data["date"])
-    day_name = day_data["day"]
+    try:
+        day_date = date.fromisoformat(str(day_data.get("date", "")))
+    except ValueError:
+        print(f"  ! Skipping notifications for a day with an invalid date: {day_data.get('date')!r}")
+        continue
+    day_name = day_data.get("day", "")
 
     # Sunday: weigh-in + prep reminders
     if day_name == "Sunday":
@@ -562,7 +572,10 @@ for day_data in menu_json:
         })
 
     for meal in day_data.get("meals", []):
-        slot = meal["slot"]
+        slot = meal.get("slot")
+        if not slot:
+            continue
+        meal_name = meal.get("name", "Your meal")
         meal_time = meal.get("time") or meal_times.get(slot)
         if not meal_time:
             continue
@@ -575,7 +588,7 @@ for day_data in menu_json:
                 "audience": MEMBERS,
                 "at": to_lux_dt(day_date, meal_time),
                 "title": f"Snack time {emoji}",
-                "body": f"{meal['name']} — keeps you on track toward your goal.",
+                "body": f"{meal_name} — keeps you on track toward your goal.",
                 "sent": False,
             })
         elif slot in ("lunch", "dinner") and meal.get("cook_minutes_day_of", 0) > 0:
@@ -588,7 +601,7 @@ for day_data in menu_json:
                 "audience": MEMBERS,
                 "at": reminder_dt.isoformat(),
                 "title": f"Start {'dinner' if slot == 'dinner' else 'lunch'} soon 🍳",
-                "body": f"{meal['name']} — {cook_min} min. Tap for recipe.",
+                "body": f"{meal_name} — {cook_min} min. Tap for recipe.",
                 "sent": False,
             })
 

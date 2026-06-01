@@ -269,6 +269,7 @@
   <div class="tab-pane active" id="pane-today">
     <div class="stats-strip" id="home-stats"></div>
     <div class="milestones" id="home-milestones"></div>
+    <div id="plan-action" style="margin-bottom:12px"></div>
     <div id="training-banner"></div>
     <div id="today-banner"></div>
     <div class="card" id="today-macro-card" style="display:none">
@@ -575,6 +576,7 @@ function renderToday(){
   const today=todayISO();
   const dayData=weekMenu?weekMenu.find(d=>d.date===today):null;
   renderHomeStats();
+  renderPlanAction();
   renderTrainingBanner();
   renderNextAction(dayData);
   renderTodaySlots(dayData);
@@ -1159,16 +1161,69 @@ async function saveSetup(input){
   return ok;
 }
 
-async function triggerGenerate(){
-  const token=cfg("gh_token"); if(!token){ setupMsg("coach","Add your GitHub token in Settings ⚙ first, then tap again 💚"); return; }
-  const btn=document.getElementById("setup-generate-btn"); if(btn){ btn.disabled=true; btn.textContent="Starting…"; }
+// Dispatch the generate workflow. Returns {ok:true} or {ok:false, error}.
+async function dispatchGenerate(){
+  const token=cfg("gh_token"); if(!token) return {ok:false, error:"no_token"};
   try{
     const r=await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/nutrition_generate.yml/dispatches`,{
       method:"POST",headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json","Content-Type":"application/json"},
       body:JSON.stringify({ref:GITHUB_BRANCH,inputs:{force:"true"}})});
-    if(r.status===204){ if(btn)btn.textContent="✓ Building your week…"; setupMsg("coach","🌿 I'm building your week now — menu, shopping list and Sunday prep plan. It takes a couple of minutes. You can close this and your tabs will fill in shortly (pull down to refresh). So proud of you for setting this up 💚"); }
-    else { const d=await r.json().catch(()=>({})); if(btn){ btn.disabled=false; btn.textContent="Generate my plan 🍽️"; } setupMsg("coach","Hmm, I couldn't start it ("+(d.message||r.status)+"). Make sure your GitHub token has the 'workflow' scope."); }
-  }catch(e){ if(btn){ btn.disabled=false; btn.textContent="Generate my plan 🍽️"; } setupMsg("coach","Network error: "+e.message); }
+    if(r.status===204) return {ok:true};
+    const d=await r.json().catch(()=>({})); return {ok:false, error:d.message||("HTTP "+r.status)};
+  }catch(e){ return {ok:false, error:e.message}; }
+}
+// Poll GitHub for a freshly built plan and refresh the UI when it lands.
+let _planPollTimer=null;
+function startPlanPoll(){
+  if(_planPollTimer) clearInterval(_planPollTimer);
+  let tries=0;
+  _planPollTimer=setInterval(async()=>{
+    tries++;
+    await loadSharedData();
+    if(Array.isArray(weekMenu)&&weekMenu.length){ clearInterval(_planPollTimer); _planPollTimer=null; renderPlanAction(); renderToday(); }
+    else if(tries>=20){ clearInterval(_planPollTimer); _planPollTimer=null; renderPlanAction(); }   // ~7 min cap
+  }, 20000);
+}
+// Setup-overlay button (during onboarding)
+async function triggerGenerate(){
+  const btn=document.getElementById("setup-generate-btn");
+  if(!cfg("gh_token")){ setupMsg("coach","Add your GitHub token in Settings ⚙ first, then tap again 💚"); return; }
+  if(btn){ btn.disabled=true; btn.textContent="Starting…"; }
+  const res=await dispatchGenerate();
+  if(res.ok){ if(btn)btn.textContent="✓ Building your week…"; startPlanPoll(); setupMsg("coach","🌿 I'm building your week now — menu, shopping list and Sunday prep plan. It takes a couple of minutes. You can close this and your tabs will fill in shortly. So proud of you for setting this up 💚"); }
+  else { if(btn){ btn.disabled=false; btn.textContent="Generate my plan 🍽️"; } setupMsg("coach", res.error==="no_token"?"Add your GitHub token in Settings ⚙ first 💚":("Hmm, I couldn't start it ("+res.error+"). Make sure your GitHub token has the 'workflow' scope.")); }
+}
+
+// Adaptive home button: Generate when there's no plan, Update/refresh when one exists.
+function planExists(){ return Array.isArray(weekMenu) && weekMenu.length>0; }
+function renderPlanAction(){
+  const wrap=document.getElementById("plan-action"); if(!wrap) return;
+  if(_planPollTimer){ wrap.innerHTML=`<button class="btn btn-block" disabled style="opacity:.7">⏳ Building your plan… (~2 min)</button>`; return; }
+  if(!planExists()){
+    wrap.innerHTML=`<button class="btn btn-block" onclick="generatePlan()">✨ Generate this week's plan</button>
+      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:6px">Coach Léa will build your menu, shopping list & prep plan.</div>`;
+  } else {
+    const wk=(planStatus&&planStatus.week_of)?` · week of ${planStatus.week_of}`:"";
+    wrap.innerHTML=`<div style="display:flex;gap:8px">
+        <button class="btn btn-outline" style="flex:1" onclick="refreshPlan()">🔄 Update plan</button>
+        <button class="btn" style="flex:1" onclick="generatePlan()">♻️ Regenerate</button>
+      </div>
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px">Update pulls changes made via chat${wk}. Regenerate builds a fresh week.</div>`;
+  }
+}
+async function generatePlan(){
+  if(!cfg("gh_token")){ alert("Add your GitHub token in Settings (gear icon) first — it needs the 'workflow' scope."); showTab("settings"); return; }
+  if(planExists() && !confirm("Build a brand-new plan for the week? This replaces the current menu, shopping list and prep plan.")) return;
+  const res=await dispatchGenerate();
+  if(res.ok){ startPlanPoll(); renderPlanAction(); }
+  else if(res.error==="no_token"){ alert("Add your GitHub token in Settings first."); showTab("settings"); }
+  else alert("Couldn't start generation: "+res.error+"\nMake sure your GitHub token has the 'workflow' scope.");
+}
+async function refreshPlan(){
+  const wrap=document.getElementById("plan-action");
+  if(wrap) wrap.innerHTML=`<button class="btn btn-outline btn-block" disabled style="opacity:.7">🔄 Updating…</button>`;
+  await Promise.all([loadSharedData(), loadUserData()]);
+  renderPlanAction(); renderToday();
 }
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
