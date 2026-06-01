@@ -736,12 +736,13 @@ print(f"✓ Prep plan: {len(prep_json)} batches, ~{prep_total_min} min active")
 print(f"✓ Notifications: {len(events)} events scheduled")
 print(f"✓ Plan saved for week of {next_monday}")
 
-# Success — remove any stale diagnostic log so it doesn't linger in the repo.
-try:
-    if ERROR_LOG.exists():
-        ERROR_LOG.unlink()
-except Exception:
-    pass
+# Success — remove any stale diagnostic logs so they don't linger in the repo.
+for _f in (ERROR_LOG, BASE / "_run.log"):
+    try:
+        if _f.exists():
+            _f.unlink()
+    except Exception:
+        pass
 if errors:
     print("\nNon-fatal warnings:")
     for e in errors:
