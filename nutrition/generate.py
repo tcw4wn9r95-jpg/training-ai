@@ -181,6 +181,8 @@ Max weekday cooking time: {max_cook} min
 8. Each week: include oily fish at least twice; legumes on at least 3 days; ≥ 5 portions of veg per day per person.
 9. Batch cooking should produce enough portions for 3–4 days before needing fresh cooking.
 10. Assign each prep batch a `food_category` from: poultry, red_meat, fish_seafood, eggs_cooked, rice, grains_pasta, legumes, vegetables_cooked, vegetables_raw_prepped, soup_stew, sauce_dairy, dairy, baked_goods, generic.
+11. **Recipe split**: every meal MUST have `prep_steps` (what to batch-cook/pre-portion on Sunday — empty list `[]` if nothing) AND `day_of_steps` (detailed, numbered, beginner-friendly actions performed on the day, including reheating instructions and quantities). Keep `video_url` as an empty string "" (the user attaches videos later).
+12. **Image prompt**: every meal MUST have an `image_prompt` — a short, vivid description of a finished plate of that meal for an AI image generator (mention key ingredients, plating, natural light; no text/words in image).
 
 ## WEEK DATES
 Monday: {week_dates['Monday']} | Tuesday: {week_dates['Tuesday']} | Wednesday: {week_dates['Wednesday']}
@@ -207,7 +209,10 @@ Output a ```json-menu block. Schema (FOLLOW EXACTLY):
         "time": "07:30",
         "prep_ahead": true,
         "cook_minutes_day_of": 3,
-        "recipe": ["Step 1", "Step 2", "Step 3"],
+        "image_prompt": "overhead food photo of greek yogurt bowl with mixed berries and granola, natural light, on a wooden table, appetising",
+        "video_url": "",
+        "prep_steps": ["What to batch-cook or pre-portion on Sunday for this meal (empty list if nothing)"],
+        "day_of_steps": ["Detailed step-by-step done on the day, e.g. 'Spoon 200g yogurt into a bowl', 'Top with 100g berries', 'Sprinkle granola'"],
         "storage_ref": "prep_batch_1",
         "food_category": "dairy",
         "portions": {{
@@ -249,9 +254,10 @@ Output a ```json-prep block. List Sunday batch steps in logical cooking order (g
     "title": "Batch title",
     "order": 1,
     "active_minutes": 20,
-    "steps": ["Step 1", "Step 2"],
+    "steps": ["Detailed numbered step 1", "Step 2", "Step 3"],
     "yields": ["What is produced — quantity"],
     "food_category": "poultry",
+    "video_url": "",
     "day_of_assembly": {{
       "Monday": "Reheat 150g chicken, add salad",
       "Tuesday": "Slice cold chicken into wrap"
@@ -259,6 +265,7 @@ Output a ```json-prep block. List Sunday batch steps in logical cooking order (g
   }}
 ]
 ```
+Keep each prep batch's `video_url` as "" (empty). Make `steps` detailed and beginner-friendly.
 
 Generate all 7 days. Be specific and realistic. Verify that each person's `day_totals` sum to within ±10% of their kcal target.
 """
@@ -337,11 +344,61 @@ for item in shopping_json:
 
 print("Allergen check passed.")
 
-# ── Post-process shopping list ────────────────────────────────────────────────
+# ── Post-process shopping list (enrich + inventory-aware) ────────────────────
 from lux_products import enrich_item
+import units
 
 for item in shopping_json:
     enrich_item(item)
+
+# Load current fridge/pantry inventory to avoid buying what we already have.
+inventory = {"items": []}
+if (BASE / "inventory.json").exists():
+    with open(BASE / "inventory.json") as f:
+        inventory = json.load(f)
+inv_index = {it["name_en"].strip().lower(): it for it in inventory.get("items", [])}
+
+# For each item: required = what the week needs; available = pantry; to_buy = shortfall.
+# The new pantry balance after shopping = max(required, available).
+new_inventory_items = []
+for item in shopping_json:
+    name_key = item.get("name_en", "").strip().lower()
+    required = units.parse_qty(item.get("qty", ""))
+    have_item = inv_index.get(name_key)
+    have = None
+    if have_item:
+        have = {"amount": have_item.get("amount"), "kind": have_item.get("kind", "unknown"), "unit": have_item.get("unit", "")}
+
+    if required["kind"] != "unknown" and have and have["kind"] == required["kind"] and have.get("unit") == required.get("unit"):
+        to_buy_amt = max(0.0, (required["amount"] or 0) - (have["amount"] or 0))
+        new_balance = max(required["amount"] or 0, have["amount"] or 0)
+        if to_buy_amt <= 0.001:
+            item["have_at_home"] = True
+            item["qty"] = "✓ in pantry"
+        else:
+            item["have_at_home"] = False
+            item["qty"] = units.format_qty(to_buy_amt, required["kind"], required["unit"])
+        kind, unit = required["kind"], required["unit"]
+    else:
+        # No usable pantry match — buy the full required amount.
+        item["have_at_home"] = False
+        if required["kind"] != "unknown":
+            new_balance = required["amount"] or 0
+            kind, unit = required["kind"], required["unit"]
+        else:
+            new_balance, kind, unit = None, "unknown", required.get("unit", "")
+
+    new_inventory_items.append({
+        "name_en": item.get("name_en", ""),
+        "name_fr": item.get("name_fr", ""),
+        "aisle": item.get("aisle", ""),
+        "stores": item.get("stores", []),
+        "food_category": item.get("food_category", "generic"),
+        "kind": kind,
+        "unit": unit,
+        "amount": round(new_balance, 2) if isinstance(new_balance, (int, float)) else None,
+        "display_qty": units.format_qty(new_balance, kind, unit) if isinstance(new_balance, (int, float)) else item.get("qty", ""),
+    })
 
 shopping_sorted = sorted(shopping_json, key=lambda x: x.get("aisle", "zzz"))
 
@@ -352,6 +409,13 @@ shopping_out = {
     "currency": "EUR",
     "est_total_eur": total_est_eur,
     "items": shopping_sorted,
+}
+
+# Re-seed pantry to the full week's required quantities (assumes shopping is done).
+inventory_out = {
+    "updated": today.isoformat(),
+    "week_of": next_monday.isoformat(),
+    "items": new_inventory_items,
 }
 
 # ── Post-process prep plan (food safety) ─────────────────────────────────────
@@ -455,6 +519,9 @@ with open(BASE / "prep_plan.json", "w") as f:
 
 with open(BASE / "notif_schedule.json", "w") as f:
     json.dump(notif_out, f, indent=2)
+
+with open(BASE / "inventory.json", "w") as f:
+    json.dump(inventory_out, f, indent=2)
 
 # ── Update plan status ────────────────────────────────────────────────────────
 plan_status = {

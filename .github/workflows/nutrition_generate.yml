@@ -44,6 +44,7 @@ jobs:
             nutrition/shopping_list.json \
             nutrition/prep_plan.json \
             nutrition/notif_schedule.json \
+            nutrition/inventory.json \
             nutrition/plan_status.json \
             nutrition/menu_history.json \
             nutrition/users/diego/macro_targets.json \

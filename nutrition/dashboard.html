@@ -14,55 +14,62 @@
 <style>
   :root {
     --green: #2d6a4f; --green-light: #52b788; --green-pale: #d8f3dc;
-    --terra: #e07a5f; --gold: #c9a84c;
+    --terra: #e07a5f; --gold: #c9a84c; --flame: #f4845f;
     --bg: #f5f0e8; --card: #ffffff; --border: #e8e0d0;
     --text: #1a1a1a; --muted: #6b6560; --faint: #b0a898;
-    --tab-h: 64px; --safe-b: env(safe-area-inset-bottom, 0px);
+    --tab-h: 60px; --safe-b: env(safe-area-inset-bottom, 0px);
     --header-h: 56px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
   html, body { height: 100%; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); overscroll-behavior: none; }
 
-  /* Header */
   header { position: fixed; top: 0; left: 0; right: 0; height: var(--header-h); background: var(--green); color: #fff; display: flex; align-items: center; padding: 0 16px; z-index: 100; padding-top: env(safe-area-inset-top); }
   header h1 { font-size: 18px; font-weight: 700; flex: 1; }
   .hdr-user { font-size: 13px; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; cursor: pointer; margin-right: 8px; }
   .hdr-gear { font-size: 20px; cursor: pointer; opacity: .85; }
 
-  /* Content */
   .content { position: fixed; top: var(--header-h); bottom: calc(var(--tab-h) + var(--safe-b)); left: 0; right: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .tab-pane { display: none; padding: 16px; }
   .tab-pane.active { display: block; }
 
-  /* Bottom nav */
   nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--tab-h) + var(--safe-b)); background: var(--card); border-top: 1px solid var(--border); display: flex; padding-bottom: var(--safe-b); z-index: 100; }
-  nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 10px; color: var(--faint); cursor: pointer; padding: 0; }
+  nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; font-size: 9px; color: var(--faint); cursor: pointer; padding: 0; }
   nav button.active { color: var(--green); }
-  nav button .ic { font-size: 22px; line-height: 1; }
+  nav button .ic { font-size: 20px; line-height: 1; }
 
-  /* Cards */
   .card { background: var(--card); border-radius: 16px; padding: 16px; margin-bottom: 12px; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
   .card-title { font-size: 13px; font-weight: 600; color: var(--muted); text-transform: uppercase; letter-spacing: .4px; margin-bottom: 10px; }
 
-  /* Next-action banner */
   .action-banner { background: var(--green); color: #fff; border-radius: 16px; padding: 16px; margin-bottom: 12px; display: flex; align-items: center; gap: 12px; }
   .action-banner .ic { font-size: 32px; }
   .action-banner h2 { font-size: 16px; font-weight: 700; }
   .action-banner p { font-size: 13px; opacity: .85; margin-top: 2px; }
 
-  /* Meal slot rows */
-  .slot-row { display: flex; align-items: flex-start; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 10px; cursor: pointer; }
+  /* Home stats strip */
+  .stats-strip { display: flex; gap: 10px; margin-bottom: 12px; }
+  .stat-tile { flex: 1; background: var(--card); border-radius: 16px; padding: 12px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .stat-tile .big { font-size: 24px; font-weight: 800; color: var(--green); line-height: 1; }
+  .stat-tile .big.flame { color: var(--flame); }
+  .stat-tile .lbl { font-size: 10px; color: var(--muted); margin-top: 4px; text-transform: uppercase; letter-spacing: .3px; }
+  .stat-tile .sub { font-size: 11px; color: var(--faint); margin-top: 2px; }
+  .milestones { display: flex; gap: 8px; margin-bottom: 12px; }
+  .milestone { flex: 1; background: var(--card); border-radius: 12px; padding: 8px 4px; text-align: center; box-shadow: 0 1px 4px rgba(0,0,0,.06); opacity: .4; }
+  .milestone.earned { opacity: 1; background: linear-gradient(135deg, #fff8e1, #fff); border: 1px solid var(--gold); }
+  .milestone .m-ic { font-size: 20px; }
+  .milestone .m-lbl { font-size: 9px; color: var(--muted); margin-top: 2px; font-weight: 600; }
+
+  .slot-row { display: flex; align-items: center; padding: 10px 0; border-bottom: 1px solid var(--border); gap: 10px; }
   .slot-row:last-child { border-bottom: none; }
-  .slot-time { font-size: 12px; color: var(--muted); min-width: 40px; padding-top: 2px; }
+  .slot-time { font-size: 12px; color: var(--muted); min-width: 40px; }
   .slot-icon { font-size: 22px; }
-  .slot-info { flex: 1; }
+  .slot-info { flex: 1; cursor: pointer; }
   .slot-name { font-size: 15px; font-weight: 600; }
   .slot-macro { font-size: 12px; color: var(--muted); margin-top: 2px; }
   .slot-badge { font-size: 11px; background: var(--green-pale); color: var(--green); border-radius: 6px; padding: 2px 6px; margin-top: 4px; display: inline-block; }
   .slot-row.current .slot-name { color: var(--green); }
-  .slot-row.current .slot-icon { filter: none; }
+  .ate-btn { width: 34px; height: 34px; border-radius: 50%; border: 2px solid var(--border); background: none; cursor: pointer; font-size: 16px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; color: var(--faint); }
+  .ate-btn.ate { background: var(--green); border-color: var(--green); color: #fff; }
 
-  /* Macro ring (doughnut) */
   .macro-ring-wrap { display: flex; align-items: center; gap: 16px; }
   .macro-ring-wrap canvas { max-width: 100px; max-height: 100px; }
   .macro-legend { flex: 1; }
@@ -71,55 +78,70 @@
   .kcal-big { font-size: 28px; font-weight: 700; color: var(--green); }
   .kcal-label { font-size: 12px; color: var(--muted); }
 
-  /* Week grid (Menu tab) */
   .day-card { background: var(--card); border-radius: 14px; margin-bottom: 10px; overflow: hidden; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
   .day-header { background: var(--green); color: #fff; padding: 10px 14px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; }
   .day-header h3 { font-size: 15px; font-weight: 700; }
   .day-header .day-kcal { font-size: 12px; opacity: .85; }
   .day-meals { display: none; }
   .day-meals.open { display: block; }
-  .meal-detail { padding: 10px 14px; border-bottom: 1px solid var(--border); }
+  .meal-detail { padding: 10px 14px; border-bottom: 1px solid var(--border); cursor: pointer; display: flex; gap: 10px; align-items: center; }
   .meal-detail:last-child { border-bottom: none; }
+  .meal-thumb { width: 52px; height: 52px; border-radius: 10px; object-fit: cover; background: var(--bg); flex-shrink: 0; }
+  .meal-detail .md-info { flex: 1; }
   .meal-slot-label { font-size: 11px; color: var(--muted); text-transform: uppercase; font-weight: 600; }
   .meal-name { font-size: 15px; font-weight: 600; margin: 2px 0; }
   .meal-macros { font-size: 12px; color: var(--muted); }
-  .meal-recipe { margin-top: 8px; padding: 8px; background: var(--bg); border-radius: 8px; }
-  .meal-recipe p { font-size: 12px; line-height: 1.5; }
-  .portion-toggle { font-size: 12px; color: var(--green); cursor: pointer; margin-top: 4px; display: inline-block; }
 
-  /* Shopping tab */
   .aisle-section { margin-bottom: 16px; }
   .aisle-label { font-size: 11px; font-weight: 700; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 6px; padding: 0 2px; }
   .shop-item { display: flex; align-items: center; gap: 10px; padding: 10px; background: var(--card); border-radius: 10px; margin-bottom: 6px; }
+  .shop-item.in-pantry { opacity: .55; }
   .shop-check { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--border); background: none; cursor: pointer; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
   .shop-check.checked { background: var(--green); border-color: var(--green); color: #fff; }
   .shop-names { flex: 1; }
   .shop-en { font-size: 14px; font-weight: 600; }
   .shop-fr { font-size: 12px; color: var(--muted); font-style: italic; }
-  .shop-qty { font-size: 13px; color: var(--green); font-weight: 600; min-width: 60px; text-align: right; }
+  .shop-qty { font-size: 13px; color: var(--green); font-weight: 600; min-width: 64px; text-align: right; }
   .shop-stores { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
   .store-chip { font-size: 10px; background: var(--green-pale); color: var(--green); border-radius: 4px; padding: 1px 5px; }
 
-  /* Prep tab */
+  /* Fridge */
+  .fridge-bar { display: flex; height: 12px; border-radius: 99px; overflow: hidden; background: var(--border); margin-top: 4px; }
+  .fridge-bar-fill { background: var(--green-light); height: 100%; }
+  .fridge-item { background: var(--card); border-radius: 10px; padding: 10px 12px; margin-bottom: 6px; }
+  .fridge-row { display: flex; justify-content: space-between; align-items: center; }
+  .fridge-name { font-size: 14px; font-weight: 600; }
+  .fridge-fr { font-size: 11px; color: var(--muted); font-style: italic; }
+  .fridge-qty { font-size: 13px; font-weight: 700; color: var(--green); }
+  .fridge-qty.low { color: var(--terra); }
+
   .batch-card { background: var(--card); border-radius: 14px; margin-bottom: 10px; overflow: hidden; }
   .batch-header { padding: 12px 14px; background: var(--green-pale); display: flex; align-items: center; gap: 10px; }
   .batch-num { width: 28px; height: 28px; border-radius: 50%; background: var(--green); color: #fff; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
   .batch-title { font-size: 15px; font-weight: 700; flex: 1; }
   .batch-time { font-size: 12px; color: var(--green); font-weight: 600; }
   .batch-steps { padding: 12px 14px; }
-  .batch-step { display: flex; gap: 8px; margin-bottom: 8px; font-size: 14px; line-height: 1.4; }
-  .batch-step-num { color: var(--green); font-weight: 700; flex-shrink: 0; width: 18px; }
+  .batch-step { display: flex; gap: 8px; margin-bottom: 10px; font-size: 14px; line-height: 1.45; }
+  .batch-step-num { color: #fff; background: var(--green-light); border-radius: 50%; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 11px; flex-shrink: 0; margin-top: 1px; }
   .batch-storage { margin: 0 14px 12px; padding: 10px; background: #fff8e1; border-radius: 8px; border-left: 3px solid var(--gold); }
   .batch-storage-title { font-size: 11px; font-weight: 700; color: var(--gold); text-transform: uppercase; margin-bottom: 4px; }
   .batch-storage p { font-size: 12px; line-height: 1.5; color: #5a4e2b; }
   .storage-warn { color: #c0392b; font-weight: 600; }
 
-  /* Progress tab */
+  .video-wrap { position: relative; padding-bottom: 56.25%; height: 0; border-radius: 12px; overflow: hidden; margin: 10px 0; background: #000; }
+  .video-wrap iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+  .video-launch { display: flex; align-items: center; gap: 10px; background: #111; color: #fff; border-radius: 12px; padding: 12px 14px; text-decoration: none; margin: 10px 0; font-size: 14px; font-weight: 600; }
+  .video-launch .vl-ic { font-size: 22px; }
+  .btn-yt { display: inline-flex; align-items: center; gap: 6px; background: var(--bg); border: 1px solid var(--border); border-radius: 10px; padding: 8px 12px; font-size: 13px; color: var(--text); text-decoration: none; margin: 4px 0; }
+  .attach-row { display: flex; gap: 6px; margin-top: 6px; }
+  .attach-row input { flex: 1; border: 1.5px solid var(--border); border-radius: 8px; padding: 7px 10px; font-size: 13px; }
+
   .weight-form { display: flex; gap: 10px; align-items: flex-end; margin-bottom: 16px; }
   .weight-form input { flex: 1; border: 1.5px solid var(--border); border-radius: 10px; padding: 10px 12px; font-size: 16px; background: var(--card); color: var(--text); }
   .weight-form input:focus { outline: none; border-color: var(--green); }
   .btn { background: var(--green); color: #fff; border: none; border-radius: 10px; padding: 10px 18px; font-size: 15px; font-weight: 600; cursor: pointer; }
   .btn:active { opacity: .85; }
+  .btn-block { width: 100%; }
   .btn-outline { background: none; border: 1.5px solid var(--green); color: var(--green); }
   .stat-row { display: flex; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid var(--border); font-size: 14px; }
   .stat-row:last-child { border-bottom: none; }
@@ -128,18 +150,16 @@
   .progress-bar-wrap { background: var(--border); border-radius: 99px; height: 8px; margin: 6px 0 2px; overflow: hidden; }
   .progress-bar-fill { background: var(--green); height: 100%; border-radius: 99px; transition: width .4s; }
 
-  /* Coach tab */
   .coach-msgs { padding: 12px; display: flex; flex-direction: column; gap: 10px; min-height: 200px; }
   .msg { max-width: 85%; padding: 10px 14px; border-radius: 16px; font-size: 14px; line-height: 1.5; }
   .msg.user { align-self: flex-end; background: var(--green); color: #fff; border-bottom-right-radius: 4px; }
   .msg.coach { align-self: flex-start; background: var(--card); border: 1px solid var(--border); border-bottom-left-radius: 4px; }
   .msg.coach em { font-style: italic; color: var(--muted); font-size: 12px; }
-  .coach-input-bar { display: flex; gap: 8px; padding: 10px 12px; background: var(--card); border-top: 1px solid var(--border); }
+  .coach-input-bar { display: flex; gap: 8px; }
   .coach-input-bar input { flex: 1; border: 1.5px solid var(--border); border-radius: 22px; padding: 8px 14px; font-size: 15px; background: var(--bg); }
   .coach-input-bar input:focus { outline: none; border-color: var(--green); }
   .send-btn { width: 38px; height: 38px; border-radius: 50%; background: var(--green); color: #fff; border: none; font-size: 18px; cursor: pointer; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
 
-  /* Settings tab */
   .setting-row { display: flex; align-items: center; justify-content: space-between; padding: 13px 0; border-bottom: 1px solid var(--border); }
   .setting-row:last-child { border-bottom: none; }
   .setting-label { font-size: 14px; font-weight: 500; }
@@ -153,12 +173,10 @@
   .identity-picker { display: flex; gap: 10px; }
   .identity-btn { flex: 1; padding: 10px; border: 2px solid var(--border); border-radius: 12px; background: none; font-size: 14px; font-weight: 600; cursor: pointer; }
   .identity-btn.active { border-color: var(--green); color: var(--green); background: var(--green-pale); }
-  .upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; margin-top: 8px; transition: border-color .2s; }
-  .upload-area:hover { border-color: var(--green); }
-  .upload-area p { color: var(--muted); font-size: 13px; }
+  .upload-area { border: 2px dashed var(--border); border-radius: 12px; padding: 24px; text-align: center; cursor: pointer; margin-top: 8px; }
   .upload-area .ic { font-size: 32px; margin-bottom: 6px; }
+  .upload-area p { color: var(--muted); font-size: 13px; }
 
-  /* Identity modal */
   .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.6); z-index: 200; display: flex; align-items: center; justify-content: center; padding: 20px; }
   .modal-overlay.hidden { display: none; }
   .modal-box { background: var(--card); border-radius: 24px; padding: 28px 24px; max-width: 360px; width: 100%; text-align: center; }
@@ -167,16 +185,22 @@
   .identity-choice-row { display: flex; gap: 12px; margin-bottom: 16px; }
   .identity-choice { flex: 1; padding: 18px 10px; border: 2px solid var(--border); border-radius: 16px; background: none; cursor: pointer; font-size: 15px; font-weight: 700; display: flex; flex-direction: column; align-items: center; gap: 6px; }
   .identity-choice .big-ic { font-size: 36px; }
-  .identity-choice:hover, .identity-choice.selected { border-color: var(--green); background: var(--green-pale); color: var(--green); }
+  .identity-choice.selected { border-color: var(--green); background: var(--green-pale); color: var(--green); }
 
-  /* Meal detail overlay */
   .meal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.5); z-index: 150; display: flex; align-items: flex-end; }
   .meal-overlay.hidden { display: none; }
-  .meal-sheet { background: var(--card); border-radius: 24px 24px 0 0; width: 100%; max-height: 85vh; overflow-y: auto; padding: 20px; }
-  .meal-sheet h2 { font-size: 20px; font-weight: 700; margin-bottom: 4px; }
-  .sheet-close { float: right; font-size: 22px; cursor: pointer; color: var(--muted); }
+  .meal-sheet { background: var(--card); border-radius: 24px 24px 0 0; width: 100%; max-height: 90vh; overflow-y: auto; }
+  .sheet-hero { position: relative; }
+  .sheet-hero img { width: 100%; height: 200px; object-fit: cover; display: block; }
+  .sheet-hero .sheet-close { position: absolute; top: 12px; right: 12px; background: rgba(0,0,0,.5); color: #fff; width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 18px; cursor: pointer; }
+  .sheet-body { padding: 18px 20px 30px; }
+  .sheet-body h2 { font-size: 21px; font-weight: 700; margin-bottom: 2px; }
+  .macro-pills { display: flex; gap: 8px; margin: 12px 0; flex-wrap: wrap; }
+  .macro-pill { background: var(--bg); border-radius: 10px; padding: 6px 10px; text-align: center; flex: 1; min-width: 60px; }
+  .macro-pill .mp-v { font-size: 17px; font-weight: 700; }
+  .macro-pill .mp-l { font-size: 10px; color: var(--muted); }
+  .recipe-section-title { font-size: 13px; font-weight: 700; color: var(--green); text-transform: uppercase; letter-spacing: .4px; margin: 16px 0 8px; display: flex; align-items: center; gap: 6px; }
 
-  /* Utilities */
   .empty { text-align: center; padding: 40px 20px; color: var(--muted); }
   .empty .ic { font-size: 40px; margin-bottom: 10px; }
   .empty p { font-size: 14px; }
@@ -187,25 +211,19 @@
 </head>
 <body>
 
-<!-- Identity Modal -->
 <div class="modal-overlay" id="identity-modal">
   <div class="modal-box">
     <div style="font-size:40px;margin-bottom:10px">🥗</div>
     <h2>Welcome to NutriPrep</h2>
-    <p>Who are you? Your meals are shared, but your goals and coach are personal.</p>
+    <p>Who are you? Your meals are shared, but your goals, coach and progress are personal.</p>
     <div class="identity-choice-row">
-      <button class="identity-choice" onclick="pickIdentity('diego', this)">
-        <span class="big-ic">👨</span>Diego
-      </button>
-      <button class="identity-choice" onclick="pickIdentity('diana', this)">
-        <span class="big-ic">👩</span>Diana
-      </button>
+      <button class="identity-choice" onclick="pickIdentity('diego', this)"><span class="big-ic">👨</span>Diego</button>
+      <button class="identity-choice" onclick="pickIdentity('diana', this)"><span class="big-ic">👩</span>Diana</button>
     </div>
-    <button class="btn" style="width:100%" onclick="confirmIdentity()">Let's go →</button>
+    <button class="btn btn-block" onclick="confirmIdentity()">Let's go →</button>
   </div>
 </div>
 
-<!-- Meal detail sheet -->
 <div class="meal-overlay hidden" id="meal-overlay">
   <div class="meal-sheet" id="meal-sheet-content"></div>
 </div>
@@ -219,6 +237,8 @@
 <div class="content">
   <!-- TODAY -->
   <div class="tab-pane active" id="pane-today">
+    <div class="stats-strip" id="home-stats"></div>
+    <div class="milestones" id="home-milestones"></div>
     <div id="today-banner"></div>
     <div class="card" id="today-macro-card" style="display:none">
       <div class="card-title">Your day — <span id="today-date-label"></span></div>
@@ -228,7 +248,7 @@
       </div>
     </div>
     <div class="card">
-      <div class="card-title">Today's meals</div>
+      <div class="card-title">Today's meals — tap ✓ when eaten</div>
       <div id="today-slots"></div>
     </div>
   </div>
@@ -245,7 +265,15 @@
       <div class="section-title" style="margin-bottom:0">Shopping list</div>
       <div id="shop-total" style="font-size:13px;color:var(--muted)"></div>
     </div>
+    <button class="btn btn-outline btn-block" style="margin-bottom:12px" onclick="markAllBought()">✓ Mark all bought → add to fridge</button>
     <div id="shopping-list-content"></div>
+  </div>
+
+  <!-- FRIDGE -->
+  <div class="tab-pane" id="pane-fridge">
+    <div class="section-title">My fridge & pantry</div>
+    <div id="fridge-meta" style="font-size:12px;color:var(--muted);margin-bottom:12px"></div>
+    <div id="fridge-content"></div>
   </div>
 
   <!-- PREP -->
@@ -279,7 +307,7 @@
   <div class="tab-pane" id="pane-coach">
     <div class="card" style="padding:10px 12px;margin-bottom:0;border-radius:16px 16px 0 0">
       <div style="font-size:13px;font-weight:600;color:var(--green)">Coach Léa 🌿</div>
-      <div style="font-size:12px;color:var(--muted)">Your private nutrition coach. Ask anything.</div>
+      <div style="font-size:12px;color:var(--muted)">Ask anything. Menu changes apply to the whole household.</div>
     </div>
     <div class="coach-msgs" id="coach-msgs"></div>
     <div style="height:80px"></div>
@@ -306,7 +334,7 @@
     <div class="card">
       <div class="card-title">Notifications</div>
       <div class="setting-row">
-        <div><div class="setting-label">Push notifications</div><div class="setting-sub">Prep, cook & snack reminders</div></div>
+        <div><div class="setting-label">Push notifications</div><div class="setting-sub">Prep, cook, snack & weigh-in</div></div>
         <button class="toggle" id="notif-toggle" onclick="toggleNotifications()"></button>
       </div>
       <div id="notif-status" style="font-size:12px;color:var(--muted);margin-top:6px"></div>
@@ -328,18 +356,18 @@
   </div>
 </div>
 
-<!-- Coach input bar (always visible when on coach tab) -->
 <div id="coach-bar" style="display:none;position:fixed;bottom:calc(var(--tab-h) + var(--safe-b));left:0;right:0;background:var(--card);border-top:1px solid var(--border);padding:8px 12px;z-index:99">
-  <div class="coach-input-bar" style="padding:0;border:none">
+  <div class="coach-input-bar">
     <input id="coach-input" type="text" placeholder="Ask Coach Léa…" onkeydown="if(event.key==='Enter')sendCoach()">
     <button class="send-btn" onclick="sendCoach()">↑</button>
   </div>
 </div>
 
 <nav>
-  <button onclick="showTab('today')" id="nav-today" class="active"><span class="ic">🏠</span>Today</button>
+  <button onclick="showTab('today')" id="nav-today" class="active"><span class="ic">🏠</span>Home</button>
   <button onclick="showTab('menu')" id="nav-menu"><span class="ic">📅</span>Menu</button>
-  <button onclick="showTab('shopping')" id="nav-shopping"><span class="ic">🛒</span>Shopping</button>
+  <button onclick="showTab('shopping')" id="nav-shopping"><span class="ic">🛒</span>Shop</button>
+  <button onclick="showTab('fridge')" id="nav-fridge"><span class="ic">🧊</span>Fridge</button>
   <button onclick="showTab('prep')" id="nav-prep"><span class="ic">🍳</span>Prep</button>
   <button onclick="showTab('progress')" id="nav-progress"><span class="ic">📈</span>Progress</button>
   <button onclick="showTab('coach')" id="nav-coach"><span class="ic">💬</span>Coach</button>
@@ -350,7 +378,7 @@
 const GITHUB_REPO = "tcw4wn9r95-jpg/training-ai";
 const GITHUB_BRANCH = "main";
 const RAW = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/nutrition`;
-const VAPID_PUBLIC_KEY = ""; // Set this after running: npx web-push generate-vapid-keys
+const VAPID_PUBLIC_KEY = ""; // Set after: npx web-push generate-vapid-keys
 
 const SLOT_LABELS = {
   breakfast: { icon: "☀️", label: "Breakfast" },
@@ -359,650 +387,578 @@ const SLOT_LABELS = {
   pm_snack:  { icon: "🥜", label: "Afternoon snack" },
   dinner:    { icon: "🍽️", label: "Dinner" },
 };
+const MILESTONES = [
+  { days: 7, icon: "🥉", label: "1 week" },
+  { days: 14, icon: "🥈", label: "2 weeks" },
+  { days: 30, icon: "🥇", label: "1 month" },
+];
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let identity = localStorage.getItem("nutriprep_identity") || null;
-let weekMenu = null, shoppingList = null, prepPlan = null, planStatus = null;
-let userGoals = {}, userWeightLog = [], userCheckins = [];
+let weekMenu = null, shoppingList = null, prepPlan = null, planStatus = null, inventory = null;
+let userGoals = {}, userWeightLog = [], userCheckins = [], userMealLogs = [];
 let coachHistory = [];
 let checkedItems = JSON.parse(localStorage.getItem("nutriprep_checked") || "{}");
 let macroRingChart = null, weightChart = null;
 let pendingIdentity = null;
 
+// ── Unit parser (mirrors units.py) ──────────────────────────────────────────────
+const MASS = {g:1,gram:1,grams:1,gr:1,kg:1000,kgs:1000,kilo:1000,kilos:1000,kilogram:1000,kilograms:1000};
+const VOL = {ml:1,milliliter:1,millilitre:1,cl:10,dl:100,l:1000,litre:1000,liter:1000,litres:1000,liters:1000};
+const COUNT = new Set(["pcs","pc","piece","pieces","unit","units","x","clove","cloves","can","cans","tin","tins","jar","jars","slice","slices","fillet","fillets","egg","eggs","head","heads","bunch","bunches","sprig","sprigs","stalk","stalks","stick","sticks","handful","handfuls","pinch","pinches","dash","dashes","tbsp","tablespoon","tablespoons","tsp","teaspoon","teaspoons","cup","cups","scoop","scoops","pack","packs","packet","packets","bottle","bottles","punnet","punnets","bag","bags"]);
+function parseNum(t){ t=t.trim().replace(/,/g,"."); if(t.includes("-")){const ps=t.split("-").filter(Boolean).map(Number).filter(n=>!isNaN(n)); return ps.length?Math.max(...ps):null;} if(t.includes("/")){const[a,b]=t.split("/").map(Number); return b?a/b:null;} const n=Number(t); return isNaN(n)?null:n; }
+function parseQty(q){ const raw=String(q||"").trim(); const low=raw.toLowerCase(); const m=low.match(/^([\d.,/\-\s]+)?\s*([a-zµ]*)/); if(!m)return{amount:null,kind:"unknown",unit:""}; let num=m[1],unit=(m[2]||"").trim(); let amt=(num&&num.trim())?parseNum(num):1; if(amt==null)amt=1; if(MASS[unit])return{amount:amt*MASS[unit],kind:"mass",unit:"g"}; if(VOL[unit])return{amount:amt*VOL[unit],kind:"volume",unit:"ml"}; const sing=(unit.endsWith("s")&&COUNT.has(unit.slice(0,-1)))?unit.slice(0,-1):unit; if(COUNT.has(unit)||COUNT.has(sing))return{amount:amt,kind:"count",unit:COUNT.has(sing)?sing:unit}; if(!unit&&num&&num.trim())return{amount:amt,kind:"count",unit:"unit"}; return{amount:null,kind:"unknown",unit}; }
+function formatQty(amount,kind,unit){ if(amount==null)return""; if(kind==="mass")return amount>=1000?(Math.round(amount/10)/100)+" kg":Math.round(amount)+" g"; if(kind==="volume")return amount>=1000?(Math.round(amount/10)/100)+" L":Math.round(amount)+" ml"; if(kind==="count"){let n=Math.round(amount*10)/10; if(n===Math.floor(n))n=Math.floor(n); let u=unit+((n!==1&&!unit.endsWith("s"))?"s":""); return (n+" "+u).trim();} return ""; }
+
+// ── Media helpers ──────────────────────────────────────────────────────────────
+function hashSeed(s){ let h=0; for(let i=0;i<s.length;i++){h=(h*31+s.charCodeAt(i))>>>0;} return h%100000; }
+function mealImageUrl(meal){
+  const prompt = meal.image_prompt || (meal.name + " healthy meal, food photography");
+  const seed = hashSeed(meal.name || prompt);
+  return `https://image.pollinations.ai/prompt/${encodeURIComponent(prompt)}?width=600&height=400&nologo=true&seed=${seed}`;
+}
+function ytId(url){ const m=url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|embed\/)|youtu\.be\/)([\w-]{11})/); return m?m[1]:null; }
+function videoHtml(url){
+  if(!url) return "";
+  const yid = ytId(url);
+  if(yid) return `<div class="video-wrap"><iframe src="https://www.youtube.com/embed/${yid}" allowfullscreen loading="lazy"></iframe></div>`;
+  let platform = "Watch video";
+  if(url.includes("instagram")) platform = "Watch on Instagram";
+  else if(url.includes("tiktok")) platform = "Watch on TikTok";
+  return `<a class="video-launch" href="${url}" target="_blank" rel="noopener"><span class="vl-ic">▶</span>${platform}</a>`;
+}
+function ytSearchBtn(name){ return `<a class="btn-yt" href="https://www.youtube.com/results?search_query=${encodeURIComponent(name+" recipe")}" target="_blank" rel="noopener">▶ Search YouTube for this recipe</a>`; }
+
 // ── Settings ──────────────────────────────────────────────────────────────────
-function cfg(k) { return localStorage.getItem("nutriprep_" + k) || ""; }
-function setCfg(k, v) { localStorage.setItem("nutriprep_" + k, v); }
-function saveSettings() {
-  setCfg("anthropic_key", document.getElementById("s-anthropic-key").value);
-  setCfg("gh_token", document.getElementById("s-gh-token").value);
-}
-function loadSettingsUI() {
-  document.getElementById("s-anthropic-key").value = cfg("anthropic_key");
-  document.getElementById("s-gh-token").value = cfg("gh_token");
-  renderIdentityPicker();
-  renderGoals();
-}
+function cfg(k){ return localStorage.getItem("nutriprep_"+k) || ""; }
+function setCfg(k,v){ localStorage.setItem("nutriprep_"+k, v); }
+function saveSettings(){ setCfg("anthropic_key", document.getElementById("s-anthropic-key").value); setCfg("gh_token", document.getElementById("s-gh-token").value); }
+function loadSettingsUI(){ document.getElementById("s-anthropic-key").value=cfg("anthropic_key"); document.getElementById("s-gh-token").value=cfg("gh_token"); renderIdentityPicker(); renderGoals(); }
 
 // ── Identity ──────────────────────────────────────────────────────────────────
-function pickIdentity(who, el) {
-  pendingIdentity = who;
-  document.querySelectorAll(".identity-choice").forEach(b => b.classList.remove("selected"));
-  if (el) el.classList.add("selected");
-}
-function confirmIdentity() {
-  if (!pendingIdentity) { alert("Please choose who you are."); return; }
-  identity = pendingIdentity;
-  localStorage.setItem("nutriprep_identity", identity);
-  document.getElementById("identity-modal").classList.add("hidden");
-  init();
-}
-function renderIdentityPicker() {
-  const wrap = document.getElementById("settings-identity-picker");
-  ["diego", "diana"].forEach(who => {
-    const btn = document.createElement("button");
-    btn.className = "identity-btn" + (identity === who ? " active" : "");
-    btn.innerHTML = (who === "diego" ? "👨 " : "👩 ") + who.charAt(0).toUpperCase() + who.slice(1);
-    btn.onclick = () => { identity = who; localStorage.setItem("nutriprep_identity", who); renderIdentityPicker(); renderUserChip(); loadUserData(); };
-    wrap.appendChild(btn);
-  });
-}
-function renderUserChip() {
-  const el = document.getElementById("hdr-user-chip");
-  el.textContent = identity ? (identity === "diego" ? "👨 Diego" : "👩 Diana") : "—";
-}
+function pickIdentity(who, el){ pendingIdentity=who; document.querySelectorAll(".identity-choice").forEach(b=>b.classList.remove("selected")); if(el)el.classList.add("selected"); }
+function confirmIdentity(){ if(!pendingIdentity){ alert("Please choose who you are."); return; } identity=pendingIdentity; localStorage.setItem("nutriprep_identity", identity); document.getElementById("identity-modal").classList.add("hidden"); init(); }
+function renderIdentityPicker(){ const wrap=document.getElementById("settings-identity-picker"); wrap.innerHTML=""; ["diego","diana"].forEach(who=>{ const btn=document.createElement("button"); btn.className="identity-btn"+(identity===who?" active":""); btn.innerHTML=(who==="diego"?"👨 ":"👩 ")+who.charAt(0).toUpperCase()+who.slice(1); btn.onclick=()=>{ identity=who; localStorage.setItem("nutriprep_identity",who); renderIdentityPicker(); renderUserChip(); loadUserData().then(()=>{renderToday();}); }; wrap.appendChild(btn); }); }
+function renderUserChip(){ document.getElementById("hdr-user-chip").textContent = identity?(identity==="diego"?"👨 Diego":"👩 Diana"):"—"; }
 
-// ── GitHub API helpers ────────────────────────────────────────────────────────
-async function ghFetch(path) {
-  const url = `${RAW}/${path}?t=${Date.now()}`;
-  const r = await fetch(url);
-  if (!r.ok) throw new Error(`${r.status} ${path}`);
-  return r.json();
+// ── GitHub API ─────────────────────────────────────────────────────────────────
+async function ghFetch(path){ const r=await fetch(`${RAW}/${path}?t=${Date.now()}`); if(!r.ok)throw new Error(`${r.status} ${path}`); return r.json(); }
+async function ghWrite(apiPath, content, message){
+  const token=cfg("gh_token"); if(!token)throw new Error("No GitHub token — go to Settings.");
+  const apiUrl=`https://api.github.com/repos/${GITHUB_REPO}/contents/nutrition/${apiPath}`;
+  let sha=null; try{ sha=(await (await fetch(apiUrl,{headers:{Authorization:`Bearer ${token}`}})).json()).sha; }catch(_){}
+  const body={message, content:btoa(unescape(encodeURIComponent(JSON.stringify(content,null,2)))), branch:GITHUB_BRANCH}; if(sha)body.sha=sha;
+  const r=await fetch(apiUrl,{method:"PUT",headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`},body:JSON.stringify(body)});
+  if(!r.ok){ throw new Error((await r.json()).message||r.status); } return r.json();
 }
-async function ghWrite(apiPath, content, message) {
-  const token = cfg("gh_token");
-  if (!token) throw new Error("No GitHub token — go to Settings.");
-  const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/nutrition/${apiPath}`;
-  // Get current SHA
-  let sha = null;
-  try {
-    const meta = await (await fetch(apiUrl, { headers: { Authorization: `Bearer ${token}` } })).json();
-    sha = meta.sha;
-  } catch (_) {}
-  const body = { message, content: btoa(unescape(encodeURIComponent(JSON.stringify(content, null, 2)))), branch: GITHUB_BRANCH };
-  if (sha) body.sha = sha;
-  const r = await fetch(apiUrl, {
-    method: "PUT",
-    headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
-    body: JSON.stringify(body),
-  });
-  if (!r.ok) { const e = await r.json(); throw new Error(e.message || r.status); }
-  return r.json();
-}
-async function ghWriteRaw(apiPath, base64Content, message) {
-  const token = cfg("gh_token");
-  if (!token) throw new Error("No GitHub token.");
-  const apiUrl = `https://api.github.com/repos/${GITHUB_REPO}/contents/nutrition/${apiPath}`;
-  let sha = null;
-  try { sha = (await (await fetch(apiUrl, { headers: { Authorization: `Bearer ${token}` } })).json()).sha; } catch (_) {}
-  const body = { message, content: base64Content, branch: GITHUB_BRANCH };
-  if (sha) body.sha = sha;
-  const r = await fetch(apiUrl, { method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` }, body: JSON.stringify(body) });
-  if (!r.ok) throw new Error((await r.json()).message || r.status);
+async function ghWriteRaw(apiPath, base64Content, message){
+  const token=cfg("gh_token"); if(!token)throw new Error("No GitHub token.");
+  const apiUrl=`https://api.github.com/repos/${GITHUB_REPO}/contents/nutrition/${apiPath}`;
+  let sha=null; try{ sha=(await (await fetch(apiUrl,{headers:{Authorization:`Bearer ${token}`}})).json()).sha; }catch(_){}
+  const body={message, content:base64Content, branch:GITHUB_BRANCH}; if(sha)body.sha=sha;
+  const r=await fetch(apiUrl,{method:"PUT",headers:{"Content-Type":"application/json",Authorization:`Bearer ${token}`},body:JSON.stringify(body)});
+  if(!r.ok)throw new Error((await r.json()).message||r.status);
 }
 
 // ── Data loading ──────────────────────────────────────────────────────────────
-async function loadSharedData() {
-  try { weekMenu = await ghFetch("weekly_menu.json"); } catch (_) { weekMenu = null; }
-  try { shoppingList = await ghFetch("shopping_list.json"); } catch (_) { shoppingList = null; }
-  try { prepPlan = await ghFetch("prep_plan.json"); } catch (_) { prepPlan = null; }
-  try { planStatus = await ghFetch("plan_status.json"); } catch (_) { planStatus = null; }
+async function loadSharedData(){
+  try{ weekMenu=await ghFetch("weekly_menu.json"); }catch(_){ weekMenu=null; }
+  try{ shoppingList=await ghFetch("shopping_list.json"); }catch(_){ shoppingList=null; }
+  try{ prepPlan=await ghFetch("prep_plan.json"); }catch(_){ prepPlan=null; }
+  try{ planStatus=await ghFetch("plan_status.json"); }catch(_){ planStatus=null; }
+  try{ inventory=await ghFetch("inventory.json"); }catch(_){ inventory=null; }
 }
-async function loadUserData() {
-  if (!identity) return;
-  try { userGoals = await ghFetch(`users/${identity}/goals.json`); } catch (_) { userGoals = {}; }
-  try { userWeightLog = await ghFetch(`users/${identity}/weight_log.json`); } catch (_) { userWeightLog = []; }
-  try { userCheckins = await ghFetch(`users/${identity}/checkins.json`); } catch (_) { userCheckins = []; }
-  try { coachHistory = await ghFetch(`users/${identity}/coach_history.json`); } catch (_) { coachHistory = []; }
+async function loadUserData(){
+  if(!identity)return;
+  try{ userGoals=await ghFetch(`users/${identity}/goals.json`); }catch(_){ userGoals={}; }
+  try{ userWeightLog=await ghFetch(`users/${identity}/weight_log.json`); }catch(_){ userWeightLog=[]; }
+  try{ userCheckins=await ghFetch(`users/${identity}/checkins.json`); }catch(_){ userCheckins=[]; }
+  try{ userMealLogs=await ghFetch(`users/${identity}/meal_logs.json`); }catch(_){ userMealLogs=[]; }
+  try{ coachHistory=await ghFetch(`users/${identity}/coach_history.json`); }catch(_){ coachHistory=[]; }
+}
+function todayISO(){ return new Date().toLocaleDateString("en-CA"); }
+
+// ── Meal confirmation / compliance ──────────────────────────────────────────────
+function isAte(date, slot){ return userMealLogs.some(l=>l.date===date && l.slot===slot && l.ate); }
+async function toggleAte(date, slot, mealName){
+  const idx=userMealLogs.findIndex(l=>l.date===date && l.slot===slot);
+  if(idx>=0 && userMealLogs[idx].ate){ userMealLogs.splice(idx,1); }
+  else if(idx>=0){ userMealLogs[idx].ate=true; userMealLogs[idx].logged_at=new Date().toISOString(); }
+  else { userMealLogs.push({date, slot, meal_name:mealName, ate:true, logged_at:new Date().toISOString()}); }
+  renderToday();
+  try{ await ghWrite(`users/${identity}/meal_logs.json`, userMealLogs, `Meal log ${date} ${slot} (${identity})`); }
+  catch(e){ alert("Couldn't save: "+e.message); }
+}
+function computeCompliance(){
+  // This week's scheduled meals up to today vs confirmed
+  if(!weekMenu) return { pct: null, scheduled: 0, eaten: 0 };
+  const today=todayISO(); let scheduled=0, eaten=0;
+  weekMenu.forEach(day=>{ if(day.date<=today){ day.meals.forEach(m=>{ scheduled++; if(isAte(day.date,m.slot))eaten++; }); } });
+  return { pct: scheduled?Math.round(eaten/scheduled*100):null, scheduled, eaten };
+}
+function computeStreak(){
+  // Compliant day = >=4 confirmed meals that date. Walk back from today.
+  const byDate={}; userMealLogs.forEach(l=>{ if(l.ate){ byDate[l.date]=(byDate[l.date]||0)+1; } });
+  let streak=0; let d=new Date();
+  // allow today to not count yet if no logs; start from today, step back
+  for(let i=0;i<400;i++){
+    const ds=d.toLocaleDateString("en-CA");
+    const compliant=(byDate[ds]||0)>=4;
+    if(compliant){ streak++; }
+    else if(i===0){ /* today incomplete — don't break, check yesterday */ }
+    else { break; }
+    d.setDate(d.getDate()-1);
+  }
+  return streak;
+}
+function computeBestStreak(){
+  const dates=[...new Set(userMealLogs.filter(l=>l.ate).map(l=>l.date))].sort();
+  const dayCount={}; userMealLogs.forEach(l=>{ if(l.ate)dayCount[l.date]=(dayCount[l.date]||0)+1; });
+  const compliantDays=dates.filter(d=>dayCount[d]>=4);
+  let best=0,cur=0,prev=null;
+  compliantDays.forEach(ds=>{ if(prev){ const diff=(new Date(ds)-new Date(prev))/86400000; cur=diff===1?cur+1:1; } else cur=1; best=Math.max(best,cur); prev=ds; });
+  return best;
 }
 
-// ── TODAY TAB ─────────────────────────────────────────────────────────────────
-function todayISO() { return new Date().toISOString().split("T")[0]; }
-function renderToday() {
-  const today = todayISO();
-  const dayData = weekMenu ? weekMenu.find(d => d.date === today) : null;
+// ── TODAY / HOME ────────────────────────────────────────────────────────────────
+function renderToday(){
+  const today=todayISO();
+  const dayData=weekMenu?weekMenu.find(d=>d.date===today):null;
+  renderHomeStats();
   renderNextAction(dayData);
   renderTodaySlots(dayData);
   renderMacroRing(dayData);
-  document.getElementById("today-date-label").textContent = new Date().toLocaleDateString("en-LU", { weekday: "long", day: "numeric", month: "long" });
+  document.getElementById("today-date-label").textContent=new Date().toLocaleDateString("en-LU",{weekday:"long",day:"numeric",month:"long"});
 }
-function renderNextAction(dayData) {
-  const banner = document.getElementById("today-banner");
-  if (!dayData) {
-    banner.innerHTML = `<div class="action-banner"><span class="ic">📋</span><div><h2>No plan yet</h2><p>Run the meal plan workflow on Sunday to generate this week's menu.</p></div></div>`;
-    return;
-  }
-  const now = new Date();
-  const hm = h => h * 60;
-  const mins = now.getHours() * 60 + now.getMinutes();
-  // Find next upcoming meal
-  const upcoming = dayData.meals
-    .map(m => { const [h,min] = m.time.split(":").map(Number); return { ...m, mins: hm(h) + min }; })
-    .filter(m => m.mins > mins)
-    .sort((a,b) => a.mins - b.mins)[0];
-  if (upcoming) {
-    const { icon, label } = SLOT_LABELS[upcoming.slot] || {};
-    const portion = (upcoming.portions || {})[identity] || {};
-    const kcal = (portion.macros || {}).kcal;
-    const minsUntil = upcoming.mins - mins;
-    banner.innerHTML = `<div class="action-banner"><span class="ic">${icon || "🕐"}</span><div><h2>${label || upcoming.slot} in ${minsUntil} min</h2><p>${upcoming.name}${kcal ? ` — ${kcal} kcal` : ""}</p></div></div>`;
-  } else {
-    banner.innerHTML = `<div class="action-banner" style="background:var(--green-light)"><span class="ic">✅</span><div><h2>All done for today!</h2><p>Great job. Tomorrow's plan is ready.</p></div></div>`;
-  }
+function renderHomeStats(){
+  const c=computeCompliance(); const streak=computeStreak();
+  const start=userGoals.start_weight_kg||0, target=userGoals.target_weight_kg||0;
+  const last=userWeightLog.length?userWeightLog[userWeightLog.length-1].weight_kg:start;
+  const totalToLose=Math.abs(start-target), done=Math.abs(start-last);
+  const wpct=totalToLose>0?Math.min(100,Math.round(done/totalToLose*100)):0;
+  document.getElementById("home-stats").innerHTML=`
+    <div class="stat-tile"><div class="big">${c.pct==null?"—":c.pct+"%"}</div><div class="lbl">Compliance</div><div class="sub">${c.eaten}/${c.scheduled} meals</div></div>
+    <div class="stat-tile"><div class="big flame">${streak}🔥</div><div class="lbl">Day streak</div><div class="sub">${streak>0?"keep it up!":"start today"}</div></div>
+    <div class="stat-tile"><div class="big">${last||"—"}<span style="font-size:13px">kg</span></div><div class="lbl">Weight</div><div class="sub">${target?"goal "+target+"kg ("+wpct+"%)":"set a goal"}</div></div>`;
+  const best=Math.max(streak, computeBestStreak());
+  document.getElementById("home-milestones").innerHTML=MILESTONES.map(m=>`
+    <div class="milestone${best>=m.days?" earned":""}"><div class="m-ic">${m.icon}</div><div class="m-lbl">${m.label}${best>=m.days?" ✓":""}</div></div>`).join("");
 }
-function renderTodaySlots(dayData) {
-  const wrap = document.getElementById("today-slots");
-  if (!dayData) { wrap.innerHTML = `<div class="empty"><div class="ic">📅</div><p>No plan for today.</p></div>`; return; }
-  const now = new Date();
-  const currMins = now.getHours() * 60 + now.getMinutes();
-  wrap.innerHTML = dayData.meals.map(meal => {
-    const { icon, label } = SLOT_LABELS[meal.slot] || { icon: "🍴", label: meal.slot };
-    const portion = (meal.portions || {})[identity] || {};
-    const macros = portion.macros || {};
-    const [mh, mm] = meal.time.split(":").map(Number);
-    const mealMins = mh * 60 + mm;
-    const current = Math.abs(mealMins - currMins) < 60;
-    return `<div class="slot-row${current ? " current" : ""}" onclick="showMealDetail(${JSON.stringify(meal).replace(/"/g,"&quot;")})">
+function renderNextAction(dayData){
+  const banner=document.getElementById("today-banner");
+  if(!dayData){ banner.innerHTML=`<div class="action-banner"><span class="ic">📋</span><div><h2>No plan yet</h2><p>Run the meal-plan workflow to generate this week's menu.</p></div></div>`; return; }
+  const now=new Date(); const mins=now.getHours()*60+now.getMinutes();
+  const upcoming=dayData.meals.map(m=>{const[h,mm]=m.time.split(":").map(Number);return{...m,mins:h*60+mm};}).filter(m=>m.mins>mins).sort((a,b)=>a.mins-b.mins)[0];
+  if(upcoming){ const{icon,label}=SLOT_LABELS[upcoming.slot]||{}; const portion=(upcoming.portions||{})[identity]||{}; const kcal=(portion.macros||{}).kcal; const minsUntil=upcoming.mins-mins;
+    banner.innerHTML=`<div class="action-banner"><span class="ic">${icon||"🕐"}</span><div><h2>${label||upcoming.slot} in ${minsUntil} min</h2><p>${upcoming.name}${kcal?` — ${kcal} kcal`:""}</p></div></div>`;
+  } else { banner.innerHTML=`<div class="action-banner" style="background:var(--green-light)"><span class="ic">✅</span><div><h2>All done for today!</h2><p>Great job. Tomorrow's plan is ready.</p></div></div>`; }
+}
+function renderTodaySlots(dayData){
+  const wrap=document.getElementById("today-slots");
+  if(!dayData){ wrap.innerHTML=`<div class="empty"><div class="ic">📅</div><p>No plan for today.</p></div>`; return; }
+  const now=new Date(); const currMins=now.getHours()*60+now.getMinutes();
+  wrap.innerHTML=dayData.meals.map(meal=>{
+    const{icon,label}=SLOT_LABELS[meal.slot]||{icon:"🍴",label:meal.slot};
+    const portion=(meal.portions||{})[identity]||{}; const macros=portion.macros||{};
+    const[mh,mm]=meal.time.split(":").map(Number); const current=Math.abs((mh*60+mm)-currMins)<60;
+    const ate=isAte(dayData.date, meal.slot);
+    return `<div class="slot-row${current?" current":""}">
       <div class="slot-time">${meal.time}</div>
       <div class="slot-icon">${icon}</div>
-      <div class="slot-info">
+      <div class="slot-info" onclick='openMeal(${JSON.stringify(meal).replace(/'/g,"&#39;")}, "${dayData.date}")'>
         <div class="slot-name">${meal.name}</div>
-        <div class="slot-macro">${macros.kcal ? `${macros.kcal} kcal · ${macros.protein_g}g protein` : ""}</div>
-        ${meal.prep_ahead ? '<span class="slot-badge">✓ Batch-prepped</span>' : ""}
+        <div class="slot-macro">${macros.kcal?`${macros.kcal} kcal · ${macros.protein_g}g protein`:""}</div>
+        ${meal.prep_ahead?'<span class="slot-badge">✓ Batch-prepped</span>':""}
       </div>
+      <button class="ate-btn${ate?" ate":""}" onclick='toggleAte("${dayData.date}","${meal.slot}",${JSON.stringify(meal.name)})'>${ate?"✓":""}</button>
     </div>`;
   }).join("");
 }
-function renderMacroRing(dayData) {
-  const card = document.getElementById("today-macro-card");
-  if (!dayData || !identity) { card.style.display = "none"; return; }
-  const totals = (dayData.day_totals || {})[identity] || {};
-  if (!totals.kcal) { card.style.display = "none"; return; }
-  card.style.display = "block";
-  const p = totals.protein_g || 0, c = totals.carbs_g || 0, f = totals.fat_g || 0;
-  const legend = document.getElementById("macro-legend");
-  legend.innerHTML = `
-    <div class="kcal-big">${totals.kcal}</div>
-    <div class="kcal-label">kcal today</div>
+function renderMacroRing(dayData){
+  const card=document.getElementById("today-macro-card");
+  if(!dayData||!identity){ card.style.display="none"; return; }
+  const totals=(dayData.day_totals||{})[identity]||{};
+  if(!totals.kcal){ card.style.display="none"; return; }
+  card.style.display="block";
+  const p=totals.protein_g||0,c=totals.carbs_g||0,f=totals.fat_g||0;
+  document.getElementById("macro-legend").innerHTML=`
+    <div class="kcal-big">${totals.kcal}</div><div class="kcal-label">kcal planned today</div>
     <div style="margin-top:10px">
       <div class="macro-legend-row"><span><span class="macro-legend-dot" style="background:#52b788"></span>Protein</span><span>${p}g</span></div>
       <div class="macro-legend-row"><span><span class="macro-legend-dot" style="background:#c9a84c"></span>Carbs</span><span>${c}g</span></div>
       <div class="macro-legend-row"><span><span class="macro-legend-dot" style="background:#e07a5f"></span>Fat</span><span>${f}g</span></div>
     </div>`;
-  const ctx = document.getElementById("macro-ring-chart").getContext("2d");
-  if (macroRingChart) macroRingChart.destroy();
-  macroRingChart = new Chart(ctx, {
-    type: "doughnut",
-    data: { datasets: [{ data: [p * 4, c * 4, f * 9], backgroundColor: ["#52b788","#c9a84c","#e07a5f"], borderWidth: 0 }] },
-    options: { cutout: "68%", plugins: { legend: { display: false }, tooltip: { enabled: false } }, animation: { duration: 400 } },
-  });
+  const ctx=document.getElementById("macro-ring-chart").getContext("2d");
+  if(macroRingChart)macroRingChart.destroy();
+  macroRingChart=new Chart(ctx,{type:"doughnut",data:{datasets:[{data:[p*4,c*4,f*9],backgroundColor:["#52b788","#c9a84c","#e07a5f"],borderWidth:0}]},options:{cutout:"68%",plugins:{legend:{display:false},tooltip:{enabled:false}},animation:{duration:400}}});
 }
 
-// ── MENU TAB ──────────────────────────────────────────────────────────────────
-function renderMenu() {
-  const wrap = document.getElementById("menu-days");
-  if (!weekMenu) { wrap.innerHTML = `<div class="empty"><div class="ic">📅</div><p>No meal plan yet. Run the workflow on Sunday.</p></div>`; return; }
-  wrap.innerHTML = weekMenu.map((day, i) => {
-    const totals = (day.day_totals || {})[identity] || {};
-    const dLabel = new Date(day.date).toLocaleDateString("en-LU", { weekday: "long", day: "numeric", month: "short" });
-    const meals = day.meals.map(meal => {
-      const { icon, label } = SLOT_LABELS[meal.slot] || { icon: "🍴", label: meal.slot };
-      const portion = (meal.portions || {})[identity] || {};
-      const macros = portion.macros || {};
-      return `<div class="meal-detail" onclick="showMealDetail(${JSON.stringify(meal).replace(/"/g, "&quot;")})">
-        <div class="meal-slot-label">${icon} ${label}</div>
-        <div class="meal-name">${meal.name}</div>
-        <div class="meal-macros">${macros.kcal ? `${macros.kcal} kcal · P${macros.protein_g}g C${macros.carbs_g}g F${macros.fat_g}g` : ""}</div>
-        ${meal.prep_ahead ? '<span class="chip" style="margin-top:4px">Batch-prepped ✓</span>' : ""}
+// ── MENU ──────────────────────────────────────────────────────────────────────
+function renderMenu(){
+  const wrap=document.getElementById("menu-days");
+  if(!weekMenu){ wrap.innerHTML=`<div class="empty"><div class="ic">📅</div><p>No meal plan yet. Run the workflow on Sunday.</p></div>`; return; }
+  wrap.innerHTML=weekMenu.map((day,i)=>{
+    const totals=(day.day_totals||{})[identity]||{};
+    const dLabel=new Date(day.date).toLocaleDateString("en-LU",{weekday:"long",day:"numeric",month:"short"});
+    const meals=day.meals.map(meal=>{
+      const{icon,label}=SLOT_LABELS[meal.slot]||{icon:"🍴",label:meal.slot};
+      const portion=(meal.portions||{})[identity]||{}; const macros=portion.macros||{};
+      return `<div class="meal-detail" onclick='openMeal(${JSON.stringify(meal).replace(/'/g,"&#39;")}, "${day.date}")'>
+        <img class="meal-thumb" loading="lazy" src="${mealImageUrl(meal)}" onerror="this.style.visibility='hidden'">
+        <div class="md-info">
+          <div class="meal-slot-label">${icon} ${label}</div>
+          <div class="meal-name">${meal.name}</div>
+          <div class="meal-macros">${macros.kcal?`${macros.kcal} kcal · P${macros.protein_g} C${macros.carbs_g} F${macros.fat_g}`:""}</div>
+        </div>
+        ${isAte(day.date,meal.slot)?'<span class="chip">✓ eaten</span>':""}
       </div>`;
     }).join("");
-    return `<div class="day-card">
-      <div class="day-header" onclick="toggleDay(${i})">
-        <h3>${dLabel}</h3>
-        <div class="day-kcal">${totals.kcal ? `${totals.kcal} kcal` : ""}</div>
-      </div>
-      <div class="day-meals" id="day-meals-${i}">${meals}</div>
-    </div>`;
+    return `<div class="day-card"><div class="day-header" onclick="toggleDay(${i})"><h3>${dLabel}</h3><div class="day-kcal">${totals.kcal?`${totals.kcal} kcal`:""}</div></div><div class="day-meals" id="day-meals-${i}">${meals}</div></div>`;
   }).join("");
-  // Open today
-  const todayIdx = weekMenu.findIndex(d => d.date === todayISO());
-  if (todayIdx >= 0) toggleDay(todayIdx);
+  const todayIdx=weekMenu.findIndex(d=>d.date===todayISO());
+  if(todayIdx>=0)toggleDay(todayIdx);
 }
-function toggleDay(i) {
-  const el = document.getElementById(`day-meals-${i}`);
-  el.classList.toggle("open");
+function toggleDay(i){ document.getElementById(`day-meals-${i}`).classList.toggle("open"); }
+
+// ── MEAL DETAIL SHEET ───────────────────────────────────────────────────────────
+let currentMeal=null, currentMealDate=null;
+function openMeal(meal, dayDate){
+  currentMeal=meal; currentMealDate=dayDate;
+  const overlay=document.getElementById("meal-overlay"); overlay.classList.remove("hidden");
+  const{icon,label}=SLOT_LABELS[meal.slot]||{icon:"🍴",label:meal.slot};
+  const myPortion=(meal.portions||{})[identity]||{}; const m=myPortion.macros||{};
+  const ingredients=myPortion.ingredients||[];
+  const partner=identity==="diego"?"diana":"diego";
+  const partnerKcal=(((meal.portions||{})[partner]||{}).macros||{}).kcal;
+  const prepSteps=meal.prep_steps||[]; const dayOf=meal.day_of_steps||meal.recipe||[];
+  const ate=isAte(dayDate, meal.slot);
+
+  const ingList=ingredients.map(ing=>`<div style="font-size:14px;padding:4px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between"><span>${ing.item}</span><strong>${ing.qty}</strong></div>`).join("");
+  const prepHtml=prepSteps.length?`<div class="recipe-section-title">🧊 Meal prep (Sunday)</div>${prepSteps.map((s,i)=>`<div class="batch-step"><span class="batch-step-num">${i+1}</span>${s}</div>`).join("")}`:"";
+  const dayHtml=dayOf.length?`<div class="recipe-section-title">🍳 On the day${meal.cook_minutes_day_of?` · ${meal.cook_minutes_day_of} min`:""}</div>${dayOf.map((s,i)=>`<div class="batch-step"><span class="batch-step-num">${i+1}</span>${s}</div>`).join("")}`:"";
+  const vid=meal.video_url?videoHtml(meal.video_url):ytSearchBtn(meal.name);
+  const attach=`<div class="attach-row"><input id="meal-video-input" placeholder="Paste recipe video link (YouTube/IG/TikTok)" value="${meal.video_url||""}"><button class="btn" onclick="attachMealVideo()">Save</button></div>`;
+
+  document.getElementById("meal-sheet-content").innerHTML=`
+    <div class="sheet-hero">
+      <img src="${mealImageUrl(meal)}" onerror="this.style.height='80px'">
+      <div class="sheet-close" onclick="closeMealSheet()">✕</div>
+    </div>
+    <div class="sheet-body">
+      <div style="font-size:12px;color:var(--muted)">${icon} ${label} · ${meal.time}${meal.prep_ahead?' · <span style="color:var(--green)">batch-prepped</span>':""}</div>
+      <h2>${meal.name}</h2>
+      <div class="macro-pills">
+        ${m.kcal?`<div class="macro-pill"><div class="mp-v">${m.kcal}</div><div class="mp-l">kcal</div></div>`:""}
+        ${m.protein_g!=null?`<div class="macro-pill"><div class="mp-v">${m.protein_g}g</div><div class="mp-l">protein</div></div>`:""}
+        ${m.carbs_g!=null?`<div class="macro-pill"><div class="mp-v">${m.carbs_g}g</div><div class="mp-l">carbs</div></div>`:""}
+        ${m.fat_g!=null?`<div class="macro-pill"><div class="mp-v">${m.fat_g}g</div><div class="mp-l">fat</div></div>`:""}
+        ${m.fiber_g!=null?`<div class="macro-pill"><div class="mp-v">${m.fiber_g}g</div><div class="mp-l">fibre</div></div>`:""}
+      </div>
+      ${partnerKcal?`<div style="font-size:12px;color:var(--muted);margin-bottom:6px">${partner.charAt(0).toUpperCase()+partner.slice(1)}'s portion: ${partnerKcal} kcal</div>`:""}
+      <button class="btn btn-block ${ate?"btn-outline":""}" onclick='toggleAte("${dayDate}","${meal.slot}",${JSON.stringify(meal.name)}); closeMealSheet();'>${ate?"✓ Eaten — tap to undo":"Mark as eaten ✓"}</button>
+      ${ingList?`<div class="recipe-section-title">🛒 Your ingredients</div>${ingList}`:""}
+      ${prepHtml}
+      ${dayHtml}
+      <div class="recipe-section-title">🎬 Video</div>
+      ${vid}
+      ${attach}
+    </div>`;
+}
+function closeMealSheet(){ document.getElementById("meal-overlay").classList.add("hidden"); }
+document.getElementById("meal-overlay").addEventListener("click",e=>{ if(e.target===document.getElementById("meal-overlay"))closeMealSheet(); });
+
+async function attachMealVideo(){
+  const url=document.getElementById("meal-video-input").value.trim();
+  if(!currentMeal)return;
+  // Update in weekMenu shared file
+  const day=weekMenu.find(d=>d.date===currentMealDate);
+  const meal=day?day.meals.find(mm=>mm.slot===currentMeal.slot):null;
+  if(meal){ meal.video_url=url; currentMeal.video_url=url; }
+  try{
+    await ghWrite("weekly_menu.json", weekMenu, `Attach video to ${currentMeal.name}`);
+    openMeal(currentMeal, currentMealDate); // re-render
+  }catch(e){ alert("Couldn't save video: "+e.message); }
 }
 
-// ── MEAL DETAIL SHEET ─────────────────────────────────────────────────────────
-function showMealDetail(meal) {
-  const overlay = document.getElementById("meal-overlay");
-  const content = document.getElementById("meal-sheet-content");
-  overlay.classList.remove("hidden");
-  const { icon, label } = SLOT_LABELS[meal.slot] || { icon: "🍴", label: meal.slot };
-  const diegoPortion = (meal.portions || {}).diego || {};
-  const dianaPortion = (meal.portions || {}).diana || {};
-  const myPortion = (meal.portions || {})[identity] || {};
-  const myMacros = myPortion.macros || {};
-  const myIngredients = myPortion.ingredients || [];
-  const partnerName = identity === "diego" ? "diana" : "diego";
-  const partnerPortion = (meal.portions || {})[partnerName] || {};
-  const steps = (meal.recipe || []).map((s, i) => `<div class="batch-step"><span class="batch-step-num">${i+1}.</span>${s}</div>`).join("");
-  const ingList = myIngredients.map(ing => `<div style="font-size:14px;padding:3px 0;border-bottom:1px solid var(--border)">${ing.item} <strong>${ing.qty}</strong></div>`).join("");
-  const partnerKcal = (partnerPortion.macros || {}).kcal;
-  content.innerHTML = `
-    <div style="display:flex;justify-content:space-between;align-items:start;margin-bottom:12px">
-      <div><div style="font-size:12px;color:var(--muted);margin-bottom:2px">${icon} ${label} · ${meal.time}</div>
-      <h2>${meal.name}</h2></div>
-      <span class="sheet-close" onclick="closeMealSheet()">✕</span>
-    </div>
-    ${meal.prep_ahead ? `<div class="chip" style="margin-bottom:12px">Batch-prepped Sunday ✓</div>` : ""}
-    <div class="card-title" style="margin-bottom:6px">Your portion (${identity})</div>
-    <div style="display:flex;gap:12px;margin-bottom:12px">
-      ${myMacros.kcal ? `<div style="text-align:center"><div style="font-size:20px;font-weight:700;color:var(--green)">${myMacros.kcal}</div><div style="font-size:11px;color:var(--muted)">kcal</div></div>` : ""}
-      ${myMacros.protein_g ? `<div style="text-align:center"><div style="font-size:20px;font-weight:700">${myMacros.protein_g}g</div><div style="font-size:11px;color:var(--muted)">protein</div></div>` : ""}
-      ${myMacros.carbs_g ? `<div style="text-align:center"><div style="font-size:20px;font-weight:700">${myMacros.carbs_g}g</div><div style="font-size:11px;color:var(--muted)">carbs</div></div>` : ""}
-      ${myMacros.fat_g ? `<div style="text-align:center"><div style="font-size:20px;font-weight:700">${myMacros.fat_g}g</div><div style="font-size:11px;color:var(--muted)">fat</div></div>` : ""}
-    </div>
-    ${ingList ? `<div class="card-title" style="margin-bottom:6px">Your ingredients</div>${ingList}` : ""}
-    ${partnerKcal ? `<div style="margin-top:10px;font-size:12px;color:var(--muted)">${partnerName.charAt(0).toUpperCase()+partnerName.slice(1)}: ${partnerKcal} kcal portion</div>` : ""}
-    ${steps ? `<div class="card-title" style="margin-top:14px;margin-bottom:6px">Recipe</div>${steps}` : ""}
-    ${meal.cook_minutes_day_of ? `<div style="margin-top:10px;font-size:13px;color:var(--muted)">⏱ ${meal.cook_minutes_day_of} min day-of cooking</div>` : ""}
-  `;
-}
-function closeMealSheet() { document.getElementById("meal-overlay").classList.add("hidden"); }
-document.getElementById("meal-overlay").addEventListener("click", e => { if (e.target === document.getElementById("meal-overlay")) closeMealSheet(); });
-
-// ── SHOPPING TAB ──────────────────────────────────────────────────────────────
-function renderShopping() {
-  const wrap = document.getElementById("shopping-list-content");
-  if (!shoppingList || !shoppingList.items) { wrap.innerHTML = `<div class="empty"><div class="ic">🛒</div><p>No shopping list yet.</p></div>`; return; }
-  document.getElementById("shop-total").textContent = shoppingList.est_total_eur ? `Est. €${shoppingList.est_total_eur}` : "";
-  // Group by aisle
-  const byAisle = {};
-  shoppingList.items.forEach(item => {
-    const aisle = item.aisle || "General";
-    if (!byAisle[aisle]) byAisle[aisle] = [];
-    byAisle[aisle].push(item);
-  });
-  wrap.innerHTML = Object.keys(byAisle).sort().map(aisle => {
-    const items = byAisle[aisle].map(item => {
-      const key = item.name_en || "";
-      const checked = checkedItems[key] ? " checked" : "";
-      const stores = (item.stores || []).slice(0, 3).map(s => `<span class="store-chip">${s}</span>`).join("");
-      return `<div class="shop-item">
-        <button class="shop-check${checked}" onclick="toggleCheck('${key.replace(/'/g,"\\'")}', this)">${checked ? "✓" : ""}</button>
-        <div class="shop-names">
-          <div class="shop-en">${item.name_en || ""}</div>
-          <div class="shop-fr">${item.name_fr || ""}</div>
-          <div class="shop-stores">${stores}</div>
-        </div>
-        <div class="shop-qty">${item.qty || ""}</div>
+// ── SHOPPING ────────────────────────────────────────────────────────────────────
+function renderShopping(){
+  const wrap=document.getElementById("shopping-list-content");
+  if(!shoppingList||!shoppingList.items){ wrap.innerHTML=`<div class="empty"><div class="ic">🛒</div><p>No shopping list yet.</p></div>`; return; }
+  document.getElementById("shop-total").textContent=shoppingList.est_total_eur?`Est. €${shoppingList.est_total_eur}`:"";
+  const byAisle={}; shoppingList.items.forEach(it=>{ const a=it.aisle||"General"; (byAisle[a]=byAisle[a]||[]).push(it); });
+  wrap.innerHTML=Object.keys(byAisle).sort().map(aisle=>{
+    const items=byAisle[aisle].map(it=>{
+      const key=it.name_en||""; const checked=checkedItems[key]?" checked":"";
+      const inPantry=it.have_at_home; const stores=(it.stores||[]).slice(0,3).map(s=>`<span class="store-chip">${s}</span>`).join("");
+      return `<div class="shop-item${inPantry?" in-pantry":""}">
+        <button class="shop-check${checked}" onclick="toggleCheck('${key.replace(/'/g,"\\'")}',this)">${checked?"✓":""}</button>
+        <div class="shop-names"><div class="shop-en">${it.name_en||""}</div><div class="shop-fr">${it.name_fr||""}</div><div class="shop-stores">${stores}</div></div>
+        <div class="shop-qty">${it.qty||""}</div>
       </div>`;
     }).join("");
     return `<div class="aisle-section"><div class="aisle-label">${aisle}</div>${items}</div>`;
   }).join("");
 }
-function toggleCheck(key, btn) {
-  checkedItems[key] = !checkedItems[key];
-  localStorage.setItem("nutriprep_checked", JSON.stringify(checkedItems));
-  btn.classList.toggle("checked");
-  btn.textContent = checkedItems[key] ? "✓" : "";
+function toggleCheck(key,btn){ checkedItems[key]=!checkedItems[key]; localStorage.setItem("nutriprep_checked",JSON.stringify(checkedItems)); btn.classList.toggle("checked"); btn.textContent=checkedItems[key]?"✓":""; }
+async function markAllBought(){
+  if(!shoppingList||!shoppingList.items)return;
+  if(!confirm("Add all bought items to your fridge/pantry?"))return;
+  const inv=inventory&&inventory.items?JSON.parse(JSON.stringify(inventory)):{items:[]};
+  const idx={}; inv.items.forEach(it=>idx[it.name_en.toLowerCase()]=it);
+  shoppingList.items.forEach(it=>{
+    if(it.have_at_home)return; // already counted
+    const q=parseQty(it.qty); const key=(it.name_en||"").toLowerCase(); const ex=idx[key];
+    if(ex && ex.kind===q.kind && ex.unit===q.unit){ ex.amount=(ex.amount||0)+(q.amount||0); ex.display_qty=formatQty(ex.amount,ex.kind,ex.unit); }
+    else if(!ex){ const ni={name_en:it.name_en,name_fr:it.name_fr,aisle:it.aisle,stores:it.stores,kind:q.kind,unit:q.unit,amount:q.amount,display_qty:q.kind!=="unknown"?formatQty(q.amount,q.kind,q.unit):it.qty}; inv.items.push(ni); idx[key]=ni; }
+  });
+  inv.updated=todayISO();
+  try{ await ghWrite("inventory.json", inv, `Mark shopping bought (${identity})`); inventory=inv; alert("✓ Added to your fridge."); showTab("fridge"); }
+  catch(e){ alert("Couldn't update fridge: "+e.message); }
 }
 
-// ── PREP TAB ──────────────────────────────────────────────────────────────────
-function renderPrep() {
-  const batchWrap = document.getElementById("prep-batches");
-  const sumCard = document.getElementById("prep-summary-card");
-  if (!prepPlan || !prepPlan.batches) { batchWrap.innerHTML = `<div class="empty"><div class="ic">🍳</div><p>No prep plan yet.</p></div>`; return; }
-  sumCard.style.display = "block";
-  document.getElementById("prep-summary").innerHTML = `
-    <div class="stat-row"><span class="stat-label">Prep day</span><span class="stat-val">Sunday · ${prepPlan.prep_start_time || ""}</span></div>
-    <div class="stat-row"><span class="stat-label">Total active time</span><span class="stat-val">${prepPlan.total_active_minutes || 0} min</span></div>
-    <div class="stat-row"><span class="stat-label">Batches</span><span class="stat-val">${prepPlan.batches.length}</span></div>`;
-  batchWrap.innerHTML = prepPlan.batches.map(batch => {
-    const s = batch.storage || {};
-    const safetyHtml = s.safety_note ? `<div class="batch-storage"><div class="batch-storage-title">🧊 Food safety</div>
-      <p><strong>Store:</strong> ${s.method || "refrigerate"} in ${s.container || "airtight container"} at ${s.fridge_c ? s.fridge_c + "°C" : "≤4°C"}</p>
-      <p><strong>Use within:</strong> ${s.use_within_days || "?"} days${s.freeze_option_days ? " · Freeze: " + s.freeze_option_days + " days" : ""}</p>
-      ${s.reheat_c ? `<p><strong>Reheat to:</strong> ${s.reheat_c}°C</p>` : ""}
-      <p>${s.safety_note.includes("⚠") ? `<span class="storage-warn">${s.safety_note}</span>` : s.safety_note}</p>
-    </div>` : "";
-    const steps = (batch.steps || []).map((step, i) => `<div class="batch-step"><span class="batch-step-num">${i + 1}.</span>${step}</div>`).join("");
-    const assembly = batch.day_of_assembly ? Object.entries(batch.day_of_assembly).map(([day, instr]) => `<div style="font-size:13px;padding:3px 0"><strong>${day}:</strong> ${instr}</div>`).join("") : "";
-    return `<div class="batch-card">
-      <div class="batch-header">
-        <div class="batch-num">${batch.order || "?"}</div>
-        <div class="batch-title">${batch.title || "Batch"}</div>
-        <div class="batch-time">${batch.active_minutes || "?"}min</div>
-      </div>
-      <div class="batch-steps">${steps}</div>
-      ${safetyHtml}
-      ${assembly ? `<div style="padding:10px 14px;border-top:1px solid var(--border)"><div class="card-title" style="margin-bottom:6px">Day-of assembly</div>${assembly}</div>` : ""}
-    </div>`;
+// ── FRIDGE ──────────────────────────────────────────────────────────────────────
+function renderFridge(){
+  const wrap=document.getElementById("fridge-content"); const meta=document.getElementById("fridge-meta");
+  if(!inventory||!inventory.items||!inventory.items.length){ wrap.innerHTML=`<div class="empty"><div class="ic">🧊</div><p>Your fridge is empty. Generate a plan or tap "Mark all bought" on the shopping list.</p></div>`; meta.textContent=""; return; }
+  meta.textContent=`Updates daily at 21:00 based on confirmed meals. Last updated: ${inventory.updated||"—"}`;
+  const byAisle={}; inventory.items.forEach(it=>{ const a=it.aisle||"General"; (byAisle[a]=byAisle[a]||[]).push(it); });
+  wrap.innerHTML=Object.keys(byAisle).sort().map(aisle=>{
+    const items=byAisle[aisle].map(it=>{
+      const qty=it.display_qty || (it.amount!=null?formatQty(it.amount,it.kind,it.unit):"");
+      const low=it.kind==="mass"?(it.amount||0)<100:it.kind==="volume"?(it.amount||0)<100:(it.amount||0)<1;
+      return `<div class="fridge-item"><div class="fridge-row"><div><div class="fridge-name">${it.name_en}</div><div class="fridge-fr">${it.name_fr||""}</div></div><div class="fridge-qty${low?" low":""}">${qty||"—"}</div></div></div>`;
+    }).join("");
+    return `<div class="aisle-section"><div class="aisle-label">${aisle}</div>${items}</div>`;
   }).join("");
 }
 
-// ── PROGRESS TAB ──────────────────────────────────────────────────────────────
-function renderProgress() {
-  const statsCard = document.getElementById("progress-stats-card");
-  if (!userGoals.goal_type) { statsCard.innerHTML = `<div class="card-title">Your goal</div><div style="font-size:14px;color:var(--muted)">Set your goals in Settings.</div>`; }
-  else {
-    const start = userGoals.start_weight_kg || 0, target = userGoals.target_weight_kg || 0;
-    const last = userWeightLog.length ? userWeightLog[userWeightLog.length - 1].weight_kg : start;
-    const total = Math.abs(start - target);
-    const done = Math.abs(start - last);
-    const pct = total > 0 ? Math.min(100, Math.round(done / total * 100)) : 0;
-    const rate = userGoals.target_rate_kg_per_week;
-    statsCard.innerHTML = `
-      <div class="card-title">Your goal</div>
-      <div class="stat-row"><span class="stat-label">Goal</span><span class="stat-val">${userGoals.goal_type.replace("_", " ")}</span></div>
+// ── PREP ──────────────────────────────────────────────────────────────────────
+function renderPrep(){
+  const batchWrap=document.getElementById("prep-batches"); const sumCard=document.getElementById("prep-summary-card");
+  if(!prepPlan||!prepPlan.batches){ batchWrap.innerHTML=`<div class="empty"><div class="ic">🍳</div><p>No prep plan yet.</p></div>`; return; }
+  sumCard.style.display="block";
+  document.getElementById("prep-summary").innerHTML=`
+    <div class="stat-row"><span class="stat-label">Prep day</span><span class="stat-val">Sunday · ${prepPlan.prep_start_time||""}</span></div>
+    <div class="stat-row"><span class="stat-label">Total active time</span><span class="stat-val">${prepPlan.total_active_minutes||0} min</span></div>
+    <div class="stat-row"><span class="stat-label">Batches</span><span class="stat-val">${prepPlan.batches.length}</span></div>`;
+  batchWrap.innerHTML=prepPlan.batches.map((batch,bi)=>{
+    const s=batch.storage||{};
+    const safety=s.safety_note?`<div class="batch-storage"><div class="batch-storage-title">🧊 Food safety</div>
+      <p><strong>Store:</strong> ${s.method||"refrigerate"} in ${s.container||"airtight container"} at ${s.fridge_c?s.fridge_c+"°C":"≤4°C"}</p>
+      <p><strong>Use within:</strong> ${s.use_within_days||"?"} days${s.freeze_option_days?" · Freeze: "+s.freeze_option_days+" days":""}</p>
+      ${s.reheat_c?`<p><strong>Reheat to:</strong> ${s.reheat_c}°C</p>`:""}
+      <p>${s.safety_note.includes("⚠")?`<span class="storage-warn">${s.safety_note}</span>`:s.safety_note}</p></div>`:"";
+    const steps=(batch.steps||[]).map((st,i)=>`<div class="batch-step"><span class="batch-step-num">${i+1}</span>${st}</div>`).join("");
+    const assembly=batch.day_of_assembly?Object.entries(batch.day_of_assembly).map(([d,instr])=>`<div style="font-size:13px;padding:3px 0"><strong>${d}:</strong> ${instr}</div>`).join(""):"";
+    const vid=batch.video_url?videoHtml(batch.video_url):ytSearchBtn(batch.title||"meal prep");
+    const attach=`<div class="attach-row" style="padding:0 14px 12px"><input id="prep-video-${bi}" placeholder="Paste a technique video link" value="${batch.video_url||""}"><button class="btn" onclick="attachPrepVideo(${bi})">Save</button></div>`;
+    return `<div class="batch-card">
+      <div class="batch-header"><div class="batch-num">${batch.order||bi+1}</div><div class="batch-title">${batch.title||"Batch"}</div><div class="batch-time">${batch.active_minutes||"?"}min</div></div>
+      <div class="batch-steps">${steps}</div>
+      <div style="padding:0 14px">${vid}</div>
+      ${attach}
+      ${safety}
+      ${assembly?`<div style="padding:10px 14px;border-top:1px solid var(--border)"><div class="card-title" style="margin-bottom:6px">Day-of assembly</div>${assembly}</div>`:""}
+    </div>`;
+  }).join("");
+}
+async function attachPrepVideo(bi){
+  const url=document.getElementById(`prep-video-${bi}`).value.trim();
+  prepPlan.batches[bi].video_url=url;
+  try{ await ghWrite("prep_plan.json", prepPlan, `Attach prep video`); renderPrep(); }
+  catch(e){ alert("Couldn't save: "+e.message); }
+}
+
+// ── PROGRESS ────────────────────────────────────────────────────────────────────
+function renderProgress(){
+  const statsCard=document.getElementById("progress-stats-card");
+  if(!userGoals.goal_type){ statsCard.innerHTML=`<div class="card-title">Your goal</div><div style="font-size:14px;color:var(--muted)">Set your goals in Settings.</div>`; }
+  else{
+    const start=userGoals.start_weight_kg||0,target=userGoals.target_weight_kg||0;
+    const last=userWeightLog.length?userWeightLog[userWeightLog.length-1].weight_kg:start;
+    const total=Math.abs(start-target),done=Math.abs(start-last);
+    const pct=total>0?Math.min(100,Math.round(done/total*100)):0;
+    statsCard.innerHTML=`<div class="card-title">Your goal</div>
+      <div class="stat-row"><span class="stat-label">Goal</span><span class="stat-val">${userGoals.goal_type.replace("_"," ")}</span></div>
       <div class="stat-row"><span class="stat-label">Start</span><span class="stat-val">${start} kg</span></div>
       <div class="stat-row"><span class="stat-label">Current</span><span class="stat-val">${last} kg</span></div>
       <div class="stat-row"><span class="stat-label">Target</span><span class="stat-val">${target} kg</span></div>
-      <div class="stat-row"><span class="stat-label">Rate</span><span class="stat-val">−${rate} kg/wk</span></div>
-      <div style="margin-top:10px">
-        <div style="font-size:12px;color:var(--muted);margin-bottom:4px">Progress: ${done.toFixed(1)} kg / ${total.toFixed(1)} kg (${pct}%)</div>
-        <div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div>
-      </div>`;
+      <div class="stat-row"><span class="stat-label">Rate</span><span class="stat-val">−${userGoals.target_rate_kg_per_week} kg/wk</span></div>
+      <div style="margin-top:10px"><div style="font-size:12px;color:var(--muted);margin-bottom:4px">Progress: ${done.toFixed(1)} / ${total.toFixed(1)} kg (${pct}%)</div><div class="progress-bar-wrap"><div class="progress-bar-fill" style="width:${pct}%"></div></div></div>`;
   }
   renderWeightChart();
 }
-async function logWeight() {
-  const input = document.getElementById("weight-input");
-  const val = parseFloat(input.value);
-  if (!val || val < 30 || val > 300) { alert("Please enter a valid weight (30–300 kg)."); return; }
-  const today = todayISO();
-  const existing = userWeightLog.findIndex(e => e.date === today);
-  const entry = { date: today, weight_kg: val };
-  if (existing >= 0) userWeightLog[existing] = entry;
-  else userWeightLog.push(entry);
-  userWeightLog.sort((a, b) => a.date.localeCompare(b.date));
-  try {
-    await ghWrite(`users/${identity}/weight_log.json`, userWeightLog, `Weight log ${today} (${identity})`);
-    input.value = "";
-    renderProgress();
-    alert(`✓ Logged ${val} kg for ${today}`);
-  } catch (e) { alert("Failed to save: " + e.message); }
+async function logWeight(){
+  const input=document.getElementById("weight-input"); const val=parseFloat(input.value);
+  if(!val||val<30||val>300){ alert("Enter a valid weight (30–300 kg)."); return; }
+  const today=todayISO(); const existing=userWeightLog.findIndex(e=>e.date===today); const entry={date:today,weight_kg:val};
+  if(existing>=0)userWeightLog[existing]=entry; else userWeightLog.push(entry);
+  userWeightLog.sort((a,b)=>a.date.localeCompare(b.date));
+  try{ await ghWrite(`users/${identity}/weight_log.json`, userWeightLog, `Weight ${today} (${identity})`); input.value=""; renderProgress(); renderHomeStats(); alert(`✓ Logged ${val} kg`); }
+  catch(e){ alert("Failed to save: "+e.message); }
 }
-function renderWeightChart() {
-  const ctx = document.getElementById("weight-chart").getContext("2d");
-  if (weightChart) weightChart.destroy();
-  if (!userWeightLog.length) return;
-  const logs = userWeightLog.slice(-12);
-  const labels = logs.map(e => e.date.slice(5));
-  const vals = logs.map(e => e.weight_kg);
-  const target = userGoals.target_weight_kg;
-  weightChart = new Chart(ctx, {
-    type: "line",
-    data: {
-      labels,
-      datasets: [
-        { label: "Weight (kg)", data: vals, borderColor: "#2d6a4f", backgroundColor: "rgba(45,106,79,.1)", tension: .3, pointRadius: 5, fill: true },
-        ...(target ? [{ label: "Target", data: labels.map(() => target), borderColor: "#e07a5f", borderDash: [5,5], pointRadius: 0 }] : [])
-      ]
-    },
-    options: { plugins: { legend: { position: "bottom", labels: { font: { size: 12 } } } }, scales: { y: { beginAtZero: false } }, animation: { duration: 400 } },
+function renderWeightChart(){
+  const ctx=document.getElementById("weight-chart").getContext("2d");
+  if(weightChart)weightChart.destroy(); if(!userWeightLog.length)return;
+  const logs=userWeightLog.slice(-12); const labels=logs.map(e=>e.date.slice(5)); const vals=logs.map(e=>e.weight_kg); const target=userGoals.target_weight_kg;
+  weightChart=new Chart(ctx,{type:"line",data:{labels,datasets:[{label:"Weight (kg)",data:vals,borderColor:"#2d6a4f",backgroundColor:"rgba(45,106,79,.1)",tension:.3,pointRadius:5,fill:true},...(target?[{label:"Target",data:labels.map(()=>target),borderColor:"#e07a5f",borderDash:[5,5],pointRadius:0}]:[])]},options:{plugins:{legend:{position:"bottom",labels:{font:{size:12}}}},scales:{y:{beginAtZero:false}},animation:{duration:400}}});
+}
+
+// ── COACH ──────────────────────────────────────────────────────────────────────
+function renderCoach(){ const wrap=document.getElementById("coach-msgs"); if(!wrap.children.length){ addCoachMsg("coach",`Hi ${identity?identity.charAt(0).toUpperCase()+identity.slice(1):"there"}! I'm Coach Léa 🌿 Ask me to swap a meal, explain a recipe, log how you feel, or check your progress. Menu changes apply to the whole household.`); } }
+function addCoachMsg(role,text){ const wrap=document.getElementById("coach-msgs"); const div=document.createElement("div"); div.className=`msg ${role}`; div.innerHTML=text.replace(/\n/g,"<br>"); wrap.appendChild(div); div.scrollIntoView({behavior:"smooth"}); }
+async function sendCoach(){
+  const input=document.getElementById("coach-input"); const text=input.value.trim(); if(!text)return;
+  const key=cfg("anthropic_key"); if(!key){ alert("Add your Anthropic API key in Settings."); showTab("settings"); return; }
+  input.value=""; addCoachMsg("user",text);
+  const typing=document.createElement("div"); typing.className="msg coach"; typing.innerHTML="<em>Coach Léa is thinking…</em>"; document.getElementById("coach-msgs").appendChild(typing); typing.scrollIntoView({behavior:"smooth"});
+  const goals=userGoals; const wlog=userWeightLog.slice(-4);
+  const trend=wlog.length>=2?(wlog[wlog.length-1].weight_kg-wlog[0].weight_kg).toFixed(1)+" kg over "+wlog.length+" weigh-ins":"no data yet";
+  const c=computeCompliance();
+  const todayMenu=weekMenu?(weekMenu.find(d=>d.date===todayISO())||{}):{};
+  const menuText=weekMenu?weekMenu.map(d=>`${d.day}: ${d.meals.map(m=>m.slot+"="+m.name).join("; ")}`).join("\n"):"no menu";
+  const system=`You are Coach Léa, a warm registered-dietitian coach for ${identity} in Luxembourg.
+
+## USER
+Name: ${identity} | Goal: ${goals.goal_type||"?"} | Target: ${goals.target_weight_kg||"?"}kg | Weight trend: ${trend}
+This week compliance: ${c.pct==null?"n/a":c.pct+"%"} (${c.eaten}/${c.scheduled} meals confirmed)
+
+## SHARED HOUSEHOLD MENU (Diego + Diana eat the same dishes, different portions)
+${menuText}
+
+## ROLE
+- Evidence-based only (EFSA/WHO). Sustainable loss 0.25–0.75 kg/wk; never below 1200 kcal/day.
+- When the user asks to change a meal, USE the swap_meal tool with a complete replacement meal (keep both diego & diana portions, prep_steps, day_of_steps, image_prompt, food_category). Changes apply to BOTH members.
+- Use log_checkin when they report mood/energy/adherence; log_weight when they state a weight.
+- Be concise (2–4 sentences). You are not a doctor — defer clinical issues to their nutritionist.`;
+  const tools=[
+    {name:"log_checkin",description:"Log how the user feels.",input_schema:{type:"object",properties:{note:{type:"string"},mood:{type:"string",enum:["great","good","ok","low","poor"]},energy:{type:"string",enum:["high","medium","low"]},adherence:{type:"string",enum:["full","mostly","partial","off"]}},required:["note"]}},
+    {name:"log_weight",description:"Log a weight measurement.",input_schema:{type:"object",properties:{weight_kg:{type:"number"},date:{type:"string"}},required:["weight_kg"]}},
+    {name:"swap_meal",description:"Replace one meal in the shared weekly menu. Applies to the whole household.",input_schema:{type:"object",properties:{date:{type:"string",description:"ISO date of the day"},slot:{type:"string",enum:["breakfast","am_snack","lunch","pm_snack","dinner"]},meal:{type:"object",description:"Full replacement meal object with name, time, prep_ahead, cook_minutes_day_of, image_prompt, video_url, prep_steps, day_of_steps, food_category, and portions.diego/diana each with ingredients[] and macros"}},required:["date","slot","meal"]}},
+    {name:"attach_video",description:"Attach a recipe video URL to a meal.",input_schema:{type:"object",properties:{date:{type:"string"},slot:{type:"string"},video_url:{type:"string"}},required:["date","slot","video_url"]}},
+  ];
+  const msgs=[...coachHistory.slice(-10).map(h=>({role:h.role,content:h.content})),{role:"user",content:text}];
+  try{
+    const res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"Content-Type":"application/json","x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:2048,system,tools,messages:msgs})});
+    const data=await res.json(); typing.remove();
+    if(!res.ok){ addCoachMsg("coach",`Error: ${data.error?.message||res.status}`); return; }
+    let reply="";
+    for(const block of data.content){ if(block.type==="text")reply+=block.text; if(block.type==="tool_use")await handleCoachTool(block.name,block.input); }
+    if(reply)addCoachMsg("coach",reply);
+    coachHistory.push({role:"user",content:text},{role:"assistant",content:data.content}); coachHistory=coachHistory.slice(-20);
+    try{ await ghWrite(`users/${identity}/coach_history.json`,coachHistory,`Coach history ${todayISO()}`); }catch(_){}
+  }catch(e){ typing.remove(); addCoachMsg("coach",`Connection error: ${e.message}`); }
+}
+async function handleCoachTool(name,input){
+  if(name==="log_checkin"){
+    userCheckins.push({date:todayISO(),...input}); userCheckins=userCheckins.slice(-30);
+    try{ await ghWrite(`users/${identity}/checkins.json`,userCheckins,`Checkin ${todayISO()}`); addCoachMsg("coach",`✓ Logged: "${input.note}"`); }catch(e){ addCoachMsg("coach",`Couldn't save check-in: ${e.message}`); }
+  } else if(name==="log_weight"){
+    const date=input.date||todayISO(); const entry={date,weight_kg:input.weight_kg}; const i=userWeightLog.findIndex(e=>e.date===date);
+    if(i>=0)userWeightLog[i]=entry; else userWeightLog.push(entry); userWeightLog.sort((a,b)=>a.date.localeCompare(b.date));
+    try{ await ghWrite(`users/${identity}/weight_log.json`,userWeightLog,`Weight ${date}`); addCoachMsg("coach",`✓ Logged ${input.weight_kg} kg.`); renderHomeStats(); }catch(e){ addCoachMsg("coach",`Couldn't save weight: ${e.message}`); }
+  } else if(name==="swap_meal"){
+    await applyMenuChange(input.date,input.slot,input.meal); addCoachMsg("coach",`✓ Swapped ${input.slot} on ${input.date} to "${input.meal.name}" for the household. Shopping list updated.`);
+  } else if(name==="attach_video"){
+    const day=weekMenu.find(d=>d.date===input.date); const meal=day?day.meals.find(m=>m.slot===input.slot):null;
+    if(meal){ meal.video_url=input.video_url; try{ await ghWrite("weekly_menu.json",weekMenu,`Attach video`); addCoachMsg("coach",`✓ Video attached.`); }catch(e){ addCoachMsg("coach",`Couldn't save: ${e.message}`); } }
+  }
+}
+async function applyMenuChange(date,slot,newMeal){
+  if(!weekMenu)return; const day=weekMenu.find(d=>d.date===date); if(!day)return;
+  const idx=day.meals.findIndex(m=>m.slot===slot);
+  if(!newMeal.slot)newMeal.slot=slot; if(!newMeal.time && idx>=0)newMeal.time=day.meals[idx].time;
+  if(idx>=0)day.meals[idx]=newMeal; else day.meals.push(newMeal);
+  // recompute day_totals for both members
+  ["diego","diana"].forEach(mem=>{ let t={kcal:0,protein_g:0,carbs_g:0,fat_g:0}; day.meals.forEach(m=>{ const mac=((m.portions||{})[mem]||{}).macros||{}; t.kcal+=mac.kcal||0; t.protein_g+=mac.protein_g||0; t.carbs_g+=mac.carbs_g||0; t.fat_g+=mac.fat_g||0; }); (day.day_totals=day.day_totals||{})[mem]=t; });
+  await ghWrite("weekly_menu.json",weekMenu,`Swap ${slot} ${date} (${identity})`);
+  await regenerateShopping();
+}
+async function regenerateShopping(){
+  // Re-aggregate household ingredients from the menu, subtract pantry, write shopping_list.json
+  const agg={}; // key -> {parsed, name_en}
+  weekMenu.forEach(day=>day.meals.forEach(meal=>{ ["diego","diana"].forEach(mem=>{ const ings=((meal.portions||{})[mem]||{}).ingredients||[]; ings.forEach(ing=>{ const key=(ing.item||"").trim().toLowerCase(); if(!key)return; const q=parseQty(ing.qty); if(!agg[key]){ agg[key]={name_en:ing.item, parsed:q}; } else { const a=agg[key].parsed; if(a.kind===q.kind&&a.unit===q.unit&&a.kind!=="unknown"){ a.amount=(a.amount||0)+(q.amount||0); } } }); }); }));
+  // existing maps for fr/aisle/stores
+  const meta={}; if(shoppingList&&shoppingList.items)shoppingList.items.forEach(it=>meta[(it.name_en||"").toLowerCase()]=it); if(inventory&&inventory.items)inventory.items.forEach(it=>{ if(!meta[(it.name_en||"").toLowerCase()])meta[(it.name_en||"").toLowerCase()]=it; });
+  const invIdx={}; if(inventory&&inventory.items)inventory.items.forEach(it=>invIdx[(it.name_en||"").toLowerCase()]=it);
+  const items=Object.keys(agg).map(key=>{
+    const a=agg[key]; const m=meta[key]||{}; const inv=invIdx[key]; let qtyStr, have_at_home=false;
+    if(a.parsed.kind!=="unknown" && inv && inv.kind===a.parsed.kind && inv.unit===a.parsed.unit){ const need=Math.max(0,(a.parsed.amount||0)-(inv.amount||0)); if(need<=0.001){have_at_home=true; qtyStr="✓ in pantry";} else qtyStr=formatQty(need,a.parsed.kind,a.parsed.unit); }
+    else qtyStr=a.parsed.kind!=="unknown"?formatQty(a.parsed.amount,a.parsed.kind,a.parsed.unit):(a.parsed.raw||"");
+    return {name_en:a.name_en, name_fr:m.name_fr||a.name_en, qty:qtyStr, aisle:m.aisle||"General", stores:m.stores||["Cactus","Auchan","Delhaize"], have_at_home};
   });
+  items.sort((x,y)=>(x.aisle||"").localeCompare(y.aisle||""));
+  const out={week_of:(shoppingList&&shoppingList.week_of)||todayISO(), currency:"EUR", est_total_eur:(shoppingList&&shoppingList.est_total_eur)||null, items};
+  await ghWrite("shopping_list.json", out, `Regenerate shopping (${identity})`); shoppingList=out;
 }
 
-// ── COACH TAB ─────────────────────────────────────────────────────────────────
-function renderCoach() {
-  const wrap = document.getElementById("coach-msgs");
-  if (!wrap.children.length) {
-    addCoachMsg("coach", `Hi ${identity ? identity.charAt(0).toUpperCase()+identity.slice(1) : "there"}! I'm Coach Léa 🌿 Ask me anything — swap a meal, explain a recipe, log how you're feeling, or just tell me how your week is going.`);
-  }
+// ── NOTIFICATIONS ────────────────────────────────────────────────────────────────
+async function toggleNotifications(){
+  const btn=document.getElementById("notif-toggle");
+  if(btn.classList.contains("on")){ btn.classList.remove("on"); setCfg("notif_enabled",""); document.getElementById("notif-status").textContent="Notifications disabled."; return; }
+  if(!("serviceWorker" in navigator)||!("PushManager" in window)){ document.getElementById("notif-status").textContent="Push not supported on this browser."; return; }
+  if(!VAPID_PUBLIC_KEY){ document.getElementById("notif-status").textContent="VAPID public key not set in dashboard.html."; return; }
+  const perm=await Notification.requestPermission(); if(perm!=="granted"){ document.getElementById("notif-status").textContent="Permission denied."; return; }
+  try{
+    const reg=await navigator.serviceWorker.ready;
+    const sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:urlBase64ToUint8Array(VAPID_PUBLIC_KEY)});
+    let subs=[]; try{ subs=await ghFetch(`users/${identity}/push_subscriptions.json`); }catch(_){}
+    subs=subs.filter(s=>s.endpoint!==sub.endpoint); subs.push(sub.toJSON());
+    await ghWrite(`users/${identity}/push_subscriptions.json`,subs,`Push sub ${identity}`);
+    btn.classList.add("on"); setCfg("notif_enabled","1"); document.getElementById("notif-status").textContent="✓ Notifications enabled on this device.";
+  }catch(e){ document.getElementById("notif-status").textContent="Failed: "+e.message; }
 }
-function addCoachMsg(role, text) {
-  const wrap = document.getElementById("coach-msgs");
-  const div = document.createElement("div");
-  div.className = `msg ${role}`;
-  div.innerHTML = text.replace(/\n/g, "<br>");
-  wrap.appendChild(div);
-  div.scrollIntoView({ behavior: "smooth" });
-}
-async function sendCoach() {
-  const input = document.getElementById("coach-input");
-  const text = input.value.trim();
-  if (!text) return;
-  const key = cfg("anthropic_key");
-  if (!key) { alert("Add your Anthropic API key in Settings."); showTab("settings"); return; }
-  input.value = "";
-  addCoachMsg("user", text);
-  const typing = document.createElement("div");
-  typing.className = "msg coach";
-  typing.innerHTML = "<em>Coach Léa is thinking…</em>";
-  document.getElementById("coach-msgs").appendChild(typing);
-  typing.scrollIntoView({ behavior: "smooth" });
-
-  // Build system prompt with user context
-  const mt = {}; // macro targets (we'd load from ghFetch in real session)
-  const goals = userGoals;
-  const wlog = userWeightLog.slice(-4);
-  const trend = wlog.length >= 2 ? (wlog[wlog.length-1].weight_kg - wlog[0].weight_kg).toFixed(1) + " kg (last " + wlog.length + " weeks)" : "no data yet";
-  const todayMenu = weekMenu ? (weekMenu.find(d => d.date === todayISO()) || {}) : {};
-  const todayMeals = (todayMenu.meals || []).map(m => m.name).join(", ");
-  const systemPrompt = `You are Coach Léa, a warm, knowledgeable registered dietitian coach for ${identity || "the user"} in Luxembourg.
-
-## USER CONTEXT
-Name: ${identity || "user"}
-Goal: ${goals.goal_type || "?"}  |  Target: ${goals.target_weight_kg || "?"}kg
-Weight trend: ${trend}
-Today's plan: ${todayMeals || "no plan for today"}
-
-## YOUR ROLE
-- Answer nutrition and meal-plan questions clearly and kindly
-- Give advice grounded in EFSA/WHO evidence — no fad diets, no unproven claims
-- Sustainable weight loss = 0.25–0.75 kg/week; never advise below 1200 kcal/day
-- You can log check-ins and weight directly. Use the tools when the user reports a feeling or logs a number.
-- Menu changes affect BOTH household members (Diego and Diana share meals)
-- Be concise: 2–4 sentences per reply unless detail is explicitly needed
-- You are NOT a medical doctor — recommend consulting their nutritionist or doctor for clinical matters`;
-
-  const tools = [
-    {
-      name: "log_checkin",
-      description: "Log how the user is feeling — mood, energy, adherence, cravings, digestion.",
-      input_schema: {
-        type: "object",
-        properties: {
-          note: { type: "string", description: "Summary of how they feel or reported" },
-          mood: { type: "string", enum: ["great","good","ok","low","poor"] },
-          energy: { type: "string", enum: ["high","medium","low"] },
-          adherence: { type: "string", enum: ["full","mostly","partial","off"] },
-        },
-        required: ["note"],
-      },
-    },
-    {
-      name: "log_weight",
-      description: "Log a weight measurement the user just mentioned.",
-      input_schema: {
-        type: "object",
-        properties: {
-          weight_kg: { type: "number" },
-          date: { type: "string", description: "ISO date, default today" },
-        },
-        required: ["weight_kg"],
-      },
-    },
-  ];
-
-  // Build messages with history (last 10 turns)
-  const msgs = [
-    ...coachHistory.slice(-10).map(h => ({ role: h.role, content: h.content })),
-    { role: "user", content: text },
-  ];
-
-  try {
-    const res = await fetch("https://api.anthropic.com/v1/messages", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-api-key": key,
-        "anthropic-version": "2023-06-01",
-        "anthropic-dangerous-direct-browser-access": "true",
-      },
-      body: JSON.stringify({ model: "claude-haiku-4-5-20251001", max_tokens: 1024, system: systemPrompt, tools, messages: msgs }),
-    });
-    const data = await res.json();
-    typing.remove();
-
-    if (!res.ok) { addCoachMsg("coach", `Error: ${data.error?.message || res.status}`); return; }
-
-    let reply = "";
-    for (const block of data.content) {
-      if (block.type === "text") reply += block.text;
-      if (block.type === "tool_use") {
-        await handleCoachTool(block.name, block.input);
-      }
-    }
-    if (reply) addCoachMsg("coach", reply);
-
-    // Save to history
-    coachHistory.push({ role: "user", content: text }, { role: "assistant", content: data.content });
-    coachHistory = coachHistory.slice(-20);
-    try { await ghWrite(`users/${identity}/coach_history.json`, coachHistory, `Coach history ${todayISO()}`); } catch (_) {}
-  } catch (e) {
-    typing.remove();
-    addCoachMsg("coach", `Connection error: ${e.message}`);
-  }
-}
-async function handleCoachTool(toolName, input) {
-  if (toolName === "log_checkin") {
-    const entry = { date: todayISO(), ...input };
-    userCheckins.push(entry);
-    userCheckins = userCheckins.slice(-30);
-    try {
-      await ghWrite(`users/${identity}/checkins.json`, userCheckins, `Checkin ${entry.date}`);
-      addCoachMsg("coach", `✓ Check-in logged: "${input.note}"`);
-    } catch (e) { addCoachMsg("coach", `Couldn't save check-in: ${e.message}`); }
-  } else if (toolName === "log_weight") {
-    const date = input.date || todayISO();
-    const entry = { date, weight_kg: input.weight_kg };
-    const idx = userWeightLog.findIndex(e => e.date === date);
-    if (idx >= 0) userWeightLog[idx] = entry; else userWeightLog.push(entry);
-    userWeightLog.sort((a, b) => a.date.localeCompare(b.date));
-    try {
-      await ghWrite(`users/${identity}/weight_log.json`, userWeightLog, `Weight ${date}`);
-      addCoachMsg("coach", `✓ Logged ${input.weight_kg} kg for ${date}.`);
-    } catch (e) { addCoachMsg("coach", `Couldn't save weight: ${e.message}`); }
-  }
-}
-
-// ── NOTIFICATIONS ─────────────────────────────────────────────────────────────
-async function toggleNotifications() {
-  const btn = document.getElementById("notif-toggle");
-  if (btn.classList.contains("on")) {
-    btn.classList.remove("on");
-    setCfg("notif_enabled", "");
-    document.getElementById("notif-status").textContent = "Notifications disabled.";
-    return;
-  }
-  if (!("serviceWorker" in navigator) || !("PushManager" in window)) {
-    document.getElementById("notif-status").textContent = "Push notifications not supported on this browser."; return;
-  }
-  if (!VAPID_PUBLIC_KEY) {
-    document.getElementById("notif-status").textContent = "VAPID public key not set. Ask the app admin to configure it."; return;
-  }
-  const perm = await Notification.requestPermission();
-  if (perm !== "granted") { document.getElementById("notif-status").textContent = "Permission denied."; return; }
-  try {
-    const reg = await navigator.serviceWorker.ready;
-    const sub = await reg.pushManager.subscribe({ userVisibleOnly: true, applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY) });
-    const subs = await loadSubsFromGH();
-    const filtered = subs.filter(s => s.endpoint !== sub.endpoint);
-    filtered.push(sub.toJSON());
-    await ghWrite(`users/${identity}/push_subscriptions.json`, filtered, `Push sub ${identity}`);
-    btn.classList.add("on");
-    setCfg("notif_enabled", "1");
-    document.getElementById("notif-status").textContent = "✓ Notifications enabled on this device.";
-  } catch (e) { document.getElementById("notif-status").textContent = "Failed: " + e.message; }
-}
-async function loadSubsFromGH() {
-  try { return await ghFetch(`users/${identity}/push_subscriptions.json`); } catch (_) { return []; }
-}
-function urlBase64ToUint8Array(b64) {
-  const pad = "=".repeat((4 - b64.length % 4) % 4);
-  const raw = atob((b64 + pad).replace(/-/g, "+").replace(/_/g, "/"));
-  return Uint8Array.from([...raw].map(c => c.charCodeAt(0)));
-}
+function urlBase64ToUint8Array(b64){ const pad="=".repeat((4-b64.length%4)%4); const raw=atob((b64+pad).replace(/-/g,"+").replace(/_/g,"/")); return Uint8Array.from([...raw].map(c=>c.charCodeAt(0))); }
 
 // ── PLAN UPLOAD ───────────────────────────────────────────────────────────────
-async function uploadPlan(input) {
-  const file = input.files[0];
-  if (!file) return;
-  const status = document.getElementById("upload-status");
-  status.textContent = "Uploading…";
-  const reader = new FileReader();
-  reader.onload = async e => {
-    const b64 = e.target.result.split(",")[1];
-    const ext = file.name.split(".").pop().toLowerCase();
-    const filename = `nutritionist_plan_upload.${ext}`;
-    try {
-      await ghWriteRaw(filename, b64, `Upload nutritionist plan ${new Date().toISOString().split("T")[0]}`);
-      status.textContent = `✓ Uploaded ${file.name}. Run the "Parse Nutritionist Plan" workflow on GitHub Actions to process it.`;
-    } catch (e) { status.textContent = "Upload failed: " + e.message; }
-  };
+async function uploadPlan(input){
+  const file=input.files[0]; if(!file)return; const status=document.getElementById("upload-status"); status.textContent="Uploading…";
+  const reader=new FileReader();
+  reader.onload=async e=>{ const b64=e.target.result.split(",")[1]; const ext=file.name.split(".").pop().toLowerCase(); const filename=`nutritionist_plan_upload.${ext}`;
+    try{ await ghWriteRaw(filename,b64,`Upload nutritionist plan ${todayISO()}`); status.textContent=`✓ Uploaded. Run the "Parse Nutritionist Plan" workflow on GitHub Actions to process it.`; }
+    catch(e){ status.textContent="Upload failed: "+e.message; } };
   reader.readAsDataURL(file);
 }
 
-// ── GOALS DISPLAY ─────────────────────────────────────────────────────────────
-function renderGoals() {
-  const el = document.getElementById("goals-display");
-  if (!userGoals.goal_type) { el.innerHTML = `<div style="font-size:13px;color:var(--muted)">Goals will load once data is available.</div>`; return; }
-  el.innerHTML = `
-    <div class="stat-row"><span class="stat-label">Type</span><span class="stat-val">${userGoals.goal_type.replace("_"," ")}</span></div>
+// ── GOALS DISPLAY ───────────────────────────────────────────────────────────────
+function renderGoals(){
+  const el=document.getElementById("goals-display");
+  if(!userGoals.goal_type){ el.innerHTML=`<div style="font-size:13px;color:var(--muted)">Goals will load once data is available.</div>`; return; }
+  el.innerHTML=`<div class="stat-row"><span class="stat-label">Type</span><span class="stat-val">${userGoals.goal_type.replace("_"," ")}</span></div>
     <div class="stat-row"><span class="stat-label">Start weight</span><span class="stat-val">${userGoals.start_weight_kg} kg</span></div>
     <div class="stat-row"><span class="stat-label">Target weight</span><span class="stat-val">${userGoals.target_weight_kg} kg</span></div>
     <div class="stat-row"><span class="stat-label">Rate</span><span class="stat-val">−${userGoals.target_rate_kg_per_week} kg/wk</span></div>
-    <div class="stat-row"><span class="stat-label">Target date</span><span class="stat-val">${userGoals.target_date || "—"}</span></div>`;
+    <div class="stat-row"><span class="stat-label">Target date</span><span class="stat-val">${userGoals.target_date||"—"}</span></div>`;
 }
 
 // ── TABS ──────────────────────────────────────────────────────────────────────
-const TABS = ["today","menu","shopping","prep","progress","coach","settings"];
-function showTab(tab) {
-  TABS.forEach(t => {
-    document.getElementById(`pane-${t}`).classList.toggle("active", t === tab);
-    const btn = document.getElementById(`nav-${t}`);
-    if (btn) btn.classList.toggle("active", t === tab);
-  });
-  document.getElementById("coach-bar").style.display = tab === "coach" ? "block" : "none";
-  if (tab === "today") renderToday();
-  else if (tab === "menu") renderMenu();
-  else if (tab === "shopping") renderShopping();
-  else if (tab === "prep") renderPrep();
-  else if (tab === "progress") renderProgress();
-  else if (tab === "coach") { renderCoach(); setTimeout(() => document.getElementById("coach-input").focus(), 100); }
-  else if (tab === "settings") loadSettingsUI();
+const TABS=["today","menu","shopping","fridge","prep","progress","coach","settings"];
+async function showTab(tab){
+  TABS.forEach(t=>{ document.getElementById(`pane-${t}`).classList.toggle("active",t===tab); const b=document.getElementById(`nav-${t}`); if(b)b.classList.toggle("active",t===tab); });
+  document.getElementById("coach-bar").style.display=tab==="coach"?"block":"none";
+  // Reload shared data when viewing shared tabs so one person's edits show for the other
+  if(["menu","shopping","fridge","prep"].includes(tab)){ await loadSharedData(); }
+  if(tab==="today")renderToday();
+  else if(tab==="menu")renderMenu();
+  else if(tab==="shopping")renderShopping();
+  else if(tab==="fridge")renderFridge();
+  else if(tab==="prep")renderPrep();
+  else if(tab==="progress")renderProgress();
+  else if(tab==="coach"){ renderCoach(); setTimeout(()=>document.getElementById("coach-input").focus(),100); }
+  else if(tab==="settings")loadSettingsUI();
 }
 
 // ── INIT ──────────────────────────────────────────────────────────────────────
-async function init() {
+async function init(){
   renderUserChip();
-  document.getElementById("notif-toggle").classList.toggle("on", !!cfg("notif_enabled"));
+  document.getElementById("notif-toggle").classList.toggle("on",!!cfg("notif_enabled"));
   await Promise.all([loadSharedData(), loadUserData()]);
   renderToday();
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("./sw.js").catch(e => console.warn("SW:", e));
-  }
+  if("serviceWorker" in navigator){ navigator.serviceWorker.register("./sw.js").catch(e=>console.warn("SW:",e)); }
 }
 
-// Boot
-if (!identity) {
-  document.getElementById("identity-modal").classList.remove("hidden");
-} else {
-  document.getElementById("identity-modal").classList.add("hidden");
-  init();
-}
+if(!identity){ document.getElementById("identity-modal").classList.remove("hidden"); }
+else { document.getElementById("identity-modal").classList.add("hidden"); init(); }
 </script>
 </body>
 </html>

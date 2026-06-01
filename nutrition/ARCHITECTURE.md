@@ -309,6 +309,22 @@ Tabs:
 - **Food safety spot-check:** cooked rice → use-within ≈1 day; reheat targets 74 °C; cool-within ≤2 h.
 - Local dry-run before pushing: `python nutrition/generate.py` with `ANTHROPIC_API_KEY` set.
 
+## v2 additions (built)
+
+- **Plan sync via chat**: Coach Léa has `swap_meal` / `attach_video` tools that rewrite the *shared*
+  `weekly_menu.json` and re-aggregate `shopping_list.json` in-browser, so either person's change is seen by
+  the other on next load (shared tabs reload data on view).
+- **Rich meal sheets**: each meal carries an `image_prompt` (rendered via free Pollinations AI-image URLs),
+  `prep_steps` (Sunday) vs `day_of_steps` (detailed day-of), macro pills, an "eaten ✓" button, and an
+  optional `video_url` — YouTube embeds inline; Instagram/TikTok get a launch button; otherwise a
+  "Search YouTube" fallback. Videos are user/coach-attached (no hallucinated links). Prep batches likewise
+  support attachable technique videos.
+- **Fridge/Pantry** (`inventory.json` + `inventory.py` + `nutrition_inventory.yml` daily 19:00 UTC):
+  seeded weekly to required quantities, depleted each day from confirmed meals (`units.py` parses/subtracts
+  quantities). `generate.py` subtracts pantry stock from the shopping list ("✓ in pantry" when enough).
+- **Compliance & gamification**: per-user `meal_logs.json` from the "eaten" buttons drive a compliance %,
+  day-streak (🔥) and milestone badges (1/2/4 weeks) shown at the top of Home alongside the weight tracker.
+
 ## Open / deferred (note, don't block MVP)
 - GitHub Actions cron timing drift on snack/cook reminders (upgrade path noted in §5).
 - Storing uploaded plan images in a public repo — consider a private repo or stripping the image after parse.
