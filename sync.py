@@ -94,6 +94,29 @@ if os.path.exists("goals.json"):
     except Exception:
         goals = {}
 
+# Body weight is single-sourced in the NutriPrep nutrition app — read Diego's
+# weight log so the training plan is weight-aware (power-to-weight, fuelling).
+weight_block = ""
+_wlog_path = os.path.join("nutrition", "users", "diego", "weight_log.json")
+if os.path.exists(_wlog_path):
+    try:
+        with open(_wlog_path) as f:
+            _wlog = sorted(json.load(f), key=lambda x: x.get("date", ""))
+        if _wlog:
+            _latest = _wlog[-1]
+            _recent = _wlog[-4:]
+            if len(_recent) >= 2:
+                _delta = _recent[-1]["weight_kg"] - _recent[0]["weight_kg"]
+                weight_block = (
+                    f"Current body weight {_latest['weight_kg']} kg "
+                    f"(trend {_delta:+.1f} kg over last {len(_recent)} weigh-ins, from NutriPrep). "
+                    "Factor weight trend into power-to-weight and recovery."
+                )
+            else:
+                weight_block = f"Current body weight {_latest['weight_kg']} kg (from NutriPrep)."
+    except Exception:
+        weight_block = ""
+
 if goals.get("primary_goal"):
     _gd = goals
     # Compute weeks-to-event if a target date is set, for taper logic
@@ -380,6 +403,7 @@ prompt = f"""You are Coach Claudio, Diego's endurance coach — the calibre who 
 ## ATHLETE
 Name: Diego | Device: Garmin Fenix
 Resting HR {REST_HR} | Max HR {MAX_HR} | Running threshold HR {LTHR} bpm | FTP {FTP}W
+{weight_block}
 
 ## GOALS & TARGETS (the athlete set these — tailor every plan toward them)
 {goals_block}

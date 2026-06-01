@@ -52,6 +52,15 @@ days_until_mon = (7 - today.weekday()) % 7 or 7
 next_monday = today + timedelta(days=days_until_mon)
 week_dates = {name: (next_monday + timedelta(days=i)).isoformat() for i, name in enumerate(DAY_NAMES)}
 
+# ── Cross-app link to the training app (AthleteIQ, lives in repo root) ─────────
+import training_link
+ROOT = BASE.parent
+training_week = training_link.load_training_week(ROOT, week_dates)   # {date: {...}}
+sleep_block = training_link.sleep_summary(ROOT)
+athlete = training_link.shared_profile(ROOT)
+# Training fuelling applies to the athlete (Diego) only; Diana isn't on AthleteIQ.
+ATHLETE_MEMBER = "diego"
+
 # ── Skip if plan already exists (unless forced) ───────────────────────────────
 _force = os.environ.get("FORCE_GENERATE", "").strip().lower() in ("1", "true")
 if not _force and (BASE / "plan_status.json").exists():
@@ -142,6 +151,33 @@ schedule_block = "\n".join(f"  {slot.replace('_', ' ').title()}: {t}" for slot, 
 if eat_out_days:
     schedule_block += f"\n  Eat out: {', '.join(eat_out_days)} (still include a light home meal for those days)"
 
+# ── Training fuelling (Diego only) — per-day adjusted calorie targets ──────────
+diego_base_kcal = (users["diego"].get("macro_targets") or {}).get("kcal", 0) or 0
+training_lines = []
+diego_day_targets = {}  # iso_date -> adjusted kcal
+for name in DAY_NAMES:
+    d = week_dates[name]
+    t = training_week.get(d)
+    if t and t["extra_kcal"] > 0:
+        adj = diego_base_kcal + t["extra_kcal"]
+        diego_day_targets[d] = adj
+        training_lines.append(
+            f"  {name} {d}: 🚴 {t['name']} ({t['sport']}, {t['tss']} TSS, {t['duration_min']} min) "
+            f"→ fuel +{t['extra_kcal']} kcal → Diego target ≈ {adj} kcal (add carbs)"
+        )
+    else:
+        training_lines.append(f"  {name} {d}: rest / no logged session → Diego base {diego_base_kcal} kcal")
+training_block = "\n".join(training_lines) if diego_base_kcal else "  (no athlete calorie base available)"
+if not training_week:
+    training_block = "  No training sessions found for this week (AthleteIQ plan not generated yet) — use base targets."
+
+athlete_block = ""
+if athlete.get("name") or athlete.get("training_goal"):
+    athlete_block = (
+        f"Athlete: {athlete.get('name','Diego')} | Training goal: {athlete.get('training_goal','-')}"
+        + (f" | Injuries: {athlete['injuries']}" if athlete.get("injuries") else "")
+    )
+
 # ── Build the prompt ──────────────────────────────────────────────────────────
 diego_kcal = (users["diego"].get("macro_targets") or {}).get("kcal", "?")
 diana_kcal = (users["diana"].get("macro_targets") or {}).get("kcal", "?")
@@ -164,6 +200,14 @@ Max weekday cooking time: {max_cook} min
 ## NUTRITIONIST GUIDELINES (clinical authority — follow above individual targets)
 {nutrition_block}
 
+## TRAINING FUELLING — DIEGO ONLY (shared from his AthleteIQ training plan)
+{athlete_block}
+Diego's calorie need changes day to day with training. On training days, raise his portions/snacks to hit the adjusted target below (carbs especially — pre/post workout fuel). Diana's targets do NOT change. Same dish for both; just bigger or an extra component for Diego on hard days.
+{training_block}
+
+## SLEEP & RECOVERY (shared from AthleteIQ / Garmin)
+{sleep_block or "  No sleep data available."}
+
 ## MEAL SCHEDULE (Luxembourg time)
 {schedule_block}
 
@@ -183,6 +227,8 @@ Max weekday cooking time: {max_cook} min
 10. Assign each prep batch a `food_category` from: poultry, red_meat, fish_seafood, eggs_cooked, rice, grains_pasta, legumes, vegetables_cooked, vegetables_raw_prepped, soup_stew, sauce_dairy, dairy, baked_goods, generic.
 11. **Recipe split**: every meal MUST have `prep_steps` (what to batch-cook/pre-portion on Sunday — empty list `[]` if nothing) AND `day_of_steps` (detailed, numbered, beginner-friendly actions performed on the day, including reheating instructions and quantities). Keep `video_url` as an empty string "" (the user attaches videos later).
 12. **Image prompt**: every meal MUST have an `image_prompt` — a short, vivid description of a finished plate of that meal for an AI image generator (mention key ingredients, plating, natural light; no text/words in image).
+13. **Fuel Diego's training days**: match Diego's `day_totals` to the per-day adjusted target in the TRAINING FUELLING table (extra mostly as carbohydrate around the session). On rest days use his base target. Diana's `day_totals` always track her own base target.
+14. **Adapt to sleep**: after poor-sleep nights, favour easy-to-digest, blood-sugar-stable meals, adequate protein, and avoid heavy late dinners.
 
 ## WEEK DATES
 Monday: {week_dates['Monday']} | Tuesday: {week_dates['Tuesday']} | Wednesday: {week_dates['Wednesday']}
@@ -333,6 +379,10 @@ for day_data in menu_json:
     day_label = day_data.get("day", "")
     if day_label in week_dates:
         day_data["date"] = week_dates[day_label]
+    # Attach the day's training session (for Diego) so the app can show fuelling
+    t = training_week.get(day_data.get("date"))
+    if t:
+        day_data["training"] = {"member": ATHLETE_MEMBER, **t}
 
 # ── Allergen safety check ─────────────────────────────────────────────────────
 allergen_list = [a.lower() for a in allergens]

@@ -239,6 +239,7 @@
   <div class="tab-pane active" id="pane-today">
     <div class="stats-strip" id="home-stats"></div>
     <div class="milestones" id="home-milestones"></div>
+    <div id="training-banner"></div>
     <div id="today-banner"></div>
     <div class="card" id="today-macro-card" style="display:none">
       <div class="card-title">Your day — <span id="today-date-label"></span></div>
@@ -378,6 +379,7 @@
 const GITHUB_REPO = "tcw4wn9r95-jpg/training-ai";
 const GITHUB_BRANCH = "main";
 const RAW = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}/nutrition`;
+const RAW_ROOT = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}`; // AthleteIQ training app (repo root)
 const VAPID_PUBLIC_KEY = ""; // Set after: npx web-push generate-vapid-keys
 
 const SLOT_LABELS = {
@@ -395,7 +397,7 @@ const MILESTONES = [
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let identity = localStorage.getItem("nutriprep_identity") || null;
-let weekMenu = null, shoppingList = null, prepPlan = null, planStatus = null, inventory = null;
+let weekMenu = null, shoppingList = null, prepPlan = null, planStatus = null, inventory = null, trainingPlan = null, sleepData = null;
 let userGoals = {}, userWeightLog = [], userCheckins = [], userMealLogs = [];
 let coachHistory = [];
 let checkedItems = JSON.parse(localStorage.getItem("nutriprep_checked") || "{}");
@@ -467,6 +469,15 @@ async function loadSharedData(){
   try{ prepPlan=await ghFetch("prep_plan.json"); }catch(_){ prepPlan=null; }
   try{ planStatus=await ghFetch("plan_status.json"); }catch(_){ planStatus=null; }
   try{ inventory=await ghFetch("inventory.json"); }catch(_){ inventory=null; }
+  // Cross-app reads from the training app (AthleteIQ) at the repo root
+  try{ trainingPlan=await (await fetch(`${RAW_ROOT}/weekly_plan.json?t=${Date.now()}`)).json(); }catch(_){ trainingPlan=null; }
+  try{ sleepData=await (await fetch(`${RAW_ROOT}/sleep.json?t=${Date.now()}`)).json(); }catch(_){ sleepData=null; }
+}
+function trainingForDate(d){
+  // Prefer the training info baked into the menu; fall back to the live training plan.
+  if(weekMenu){ const day=weekMenu.find(x=>x.date===d); if(day&&day.training)return day.training; }
+  if(trainingPlan&&Array.isArray(trainingPlan)){ const s=trainingPlan.find(x=>x.date===d); if(s)return {name:s.name,sport:s.sport,tss:s.planned_tss,duration_min:Math.round((s.total_duration_secs||0)/60),extra_kcal:Math.min(700,Math.round((s.planned_tss||0)*7))}; }
+  return null;
 }
 async function loadUserData(){
   if(!identity)return;
@@ -525,6 +536,7 @@ function renderToday(){
   const today=todayISO();
   const dayData=weekMenu?weekMenu.find(d=>d.date===today):null;
   renderHomeStats();
+  renderTrainingBanner();
   renderNextAction(dayData);
   renderTodaySlots(dayData);
   renderMacroRing(dayData);
@@ -543,6 +555,15 @@ function renderHomeStats(){
   const best=Math.max(streak, computeBestStreak());
   document.getElementById("home-milestones").innerHTML=MILESTONES.map(m=>`
     <div class="milestone${best>=m.days?" earned":""}"><div class="m-ic">${m.icon}</div><div class="m-lbl">${m.label}${best>=m.days?" ✓":""}</div></div>`).join("");
+}
+function renderTrainingBanner(){
+  const el=document.getElementById("training-banner"); el.innerHTML="";
+  const t=trainingForDate(todayISO());
+  // Fuelling adjustment applies to the athlete (Diego) only.
+  if(!t || identity!=="diego"){ return; }
+  if(t.extra_kcal>0){
+    el.innerHTML=`<div class="action-banner" style="background:linear-gradient(135deg,#4361a8,#5a7bd0)"><span class="ic">🚴</span><div><h2>Training day — eat to fuel it</h2><p>${t.name} · ${t.tss} TSS · +${t.extra_kcal} kcal today (extra carbs). Your portions are sized up.</p></div></div>`;
+  }
 }
 function renderNextAction(dayData){
   const banner=document.getElementById("today-banner");
@@ -817,11 +838,21 @@ async function sendCoach(){
   const c=computeCompliance();
   const todayMenu=weekMenu?(weekMenu.find(d=>d.date===todayISO())||{}):{};
   const menuText=weekMenu?weekMenu.map(d=>`${d.day}: ${d.meals.map(m=>m.slot+"="+m.name).join("; ")}`).join("\n"):"no menu";
+  // Cross-app context (training day + recent sleep) — fuelling is Diego-only
+  const tToday=trainingForDate(todayISO());
+  const trainingLine=(identity==="diego"&&tToday)?`Training today: ${tToday.name} (${tToday.tss} TSS) → +${tToday.extra_kcal} kcal, extra carbs.`:(identity==="diego"?"No training scheduled today (rest-day calories).":"");
+  let sleepLine="";
+  if(sleepData&&sleepData.length){ const last=sleepData[sleepData.length-1]; const scored=sleepData.filter(s=>s.score).slice(-7); const avg=scored.length?Math.round(scored.reduce((a,s)=>a+s.score,0)/scored.length):null; sleepLine=`Sleep: last night ${last.score||"?"}/100 (${last.duration_h||"?"}h)${avg?", 7-day avg "+avg:""}.`; }
   const system=`You are Coach Léa, a warm registered-dietitian coach for ${identity} in Luxembourg.
 
 ## USER
 Name: ${identity} | Goal: ${goals.goal_type||"?"} | Target: ${goals.target_weight_kg||"?"}kg | Weight trend: ${trend}
 This week compliance: ${c.pct==null?"n/a":c.pct+"%"} (${c.eaten}/${c.scheduled} meals confirmed)
+${trainingLine}
+${sleepLine}
+
+## CROSS-APP NOTE
+Weight is single-sourced here; ${identity==="diego"?"Diego also uses the AthleteIQ training app — fuel his training days and adapt to his sleep/recovery":"Diana is not on the training app"}.
 
 ## SHARED HOUSEHOLD MENU (Diego + Diana eat the same dishes, different portions)
 ${menuText}
