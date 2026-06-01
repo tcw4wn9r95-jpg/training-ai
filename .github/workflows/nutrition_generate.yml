@@ -26,7 +26,10 @@ jobs:
           python-version: "3.12"
 
       - name: Install dependencies
-        run: pip install -r nutrition/requirements.txt
+        # generate.py only needs the Anthropic SDK. Don't pull in pywebpush/pypdf
+        # (notify.py / parse_plan.py deps) — a build failure there must not block
+        # plan generation.
+        run: pip install "anthropic>=0.40.0"
 
       - name: Generate meal plan
         env:
@@ -38,18 +41,40 @@ jobs:
         run: |
           git config user.name "Coach Léa"
           git config user.email "lea@nutriprep.local"
-          git add \
-            nutrition/weekly_menu.json \
-            nutrition/weekly_menu.md \
-            nutrition/shopping_list.json \
-            nutrition/prep_plan.json \
-            nutrition/notif_schedule.json \
-            nutrition/inventory.json \
-            nutrition/plan_status.json \
-            nutrition/menu_history.json \
-            nutrition/users/diego/macro_targets.json \
-            nutrition/users/diana/macro_targets.json
-          git diff --staged --quiet && echo "Nothing to commit." && exit 0
+          # Stage whatever generate.py produced (don't fail on a missing file).
+          git add -A nutrition/
+          if git diff --staged --quiet; then
+            echo "Nothing to commit."
+            exit 0
+          fi
           git commit -m "Meal plan $(date +%Y-%m-%d)"
-          git pull --rebase origin main
-          git push
+          # main moves often (the app commits push subs / coach history), so
+          # rebase onto the latest and retry the push a few times to win races.
+          for i in 1 2 3 4 5; do
+            git pull --rebase --autostash origin main || true
+            if git push origin HEAD:main; then
+              echo "Pushed on attempt $i."
+              exit 0
+            fi
+            echo "Push attempt $i failed; retrying after sync…"
+            sleep $((i * 3))
+          done
+          echo "::error::Could not push the generated plan after 5 attempts."
+          exit 1
+
+      - name: Commit diagnostics on failure
+        if: failure()
+        run: |
+          if [ -f nutrition/_generation_error.txt ]; then
+            git config user.name "Coach Léa"
+            git config user.email "lea@nutriprep.local"
+            git add nutrition/_generation_error.txt
+            git commit -m "Generation error log $(date +%Y-%m-%dT%H:%M)" || true
+            for i in 1 2 3; do
+              git pull --rebase --autostash origin main || true
+              git push origin HEAD:main && break
+              sleep $((i * 3))
+            done
+          else
+            echo "No diagnostic file was written (failure happened before generation)."
+          fi
