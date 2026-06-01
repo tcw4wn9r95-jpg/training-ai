@@ -4,7 +4,7 @@ Reads household + user profiles, calls Claude Sonnet, parses three JSON blocks
 (menu / shopping / prep), post-processes with food_safety + lux_products, writes
 all output files and computes the notification schedule for the week.
 """
-import os, json, sys, re
+import os, json, sys, re, traceback
 from datetime import date, timedelta, datetime
 from zoneinfo import ZoneInfo
 from pathlib import Path
@@ -15,6 +15,33 @@ BASE = Path(__file__).parent
 LUX = ZoneInfo("Europe/Luxembourg")
 MEMBERS = ["diego", "diana"]
 DAY_NAMES = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+
+# ── Self-reporting diagnostics ────────────────────────────────────────────────
+# On ANY failure, write a readable log (traceback + raw Claude response) that the
+# workflow commits, so the exact cause is visible without CI-log access.
+ERROR_LOG = BASE / "_generation_error.txt"
+_DEBUG = {"response": None, "stop_reason": None, "phase": "startup"}
+
+
+def _write_error(header: str, body: str) -> None:
+    try:
+        with open(ERROR_LOG, "w") as f:
+            f.write(f"{header}\nWhen: {datetime.now().isoformat()}\nPhase: {_DEBUG['phase']}\n\n{body}")
+            if _DEBUG.get("stop_reason"):
+                f.write(f"\n\nstop_reason: {_DEBUG['stop_reason']}")
+            if _DEBUG.get("response"):
+                f.write("\n\n=== RAW CLAUDE RESPONSE (first 20k chars) ===\n" + _DEBUG["response"][:20000])
+    except Exception:
+        pass
+
+
+def _excepthook(exc_type, exc, tb):
+    _write_error("NutriPrep plan generation FAILED (uncaught exception).",
+                 "".join(traceback.format_exception(exc_type, exc, tb)))
+    sys.__excepthook__(exc_type, exc, tb)
+
+
+sys.excepthook = _excepthook
 
 # ── Load shared files ─────────────────────────────────────────────────────────
 with open(BASE / "household.json") as f:
@@ -318,6 +345,7 @@ print("Calling Claude for meal plan...")
 client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 # A full week (35 meals × 2 portions + shopping + prep) is a large structured
 # output — give it plenty of room and stream so the request can't time out.
+_DEBUG["phase"] = "calling Claude API"
 stop_reason = None
 with client.messages.stream(
     model="claude-sonnet-4-6",
@@ -330,6 +358,9 @@ with client.messages.stream(
 # Join every text block (don't assume content[0])
 response = "".join(b.text for b in final.content if getattr(b, "type", None) == "text")
 stop_reason = final.stop_reason
+_DEBUG["response"] = response
+_DEBUG["stop_reason"] = stop_reason
+_DEBUG["phase"] = "parsing response"
 print(f"Plan received from Claude (stop_reason={stop_reason}, {len(response)} chars).")
 if stop_reason == "max_tokens":
     print("WARNING: response hit the max_tokens limit and may be truncated — "
@@ -418,6 +449,8 @@ if not menu_json:
         print("  " + e)
     print("RESPONSE (first 3000 chars):")
     print(response[:3000])
+    _write_error("NutriPrep plan generation FAILED: no usable menu JSON parsed.",
+                 "Parse errors:\n" + "\n".join(errors))
     sys.exit("Plan generation failed.")
 
 # Enforce correct dates (LLM drifts: wrong/missing dates, day-name casing, extra days)
@@ -442,7 +475,9 @@ for item in shopping_json:
     name_en_lower = item.get("name_en", "").lower()
     for allergen in allergen_list:
         if allergen in name_en_lower:
-            sys.exit(f"SAFETY VIOLATION: allergen '{allergen}' found in shopping list item '{item['name_en']}'! Aborting.")
+            msg = f"SAFETY VIOLATION: allergen '{allergen}' found in shopping list item '{item['name_en']}'! Aborting."
+            _write_error("NutriPrep plan generation FAILED: allergen safety check.", msg)
+            sys.exit(msg)
 
 print("Allergen check passed.")
 
@@ -700,6 +735,13 @@ print(f"✓ Shopping list: {len(shopping_sorted)} items")
 print(f"✓ Prep plan: {len(prep_json)} batches, ~{prep_total_min} min active")
 print(f"✓ Notifications: {len(events)} events scheduled")
 print(f"✓ Plan saved for week of {next_monday}")
+
+# Success — remove any stale diagnostic log so it doesn't linger in the repo.
+try:
+    if ERROR_LOG.exists():
+        ERROR_LOG.unlink()
+except Exception:
+    pass
 if errors:
     print("\nNon-fatal warnings:")
     for e in errors:
