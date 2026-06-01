@@ -235,12 +235,10 @@ Monday: {week_dates['Monday']} | Tuesday: {week_dates['Tuesday']} | Wednesday: {
 Thursday: {week_dates['Thursday']} | Friday: {week_dates['Friday']}
 Saturday: {week_dates['Saturday']} | Sunday: {week_dates['Sunday']}
 
-## OUTPUT — FOUR SECTIONS IN ORDER
+## OUTPUT — THREE JSON BLOCKS ONLY, IN ORDER
+Output ONLY the three fenced code blocks below — no prose, no Markdown summary, no commentary before, between, or after them. Start your reply immediately with ```json-menu. Keep `day_of_steps` and `prep_steps` concise (short imperative phrases) so the whole response fits.
 
-### SECTION 1: MARKDOWN MENU
-Write a clean, readable summary for each day (day name, each slot with emoji + meal name + key ingredients + macros for each person). End with a weekly totals table.
-
-### SECTION 2: MENU JSON
+### SECTION 1: MENU JSON
 Output a ```json-menu block. Schema (FOLLOW EXACTLY):
 
 ```json-menu
@@ -281,7 +279,7 @@ Output a ```json-menu block. Schema (FOLLOW EXACTLY):
 ]
 ```
 
-### SECTION 3: SHOPPING JSON
+### SECTION 2: SHOPPING JSON
 Output a ```json-shopping block. Pre-aggregate ALL ingredients for BOTH members across ALL 7 days. Each item = total household quantity needed for the week. Include French name.
 
 ```json-shopping
@@ -290,7 +288,7 @@ Output a ```json-shopping block. Pre-aggregate ALL ingredients for BOTH members 
 ]
 ```
 
-### SECTION 4: PREP JSON
+### SECTION 3: PREP JSON
 Output a ```json-prep block. List Sunday batch steps in logical cooking order (grains first, then proteins, then veg). Include `day_of_assembly` showing what to do each day with the batch.
 
 ```json-prep
@@ -318,52 +316,100 @@ Generate all 7 days. Be specific and realistic. Verify that each person's `day_t
 
 print("Calling Claude for meal plan...")
 client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
-message = client.messages.create(
+# A full week (35 meals × 2 portions + shopping + prep) is a large structured
+# output — give it plenty of room and stream so the request can't time out.
+stop_reason = None
+with client.messages.stream(
     model="claude-sonnet-4-6",
-    max_tokens=14000,
+    max_tokens=32000,
     messages=[{"role": "user", "content": prompt}],
-)
-response = message.content[0].text
-print("Plan received from Claude.")
+) as stream:
+    for _ in stream.text_stream:
+        pass
+    final = stream.get_final_message()
+# Join every text block (don't assume content[0])
+response = "".join(b.text for b in final.content if getattr(b, "type", None) == "text")
+stop_reason = final.stop_reason
+print(f"Plan received from Claude (stop_reason={stop_reason}, {len(response)} chars).")
+if stop_reason == "max_tokens":
+    print("WARNING: response hit the max_tokens limit and may be truncated — "
+          "parsing what arrived and salvaging incomplete blocks.")
 
 # ── Parse the three JSON blocks ───────────────────────────────────────────────
 def extract_block(text: str, label: str) -> str | None:
-    """Extract content from a ```{label} … ``` block."""
-    pattern = rf"```{re.escape(label)}\s*(.*?)```"
-    m = re.search(pattern, text, re.DOTALL)
-    return m.group(1).strip() if m else None
+    """Extract a ```{label} … ``` block. Tolerates a missing closing fence
+    (truncated output) by taking everything up to the next ``` or end-of-text."""
+    closed = re.search(rf"```{re.escape(label)}\s*(.*?)```", text, re.DOTALL)
+    if closed:
+        return closed.group(1).strip()
+    # No closing fence — block was cut off mid-stream. Grab to next fence / EOF.
+    open_m = re.search(rf"```{re.escape(label)}\s*(.*)", text, re.DOTALL)
+    if open_m:
+        tail = open_m.group(1)
+        tail = re.split(r"```", tail)[0]
+        return tail.strip()
+    return None
 
 
-plan_md = response
+def salvage_json_array(raw: str):
+    """Parse a JSON array, repairing a truncated tail by trimming back to the
+    last complete top-level element and closing the array."""
+    try:
+        return json.loads(raw)
+    except json.JSONDecodeError:
+        pass
+    s = raw.strip()
+    if not s.startswith("["):
+        return None
+    depth = 0; in_str = False; esc = False; last_good = None
+    for i, ch in enumerate(s):
+        if esc:
+            esc = False; continue
+        if ch == "\\":
+            esc = True; continue
+        if ch == '"':
+            in_str = not in_str; continue
+        if in_str:
+            continue
+        if ch in "[{":
+            depth += 1
+        elif ch in "]}":
+            depth -= 1
+            if depth == 1 and ch == "}":   # just closed a top-level element
+                last_good = i
+    if last_good is None:
+        return None
+    try:
+        return json.loads(s[:last_good + 1] + "]")
+    except json.JSONDecodeError:
+        return None
+
+
 menu_json: list = []
 shopping_json: list = []
 prep_json: list = []
 errors = []
 
-for label, target, name in [
-    ("json-menu", "menu_json", "menu"),
-    ("json-shopping", "shopping_json", "shopping"),
-    ("json-prep", "prep_json", "prep"),
+for label, name in [
+    ("json-menu", "menu"),
+    ("json-shopping", "shopping"),
+    ("json-prep", "prep"),
 ]:
     raw_block = extract_block(response, label)
-    if raw_block:
-        try:
-            parsed = json.loads(raw_block)
-            if label == "json-menu":
-                menu_json = parsed
-            elif label == "json-shopping":
-                shopping_json = parsed
-            else:
-                prep_json = parsed
-            print(f"Parsed {name}: {len(parsed)} items.")
-        except json.JSONDecodeError as e:
-            errors.append(f"JSON parse error in {label}: {e}")
-    else:
+    if not raw_block:
         errors.append(f"Missing ```{label} block in response.")
-
-# Extract markdown (everything before the first json-menu block)
-if "```json-menu" in response:
-    plan_md = response.split("```json-menu")[0].strip()
+        continue
+    parsed = salvage_json_array(raw_block)
+    if parsed is None:
+        errors.append(f"JSON parse error in {label} (unrecoverable).")
+        continue
+    if label == "json-menu":
+        menu_json = parsed
+    elif label == "json-shopping":
+        shopping_json = parsed
+    else:
+        prep_json = parsed
+    print(f"Parsed {name}: {len(parsed)} items.")
 
 if not menu_json:
     print("=" * 70)
@@ -550,13 +596,36 @@ for day_data in menu_json:
 events.sort(key=lambda e: e["at"])
 notif_out = {"tz": "Europe/Luxembourg", "events": events}
 
+# ── Build the Markdown menu deterministically from the parsed JSON ────────────
+SLOT_EMOJI = {"breakfast": "☀️", "am_snack": "🍎", "lunch": "🥗", "pm_snack": "🥜", "dinner": "🍽️"}
+
+
+def build_menu_md() -> str:
+    lines = []
+    for day in menu_json:
+        lines.append(f"## {day.get('day','')} — {day.get('date','')}")
+        for meal in day.get("meals", []):
+            em = SLOT_EMOJI.get(meal.get("slot", ""), "•")
+            dg = ((meal.get("portions") or {}).get("diego") or {}).get("macros", {})
+            dn = ((meal.get("portions") or {}).get("diana") or {}).get("macros", {})
+            lines.append(
+                f"- {em} **{meal.get('name','')}** ({meal.get('time','')}) — "
+                f"Diego {dg.get('kcal','?')} kcal · Diana {dn.get('kcal','?')} kcal"
+            )
+        tot = day.get("day_totals", {})
+        td, tn = tot.get("diego", {}), tot.get("diana", {})
+        lines.append(f"  - **Day totals** — Diego {td.get('kcal','?')} kcal, Diana {tn.get('kcal','?')} kcal")
+        lines.append("")
+    return "\n".join(lines)
+
+
 # ── Write all output files ────────────────────────────────────────────────────
 with open(BASE / "weekly_menu.md", "w") as f:
     f.write(f"# Meal Plan — Week of {next_monday.strftime('%d %B %Y')}\n\n")
     f.write(f"**Generated:** {today.strftime('%d %B %Y')}  \n")
     f.write(f"**Diego:** {users['diego'].get('macro_targets', {}).get('kcal','?')} kcal/day  \n")
     f.write(f"**Diana:** {users['diana'].get('macro_targets', {}).get('kcal','?')} kcal/day  \n\n---\n\n")
-    f.write(plan_md)
+    f.write(build_menu_md())
 
 with open(BASE / "weekly_menu.json", "w") as f:
     json.dump(menu_json, f, indent=2)
