@@ -348,7 +348,9 @@ client = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 _DEBUG["phase"] = "calling Claude API"
 stop_reason = None
 with client.messages.stream(
-    model="claude-sonnet-4-6",
+    # TEMPORARY (testing): cheapest model to keep token spend low while we iterate.
+    # Switch back to "claude-sonnet-4-6" for launch — it produces richer menus.
+    model="claude-haiku-4-5-20251001",
     max_tokens=32000,
     messages=[{"role": "user", "content": prompt}],
 ) as stream:

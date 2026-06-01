@@ -10,9 +10,6 @@
 <link rel="manifest" href="manifest.json">
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <title>NutriPrep — Coach Léa</title>
-<!-- Set --app-h to the true pixel height before first paint.
-     iOS PWA standalone reports the wrong value for dvh/svh units; window.innerHeight is always correct. -->
-<script>!function(){function s(){document.documentElement.style.setProperty('--app-h',window.innerHeight+'px')}s();window.addEventListener('resize',s);window.addEventListener('orientationchange',function(){setTimeout(s,200)});}();</script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4/dist/chart.umd.min.js"></script>
 <style>
   :root {
@@ -24,11 +21,14 @@
     --header-h: 56px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  /* App shell is a flex column locked to the *dynamic* viewport height, so the
-     header, scrollable content and bottom nav always fill the screen exactly —
-     no fixed-position viewport mismatch / cream band on iOS standalone. */
-  html { height: 100%; }
-  body { height: 100vh; height: var(--app-h, 100dvh); background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); overscroll-behavior: none; display: flex; flex-direction: column; }
+  /* App shell: pin the body to all four edges of the *visual* viewport with
+     position:fixed + inset:0, then lay header / scrollable content / bottom nav
+     out as a flex column. Pinning the edges (rather than relying on height: 100dvh,
+     which iOS standalone reports incorrectly) glues the nav to the true bottom of
+     the screen — so the cream band below the tab bar is physically impossible.
+     Safe-area insets are handled by per-element padding, not by shrinking the shell. */
+  html, body { height: 100%; }
+  body { position: fixed; inset: 0; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); overscroll-behavior: none; display: flex; flex-direction: column; }
 
   header { flex: 0 0 auto; height: calc(var(--header-h) + var(--safe-t)); background: var(--green); color: #fff; display: flex; align-items: center; padding: var(--safe-t) 16px 0; z-index: 100; }
   header h1 { font-size: 18px; font-weight: 700; flex: 1; }
