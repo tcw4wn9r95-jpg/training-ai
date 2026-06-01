@@ -33,6 +33,9 @@
   .tab-pane.active { display: block; }
 
   nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--tab-h) + var(--safe-b)); background: var(--card); border-top: 1px solid var(--border); display: flex; padding-bottom: var(--safe-b); z-index: 100; }
+  /* Paint the home-indicator strip the same colour as the nav, so iOS standalone
+     never shows a page-coloured gap below the fixed tab bar. */
+  body::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: var(--safe-b); background: var(--card); z-index: 99; pointer-events: none; }
   nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; font-size: 9px; color: var(--faint); cursor: pointer; padding: 0; }
   nav button.active { color: var(--green); }
   nav button .ic { font-size: 20px; line-height: 1; }
