@@ -520,7 +520,13 @@ async function loadUserData(){
   try{ userMealLogs=await ghFetch(`users/${identity}/meal_logs.json`); }catch(_){ userMealLogs=[]; }
   try{ coachHistory=await ghFetch(`users/${identity}/coach_history.json`); }catch(_){ coachHistory=[]; }
 }
-function todayISO(){ return new Date().toLocaleDateString("en-CA"); }
+function todayISO(){ return new Date().toLocaleDateString("en-CA",{timeZone:"Europe/Luxembourg"}); }
+// Minutes since midnight in Luxembourg local time (DST-correct, independent of device tz)
+function luxMinutes(){
+  const p=new Intl.DateTimeFormat("en-GB",{timeZone:"Europe/Luxembourg",hour:"2-digit",minute:"2-digit",hour12:false}).formatToParts(new Date());
+  let h=0,m=0; p.forEach(x=>{ if(x.type==="hour")h=+x.value; if(x.type==="minute")m=+x.value; }); if(h===24)h=0;
+  return h*60+m;
+}
 
 // ── Meal confirmation / compliance ──────────────────────────────────────────────
 function isAte(date, slot){ return userMealLogs.some(l=>l.date===date && l.slot===slot && l.ate); }
@@ -546,7 +552,7 @@ function computeStreak(){
   let streak=0; let d=new Date();
   // allow today to not count yet if no logs; start from today, step back
   for(let i=0;i<400;i++){
-    const ds=d.toLocaleDateString("en-CA");
+    const ds=d.toLocaleDateString("en-CA",{timeZone:"Europe/Luxembourg"});
     const compliant=(byDate[ds]||0)>=4;
     if(compliant){ streak++; }
     else if(i===0){ /* today incomplete — don't break, check yesterday */ }
@@ -573,7 +579,7 @@ function renderToday(){
   renderNextAction(dayData);
   renderTodaySlots(dayData);
   renderMacroRing(dayData);
-  document.getElementById("today-date-label").textContent=new Date().toLocaleDateString("en-LU",{weekday:"long",day:"numeric",month:"long"});
+  document.getElementById("today-date-label").textContent=new Date().toLocaleDateString("en-LU",{timeZone:"Europe/Luxembourg",weekday:"long",day:"numeric",month:"long"});
 }
 function renderHomeStats(){
   const c=computeCompliance(); const streak=computeStreak();
@@ -601,7 +607,7 @@ function renderTrainingBanner(){
 function renderNextAction(dayData){
   const banner=document.getElementById("today-banner");
   if(!dayData){ banner.innerHTML=`<div class="action-banner"><span class="ic">📋</span><div><h2>No plan yet</h2><p>Run the meal-plan workflow to generate this week's menu.</p></div></div>`; return; }
-  const now=new Date(); const mins=now.getHours()*60+now.getMinutes();
+  const mins=luxMinutes();
   const upcoming=dayData.meals.map(m=>{const[h,mm]=m.time.split(":").map(Number);return{...m,mins:h*60+mm};}).filter(m=>m.mins>mins).sort((a,b)=>a.mins-b.mins)[0];
   if(upcoming){ const{icon,label}=SLOT_LABELS[upcoming.slot]||{}; const portion=(upcoming.portions||{})[identity]||{}; const kcal=(portion.macros||{}).kcal; const minsUntil=upcoming.mins-mins;
     banner.innerHTML=`<div class="action-banner"><span class="ic">${icon||"🕐"}</span><div><h2>${label||upcoming.slot} in ${minsUntil} min</h2><p>${upcoming.name}${kcal?` — ${kcal} kcal`:""}</p></div></div>`;
@@ -610,7 +616,7 @@ function renderNextAction(dayData){
 function renderTodaySlots(dayData){
   const wrap=document.getElementById("today-slots");
   if(!dayData){ wrap.innerHTML=`<div class="empty"><div class="ic">📅</div><p>No plan for today.</p></div>`; return; }
-  const now=new Date(); const currMins=now.getHours()*60+now.getMinutes();
+  const currMins=luxMinutes();
   wrap.innerHTML=dayData.meals.map(meal=>{
     const{icon,label}=SLOT_LABELS[meal.slot]||{icon:"🍴",label:meal.slot};
     const portion=(meal.portions||{})[identity]||{}; const macros=portion.macros||{};
@@ -653,7 +659,7 @@ function renderMenu(){
   if(!weekMenu){ wrap.innerHTML=`<div class="empty"><div class="ic">📅</div><p>No meal plan yet. Run the workflow on Sunday.</p></div>`; return; }
   wrap.innerHTML=weekMenu.map((day,i)=>{
     const totals=(day.day_totals||{})[identity]||{};
-    const dLabel=new Date(day.date).toLocaleDateString("en-LU",{weekday:"long",day:"numeric",month:"short"});
+    const dLabel=new Date(day.date+"T12:00:00").toLocaleDateString("en-LU",{timeZone:"Europe/Luxembourg",weekday:"long",day:"numeric",month:"short"});
     const meals=day.meals.map(meal=>{
       const{icon,label}=SLOT_LABELS[meal.slot]||{icon:"🍴",label:meal.slot};
       const portion=(meal.portions||{})[identity]||{}; const macros=portion.macros||{};
