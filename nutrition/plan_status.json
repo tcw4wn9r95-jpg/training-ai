@@ -1,5 +1,10 @@
 {
-  "status": "none",
-  "generated": null,
-  "week_of": null
+  "status": "published",
+  "generated": "2026-06-01",
+  "week_of": "2026-06-08",
+  "meal_count": 35,
+  "shopping_items": 90,
+  "prep_batches": 5,
+  "prep_minutes": 85,
+  "notification_events": 30
 }

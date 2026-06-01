@@ -1,0 +1,190 @@
+{
+  "week_of": "2026-06-08",
+  "prep_day": "Sunday",
+  "prep_start_time": "15:00",
+  "total_active_minutes": 85,
+  "batches": [
+    {
+      "id": "prep_batch_1",
+      "title": "Batch-Roasted Chicken Breast & Quinoa for Mediterranean Bowls (Mon\u2013Tue lunches)",
+      "order": 1,
+      "active_minutes": 25,
+      "steps": [
+        "1. Preheat oven to 200\u00b0C (fan 180\u00b0C).",
+        "2. Rinse 400g dry quinoa under cold water using a fine-mesh sieve for 1 minute.",
+        "3. Bring 800ml lightly salted water to a boil in a medium saucepan; add quinoa, reduce to a simmer, cover and cook 12\u201314 minutes until water is absorbed and the little white tails have sprouted.",
+        "4. Fluff with a fork; spread on a large plate or tray to cool, then transfer to a sealed container. Label: 'Quinoa \u2013 Mon/Tue lunches'. Refrigerate up to 4 days.",
+        "5. Meanwhile, lay 700g chicken breast on a lined baking tray; drizzle with 1 tbsp olive oil.",
+        "6. Season all over with 1 tsp dried oregano, 1 tsp garlic powder, 1 tsp salt, 1/2 tsp black pepper.",
+        "7. Bake 20\u201322 minutes until internal temperature reads 75\u00b0C or juices run clear.",
+        "8. Allow to cool 10 minutes, then slice into thick pieces. Transfer to a sealed container. Label: 'Chicken \u2013 Mon/Tue lunches'. Refrigerate up to 3 days.",
+        "9. Cube 2 courgettes and 3 red peppers into 2cm pieces; toss with 1 tbsp olive oil, salt and pepper on a separate baking tray.",
+        "10. Roast at 200\u00b0C for 22\u201325 minutes, turning once halfway, until lightly charred. Cool and refrigerate in a sealed container. Label: 'Roasted veg \u2013 Mon/Tue lunches'."
+      ],
+      "yields": [
+        "~1 kg cooked quinoa (8\u201310 portions of ~110\u2013200g)",
+        "~600 g sliced cooked chicken breast",
+        "~550 g roasted courgette and red pepper"
+      ],
+      "food_category": "poultry",
+      "video_url": "",
+      "day_of_assembly": {
+        "Monday": "Portion quinoa 200g Diego / 140g Diana + chicken 150g/110g + roasted veg 120g/90g into bowls; microwave 2 min; add fresh cherry tomatoes and olive oil.",
+        "Tuesday": "Same as Monday. Use remaining chicken, quinoa and roasted veg from container."
+      },
+      "storage": {
+        "method": "refrigerate",
+        "container": "airtight container",
+        "fridge_c": "\u2264 4",
+        "cool_within_hours": 2,
+        "use_within_days": 3,
+        "freeze_option_days": 60,
+        "reheat_c": 74,
+        "safety_note": "Cool quickly; never leave poultry at room temp > 2 h. Reheat to 74 \u00b0C through."
+      }
+    },
+    {
+      "id": "prep_batch_2",
+      "title": "Green Lentil & Vegetable Stew (Mon dinner + Wed lunch)",
+      "order": 2,
+      "active_minutes": 20,
+      "steps": [
+        "1. Rinse 300g dry green lentils thoroughly under cold water.",
+        "2. Dice 2 medium carrots and 2 celery sticks (c\u00e9leri branche) into small cubes.",
+        "3. Heat 1 tbsp olive oil in a large saucepan over medium heat; add carrots and celery; saut\u00e9 4\u20135 minutes until slightly softened.",
+        "4. Add 3 crushed garlic cloves; cook 1 minute more.",
+        "5. Add lentils, 1 can (400g) chopped tomatoes, 1 litre of vegetable stock (made from cubes), 1 tsp ground cumin, 1 tsp smoked paprika, salt and pepper.",
+        "6. Bring to a boil, then reduce heat to low; simmer uncovered 25\u201330 minutes until lentils are tender but not mushy.",
+        "7. Taste and adjust seasoning. Remove from heat; cool to room temperature.",
+        "8. Transfer to a sealed container. Label: 'Lentil stew \u2013 Mon dinner / Wed lunch'. Refrigerate up to 4 days."
+      ],
+      "yields": [
+        "~1.5 kg cooked lentil and vegetable stew (approximately 6\u20138 portions)"
+      ],
+      "food_category": "legumes",
+      "video_url": "",
+      "day_of_assembly": {
+        "Monday": "Portion into saucepan (Diego 300g, Diana 220g); add spinach 80g total; heat 4 min; serve with pan-seared salmon.",
+        "Wednesday": "Reheat portioned stew (Diego 320g, Diana 240g) with extra spinach 100g total until wilted; serve with 1 slice wholegrain bread each."
+      },
+      "storage": {
+        "method": "refrigerate",
+        "container": "airtight container",
+        "fridge_c": "\u2264 4",
+        "cool_within_hours": 2,
+        "use_within_days": 5,
+        "freeze_option_days": 90,
+        "reheat_c": 74,
+        "safety_note": "Cooked beans and lentils keep well. Freeze in portions for quick meals."
+      }
+    },
+    {
+      "id": "prep_batch_3",
+      "title": "Batch Brown Rice (Tue/Thu/Fri lunches + Tue/Wed dinners)",
+      "order": 3,
+      "active_minutes": 10,
+      "steps": [
+        "1. Rinse 700g dry brown rice under cold running water for 1 minute.",
+        "2. Add to a large saucepan with 1.5 litres lightly salted water.",
+        "3. Bring to a boil over high heat; stir once, then reduce to the lowest heat setting.",
+        "4. Cover tightly and cook 28\u201330 minutes without lifting the lid.",
+        "5. After 30 minutes, check: grains should be tender and water absorbed. If not, cover and cook 5 more minutes.",
+        "6. Remove from heat; let steam covered for 5 minutes, then fluff with a fork.",
+        "7. Spread on a tray to cool quickly (30 min at room temperature).",
+        "8. Divide into two labelled containers: 'Brown rice \u2013 Tue/Wed dinners' and 'Brown rice \u2013 Thu/Fri lunches'. Refrigerate up to 4 days.",
+        "Note: Also used for marinated tofu (see prep_batch_5 for the tofu-stir-fry component)."
+      ],
+      "yields": [
+        "~1.8 kg cooked brown rice"
+      ],
+      "food_category": "rice",
+      "video_url": "",
+      "day_of_assembly": {
+        "Tuesday": "Microwave brown rice: Diego 220g, Diana 160g for 2 min; serve under tofu stir-fry.",
+        "Wednesday": "Microwave brown rice: Diego 200g, Diana 150g for 2 min; use for Mexican turkey-bean bowl.",
+        "Thursday": "Microwave brown rice: Diego 200g, Diana 150g for 2 min; serve under leftover tofu stir-fry.",
+        "Friday": "Microwave brown rice: Diego 180g, Diana 130g for 2 min; use for Mexican leftover bowl."
+      },
+      "storage": {
+        "method": "refrigerate",
+        "container": "airtight container \u2014 cool within 1 hour",
+        "fridge_c": "\u2264 4",
+        "cool_within_hours": 1,
+        "use_within_days": 1,
+        "freeze_option_days": 30,
+        "reheat_c": 74,
+        "safety_note": "\u26a0 HIGH RISK: Bacillus cereus spores survive cooking. Cool rice within 1 h, refrigerate, use within 1 day. Never reheat more than once."
+      }
+    },
+    {
+      "id": "prep_batch_4",
+      "title": "Ratatouille Base (Thu dinner + Fri dinner)",
+      "order": 4,
+      "active_minutes": 20,
+      "steps": [
+        "1. Dice 1 large aubergine, 2 courgettes, and 2 ripe tomatoes into 2cm cubes.",
+        "2. Heat 2 tbsp olive oil in a large heavy-bottomed pan or Dutch oven over medium heat.",
+        "3. Add aubergine cubes; cook 5 minutes, stirring, until they start to soften and absorb the oil.",
+        "4. Add courgette cubes; cook 4 more minutes.",
+        "5. Add 2 crushed garlic cloves and 1 can (400g) chopped tomatoes; stir well.",
+        "6. Season with 2 tsp herbes de Provence, 1/2 tsp sugar (to balance acidity), salt and pepper.",
+        "7. Simmer on low heat, partially covered, for 20 minutes, stirring occasionally, until vegetables are very tender.",
+        "8. Taste and adjust seasoning; add a drizzle of olive oil for richness.",
+        "9. Cool to room temperature; transfer to a sealed container. Label: 'Ratatouille \u2013 Thu/Fri'. Refrigerate up to 4 days."
+      ],
+      "yields": [
+        "~900 g cooked ratatouille"
+      ],
+      "food_category": "vegetables_cooked",
+      "video_url": "",
+      "day_of_assembly": {
+        "Thursday": "Spoon ratatouille around cod fillets in baking dish (Diego 200g, Diana 160g); bake together 18\u201320 min at 200\u00b0C.",
+        "Friday": "Warm 270g ratatouille total in a small pan; use as omelette filling (Diego 150g, Diana 120g)."
+      },
+      "storage": {
+        "method": "refrigerate",
+        "container": "airtight container",
+        "fridge_c": "\u2264 4",
+        "cool_within_hours": 2,
+        "use_within_days": 4,
+        "freeze_option_days": 90,
+        "reheat_c": 74,
+        "safety_note": "Cooked vegetables store well. Roasted veg can be eaten cold in salads."
+      }
+    },
+    {
+      "id": "prep_batch_5",
+      "title": "Marinated Tofu for Asian Stir-Fry (Tue dinner + Thu lunch)",
+      "order": 5,
+      "active_minutes": 10,
+      "steps": [
+        "1. Remove 600g firm tofu from packaging; wrap in 3 layers of kitchen paper.",
+        "2. Place on a plate and put a heavy pan or book on top; press for 15 minutes to drain excess water.",
+        "3. Cut pressed tofu into 2cm cubes.",
+        "4. In a bowl, mix marinade: 3 tbsp soy sauce, 2 tsp sesame oil, 1 tsp garlic powder, 1 tsp smoked paprika.",
+        "5. Add tofu cubes; toss gently to coat each piece. Do not break the cubes.",
+        "6. Cover bowl with cling film or transfer to a sealed container.",
+        "7. Label: 'Marinated tofu \u2013 Tue dinner / Thu lunch'. Refrigerate overnight or up to 24 hours."
+      ],
+      "yields": [
+        "~600 g marinated tofu cubes"
+      ],
+      "food_category": "generic",
+      "video_url": "",
+      "day_of_assembly": {
+        "Tuesday": "Stir-fry marinated tofu in sesame oil 5\u20136 min until golden; combine with stir-fried broccoli, red pepper, snap peas; toss with extra soy sauce, oyster sauce, fresh ginger.",
+        "Thursday": "Reheat leftover tofu stir-fry (Diego 250g, Diana 190g) in microwave 2 min with brown rice."
+      },
+      "storage": {
+        "method": "refrigerate",
+        "container": "airtight container",
+        "fridge_c": "\u2264 4",
+        "cool_within_hours": 2,
+        "use_within_days": 3,
+        "freeze_option_days": 60,
+        "reheat_c": 74,
+        "safety_note": "Cool within 2 h of cooking, refrigerate, use within 3 days, reheat to 74 \u00b0C."
+      }
+    }
+  ]
+}
