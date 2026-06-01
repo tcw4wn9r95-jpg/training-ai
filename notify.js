@@ -66,8 +66,9 @@ async function main() {
       await webpush.sendNotification(sub, payload);
       console.log(`  ✓ ${sub.endpoint.substring(0, 60)}…`);
     } catch(e) {
-      if (e.statusCode === 404 || e.statusCode === 410) {
-        console.log(`  ✗ expired (${e.statusCode}), removing`);
+      // 404/410 = subscription gone; 401/403 = key mismatch (resubscribe needed)
+      if ([401, 403, 404, 410].includes(e.statusCode)) {
+        console.log(`  ✗ invalid subscription (HTTP ${e.statusCode}), removing`);
         failed.push(sub.endpoint);
       } else {
         console.error(`  ✗ failed: ${e.message} (HTTP ${e.statusCode || '?'})`);

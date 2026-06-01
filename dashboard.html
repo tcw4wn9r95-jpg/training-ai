@@ -378,10 +378,11 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="hero-title" id="today-title">Loading…</div>
       <div class="hero-sub" id="today-sub">Fetching your plan</div>
       <div class="hero-stats" id="today-stats" style="display:none">
-        <div class="hero-stat"><div class="v" id="today-dur">—</div><div class="l">Duration</div></div>
-        <div class="hero-stat"><div class="v" id="today-tss">—</div><div class="l">Planned TSS</div></div>
-        <div class="hero-stat"><div class="v" id="today-focus" style="font-size:13px">—</div><div class="l">Focus</div></div>
+        <div class="hero-stat"><div class="v" id="today-dur">—</div><div class="l" id="today-dur-l">Duration</div></div>
+        <div class="hero-stat"><div class="v" id="today-tss">—</div><div class="l" id="today-tss-l">Planned TSS</div></div>
+        <div class="hero-stat"><div class="v" id="today-focus" style="font-size:13px">—</div><div class="l" id="today-focus-l">Focus</div></div>
       </div>
+      <div id="today-coach-note" style="display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,200,150,.07);border:1px solid rgba(0,200,150,.18);font-size:12px;color:var(--t2);line-height:1.55"></div>
       <div id="today-synopsis" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--t2);line-height:1.55;font-family:var(--mono)"></div>
     </div>
     <div id="block-overview"></div>
@@ -911,32 +912,109 @@ function workoutSynopsis(session){
 }
 function renderTodayHero(){
   var today=new Date().toISOString().split("T")[0];
-  var dayName=DAYS[(new Date().getDay()+6)%7];
   document.getElementById("today-date").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"});
   var session=planJson.find(s=>s.date===today);
-  var hero=document.getElementById("today-hero"), pill=document.getElementById("today-pill"), stats=document.getElementById("today-stats");
-  if(session){
-    var sp=session.sport||"running";
-    var st=sp==="running"?"run":sp.indexOf("cycl")>-1?"bike":sp==="strength"?"strength":"other";
-    var clr=sportClr(st)[1];
+  var done=workouts.filter(w=>w.date===today);
+  var hero=document.getElementById("today-hero"),pill=document.getElementById("today-pill"),stats=document.getElementById("today-stats");
+  var synEl=document.getElementById("today-synopsis"),noteEl=document.getElementById("today-coach-note");
+
+  if(done.length){
+    // ── Completed workout ──────────────────────────────────────
+    var w=done.reduce(function(a,b){return getTSS(b)>getTSS(a)?b:a;},done[0]);
+    var st=sportOf(w),clr=sportClr(st)[1];
     hero.style.setProperty("--accent",clr);
-    pill.textContent=sp.replace("_"," ");pill.style.background=sportClr(st)[0];pill.style.color=clr;
+    pill.innerHTML='<span style="opacity:.7">✓</span> Done';
+    pill.style.background=sportClr(st)[0];pill.style.color=clr;
+    document.getElementById("today-title").textContent=session?session.name:(w.name||"Training");
+    document.getElementById("today-sub").textContent=session?session.focus:"";
+    var aTss=Math.round(getTSS(w)),pTss=session?session.planned_tss:null;
+    var aDur=Math.round(w.duration_min||0),pDur=session?Math.round((session.total_duration_secs||0)/60):null;
+    document.getElementById("today-dur").textContent=aDur+"m"+(pDur&&pDur!==aDur?" / "+pDur+"m plan":"");
+    document.getElementById("today-dur-l").textContent="Duration";
+    document.getElementById("today-tss").textContent=aTss+(pTss?" / "+pTss:"");
+    document.getElementById("today-tss-l").textContent=pTss?"TSS · actual / plan":"TSS";
+    var keyMetric="",keyLabel="";
+    if(st==="run"&&w.avg_pace_min_km){keyMetric=fmtPace(w.avg_pace_min_km*60)+"/km";keyLabel="Avg Pace";}
+    else if((st==="bike"||st==="row")&&w.avg_power_watts>0){keyMetric=w.avg_power_watts+"W"+(FTP?" / "+Math.round(w.avg_power_watts/FTP*100)+"%":"");keyLabel="Avg Power";}
+    else if(w.avg_hr>0){keyMetric=Math.round(w.avg_hr)+" bpm";keyLabel="Avg HR";}
+    else{keyMetric=done.length>1?done.length+" sessions":"";keyLabel="Sessions";}
+    document.getElementById("today-focus").textContent=keyMetric;
+    document.getElementById("today-focus-l").textContent=keyLabel;
+    stats.style.display="flex";
+    if(synEl)synEl.style.display="none";
+    // Load coach note inline in the hero
+    if(noteEl){
+      noteEl.style.display="block";
+      noteEl.textContent="Coach is reviewing this workout…";
+      loadHeroCoachNote(w,session,noteEl);
+    }
+  }else if(session){
+    // ── Planned, not done yet ──────────────────────────────────
+    var sp=session.sport||"running";
+    var st2=sportOf({sport:sp}),clr2=sportClr(st2)[1];
+    hero.style.setProperty("--accent",clr2);
+    pill.textContent=sp.replace(/_/g," ");pill.style.background=sportClr(st2)[0];pill.style.color=clr2;
     document.getElementById("today-title").textContent=session.name||"Training";
     document.getElementById("today-sub").textContent=session.focus||"";
     document.getElementById("today-dur").textContent=Math.round((session.total_duration_secs||0)/60)+"m";
+    document.getElementById("today-dur-l").textContent="Duration";
     document.getElementById("today-tss").textContent=session.planned_tss||"—";
+    document.getElementById("today-tss-l").textContent="Planned TSS";
     document.getElementById("today-focus").textContent=(session.focus||"—").split(",")[0];
+    document.getElementById("today-focus-l").textContent="Focus";
     stats.style.display="flex";
-    var syn=workoutSynopsis(session),synEl=document.getElementById("today-synopsis");
+    var syn=workoutSynopsis(session);
     if(synEl){synEl.style.display=syn?"":"none";synEl.textContent=syn;}
+    if(noteEl)noteEl.style.display="none";
   }else{
+    // ── Rest day ──────────────────────────────────────────────
     hero.style.setProperty("--accent","#6b7480");
     pill.textContent="Rest";pill.style.background="rgba(255,255,255,.06)";pill.style.color="var(--t3)";
     document.getElementById("today-title").textContent="Rest Day";
     document.getElementById("today-sub").textContent="Recovery is where adaptation happens. Easy walk or full rest.";
     stats.style.display="none";
-    var synEl=document.getElementById("today-synopsis");if(synEl)synEl.style.display="none";
+    if(synEl)synEl.style.display="none";
+    if(noteEl)noteEl.style.display="none";
   }
+}
+
+async function loadHeroCoachNote(w,session,el){
+  var apiKey=localStorage.getItem("anthropic_key");
+  if(!apiKey){el.style.display="none";return;}
+  var cacheKey="hero_cwn_"+w.date+"_"+w.sport;
+  var cached=localStorage.getItem(cacheKey);
+  if(cached){el.innerHTML='🤖 '+esc(cached);return;}
+  // Build plan context
+  var planCtx="";
+  if(session){
+    var pDur=Math.round((session.total_duration_secs||0)/60);
+    planCtx="PLANNED SESSION:\n"+session.name+" — "+session.focus+"\nDuration: "+pDur+"min, TSS: "+(session.planned_tss||"?")+"\n";
+  }
+  // Week context
+  var today=w.date,dow2=new Date(today),monDate=new Date(dow2);monDate.setDate(dow2.getDate()-(dow2.getDay()||7)+1);
+  var monStr=monDate.toISOString().split("T")[0];
+  var weekPlan=(planJson||[]).filter(function(s){return s.date>=monStr&&s.date<=(new Date(monDate.getTime()+6*86400000)).toISOString().split("T")[0];});
+  var weekPlannedTss=weekPlan.reduce(function(s,x){return s+(x.planned_tss||0);},0);
+  var weekDoneTss=workouts.filter(function(x){return x.date>=monStr&&x.date<=today;}).reduce(function(s,x){return s+getTSS(x);},0);
+  var pmc=buildPMC(90);
+  var prompt="You are Coach Claudio. Give a 2-3 sentence coaching note on this completed workout IN CONTEXT of the training plan. Reference specific numbers. Assess execution vs plan. Note what this means for the rest of the week. Don't start with 'Great' or 'Nice'.\n\n"+
+    planCtx+
+    "\nWEEK TRAINING LOAD:\nWeek planned TSS: "+weekPlannedTss+" | Done so far this week: "+Math.round(weekDoneTss)+" TSS\n"+
+    "\nACTUAL WORKOUT:\n"+
+    "Sport: "+(w.sport||"")+" | Date: "+w.date+"\nDuration: "+Math.round(w.duration_min||0)+"min"+
+    (w.distance_km>0?" | Distance: "+w.distance_km.toFixed(1)+"km":"")+
+    (w.avg_hr?"\nAvg HR: "+w.avg_hr+" bpm (LTHR: "+LTHR+" bpm)":"")+
+    ((sportOf(w)==="run"&&w.avg_pace_min_km)?"\nAvg pace: "+fmtPace(w.avg_pace_min_km*60)+"/km":"")+
+    (w.avg_power_watts>0?"\nAvg power: "+w.avg_power_watts+"W (FTP: "+FTP+"W)":"")+
+    "\nTSS: "+Math.round(getTSS(w))+
+    "\nFitness (CTL): "+Math.round(pmc.C[pmc.C.length-1])+" | Fatigue (ATL): "+Math.round(pmc.A[pmc.A.length-1]);
+  try{
+    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true","Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:180,messages:[{role:"user",content:prompt}]})});
+    var d=await res.json();
+    var note=d.content&&d.content[0]&&d.content[0].text?d.content[0].text.trim():null;
+    if(note){localStorage.setItem(cacheKey,note);if(el)el.innerHTML='🤖 '+esc(note);}
+    else if(el)el.style.display="none";
+  }catch(e){if(el)el.style.display="none";}
 }
 
 var CD={responsive:true,maintainAspectRatio:false,
@@ -1446,7 +1524,19 @@ async function loadCoachWorkoutNote(w,key){
   var apiKey=localStorage.getItem("anthropic_key");
   if(!apiKey){el.textContent="Add your Anthropic API key (gear icon) to get Coach notes.";return;}
   var pmc=buildPMC(90);
-  var prompt="In 2-3 sentences give a brief coaching observation about this workout. Be specific — reference the actual numbers. Don't start with 'Great' or 'Nice'.\n\nWorkout: "+(w.name||w.sport)+" ("+w.sport+")\nDate: "+w.date+"\nDuration: "+Math.round(w.duration_min||0)+"min"+(w.distance_km>0?"\nDistance: "+w.distance_km+"km":"")+(w.avg_hr?"\nAvg HR: "+w.avg_hr+" bpm (LTHR: "+LTHR+")":"")+((sportOf(w)==="run"&&w.avg_pace_min_km)?"\nAvg pace: "+fmtPace(w.avg_pace_min_km*60)+"/km":"")+(w.avg_power_watts>0?"\nAvg power: "+w.avg_power_watts+"W (FTP: "+FTP+"W)":"")+"\nTSS: "+getTSS(w)+"\nCTL: "+pmc.C[pmc.C.length-1]+", ATL: "+pmc.A[pmc.A.length-1];
+  // Plan context for this workout date
+  var matchedSession=planJson.find(function(s){return s.date===w.date&&sportOf({sport:s.sport})===sportOf(w);})
+    ||planJson.find(function(s){return s.date===w.date;});
+  var planCtx="";
+  if(matchedSession){planCtx="Planned session: "+matchedSession.name+" — "+matchedSession.focus+" ("+Math.round((matchedSession.total_duration_secs||0)/60)+"min, "+matchedSession.planned_tss+" TSS planned)\n";}
+  var wDow=new Date(w.date),wMon=new Date(wDow);wMon.setDate(wDow.getDate()-(wDow.getDay()||7)+1);
+  var wMonStr=wMon.toISOString().split("T")[0],wSunStr=new Date(wMon.getTime()+6*86400000).toISOString().split("T")[0];
+  var wkPlanned=(planJson||[]).filter(function(s){return s.date>=wMonStr&&s.date<=wSunStr;}).reduce(function(s,x){return s+(x.planned_tss||0);},0);
+  var wkDone=workouts.filter(function(x){return x.date>=wMonStr&&x.date<=w.date;}).reduce(function(s,x){return s+getTSS(x);},0);
+  var prompt="You are Coach Claudio. In 2-3 sentences give a coaching observation on this workout in context of the training plan. Reference specific numbers. Assess execution vs what was planned and what it means for the rest of the week. Don't start with 'Great' or 'Nice'.\n\n"+
+    planCtx+
+    "Week load: "+Math.round(wkDone)+" TSS done / "+wkPlanned+" planned this week\n"+
+    "Workout: "+(w.name||w.sport)+" ("+w.sport+")\nDate: "+w.date+"\nDuration: "+Math.round(w.duration_min||0)+"min"+(w.distance_km>0?"\nDistance: "+w.distance_km.toFixed(1)+"km":"")+(w.avg_hr?"\nAvg HR: "+w.avg_hr+" bpm (LTHR: "+LTHR+")":"")+((sportOf(w)==="run"&&w.avg_pace_min_km)?"\nAvg pace: "+fmtPace(w.avg_pace_min_km*60)+"/km":"")+(w.avg_power_watts>0?"\nAvg power: "+w.avg_power_watts+"W (FTP: "+FTP+"W)":"")+"\nTSS: "+Math.round(getTSS(w))+"\nFitness (CTL): "+Math.round(pmc.C[pmc.C.length-1])+", Fatigue (ATL): "+Math.round(pmc.A[pmc.A.length-1]);
   try{
     var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",headers:{"x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true","Content-Type":"application/json"},body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:200,messages:[{role:"user",content:prompt}]})});
     var d=await res.json();
