@@ -21,21 +21,22 @@
     --header-h: 56px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-  html, body { height: 100%; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); overscroll-behavior: none; }
+  /* App shell is a flex column locked to the *dynamic* viewport height, so the
+     header, scrollable content and bottom nav always fill the screen exactly —
+     no fixed-position viewport mismatch / cream band on iOS standalone. */
+  html { height: 100%; }
+  body { height: 100vh; height: 100dvh; background: var(--bg); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; color: var(--text); overscroll-behavior: none; display: flex; flex-direction: column; }
 
-  header { position: fixed; top: 0; left: 0; right: 0; height: calc(var(--header-h) + var(--safe-t)); background: var(--green); color: #fff; display: flex; align-items: center; padding: var(--safe-t) 16px 0; z-index: 100; }
+  header { flex: 0 0 auto; height: calc(var(--header-h) + var(--safe-t)); background: var(--green); color: #fff; display: flex; align-items: center; padding: var(--safe-t) 16px 0; z-index: 100; }
   header h1 { font-size: 18px; font-weight: 700; flex: 1; }
   .hdr-user { font-size: 13px; background: rgba(255,255,255,0.2); padding: 4px 10px; border-radius: 20px; cursor: pointer; margin-right: 8px; }
   .hdr-gear { font-size: 20px; cursor: pointer; opacity: .85; }
 
-  .content { position: fixed; top: calc(var(--header-h) + var(--safe-t)); bottom: calc(var(--tab-h) + var(--safe-b)); left: 0; right: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .content { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
   .tab-pane { display: none; padding: 16px; }
   .tab-pane.active { display: block; }
 
-  nav { position: fixed; bottom: 0; left: 0; right: 0; height: calc(var(--tab-h) + var(--safe-b)); background: var(--card); border-top: 1px solid var(--border); display: flex; padding-bottom: var(--safe-b); z-index: 100; }
-  /* Paint the home-indicator strip the same colour as the nav, so iOS standalone
-     never shows a page-coloured gap below the fixed tab bar. */
-  body::after { content: ""; position: fixed; left: 0; right: 0; bottom: 0; height: var(--safe-b); background: var(--card); z-index: 99; pointer-events: none; }
+  nav { flex: 0 0 auto; height: calc(var(--tab-h) + var(--safe-b)); background: var(--card); border-top: 1px solid var(--border); display: flex; padding-bottom: var(--safe-b); z-index: 100; }
   nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1px; font-size: 9px; color: var(--faint); cursor: pointer; padding: 0; }
   nav button.active { color: var(--green); }
   nav button .ic { font-size: 20px; line-height: 1; }
