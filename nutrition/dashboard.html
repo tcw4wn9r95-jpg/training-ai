@@ -41,8 +41,8 @@
   /* App shell: body pinned to all four edges of the visual viewport (position:fixed
      + inset:0) as a flex column. This is what glues the nav to the true screen bottom
      on iOS standalone — no dvh quirk, no cream band. Safe areas handled per-element. */
-  html, body { height: 100%; }
-  body { position: fixed; inset: 0; background: var(--bg); font-family: var(--sans); color: var(--ink); overscroll-behavior: none; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
+  html { height: 100%; background: var(--bg); }
+  body { position: fixed; top: 0; right: 0; bottom: 0; left: 0; background: var(--bg); font-family: var(--sans); color: var(--ink); overscroll-behavior: none; display: flex; flex-direction: column; -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; }
 
   /* ── Header: light editorial bar ───────────────────────────────────────────── */
   header { flex: 0 0 auto; height: calc(var(--header-h) + var(--safe-t)); background: var(--surface-warm); border-bottom: 1px solid var(--hair); color: var(--ink); display: flex; align-items: center; padding: var(--safe-t) 18px 0; z-index: 100; }
@@ -52,13 +52,15 @@
   .hdr-gear { width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; color: var(--muted); cursor: pointer; }
   .hdr-gear svg { width: 22px; height: 22px; }
 
-  .content { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  .content { flex: 1 1 auto; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; padding-bottom: calc(var(--tab-h) + var(--nav-pb)); }
   .tab-pane { display: none; padding: 20px 16px; }
   .tab-pane.active { display: block; animation: fade .28s ease; }
   @keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
   /* ── Bottom nav: lean frosted bar with active pill ─────────────────────────── */
-  nav { flex: 0 0 auto; height: calc(var(--tab-h) + var(--nav-pb)); padding-bottom: var(--nav-pb); background: rgba(251,247,240,.88); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--hair); display: flex; z-index: 100; }
+  /* Glued to the TRUE viewport bottom via position:fixed/bottom:0 — independent of
+     how the body sizes on iOS standalone — so no cream band can appear beneath it. */
+  nav { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--tab-h) + var(--nav-pb)); padding-bottom: var(--nav-pb); background: rgba(251,247,240,.92); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--hair); display: flex; z-index: 100; }
   nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10px; font-weight: 600; letter-spacing: .1px; color: var(--faint); cursor: pointer; padding: 0; }
   nav button .ic { display: flex; align-items: center; justify-content: center; width: 46px; height: 26px; border-radius: 999px; transition: background .2s ease, color .2s ease; }
   nav button .ic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
