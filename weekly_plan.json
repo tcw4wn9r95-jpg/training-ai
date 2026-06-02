@@ -37,11 +37,21 @@
   {
     "day": "Tuesday",
     "date": "2026-06-02",
+    "sport": "rest",
+    "name": "Rest Day",
+    "total_duration_secs": 0,
+    "planned_tss": 0,
+    "focus": "Recovery and catch-up",
+    "steps": []
+  },
+  {
+    "day": "Wednesday",
+    "date": "2026-06-03",
     "sport": "cycling_indoor",
     "name": "Steady Z2 Aerobic Spin",
     "total_duration_secs": 2700,
     "planned_tss": 28,
-    "focus": "Extended aerobic base, indoor alternative to run, Z2 steady effort",
+    "focus": "Extended aerobic base, Z2 steady effort",
     "steps": [
       {
         "type": "warmup",
@@ -66,41 +76,6 @@
         "target_low": 60,
         "target_high": 105,
         "description": "Z1 wind down, cadence 80 rpm, HR below 140 bpm before stopping"
-      }
-    ]
-  },
-  {
-    "day": "Wednesday",
-    "date": "2026-06-03",
-    "sport": "cycling_indoor",
-    "name": "Active Recovery Spin",
-    "total_duration_secs": 1800,
-    "planned_tss": 14,
-    "focus": "Flush Monday and Tuesday load, active recovery, stay below Z2",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 60,
-        "target_high": 95,
-        "description": "Z1 very light spin, cadence 80-85 rpm"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 1200,
-        "target_type": "power",
-        "target_low": 88,
-        "target_high": 105,
-        "description": "Z1 recovery ride, cadence 82-88 rpm, HR below 145 bpm throughout — blood flow only"
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 50,
-        "target_high": 85,
-        "description": "Ease off completely, gentle spin, HR settling"
       }
     ]
   },
@@ -212,6 +187,41 @@
         "target_low": 60,
         "target_high": 100,
         "description": "Z1 step-down, reduce power every 2 min, HR below 135 bpm before stopping"
+      }
+    ]
+  },
+  {
+    "day": "Sunday",
+    "date": "2026-06-07",
+    "sport": "cycling_indoor",
+    "name": "Active Recovery Spin",
+    "total_duration_secs": 1800,
+    "planned_tss": 14,
+    "focus": "Flush the week's load, active recovery, stay below Z2",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 95,
+        "description": "Z1 very light spin, cadence 80-85 rpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "power",
+        "target_low": 88,
+        "target_high": 105,
+        "description": "Z1 recovery ride, cadence 82-88 rpm, HR below 145 bpm throughout — blood flow only"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 50,
+        "target_high": 85,
+        "description": "Ease off completely, gentle spin, HR settling"
       }
     ]
   }
