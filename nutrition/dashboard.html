@@ -57,10 +57,12 @@
   .tab-pane.active { display: block; animation: fade .28s ease; }
   @keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
-  /* ── Bottom nav: lean frosted bar with active pill ─────────────────────────── */
-  /* Glued to the TRUE viewport bottom via position:fixed/bottom:0 — independent of
-     how the body sizes on iOS standalone — so no cream band can appear beneath it. */
-  nav { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--tab-h) + var(--nav-pb)); padding-bottom: var(--nav-pb); background: rgba(251,247,240,.92); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--hair); display: flex; z-index: 100; }
+  /* ── Bottom nav ────────────────────────────────────────────────────────────── */
+  /* Glued to the TRUE viewport bottom (position:fixed/bottom:0). CRITICAL: the nav
+     fill MUST equal --bg, because iOS paints the home-indicator safe area by sampling
+     the page background colour. A different shade there shows as a cream band below
+     the bar. Same colour = one continuous surface, so the band cannot appear. */
+  nav { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--tab-h) + var(--nav-pb)); padding-bottom: var(--nav-pb); background: var(--bg); border-top: 1px solid var(--hair); box-shadow: 0 -3px 14px rgba(40,34,28,.05); display: flex; z-index: 100; }
   nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10px; font-weight: 600; letter-spacing: .1px; color: var(--faint); cursor: pointer; padding: 0; }
   nav button .ic { display: flex; align-items: center; justify-content: center; width: 46px; height: 26px; border-radius: 999px; transition: background .2s ease, color .2s ease; }
   nav button .ic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
@@ -428,6 +430,7 @@
       <div id="goals-display"></div>
       <button class="btn btn-outline btn-block" style="margin-top:12px" onclick="startSetup()">🌿 Set up / review my plan with Coach Léa</button>
     </div>
+    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v8</div>
     <div style="height:20px"></div>
   </div>
 </div>
