@@ -26,10 +26,13 @@
     --terra:var(--clay); --gold:var(--honey); --flame:var(--clay);
     --card:var(--surface); --border:var(--hair); --text:var(--ink);
     /* layout + system */
-    --tab-h:48px; --header-h:56px; --r:20px; --r-sm:14px;
+    --tab-h:46px; --header-h:56px; --r:20px; --r-sm:14px;
     --shadow:0 6px 24px rgba(40,34,28,.06), 0 1px 3px rgba(40,34,28,.05);
     --shadow-lg:0 16px 48px rgba(40,34,28,.16);
     --safe-b:env(safe-area-inset-bottom, 0px); --safe-t:env(safe-area-inset-top, 0px);
+    /* Only reserve the clearance the home indicator needs (~16px), not the full
+       ~34px inset — otherwise a dead cream band sits below the tab icons. */
+    --nav-pb: max(6px, calc(env(safe-area-inset-bottom, 0px) - 18px));
     --serif:"Fraunces", ui-serif, Georgia, "Times New Roman", serif;
     --sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
@@ -55,7 +58,7 @@
   @keyframes fade { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: none; } }
 
   /* ── Bottom nav: lean frosted bar with active pill ─────────────────────────── */
-  nav { flex: 0 0 auto; height: calc(var(--tab-h) + var(--safe-b)); padding-bottom: var(--safe-b); background: rgba(251,247,240,.88); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--hair); display: flex; z-index: 100; }
+  nav { flex: 0 0 auto; height: calc(var(--tab-h) + var(--nav-pb)); padding-bottom: var(--nav-pb); background: rgba(251,247,240,.88); -webkit-backdrop-filter: saturate(180%) blur(20px); backdrop-filter: saturate(180%) blur(20px); border-top: 1px solid var(--hair); display: flex; z-index: 100; }
   nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10px; font-weight: 600; letter-spacing: .1px; color: var(--faint); cursor: pointer; padding: 0; }
   nav button .ic { display: flex; align-items: center; justify-content: center; width: 46px; height: 26px; border-radius: 999px; transition: background .2s ease, color .2s ease; }
   nav button .ic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
@@ -427,7 +430,7 @@
   </div>
 </div>
 
-<div id="coach-bar" style="display:none;position:fixed;bottom:calc(var(--tab-h) + var(--safe-b));left:0;right:0;background:var(--card);border-top:1px solid var(--border);padding:8px 12px;z-index:99">
+<div id="coach-bar" style="display:none;position:fixed;bottom:calc(var(--tab-h) + var(--nav-pb));left:0;right:0;background:var(--card);border-top:1px solid var(--border);padding:8px 12px;z-index:99">
   <div class="coach-input-bar">
     <input id="coach-input" type="text" placeholder="Ask Coach Léa…" onkeydown="if(event.key==='Enter')sendCoach()">
     <button class="send-btn" onclick="sendCoach()">↑</button>
