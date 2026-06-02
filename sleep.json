@@ -1,14 +1,5 @@
 [
   {
-    "date": "2026-05-19",
-    "score": 83,
-    "duration_h": 7.55,
-    "deep_h": 0.9,
-    "light_h": 5.48,
-    "rem_h": 1.17,
-    "awake_h": 0.28
-  },
-  {
     "date": "2026-05-20",
     "score": 82,
     "duration_h": 8.1,
@@ -115,5 +106,14 @@
     "light_h": 4.02,
     "rem_h": 1.0,
     "awake_h": 0.35
+  },
+  {
+    "date": "2026-06-02",
+    "score": 64,
+    "duration_h": 6.57,
+    "deep_h": 1.63,
+    "light_h": 4.6,
+    "rem_h": 0.33,
+    "awake_h": 0.03
   }
 ]
