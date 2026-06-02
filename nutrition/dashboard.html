@@ -26,13 +26,14 @@
     --terra:var(--clay); --gold:var(--honey); --flame:var(--clay);
     --card:var(--surface); --border:var(--hair); --text:var(--ink);
     /* layout + system */
-    --tab-h:46px; --header-h:56px; --r:20px; --r-sm:14px;
+    --tab-h:40px; --header-h:56px; --r:20px; --r-sm:14px;
     --shadow:0 6px 24px rgba(40,34,28,.06), 0 1px 3px rgba(40,34,28,.05);
     --shadow-lg:0 16px 48px rgba(40,34,28,.16);
     --safe-b:env(safe-area-inset-bottom, 0px); --safe-t:env(safe-area-inset-top, 0px);
-    /* Only reserve the clearance the home indicator needs (~16px), not the full
-       ~34px inset — otherwise a dead cream band sits below the tab icons. */
-    --nav-pb: max(6px, calc(env(safe-area-inset-bottom, 0px) - 18px));
+    /* The page background already fills the home-indicator safe area (same colour as
+       the nav), so the bar only needs a small clearance above the indicator — keep it
+       tight so the bar reads compact, not tall. */
+    --nav-pb: max(4px, calc(env(safe-area-inset-bottom, 0px) - 26px));
     --serif:"Fraunces", ui-serif, Georgia, "Times New Roman", serif;
     --sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
@@ -62,10 +63,10 @@
      fill MUST equal --bg, because iOS paints the home-indicator safe area by sampling
      the page background colour. A different shade there shows as a cream band below
      the bar. Same colour = one continuous surface, so the band cannot appear. */
-  nav { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--tab-h) + var(--nav-pb)); padding-bottom: var(--nav-pb); background: var(--bg); border-top: 1px solid var(--hair); box-shadow: 0 -3px 14px rgba(40,34,28,.05); display: flex; z-index: 100; }
-  nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; font-size: 10px; font-weight: 600; letter-spacing: .1px; color: var(--faint); cursor: pointer; padding: 0; }
-  nav button .ic { display: flex; align-items: center; justify-content: center; width: 46px; height: 26px; border-radius: 999px; transition: background .2s ease, color .2s ease; }
-  nav button .ic svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
+  nav { position: fixed; left: 0; right: 0; bottom: 0; height: calc(var(--tab-h) + var(--nav-pb)); padding-bottom: var(--nav-pb); background: var(--bg); border-top: 1px solid var(--hair); box-shadow: 0 -1px 8px rgba(40,34,28,.04); display: flex; z-index: 100; }
+  nav button { flex: 1; border: none; background: none; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-size: 9.5px; font-weight: 600; letter-spacing: .1px; color: var(--faint); cursor: pointer; padding: 0; }
+  nav button .ic { display: flex; align-items: center; justify-content: center; width: 42px; height: 22px; border-radius: 999px; transition: background .2s ease, color .2s ease; }
+  nav button .ic svg { width: 21px; height: 21px; fill: none; stroke: currentColor; stroke-width: 1.7; stroke-linecap: round; stroke-linejoin: round; }
   nav button.active { color: var(--pine); }
   nav button.active .ic { background: var(--sage-pale); }
 
@@ -430,7 +431,7 @@
       <div id="goals-display"></div>
       <button class="btn btn-outline btn-block" style="margin-top:12px" onclick="startSetup()">🌿 Set up / review my plan with Coach Léa</button>
     </div>
-    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v8</div>
+    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v9</div>
     <div style="height:20px"></div>
   </div>
 </div>
