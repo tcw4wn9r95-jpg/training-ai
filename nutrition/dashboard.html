@@ -176,6 +176,7 @@
   .btn:active { opacity: .9; transform: scale(.98); }
   .btn-block { width: 100%; }
   .btn-outline { background: none; border: 1.5px solid var(--pine); color: var(--pine); }
+  .btn-ic { display: inline-flex; align-items: center; justify-content: center; gap: 8px; }
   .stat-row { display: flex; justify-content: space-between; padding: 12px 0; border-bottom: 1px solid var(--hair); font-size: 14px; }
   .stat-row:last-child { border-bottom: none; }
   .stat-label { color: var(--muted); }
@@ -411,7 +412,7 @@
     <div class="card">
       <div class="card-title">Upload nutritionist plan</div>
       <div class="upload-area" onclick="document.getElementById('plan-upload-input').click()">
-        <div class="ic">📋</div>
+        <div class="ic" style="color:var(--faint)"><svg viewBox="0 0 24 24" width="34" height="34" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><path d="M17 8l-5-5-5 5"/><path d="M12 3v13"/></svg></div>
         <p>Tap to upload a photo or PDF of your nutritionist's plan.<br>Supported: JPG, PNG, PDF</p>
       </div>
       <input type="file" id="plan-upload-input" accept="image/*,.pdf" style="display:none" onchange="uploadPlan(this)">
@@ -463,6 +464,28 @@ const MILESTONES = [
   { days: 14, icon: "🥈", label: "2 weeks" },
   { days: 30, icon: "🥇", label: "1 month" },
 ];
+
+// Inline line-icons (match the chrome's stroke style) — used in buttons/banners
+// so structural UI no longer relies on clashing full-colour emoji.
+const SVG_PATHS = {
+  refresh:  '<path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 4v5h-5"/>',
+  sparkle:  '<path d="M12 3v18M3 12h18M6.3 6.3l11.4 11.4M17.7 6.3 6.3 17.7"/>',
+  clipboard:'<rect x="8" y="3" width="8" height="4" rx="1"/><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>',
+  calendar: '<rect x="3" y="4" width="18" height="18" rx="2"/><path d="M16 2v4M8 2v4M3 10h18"/>',
+  bag:      '<path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/>',
+  box:      '<path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/>',
+  pot:      '<path d="M3 11h18"/><path d="M12 11V4a3 3 0 0 0-3 3"/><path d="M5 11v7a3 3 0 0 0 3 3h8a3 3 0 0 0 3-3v-7"/>',
+  clock:    '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+  check:    '<circle cx="12" cy="12" r="9"/><path d="m8.5 12 2.5 2.5 4.5-5"/>',
+};
+// Inline icon for buttons/text (sits on the baseline of the label).
+function ic(name, size=18, sw=1.8){
+  return `<svg viewBox="0 0 24 24" width="${size}" height="${size}" fill="none" stroke="currentColor" stroke-width="${sw}" stroke-linecap="round" stroke-linejoin="round" style="vertical-align:-3px;flex-shrink:0">${SVG_PATHS[name]||""}</svg>`;
+}
+// Larger, muted icon for empty-state panels.
+function emptyIcon(name){
+  return `<svg viewBox="0 0 24 24" width="42" height="42" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" style="color:var(--faint)">${SVG_PATHS[name]||""}</svg>`;
+}
 
 // ── State ─────────────────────────────────────────────────────────────────────
 let identity = localStorage.getItem("nutriprep_identity") || null;
@@ -645,16 +668,16 @@ function renderTrainingBanner(){
 }
 function renderNextAction(dayData){
   const banner=document.getElementById("today-banner");
-  if(!dayData){ banner.innerHTML=`<div class="action-banner"><span class="ic">📋</span><div><h2>No plan yet</h2><p>Run the meal-plan workflow to generate this week's menu.</p></div></div>`; return; }
+  if(!dayData){ banner.innerHTML=`<div class="action-banner"><span class="ic" style="display:flex;color:rgba(255,255,255,.92)">${ic("clipboard",30,1.6)}</span><div><h2>No plan yet</h2><p>Tap "Generate this week's plan" above to build your menu.</p></div></div>`; return; }
   const mins=luxMinutes();
   const upcoming=dayData.meals.map(m=>{const[h,mm]=m.time.split(":").map(Number);return{...m,mins:h*60+mm};}).filter(m=>m.mins>mins).sort((a,b)=>a.mins-b.mins)[0];
   if(upcoming){ const{icon,label}=SLOT_LABELS[upcoming.slot]||{}; const portion=(upcoming.portions||{})[identity]||{}; const kcal=(portion.macros||{}).kcal; const minsUntil=upcoming.mins-mins;
     banner.innerHTML=`<div class="action-banner"><span class="ic">${icon||"🕐"}</span><div><h2>${label||upcoming.slot} in ${minsUntil} min</h2><p>${upcoming.name}${kcal?` — ${kcal} kcal`:""}</p></div></div>`;
-  } else { banner.innerHTML=`<div class="action-banner" style="background:var(--green-light)"><span class="ic">✅</span><div><h2>All done for today!</h2><p>Great job. Tomorrow's plan is ready.</p></div></div>`; }
+  } else { banner.innerHTML=`<div class="action-banner"><span class="ic" style="display:flex;color:rgba(255,255,255,.95)">${ic("check",30,1.7)}</span><div><h2>All done for today!</h2><p>Great job. Tomorrow's plan is ready.</p></div></div>`; }
 }
 function renderTodaySlots(dayData){
   const wrap=document.getElementById("today-slots");
-  if(!dayData){ wrap.innerHTML=`<div class="empty"><div class="ic">📅</div><p>No plan for today.</p></div>`; return; }
+  if(!dayData){ wrap.innerHTML=`<div class="empty"><div class="ic">${emptyIcon("calendar")}</div><p>No plan for today.</p></div>`; return; }
   const currMins=luxMinutes();
   wrap.innerHTML=dayData.meals.map(meal=>{
     const{icon,label}=SLOT_LABELS[meal.slot]||{icon:"🍴",label:meal.slot};
@@ -695,7 +718,7 @@ function renderMacroRing(dayData){
 // ── MENU ──────────────────────────────────────────────────────────────────────
 function renderMenu(){
   const wrap=document.getElementById("menu-days");
-  if(!weekMenu){ wrap.innerHTML=`<div class="empty"><div class="ic">📅</div><p>No meal plan yet. Run the workflow on Sunday.</p></div>`; return; }
+  if(!weekMenu){ wrap.innerHTML=`<div class="empty"><div class="ic">${emptyIcon("calendar")}</div><p>No meal plan yet. Run the workflow on Sunday.</p></div>`; return; }
   wrap.innerHTML=weekMenu.map((day,i)=>{
     const totals=(day.day_totals||{})[identity]||{};
     const dLabel=new Date(day.date+"T12:00:00").toLocaleDateString("en-LU",{timeZone:"Europe/Luxembourg",weekday:"long",day:"numeric",month:"short"});
@@ -782,7 +805,7 @@ async function attachMealVideo(){
 // ── SHOPPING ────────────────────────────────────────────────────────────────────
 function renderShopping(){
   const wrap=document.getElementById("shopping-list-content");
-  if(!shoppingList||!shoppingList.items){ wrap.innerHTML=`<div class="empty"><div class="ic">🛒</div><p>No shopping list yet.</p></div>`; return; }
+  if(!shoppingList||!shoppingList.items){ wrap.innerHTML=`<div class="empty"><div class="ic">${emptyIcon("bag")}</div><p>No shopping list yet.</p></div>`; return; }
   document.getElementById("shop-total").textContent=shoppingList.est_total_eur?`Est. €${shoppingList.est_total_eur}`:"";
   const byAisle={}; shoppingList.items.forEach(it=>{ const a=it.aisle||"General"; (byAisle[a]=byAisle[a]||[]).push(it); });
   wrap.innerHTML=Object.keys(byAisle).sort().map(aisle=>{
@@ -818,7 +841,7 @@ async function markAllBought(){
 // ── FRIDGE ──────────────────────────────────────────────────────────────────────
 function renderFridge(){
   const wrap=document.getElementById("fridge-content"); const meta=document.getElementById("fridge-meta");
-  if(!inventory||!inventory.items||!inventory.items.length){ wrap.innerHTML=`<div class="empty"><div class="ic">🧊</div><p>Your fridge is empty. Generate a plan or tap "Mark all bought" on the shopping list.</p></div>`; meta.textContent=""; return; }
+  if(!inventory||!inventory.items||!inventory.items.length){ wrap.innerHTML=`<div class="empty"><div class="ic">${emptyIcon("box")}</div><p>Your fridge is empty. Generate a plan or tap "Mark all bought" on the shopping list.</p></div>`; meta.textContent=""; return; }
   meta.textContent=`Updates daily at 21:00 based on confirmed meals. Last updated: ${inventory.updated||"—"}`;
   const byAisle={}; inventory.items.forEach(it=>{ const a=it.aisle||"General"; (byAisle[a]=byAisle[a]||[]).push(it); });
   wrap.innerHTML=Object.keys(byAisle).sort().map(aisle=>{
@@ -834,7 +857,7 @@ function renderFridge(){
 // ── PREP ──────────────────────────────────────────────────────────────────────
 function renderPrep(){
   const batchWrap=document.getElementById("prep-batches"); const sumCard=document.getElementById("prep-summary-card");
-  if(!prepPlan||!prepPlan.batches){ batchWrap.innerHTML=`<div class="empty"><div class="ic">🍳</div><p>No prep plan yet.</p></div>`; return; }
+  if(!prepPlan||!prepPlan.batches){ batchWrap.innerHTML=`<div class="empty"><div class="ic">${emptyIcon("pot")}</div><p>No prep plan yet.</p></div>`; return; }
   sumCard.style.display="block";
   document.getElementById("prep-summary").innerHTML=`
     <div class="stat-row"><span class="stat-label">Prep day</span><span class="stat-val">Sunday · ${prepPlan.prep_start_time||""}</span></div>
@@ -1235,17 +1258,17 @@ async function triggerGenerate(){
 function planExists(){ return Array.isArray(weekMenu) && weekMenu.length>0; }
 function renderPlanAction(){
   const wrap=document.getElementById("plan-action"); if(!wrap) return;
-  if(_planPollTimer){ wrap.innerHTML=`<button class="btn btn-block" disabled style="opacity:.7">⏳ Building your plan… (~2 min)</button>`; return; }
+  if(_planPollTimer){ wrap.innerHTML=`<button class="btn btn-block btn-ic" disabled style="opacity:.7">${ic("clock")} Building your plan… (~2 min)</button>`; return; }
   if(!planExists()){
-    wrap.innerHTML=`<button class="btn btn-block" onclick="generatePlan()">✨ Generate this week's plan</button>
-      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:6px">Coach Léa will build your menu, shopping list & prep plan.</div>`;
+    wrap.innerHTML=`<button class="btn btn-block btn-ic" onclick="generatePlan()">${ic("sparkle")} Generate this week's plan</button>
+      <div style="font-size:12px;color:var(--muted);text-align:center;margin-top:8px">Coach Léa will build your menu, shopping list & prep plan.</div>`;
   } else {
     const wk=(planStatus&&planStatus.week_of)?` · week of ${planStatus.week_of}`:"";
     wrap.innerHTML=`<div style="display:flex;gap:8px">
-        <button class="btn btn-outline" style="flex:1" onclick="refreshPlan()">🔄 Update plan</button>
-        <button class="btn" style="flex:1" onclick="generatePlan()">♻️ Regenerate</button>
+        <button class="btn btn-outline btn-ic" style="flex:1" onclick="refreshPlan()">${ic("refresh")} Update plan</button>
+        <button class="btn btn-ic" style="flex:1" onclick="generatePlan()">${ic("sparkle")} Regenerate</button>
       </div>
-      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:6px">Update pulls changes made via chat${wk}. Regenerate builds a fresh week.</div>`;
+      <div style="font-size:11px;color:var(--muted);text-align:center;margin-top:8px">Update pulls changes made via chat${wk}. Regenerate builds a fresh week.</div>`;
   }
 }
 async function generatePlan(){
@@ -1258,7 +1281,7 @@ async function generatePlan(){
 }
 async function refreshPlan(){
   const wrap=document.getElementById("plan-action");
-  if(wrap) wrap.innerHTML=`<button class="btn btn-outline btn-block" disabled style="opacity:.7">🔄 Updating…</button>`;
+  if(wrap) wrap.innerHTML=`<button class="btn btn-outline btn-block btn-ic" disabled style="opacity:.7">${ic("refresh")} Updating…</button>`;
   await Promise.all([loadSharedData(), loadUserData()]);
   renderPlanAction(); renderToday();
 }
