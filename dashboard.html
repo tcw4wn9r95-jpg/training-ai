@@ -560,6 +560,10 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <button class="btn" style="background:var(--bg3);color:var(--t1)" onclick="startOnboarding()">Set / review my goals with Coach</button>
     <button class="btn" style="background:transparent;border:1px solid var(--red);color:var(--red);margin-top:10px" onclick="confirmRestart()">Restart plan from scratch</button>
   </div>
+
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line);text-align:center">
+    <div style="font-size:11px;color:var(--t3)">Coach Claudio · build <strong id="build-stamp" style="color:var(--t2)"></strong></div>
+  </div>
 </div>
 
 <!-- Restart confirm dialog -->
@@ -595,6 +599,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
+const BUILD="20260602-3";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1341,7 +1346,7 @@ function renderPlanArray(arr,wk){
     var metaLine=dayLabel+(dur?' · '+dur+' min':"")+(s.planned_tss?' · '+s.planned_tss+' TSS':"");
     var ib=intensityBadge(s);
     var ibHTML=ib?'<span class="tag" style="background:'+ib.bg+';color:'+ib.c+'">'+ib.l+'</span>':"";
-    var exBtnHTML=sp==="strength";
+    var isStrength=sp==="strength";
 
     var el=document.createElement("div");el.className="day";
     el.innerHTML=
@@ -1350,10 +1355,10 @@ function renderPlanArray(arr,wk){
         '<div class="day-meta"><div class="day-name">'+(s.name||"Session")+
           ' <span class="tag" style="background:'+bg+';color:'+col+'">'+sp.replace("_"," ")+'</span>'+ibHTML+'</div>'+
           '<div class="day-line">'+metaLine+'</div></div>'+
-        (exBtnHTML?'<button class="ex-btn" style="flex-shrink:0;margin-top:0" onclick="event.stopPropagation();openExerciseOverlay('+idx+')">▶ Exercises</button>':"")+
         '<div class="chev"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
       '</div>'+
       '<div class="day-body"><div class="day-inner">'+
+        (isStrength?'<button class="ex-btn" onclick="openExerciseOverlay('+idx+')" style="width:100%;justify-content:center;margin-bottom:12px">▶ Today\'s Exercises</button>':"")+
         (s.focus?'<div style="font-size:13px;color:var(--t2);margin-bottom:10px">'+s.focus+'</div>':"")+
         (stepsHTML||noteHTML?stepsHTML+noteHTML:(isOutline?'<div style="font-size:12px;color:var(--t3)">Session detail will be generated when this week becomes active.</div>':""))+
       '</div></div>';
@@ -2049,6 +2054,7 @@ async function doRestart(){
   startOnboarding();
 }
 async function init(){
+  var stamp=document.getElementById("build-stamp");if(stamp)stamp.textContent=BUILD;
   var _t=getToken();
   var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),apiGetJSON("weekly_plan.json",_t),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json"),apiGetJSON("plan_block.json",_t),fetchJSON("sleep.json")]);
   workouts=r[0]||[];planText=r[1]||"";planJson=r[2]||[];
