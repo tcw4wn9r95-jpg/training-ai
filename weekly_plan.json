@@ -48,10 +48,10 @@
     "day": "Wednesday",
     "date": "2026-06-03",
     "sport": "cycling_indoor",
-    "name": "Steady Z2 Aerobic Spin",
-    "total_duration_secs": 2700,
-    "planned_tss": 28,
-    "focus": "Extended aerobic base, Z2 steady effort",
+    "name": "Extended Z2 Aerobic Spin",
+    "total_duration_secs": 3600,
+    "planned_tss": 37,
+    "focus": "Longer aerobic base build, steady Z2 effort, mid-week anchor",
     "steps": [
       {
         "type": "warmup",
@@ -63,15 +63,15 @@
       },
       {
         "type": "interval",
-        "duration_secs": 2100,
+        "duration_secs": 2900,
         "target_type": "power",
         "target_low": 106,
         "target_high": 141,
-        "description": "Z2 steady aerobic, cadence 88-92 rpm, HR 146-162 bpm, smooth and conversational — dial in a rhythm you can hold"
+        "description": "Z2 steady aerobic, cadence 88-92 rpm, HR 146-162 bpm, smooth and conversational — dial in a rhythm you can hold for the full block"
       },
       {
         "type": "cooldown",
-        "duration_secs": 300,
+        "duration_secs": 400,
         "target_type": "power",
         "target_low": 60,
         "target_high": 105,
