@@ -6,8 +6,8 @@
   "orientation": "portrait",
   "start_url": "/training-ai/nutrition/dashboard.html",
   "scope": "/training-ai/nutrition/",
-  "theme_color": "#2d6a4f",
-  "background_color": "#f5f0e8",
+  "theme_color": "#F4EEE4",
+  "background_color": "#F4EEE4",
   "icons": [
     { "src": "icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" },
