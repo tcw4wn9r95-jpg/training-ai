@@ -160,5 +160,59 @@
         "focus": "Longest aerobic stimulus of the week \u2014 sustained Z2 base building"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-01",
+    "generated": "2026-06-03",
+    "phase": "base",
+    "planned_tss": 150,
+    "last_7d_actual_tss": 79,
+    "last_28d_actual_tss": 79,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Spin with Cadence Focus",
+        "planned_tss": 22,
+        "focus": "Z2 aerobic base, cadence efficiency at 90+ rpm"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Active Recovery Spin",
+        "planned_tss": 10,
+        "focus": "Active recovery, flush legs, no aerobic loading"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Pyramid Ride",
+        "planned_tss": 26,
+        "focus": "Progressive Z2 aerobic load, introduce upper Z2 stimulus"
+      },
+      {
+        "day": "Thursday",
+        "sport": "running",
+        "name": "First Z2 Run",
+        "planned_tss": 22,
+        "focus": "Introduce running stimulus, aerobic Z2 effort"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Shoulder Free",
+        "planned_tss": 18,
+        "focus": "Lower body strength and core stability, zero shoulder load"
+      },
+      {
+        "day": "Saturday",
+        "sport": "cycling_indoor",
+        "name": "First Long Aerobic Ride",
+        "planned_tss": 52,
+        "focus": "Sustained aerobic base \u2014 longest ride in current block"
+      }
+    ]
   }
 ]

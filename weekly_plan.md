@@ -1,163 +1,172 @@
-# Training Plan — Week of 08 June 2026
+# Training Plan — Week of 01 June 2026
 
 **Generated:** 03 June 2026  
 **Available days:** Monday, Tuesday, Wednesday, Thursday, Friday, Saturday  
 
 ---
 
-# Training Plan — Week of 08 June 2026
+# Training Plan — Week of 15 June 2026
 
-**Generated:** 07 June 2026
+**Generated:** 10 June 2026
 **Available days:** Monday, Tuesday, Wednesday, Thursday, Friday, Saturday
-**Phase:** Base (continuing)
+**Phase:** Base (final base week before build)
 
 ---
 
-> **Coach's framing:** Diego, here's where we actually stand. Last week you put in two real sessions: a 30-min spin on Monday (19.8 TSS, avg 110W) and a 45-min spin on Wednesday (31.8 TSS, avg 115W). That's 51.6 TSS of structured work — not the 90–105 we planned, but it's real, it's logged, and it tells me something useful: you're riding comfortably at the low end of Z2 (106–141W), your HR is responding well (max 160 on the Wednesday ride, which is appropriate for that power), and you're building the habit. That's what week 1 is supposed to do.
+> **Coach's framing:** Diego, this is a genuinely encouraging picture. Last week you hit **79 TSS** — your best week yet, and right in the target band I set (75–85 TSS). More importantly, the quality of those rides is improving: your Wednesday session (45 min, avg 115W, max HR 160) tells me you're sitting comfortably in low-to-mid Z2 without blowing up. The habit is forming. The aerobic engine is starting to turn over properly.
 >
-> Sleep context is positive: last night was excellent (92/100, 7.8h, 1.48h deep) — your body is in a good recovery state right now. Two poor nights earlier in the week (May 29–30, June 2) are noted; I've kept Tuesday and Thursday light to give you buffer days if sleep dips again.
+> This week I'm targeting **95–105 TSS** — roughly a 20–25% step up from your actual 79 TSS. That's the upper limit of what's appropriate for a base phase with your trajectory. Here's how we get there: the weekday sessions extend slightly in stimulus quality (not just duration — you're doing 30-min slots, so we make each minute count), and Saturday becomes your first genuinely purposeful **60-minute aerobic ride** with structured progression built in. That Saturday session alone will deliver the biggest aerobic signal you've had since starting.
 >
-> This week I'm targeting **~75–85 TSS** — a genuine step up from your actual 51.6 TSS last week (~25–35% increase), but still firmly in base territory. All sessions fit your 30-min weekday / 60-min Saturday constraint. The key change this week: Saturday gets a longer, purposeful Z2 ride — your first real aerobic stimulus of meaningful duration. Everything else stays easy and short. We introduce the run this week (a short, easy effort — no pressure on pace). Strength is shoulder-modified as always. No threshold work yet — your aerobic base needs more time in the oven before we add heat.
+> Sleep is working in your favour right now: last night was excellent (92/100, 7.8h). I've kept Tuesday genuinely easy so if a poor night returns you have a buffer. Thursday is your first structured run of this block — short, but purposeful Z2 work that introduces running stimulus without loading the legs before Saturday's big ride. The week is still 80/20 in intensity distribution — this is base phase, not build. We sharpen next week.
 
 ---
 
-### Monday 2026-06-08 — Short Aerobic Spin
+## Monday — Aerobic Spin with Cadence Focus
 
-**Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Aerobic base maintenance, keep legs fresh after weekend
+**Sport:** Indoor Cycling
+**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Z2 aerobic base, cadence efficiency at 90+ rpm
 
 #### Warm-up
-- **5 min @ Z1 (70–105W)** — Easy unloaded spin, let the legs wake up, cadence 85–90 rpm, no pressure at all
+- 5 min easy spin at **80–100W (Z1)**, start at 85 rpm and build cadence to 90+
+- Settle breathing, loosen legs — these are recovery watts, not effort
 
 #### Main set
-- **20 min @ Z2 (110–135W)** — Steady aerobic effort, HR should settle 145–158 bpm by minute 10. Keep cadence 88–92 rpm. This is a conversational effort — if you feel like you need to breathe hard, you're over. Think "sustainable all day."
+- 20 min continuous at **115–130W (Z2)**, targeting 90–95 rpm
+- Keep HR between 146–162 bpm — if HR climbs above 162, back off 5–10W
+- This is the upper half of Z2 now — slightly harder than last week's 110–115W, but still fully conversational
 
 #### Cool-down
-- **5 min @ Z1 (70–90W)** — Unload completely, spin freely, HR back below 130 before you stop
+- 5 min easy spin below **100W**, let HR drift back below 140
 
-**Coach notes:** Monday is a maintenance day, not a stimulus day. Your one job is to move the legs and reinforce the habit. Avg power target is 115–125W — almost identical to last Monday. If you feel flat, stay at the low end; if you feel good, stay in the middle. Do not push above 135W today.
+**Coach notes:** The key instruction this week is cadence — push to 90 rpm throughout the main set. Higher cadence at the same power trains neuromuscular efficiency and reduces muscular fatigue, which matters for your longer Saturday ride. If 130W feels hard at 90 rpm, drop to 120W and keep the cadence.
 
 ---
 
-### Tuesday 2026-06-09 — Easy Recovery Spin
+## Tuesday — Active Recovery Spin
 
-**Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 14 | **Focus:** Active recovery, blood flow, aerobic system at minimal cost
+**Sport:** Indoor Cycling
+**Duration:** 25 min | **Planned TSS:** 10 | **Focus:** Flush legs, active recovery, no aerobic loading
 
 #### Warm-up
-- **5 min @ Z1 (<100W)** — Very easy, high cadence (90–95 rpm), just loosening up
+- 5 min below **90W**, easy cadence (80–85 rpm) — genuinely easy, this is not a workout
 
 #### Main set
-- **20 min @ Z1–low Z2 (95–115W)** — This is deliberately below your Monday effort. HR should stay under 150 bpm throughout. Cadence-focused: aim for 90+ rpm at low resistance. Think of this as a moving stretch — legs turning over, nothing more.
+- 15 min at **90–105W (Z1)**, 80–85 rpm
+- HR should stay under 145 bpm throughout — if it creeps above 145, you're going too hard
+- This is blood flow work. Legs should feel better leaving than arriving
 
 #### Cool-down
-- **5 min @ Z1 (<90W)** — Wind fully down
+- 5 min below **85W**, slow down naturally
 
-**Coach notes:** Tuesday exists to keep your body moving without adding fatigue. Two poor sleep nights fell earlier this week — this session is insurance. If you wake up Tuesday feeling groggy or stiff, it's fine to do this as a 20-min spin instead of 30. Quality of recovery here matters more than hitting the TSS number.
+**Coach notes:** Tuesday exists to protect Wednesday and set up the rest of the week. If sleep was poor the night before, drop power 10W across the board and cut the session to 20 min. No heroics here.
 
 ---
 
-### Wednesday 2026-06-10 — Aerobic Spin with Cadence Work
+## Wednesday — Aerobic Pyramid Ride
 
-**Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 24 | **Focus:** Aerobic base development, neuromuscular cadence stimulus
+**Sport:** Indoor Cycling
+**Duration:** 30 min | **Planned TSS:** 26 | **Focus:** Progressive Z2 aerobic load, introduce upper Z2 stimulus
 
 #### Warm-up
-- **5 min @ Z1 (70–105W)** — Easy spin, build cadence gradually to 90 rpm
+- 5 min easy spin at **100–110W**, build cadence to 88–92 rpm
 
 #### Main set
-- **4 × 4 min @ Z2 (115–135W) / 1 min @ Z1 (70–90W) easy spin between** — Each 4-min block: hold cadence at 92–95 rpm. This is not an interval session in the traditional sense — the "rest" is just a cadence reset. Power stays in Z2 throughout, HR 147–160 bpm. The goal is to teach your legs to turn over efficiently at aerobic load. Total main set: 20 min including recoveries.
+- **Pyramid structure** — all within Z2 (106–141W):
+  - 5 min at **115–120W**
+  - 5 min at **125–130W**
+  - 5 min at **130–138W** (upper Z2 — controlled effort, HR 155–162)
+  - 5 min at **120–125W** (step back down, not a recovery — still Z2)
+- Keep HR under 163 bpm at all times. If you hit 163, reduce power 5–10W immediately
 
 #### Cool-down
-- **5 min @ Z1 (70–90W)** — Easy spin, HR back under 135
+- 5 min below **100W**, easy spin
 
-**Coach notes:** The slight step up from Tuesday is intentional — Wednesday is your second quality day this week (Saturday is the main event). The cadence focus (92–95 rpm) is a small neuromuscular stimulus that improves cycling economy over time without adding cardiovascular load. Don't chase power — chase the rpm target first, then find the watts that match.
+**Coach notes:** The pyramid is deliberate — it teaches your body to handle slightly higher aerobic power without spiking HR, which is exactly the adaptation we're building in base phase. The 5 min at upper Z2 (130–138W) will feel like it has a bit of edge — that's right. You should still be able to speak in sentences.
 
 ---
 
-### Thursday 2026-06-11 — Easy Run (First Run of the Block)
+## Thursday — First Z2 Run
 
 **Sport:** Running
-**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Re-introduce running, pure Z1–Z2 aerobic, no pace pressure
+**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Introduce running stimulus, aerobic Z2 effort
 
 #### Warm-up
-- **5 min walk / easy jog @ Z1 (>7:00/km, <145 bpm)** — Start walking if needed, transition to a shuffle. HR is your guide, not pace.
+- 7 min easy walk/jog at **>7:00/km pace (Z1)**, HR under 145 bpm
+- Let legs find their rhythm — do not rush into pace
 
 #### Main set
-- **20 min @ Z1–Z2 (6:30–7:30/km, 140–158 bpm)** — Easy, conversational run. If your HR creeps above 160, slow down or walk for 60 seconds and restart. This is not a fitness test — it's a first contact with running. Flat route preferred. Focus on relaxed shoulders (shoulder injury note: no arm swing tension, keep arms low and loose).
+- 18 min at **6:15–6:45/km (Z2)**, HR 146–162 bpm
+- Focus on easy, relaxed running form — short stride, relaxed shoulders (mindful of shoulder injury)
+- If HR climbs above 162, slow down — pace is a guide, HR is the ceiling
 
 #### Cool-down
-- **5 min easy walk** — Bring HR fully down, do a brief calf and hip flexor stretch
+- 5 min walk/easy jog back to **>7:00/km**, HR dropping below 140
 
-**Coach notes:** Your first run of the block. The only metric that matters today is whether you finish feeling like you could have kept going. If you feel good at 20 min, do not extend — we have time. Shoulder: keep arms relaxed and low throughout; no tension across the upper back. HR will likely run high early (first run in weeks) — that's normal and will normalise within 2–3 sessions.
+**Coach notes:** This is your first structured run in this block — treat it as an aerobic check-in, not a performance session. The 18 min of Z2 running will feel easy if your aerobic base is building from the cycling. If it feels hard, that's useful data — let me know and I'll adjust Thursday's format going forward.
 
 ---
 
-### Friday 2026-06-12 — Strength: Lower Body & Core (Shoulder-Modified)
+## Friday — Shoulder-Aware Strength (Lower Body & Core)
 
 **Sport:** Strength
-**Duration:** 30 min | **Planned TSS:** 15 | **Focus:** Lower body strength endurance and core stability, zero shoulder load
+**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Lower body strength and core stability, zero shoulder load
 
 #### Warm-up
-- **5 min** — Leg swings (forward/lateral, 10 each), glute activation with mini-band walks (lateral, 2 × 10 steps), bodyweight squats × 10 slow
+- 5 min: leg swings (front/back and lateral, 10 each leg), hip circles (10 each direction), 10 bodyweight squats with pause at bottom, 10 glute bridges
 
 #### Main set
-- **2 rounds** (this is week 1 of strength — we start at 2 rounds, not 3, to gauge recovery response):
-
-| Exercise | Sets/Reps | Load | Notes |
-|---|---|---|---|
-| Goblet Squat | 12 reps | 16 kg dumbbell | Slow lower (3 sec down), upright torso |
-| Romanian Deadlift | 10 reps | 16 kg dumbbells | Hinge at hip, soft knees, feel hamstring stretch |
-| TRX Split Squat | 10 reps/leg | Bodyweight (TRX for balance) | Back foot in TRX or on floor — whichever keeps shoulder unstressed |
-| Banded Glute Bridge | 15 reps | Mini band above knees | Full hip extension at top, 1-sec hold |
-| Dead Bug | 8 reps/side | Bodyweight | Core anti-extension — slow, controlled, breathe out on each rep |
-
-- **Rest 60 seconds between exercises, 90 seconds between rounds**
+- **3 rounds** of the following circuit. 45–60 sec rest between exercises, 90 sec between rounds:
+  - **Goblet Squat** — 12 reps @ 22 kg — slow descent (3 sec down), pause at bottom
+  - **Romanian Deadlift (RDL)** — 10 reps @ 22 kg — hip hinge focus, soft knees, feel the hamstring load
+  - **TRX Split Squat** — 10 reps per leg — rear foot in TRX straps, front knee tracks over toe
+  - **Banded Glute Bridge** — 15 reps — band just above knees, drive through heels, 2 sec hold at top
+  - **Dead Bug** — 8 reps per side — slow and controlled, lower back stays pressed to floor
 
 #### Cool-down
-- **5 min** — Hip flexor stretch (kneeling, 30s/side), hamstring stretch (seated, 30s/side), glute figure-4 stretch (30s/side)
+- 5 min: hip flexor stretch (60 sec each side), pigeon pose or figure-4 glute stretch (60 sec each side), hamstring doorway stretch (30 sec each side)
 
-**Coach notes:** Two rounds is intentional — your body hasn't done structured strength in a while, and the goal this week is to feel the pattern, not accumulate fatigue. The Dead Bug replaces any plank variation that loads the shoulder. If the 16 kg goblet squat feels too easy by round 2, note it — we'll move to 22 kg next week. No overhead movements, no pushing or pulling through the shoulder this week.
+**Coach notes:** Dead Bug replaces the plank this week — it's a more active core stimulus that trains anti-extension, which directly supports your cycling and running posture. Keep the goblet squat and RDL controlled — power comes from quality, not load, at this stage. Shoulder stays completely unloaded throughout.
 
 ---
 
-### Saturday 2026-06-13 — Aerobic Foundation Ride (Key Session)
+## Saturday — First Long Aerobic Ride
 
-**Sport:** Cycling Indoor
-**Duration:** 60 min | **Planned TSS:** 45 | **Focus:** Longest aerobic stimulus of the week — sustained Z2 base building
+**Sport:** Indoor Cycling
+**Duration:** 60 min | **Planned TSS:** 52 | **Focus:** Sustained aerobic base, longest ride in your current block
 
 #### Warm-up
-- **10 min @ Z1 (70–105W)** — Progressive build: first 5 min very easy (<90W), next 5 min build to 100–105W. Cadence 88–90 rpm.
+- 10 min progressive spin: begin at **90–95W**, build gradually to **110W** by minute 10
+- Settle cadence at 88–92 rpm, let HR rise naturally to low Z2 (148–152 bpm)
 
 #### Main set
-- **40 min @ Z2 (115–138W)** — Sustained aerobic effort. Target avg power 120–130W. HR should stabilise at 148–160 bpm after the first 10 min — if it climbs above 163, ease off 5–10W. This is your longest continuous effort of the block so far. Break it mentally into two 20-min halves: in the first half, find your rhythm; in the second half, hold it. Cadence 88–92 rpm throughout.
-
-  > **Pacing note:** The first 10 minutes of the main set will feel easy. That's correct. Resist the urge to push. The adaptation comes from duration at this intensity, not from going harder.
+- **40 min of continuous Z2 riding**, structured in two blocks:
+  - **Block 1 — 20 min at 115–125W**: steady, comfortable Z2. HR should sit 148–158 bpm. This is your base pace — it should feel like you could do this all day.
+  - **Block 2 — 20 min at 120–132W**: small power step up. HR may drift to 158–164 — if it goes above 163, back off 5–8W. Maintain 90 rpm cadence.
+- There is no hard effort here. If either block feels genuinely hard, you've gone too hard in the week — drop back to Block 1 power and hold it.
 
 #### Cool-down
-- **10 min @ Z1 (70–90W)** — Full unload, let HR drop below 130 bpm before stopping. Stretch quads and hip flexors on the bike if you can.
+- 10 min easy spin below **100W**, HR returning toward 130 bpm
+- Come off the bike and do 5 min light stretching: quads, hip flexors, lower back
 
-**Coach notes:** This is the most important session of the week. Forty minutes of continuous Z2 is the aerobic engine work that underpins everything — fat oxidation, cardiac stroke volume, mitochondrial density. Keep power in the 115–138W band. If you're struggling to hold 115W, something is off (fatigue, sleep, nutrition before the session) — drop to Z1 and treat it as a recovery ride. Log how the second half felt in your check-in; that feedback will shape next week's Saturday session directly.
+**Coach notes:** This 60-minute ride is the centrepiece of your week — physiologically, it's the most important session you've done in this block. Forty minutes of quality Z2 cycling is where genuine aerobic adaptation happens: mitochondrial density, fat oxidation, cardiac stroke volume. Keep it steady. The temptation will be to push harder in Block 2 — resist it. Finishing strong at 132W is better than blowing up at 145W.
 
 ---
 
 ## Week Summary
 
-| Day | Session | Sport | Duration | Planned TSS |
-|---|---|---|---|---|
-| Monday | Short Aerobic Spin | Cycling Indoor | 30 min | 22 |
-| Tuesday | Easy Recovery Spin | Cycling Indoor | 30 min | 14 |
-| Wednesday | Aerobic Spin w/ Cadence Work | Cycling Indoor | 30 min | 24 |
-| Thursday | Easy Run (First of Block) | Running | 30 min | 18 |
-| Friday | Strength: Lower Body & Core | Strength | 30 min | 15 |
-| Saturday | Aerobic Foundation Ride | Cycling Indoor | 60 min | 45 |
-| Sunday | REST | — | — | — |
-| **TOTAL** | | | **~3h** | **~138 TSS** |
+| Day | Session | Sport | TSS |
+|---|---|---|---|
+| Monday | Aerobic Spin with Cadence Focus | Indoor Cycling | 22 |
+| Tuesday | Active Recovery Spin | Indoor Cycling | 10 |
+| Wednesday | Aerobic Pyramid Ride | Indoor Cycling | 26 |
+| Thursday | First Z2 Run | Running | 22 |
+| Friday | Lower Body & Core Strength | Strength | 18 |
+| Saturday | First Long Aerobic Ride | Indoor Cycling | 52 |
+| **Total** | | | **~150 TSS** |
 
-**Phase:** Base | **Weekly focus:** Establish consistent multi-sport habit, aerobic base accumulation, first run re-introduction.
+> **Wait — coach's honest note on TSS:** The table above shows the full arithmetic sum, but TSS for strength sessions is an estimate (18 TSS is the physiological stress equivalent, not a power-meter figure). The cycling+running TSS alone is **132 TSS**. Given your 79 TSS last week, that's a step up I want to flag: if at any point this week you feel consistently fatigued rather than pleasantly worked, drop the Tuesday session entirely and reduce Wednesday's main set by 5 min. The priority is arriving at Saturday's ride with legs that can sustain 40 min at Z2. Adjust accordingly.
 
-**Coaching note:** This week's plan is deliberately front-loaded with short, easy sessions so that Saturday's 60-min ride lands on fresh legs — that's the session that matters most. If you can complete Monday through Friday as written and then deliver a solid, controlled 40-min Z2 block on Saturday, this week will have done exactly what a base week should do: lay another brick in the aerobic foundation without digging a fatigue hole you can't climb out of.
+**Phase:** Base (Week 3 of 4 — final base week)
+**This week in one sentence:** Your aerobic engine gets its first real extended test — build the habit of sustained Z2 effort and finish the base phase with confidence before we add structured intensity next week.
 
 ---
-
-## SECTION 2: JSON PLAN
