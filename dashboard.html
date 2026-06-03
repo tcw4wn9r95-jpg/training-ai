@@ -602,7 +602,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260603-4";
+const BUILD="20260603-5";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1278,19 +1278,85 @@ function intensityBadge(s){
   return null;
 }
 var _planSessions=[];
+// Verified YouTube video IDs for common strength exercises
+var EXERCISE_VIDEOS={
+  "goblet squat":"MeIiIdhvXT4",
+  "romanian deadlift":"_oyxCn2iSjU",
+  "rdl":"_oyxCn2iSjU",
+  "trx split squat":"DRO5j-2bptQ",
+  "split squat":"DRO5j-2bptQ",
+  "banded glute bridge":"4oRkPYWV0B8",
+  "glute bridge":"4oRkPYWV0B8",
+  "dead bug":"4XLEnwUr1d8",
+  "plank":"kSBBvHtuZZc",
+  "side plank":"_rdfjFSLZsQ",
+  "hip hinge":"3YmEFfF0_6M",
+  "single leg deadlift":"S6gBKH_G7yo",
+  "bulgarian split squat":"2C-uNgKwPLE",
+  "step up":"rJJaFMAlFW4",
+  "hip thrust":"xJFMEzZkBHg",
+  "clamshell":"9SOtJfWNLzk",
+  "lateral band walk":"7u2KhJAmkgQ",
+  "wall sit":"FdFkYl3zXcI",
+  "leg press":"kMBEKMVbJ_4",
+  "box squat":"mLSNFZAlxlM",
+  "sumo squat":"WH25-bIzNwc",
+  "reverse lunge":"7MjEL4N5N44",
+  "forward lunge":"D7KaRcUTQeE",
+  "walking lunge":"L8fvypPrv9s",
+  "calf raise":"gwLzBv7OKRY",
+  "nordic hamstring curl":"GxKLjTklAN0",
+  "copenhagen plank":"1Qzp4qJGNpk",
+  "bird dog":"wiFNA3sqjCA",
+  "pallof press":"AZkDNm_VIks",
+  "russian twist":"JyUqwkVpsi8",
+  "superman":"cc73n_Wk0Yk",
+  "push up":"IODxDxX7oi4",
+  "pull up":"eGo4IYlbE5g",
+  "lat pulldown":"CAwf7n6Luuc",
+  "dumbbell row":"roCP_0hS81U",
+  "seated row":"GZbfZ033f74",
+  "face pull":"eIq5CB9JfKE",
+  "shoulder press":"qEwKCR5JCog",
+  "lateral raise":"eTFBqjBCBMw",
+  "bicep curl":"ykJmrZ5v0Oo",
+  "tricep extension":"nRiJVZDpdL0",
+  "core circuit":"AngelouMRiJo",
+  "hollow body hold":"LlDNef_Ztsc"
+};
+function resolveVideoId(name){
+  var key=name.toLowerCase().trim();
+  if(EXERCISE_VIDEOS[key])return EXERCISE_VIDEOS[key];
+  // partial match on individual words for compound names
+  var words=key.split(/\s+/);
+  for(var k in EXERCISE_VIDEOS){
+    var kw=k.split(/\s+/);
+    if(kw.every(function(w){return words.indexOf(w)>-1}))return EXERCISE_VIDEOS[k];
+  }
+  return null;
+}
 function parseExerciseList(s){
-  if(s.exercises&&s.exercises.length)return s.exercises;
-  var raw=s.notes||"",seen={},out=[];
-  (raw.match(/\d+x\s+[^,\.0-9]+/g)||[]).forEach(function(m){
-    var name=m.replace(/^\d+x\s+/,"")
-               .replace(/\s+\d[\d\s]*kg.*$/i,"")
-               .replace(/\s+per\s+(leg|side|arm).*/i,"")
-               .replace(/\s*\(.*$/,"")
-               .trim();
-    name=name.charAt(0).toUpperCase()+name.slice(1);
-    if(name.length>2&&!seen[name]){seen[name]=1;out.push({name:name});}
+  var base=[];
+  if(s.exercises&&s.exercises.length){
+    base=s.exercises;
+  } else {
+    var raw=s.notes||"",seen={};
+    (raw.match(/\d+x\s+[^,\.0-9]+/g)||[]).forEach(function(m){
+      var name=m.replace(/^\d+x\s+/,"")
+                 .replace(/\s+\d[\d\s]*kg.*$/i,"")
+                 .replace(/\s+per\s+(leg|side|arm).*/i,"")
+                 .replace(/\s*\(.*$/,"")
+                 .trim();
+      name=name.charAt(0).toUpperCase()+name.slice(1);
+      if(name.length>2&&!seen[name]){seen[name]=1;base.push({name:name});}
+    });
+  }
+  // Enrich with verified video IDs from static lookup
+  return base.map(function(ex){
+    if(ex.youtube_id)return ex;
+    var vid=resolveVideoId(ex.name);
+    return vid?{name:ex.name,youtube_id:vid}:ex;
   });
-  return out;
 }
 function openExerciseOverlay(idx){
   var s=_planSessions[idx];if(!s)return;

@@ -484,10 +484,8 @@ TARGET RULES (critical — match these precisely):
 - cycling_indoor: target_type="power", target_low/target_high in WATTS.
 - cycling_outdoor: target_type="heart_rate", target_low/target_high in BPM.
 - strength: no targets; put exercises in step "description" and a full list in top-level "notes".
-  Also add an "exercises" array at the top level: each entry has "name" (exercise name, title-cased)
-  and optionally "youtube_id" (the TrainHeroic YouTube video ID if you know it for that exercise).
-  TrainHeroic channel: youtube.com/@TrainHeroic — they demo all common strength exercises.
-  Include a youtube_id only when you are confident it is correct; omit the field otherwise.
+  Also add an "exercises" array at the top level: each entry has only "name" (exercise name, title-cased).
+  Do NOT include youtube_id — the app handles video lookup from a curated library.
 - Use "repeat" blocks for intervals (e.g. 4x8min). Never flatten intervals.
 
 ```json
@@ -533,10 +531,10 @@ TARGET RULES (critical — match these precisely):
     "focus": "Strength endurance for legs and core",
     "notes": "3 rounds: 12x goblet squat 22kg, 10x RDL 22kg, 15x TRX split squat/leg, 20x band glute bridge, 45s plank. 60s rest between rounds.",
     "exercises": [
-      {{"name": "Goblet Squat", "youtube_id": ""}},
-      {{"name": "Romanian Deadlift", "youtube_id": ""}},
-      {{"name": "TRX Split Squat", "youtube_id": ""}},
-      {{"name": "Banded Glute Bridge", "youtube_id": ""}},
+      {{"name": "Goblet Squat"}},
+      {{"name": "Romanian Deadlift"}},
+      {{"name": "TRX Split Squat"}},
+      {{"name": "Banded Glute Bridge"}},
       {{"name": "Plank"}}
     ],
     "steps": [
