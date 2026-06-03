@@ -602,7 +602,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260603-5";
+const BUILD="20260603-6";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1165,6 +1165,16 @@ function renderPlanForOffset(){
     renderPlanArray(wk.sessions,wk);
   } else if(!planBlock||!planBlock.length){
     box.innerHTML='<div class="empty">No plan generated yet.<br><br>1️⃣ Set your availability in the <b>Avail</b> tab<br>2️⃣ Tap <b>Generate plan</b></div>';
+  } else if(weekOffset===0&&planMon&&planMon>localDateStr(mondayOf(0))){
+    // Current week has no plan but a future plan exists — offer to generate for this week
+    var planStartLabel=new Date(planMon+"T00:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
+    box.innerHTML='<div id="start-week-prompt" style="padding:20px 0">'+
+      '<div style="background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:20px">'+
+      '<div style="font-size:15px;font-weight:700;color:var(--t1);margin-bottom:6px">No sessions this week</div>'+
+      '<div style="font-size:13px;color:var(--t2);margin-bottom:16px">Your plan starts <strong>'+planStartLabel+'</strong>. Want to kick off training this week instead?</div>'+
+      '<button onclick="generatePlanForWeek(0)" style="width:100%;background:var(--brand);color:#000;border:none;border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer">Generate plan for this week →</button>'+
+      '<button onclick="shiftWeek(planStartOffset())" style="width:100%;background:transparent;color:var(--t2);border:none;padding:10px;font-size:13px;cursor:pointer">Keep next-week start</button>'+
+      '</div></div>';
   } else {
     box.innerHTML='<div class="empty">Session detail will be generated when this week becomes active.</div>';
   }
@@ -1530,6 +1540,37 @@ async function generatePlan(){
   setTimeout(poll,25000);  // first check after 25s (give the workflow time to start + finish)
 }
 
+async function generatePlanForWeek(sw){
+  // sw: 0=this week, 1=next week — triggered from Plan tab inline prompt or coach tool
+  var token=getToken();
+  if(!token){alert("Add your GitHub token first (gear icon, top right).");return;}
+  var el=document.getElementById("start-week-prompt");
+  if(el){el.innerHTML='<div style="font-size:13px;color:var(--t2);text-align:center;padding:16px">Building plan… this takes about 2 minutes.</div>';}
+  var ok=await triggerGenerate({startWeek:sw,force:sw===0});
+  if(!ok){
+    if(el)renderPlanForOffset();
+    alert("Couldn't trigger the workflow. Check your GitHub token has 'workflow' scope.");
+    return;
+  }
+  var beforeSig=JSON.stringify(planJson||[])+"|"+JSON.stringify(planBlock||[]);
+  var tries=0,maxTries=15;
+  var poll=async function(){
+    tries++;
+    var _tok=getToken();
+    var r=await Promise.all([apiGetJSON("weekly_plan.json",_tok),apiGetJSON("plan_block.json",_tok),apiGetJSON("plan_status.json",_tok),fetchText("weekly_plan.md")]);
+    var newSig=JSON.stringify(r[0]||[])+"|"+JSON.stringify(r[1]||[]);
+    if(newSig!==beforeSig&&((r[0]&&r[0].length)||(r[1]&&r[1].length))){
+      planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
+      weekOffset=planStartOffset()||0;
+      updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
+      return;
+    }
+    if(tries>=maxTries){if(el)renderPlanForOffset();return;}
+    setTimeout(poll,20000);
+  };
+  setTimeout(poll,25000);
+}
+
 // ── PUSH TO GARMIN ────────────────────────────────────────────
 let planStatus=null;
 function renderPushZone(){
@@ -1755,6 +1796,18 @@ var EDIT_PLAN_TOOL={
     required:["summary","plan"]
   }
 };
+var GENERATE_PLAN_TOOL={
+  name:"generate_plan",
+  description:"Trigger generation of a new training plan. Call this when Diego asks to generate a plan, start training, or wants to know when his plan begins. Use start_week=0 when he wants to start THIS week, start_week=1 for NEXT week (default). Always confirm the choice with a short message.",
+  input_schema:{
+    type:"object",
+    properties:{
+      start_week:{type:"integer",enum:[0,1],description:"0=generate plan starting this week, 1=generate plan starting next week"},
+      message:{type:"string",description:"Short coach message to show Diego explaining what you're triggering (1-2 sentences)."}
+    },
+    required:["start_week","message"]
+  }
+};
 
 async function sendCoachMessage(){
   var input=document.getElementById("coach-input"), send=document.getElementById("coach-send");
@@ -1804,22 +1857,30 @@ async function sendCoachMessage(){
       var poor=rs.filter(function(d){return d.score&&d.score<65;}).map(function(d){return d.date;});
       return "Sleep (7-day avg): "+avgSc+"/100. Last night: "+(last.score||"?")+" score, "+last.duration_h+"h total, "+last.deep_h+"h deep."+(poor.length?" Poor nights: "+poor.join(", ")+".":" No poor nights.")+"\n";
     })()+
+    (function(){
+      var planMon=getPlanJsonMon();
+      var thisMon=localDateStr(mondayOf(0));
+      if(!planMon)return "No plan generated yet.\n";
+      if(planMon===thisMon)return "Plan covers THIS week ("+planMon+").\n";
+      return "Plan covers week of "+planMon+" (starts in the future). Current week ("+thisMon+") has no sessions. Use generate_plan tool with start_week=0 if Diego wants to start training this week.\n";
+    })()+
     "Current plan JSON: "+JSON.stringify(planJson);
   coachHistory.push({role:"user",content:msg});
   try{
     var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL],messages:coachHistory})});
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL,GENERATE_PLAN_TOOL],messages:coachHistory})});
     var data=await res.json();
     var _th=document.getElementById("coach-thinking");if(_th)_th.remove();
     if(data.error){addCoachMessage("Error: "+data.error.message,false);return;}
 
     // Process all content blocks: text + tool_use (may be multiple tools in one turn)
-    var textParts=[], toolUse=null, checkinUse=null;
+    var textParts=[], toolUse=null, checkinUse=null, genPlanUse=null;
     (data.content||[]).forEach(function(b){
       if(b.type==="text")textParts.push(b.text);
       else if(b.type==="tool_use"&&b.name==="edit_plan")toolUse=b;
       else if(b.type==="tool_use"&&b.name==="log_checkin")checkinUse=b;
+      else if(b.type==="tool_use"&&b.name==="generate_plan")genPlanUse=b;
     });
     coachHistory.push({role:"assistant",content:data.content});
 
@@ -1836,6 +1897,14 @@ async function sendCoachMessage(){
         var icon=sev==="important"?"🔴":sev==="caution"?"🟡":"📝";
         addCoachMessage(icon+" Noted and saved to your record — I'll factor this into your training.",false);
       }
+    }
+
+    if(genPlanUse){
+      var sw=genPlanUse.input.start_week||1;
+      var gpMsg=genPlanUse.input.message||"Generating your plan…";
+      addCoachMessage(gpMsg,false);
+      toolResults.push({type:"tool_result",tool_use_id:genPlanUse.id,content:"Plan generation triggered for "+(sw===0?"this week":"next week")+"."});
+      generatePlanForWeek(sw);
     }
 
     if(toolUse){
@@ -2023,12 +2092,18 @@ async function saveGoals(g){
     return r.ok;
   }catch(e){return false;}
 }
-async function triggerGenerate(){
+async function triggerGenerate(opts){
   var token=getToken();if(!token)return false;
+  opts=opts||{};
+  var inputs={};
+  if(opts.force)inputs.force="true";
+  if(opts.startWeek!==undefined)inputs.start_week=String(opts.startWeek);
   try{
+    var body={ref:"main"};
+    if(Object.keys(inputs).length)body.inputs=inputs;
     var r=await fetch("https://api.github.com/repos/"+REPO+"/actions/workflows/generate_plan.yml/dispatches",{
       method:"POST",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
-      body:JSON.stringify({ref:"main"})});
+      body:JSON.stringify(body)});
     return r.status===204;
   }catch(e){return false;}
 }

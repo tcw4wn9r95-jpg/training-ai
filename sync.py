@@ -306,10 +306,15 @@ if os.environ.get("ACTIVITIES_ONLY", "").strip().lower() in ("1", "true"):
     print("ACTIVITIES_ONLY=true — skipping plan generation.")
     raise SystemExit(0)
 
-# ── Build next-week date map ──────────────────────────────────────────────────
+# ── Build target-week date map ───────────────────────────────────────────────
 today = date.today()
-days_until_mon = (7 - today.weekday()) % 7 or 7
-next_monday = today + timedelta(days=days_until_mon)
+# START_WEEK_OFFSET=0 → this week's Monday; 1 (default) → next Monday
+_start_week = int(os.environ.get("START_WEEK_OFFSET", "1"))
+if _start_week == 0:
+    next_monday = today - timedelta(days=today.weekday())  # this week's Monday
+else:
+    days_until_mon = (7 - today.weekday()) % 7 or 7
+    next_monday = today + timedelta(days=days_until_mon)
 week_dates = {name: (next_monday + timedelta(days=i)).isoformat() for i, name in enumerate(DAY_NAMES)}
 
 # Determine where we are in the 4-week periodisation block.

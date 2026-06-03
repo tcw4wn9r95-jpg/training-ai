@@ -8,6 +8,12 @@ on:
         default: 'false'
         type: choice
         options: ['false', 'true']
+      start_week:
+        description: 'Which week to generate for: 0=this week, 1=next week (default)'
+        required: false
+        default: '1'
+        type: choice
+        options: ['0', '1']
   schedule:
     - cron: '0 20 * * 0'   # Sunday 20:00 UTC — auto-generate next week's plan
 
@@ -33,6 +39,7 @@ jobs:
           GARMIN_PASSWORD: ${{ secrets.GARMIN_PASSWORD }}
           ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
           FORCE_GENERATE: ${{ github.event.inputs.force || 'false' }}
+          START_WEEK_OFFSET: ${{ github.event.inputs.start_week || '1' }}
         run: python sync.py
       - name: Commit plan
         run: |
