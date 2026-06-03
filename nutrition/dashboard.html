@@ -26,13 +26,13 @@
     --terra:var(--clay); --gold:var(--honey); --flame:var(--clay);
     --card:var(--surface); --border:var(--hair); --text:var(--ink);
     /* layout + system */
-    --tab-h:46px; --header-h:56px; --r:20px; --r-sm:14px;
+    --tab-h:50px; --header-h:56px; --r:20px; --r-sm:14px;
     --shadow:0 6px 24px rgba(40,34,28,.06), 0 1px 3px rgba(40,34,28,.05);
     --shadow-lg:0 16px 48px rgba(40,34,28,.16);
     --safe-b:env(safe-area-inset-bottom, 0px); --safe-t:env(safe-area-inset-top, 0px);
     /* Bottom clearance so the icons sit comfortably above the screen edge (not jammed
        against it). env insets are 0 without viewport-fit=cover, so this is just 14px. */
-    --nav-pb: max(14px, calc(env(safe-area-inset-bottom, 0px) - 20px));
+    --nav-pb: max(22px, calc(env(safe-area-inset-bottom, 0px) - 12px));
     --serif:"Fraunces", ui-serif, Georgia, "Times New Roman", serif;
     --sans:-apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   }
@@ -430,7 +430,7 @@
       <div id="goals-display"></div>
       <button class="btn btn-outline btn-block" style="margin-top:12px" onclick="startSetup()">🌿 Set up / review my plan with Coach Léa</button>
     </div>
-    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v11</div>
+    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v12</div>
     <div style="height:20px"></div>
   </div>
 </div>
