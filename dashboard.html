@@ -602,7 +602,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260603-3";
+const BUILD="20260603-4";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -2071,7 +2071,7 @@ async function init(){
   sleep=Array.isArray(r[8])?r[8]:[];
   if(prof){profile=prof;FTP=prof.cycling?.ftp_watts||FTP;LTHR=prof.running?.threshold_hr||LTHR;REST_HR=prof.running?.resting_hr||REST_HR;MAX_HR=prof.running?.max_hr||MAX_HR;}
   if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
-  weekOffset=0;updateWeekLabel();
+  weekOffset=planStartOffset();updateWeekLabel();
   renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
   renderPlanPreamble();renderBlockOverview();loadChatHistory();
   if(workouts.length)renderHome();
