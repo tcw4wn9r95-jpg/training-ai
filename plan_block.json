@@ -1,19 +1,19 @@
 [
   {
     "week_index": 1,
-    "week_of": "2026-06-01",
+    "week_of": "2026-06-08",
     "phase": "base",
     "target_tss": 138,
-    "summary": "Establish daily movement habit with easy aerobic cycling, one run, and a foundational strength session — no intensity, all about consistency and aerobic base activation.",
+    "summary": "Re-establish multi-sport habit: five short weekday sessions plus first meaningful 60-min Saturday ride; first run of the block introduced; strength at 2 rounds to gauge response.",
     "sessions": [
       {
         "day": "Monday",
-        "date": "2026-06-01",
+        "date": "2026-06-08",
         "sport": "cycling_indoor",
-        "name": "Aerobic Foundation Spin",
+        "name": "Short Aerobic Spin",
         "total_duration_secs": 1800,
         "planned_tss": 22,
-        "focus": "Re-establish Z2 feel on the bike, aerobic base activation",
+        "focus": "Aerobic base maintenance, easy Z2 habit session",
         "steps": [
           {
             "type": "warmup",
@@ -21,44 +21,69 @@
             "target_type": "power",
             "target_low": 70,
             "target_high": 105,
-            "description": "Z1 easy spin, cadence 85-90 rpm, HR settle below 140 bpm"
+            "description": "Z1 easy unloaded spin, cadence 85-90 rpm, HR <140 bpm"
           },
           {
             "type": "interval",
             "duration_secs": 1200,
             "target_type": "power",
-            "target_low": 106,
-            "target_high": 141,
-            "description": "Z2 steady aerobic, cadence 88-92 rpm, HR 146-162 bpm, conversational effort"
+            "target_low": 110,
+            "target_high": 135,
+            "description": "Z2 steady aerobic effort, cadence 88-92 rpm, HR 145-158 bpm, conversational pace"
           },
           {
             "type": "cooldown",
             "duration_secs": 300,
             "target_type": "power",
-            "target_low": 60,
-            "target_high": 105,
-            "description": "Z1 wind down, cadence 80 rpm, HR below 140 bpm before stopping"
+            "target_low": 70,
+            "target_high": 90,
+            "description": "Z1 full unload, HR back below 130 bpm before stopping"
           }
         ]
       },
       {
         "day": "Tuesday",
-        "date": "2026-06-02",
-        "sport": "rest",
-        "name": "Rest Day",
-        "total_duration_secs": 0,
-        "planned_tss": 0,
-        "focus": "Recovery and catch-up",
-        "steps": []
+        "date": "2026-06-09",
+        "sport": "cycling_indoor",
+        "name": "Easy Recovery Spin",
+        "total_duration_secs": 1800,
+        "planned_tss": 14,
+        "focus": "Active recovery, blood flow, aerobic system at minimal cost",
+        "steps": [
+          {
+            "type": "warmup",
+            "duration_secs": 300,
+            "target_type": "power",
+            "target_low": 60,
+            "target_high": 100,
+            "description": "Z1 very easy, cadence 90-95 rpm, just loosening up"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 1200,
+            "target_type": "power",
+            "target_low": 95,
+            "target_high": 115,
+            "description": "Z1-low Z2 recovery effort, cadence 90+ rpm, HR under 150 bpm throughout"
+          },
+          {
+            "type": "cooldown",
+            "duration_secs": 300,
+            "target_type": "power",
+            "target_low": 60,
+            "target_high": 90,
+            "description": "Z1 wind fully down, HR under 125 bpm"
+          }
+        ]
       },
       {
         "day": "Wednesday",
-        "date": "2026-06-03",
+        "date": "2026-06-10",
         "sport": "cycling_indoor",
-        "name": "Extended Z2 Aerobic Spin",
-        "total_duration_secs": 3600,
-        "planned_tss": 37,
-        "focus": "Longer aerobic base build, steady Z2 effort, mid-week anchor",
+        "name": "Aerobic Spin with Cadence Work",
+        "total_duration_secs": 1800,
+        "planned_tss": 24,
+        "focus": "Aerobic base development with neuromuscular cadence stimulus",
         "steps": [
           {
             "type": "warmup",
@@ -66,69 +91,7 @@
             "target_type": "power",
             "target_low": 70,
             "target_high": 105,
-            "description": "Z1 easy spin, cadence 85-90 rpm, HR settle below 140 bpm"
-          },
-          {
-            "type": "interval",
-            "duration_secs": 2900,
-            "target_type": "power",
-            "target_low": 106,
-            "target_high": 141,
-            "description": "Z2 steady aerobic, cadence 88-92 rpm, HR 146-162 bpm, smooth and conversational — dial in a rhythm you can hold for the full block"
-          },
-          {
-            "type": "cooldown",
-            "duration_secs": 400,
-            "target_type": "power",
-            "target_low": 60,
-            "target_high": 105,
-            "description": "Z1 wind down, cadence 80 rpm, HR below 140 bpm before stopping"
-          }
-        ]
-      },
-      {
-        "day": "Thursday",
-        "date": "2026-06-04",
-        "sport": "strength",
-        "name": "Lower Body & Core Strength",
-        "total_duration_secs": 1800,
-        "planned_tss": 18,
-        "focus": "Leg and core strength foundation — shoulder protected throughout",
-        "notes": "2 rounds: 12x goblet squat 16kg (held at chest), 10x Romanian deadlift 16kg, 10x TRX split squat per leg (balance assist only — keep shoulder passive), 15x banded glute bridge (band above knees), 30s dead bug. 60s rest between exercises, 90s between rounds. Drop to 11kg if form breaks on goblet squat or RDL.",
-        "steps": [
-          {
-            "type": "warmup",
-            "duration_secs": 300,
-            "description": "Leg swings front/back and lateral, hip circles, 10x bodyweight squat, 10x bodyweight glute bridge"
-          },
-          {
-            "type": "interval",
-            "duration_secs": 1260,
-            "description": "2 rounds: 12x goblet squat 16kg, 10x RDL 16kg, 10x TRX split squat/leg, 15x banded glute bridge, 30s dead bug. 60s rest between exercises, 90s between rounds."
-          },
-          {
-            "type": "cooldown",
-            "duration_secs": 240,
-            "description": "Kneeling hip flexor stretch 30s/side, standing hamstring stretch, figure-4 glute stretch 30s/side"
-          }
-        ]
-      },
-      {
-        "day": "Friday",
-        "date": "2026-06-05",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Spin with Cadence Focus",
-        "total_duration_secs": 1800,
-        "planned_tss": 22,
-        "focus": "Aerobic base plus neuromuscular cadence drill, end-of-week activation",
-        "steps": [
-          {
-            "type": "warmup",
-            "duration_secs": 300,
-            "target_type": "power",
-            "target_low": 70,
-            "target_high": 105,
-            "description": "Z1 easy build, cadence 85-90 rpm"
+            "description": "Z1 easy spin, build cadence gradually to 90 rpm"
           },
           {
             "type": "repeat",
@@ -136,99 +99,158 @@
             "steps": [
               {
                 "type": "interval",
-                "duration_secs": 180,
+                "duration_secs": 240,
                 "target_type": "power",
-                "target_low": 106,
-                "target_high": 141,
-                "description": "Z2 cadence focus 90-95 rpm, HR 146-162 bpm — shift load to cardiovascular system"
+                "target_low": 115,
+                "target_high": 135,
+                "description": "Z2 aerobic block, cadence 92-95 rpm, HR 147-160 bpm"
               },
               {
                 "type": "recovery",
-                "duration_secs": 120,
+                "duration_secs": 60,
                 "target_type": "power",
                 "target_low": 70,
-                "target_high": 105,
-                "description": "Z1 easy spin between blocks"
+                "target_high": 90,
+                "description": "Z1 easy spin cadence reset, HR settle"
               }
             ]
           },
           {
             "type": "cooldown",
-            "duration_secs": 180,
+            "duration_secs": 300,
             "target_type": "power",
-            "target_low": 50,
-            "target_high": 88,
-            "description": "Z1 wind down, HR settle below 135 bpm"
+            "target_low": 70,
+            "target_high": 90,
+            "description": "Z1 easy spin, HR back under 135 bpm"
+          }
+        ]
+      },
+      {
+        "day": "Thursday",
+        "date": "2026-06-11",
+        "sport": "running",
+        "name": "Easy Run \u2014 First Run of the Block",
+        "total_duration_secs": 1800,
+        "planned_tss": 18,
+        "focus": "Re-introduce running, pure Z1-Z2 aerobic, no pace pressure",
+        "steps": [
+          {
+            "type": "warmup",
+            "duration_secs": 300,
+            "target_type": "pace",
+            "target_low": 480,
+            "target_high": 420,
+            "description": "Z1 walk/easy jog, <145 bpm, transition from walk to shuffle as HR allows"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 1200,
+            "target_type": "pace",
+            "target_low": 450,
+            "target_high": 390,
+            "description": "Z1-Z2 easy run, 140-158 bpm, conversational effort \u2014 walk 60s if HR exceeds 160 bpm, keep shoulders relaxed and arms low"
+          },
+          {
+            "type": "cooldown",
+            "duration_secs": 300,
+            "target_type": "pace",
+            "target_low": 540,
+            "target_high": 480,
+            "description": "Easy walk cool-down, HR fully down, brief calf and hip flexor stretch"
+          }
+        ]
+      },
+      {
+        "day": "Friday",
+        "date": "2026-06-12",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Shoulder-Modified",
+        "total_duration_secs": 1800,
+        "planned_tss": 15,
+        "focus": "Lower body strength endurance and core stability, zero shoulder load",
+        "notes": "2 rounds: 12x goblet squat 16kg, 10x Romanian deadlift 16kg dumbbells, 10x TRX split squat per leg (TRX for balance only), 15x banded glute bridge (mini band above knees), 8x dead bug per side. 60s rest between exercises, 90s between rounds. No overhead movements, no shoulder pressing or pulling. Dead bug replaces plank to keep shoulder unloaded.",
+        "exercises": [
+          {
+            "name": "Goblet Squat",
+            "youtube_id": "MxsFDiTyO_E"
+          },
+          {
+            "name": "Romanian Deadlift",
+            "youtube_id": "JCXUYuzwNrM"
+          },
+          {
+            "name": "TRX Split Squat"
+          },
+          {
+            "name": "Banded Glute Bridge",
+            "youtube_id": "gigcqzEGOQ0"
+          },
+          {
+            "name": "Dead Bug",
+            "youtube_id": "4XLEnwUr1d8"
+          }
+        ],
+        "steps": [
+          {
+            "type": "warmup",
+            "duration_secs": 300,
+            "description": "Leg swings forward and lateral 10 each, mini-band lateral walks 2x10 steps, bodyweight squats 10 reps slow"
+          },
+          {
+            "type": "repeat",
+            "repeat_count": 2,
+            "steps": [
+              {
+                "type": "interval",
+                "duration_secs": 480,
+                "description": "12x goblet squat 16kg (3s lower), 10x Romanian deadlift 16kg, 10x TRX split squat per leg, 15x banded glute bridge, 8x dead bug per side. 60s rest between exercises."
+              },
+              {
+                "type": "recovery",
+                "duration_secs": 90,
+                "description": "90s rest between rounds \u2014 walk around, shake legs out"
+              }
+            ]
+          },
+          {
+            "type": "cooldown",
+            "duration_secs": 300,
+            "description": "Hip flexor stretch kneeling 30s per side, seated hamstring stretch 30s per side, figure-4 glute stretch 30s per side"
           }
         ]
       },
       {
         "day": "Saturday",
-        "date": "2026-06-06",
+        "date": "2026-06-13",
         "sport": "cycling_indoor",
-        "name": "Longer Aerobic Endurance Ride",
+        "name": "Aerobic Foundation Ride",
         "total_duration_secs": 3600,
-        "planned_tss": 42,
-        "focus": "Weekly long aerobic ride — extend Z2 duration, fat oxidation, aerobic ceiling",
+        "planned_tss": 45,
+        "focus": "Longest aerobic stimulus of the week \u2014 sustained Z2 base building",
         "steps": [
           {
             "type": "warmup",
-            "duration_secs": 480,
+            "duration_secs": 600,
             "target_type": "power",
             "target_low": 70,
             "target_high": 105,
-            "description": "Z1 gradual build, cadence 85-90 rpm, take time settling in"
+            "description": "Z1 progressive build: first 5 min under 90W, next 5 min build to 100-105W, cadence 88-90 rpm"
           },
           {
             "type": "interval",
-            "duration_secs": 2640,
+            "duration_secs": 2400,
             "target_type": "power",
-            "target_low": 106,
-            "target_high": 141,
-            "description": "Z2 long aerobic block — start lower half 106-125W for first 20 min, allow natural drift to 130-141W if HR stays below 162 bpm. Cadence 88-92 rpm. Do not drift into Z3."
+            "target_low": 115,
+            "target_high": 138,
+            "description": "Z2 sustained aerobic effort, target avg 120-130W, HR stabilise 148-160 bpm after first 10 min, cadence 88-92 rpm \u2014 if HR climbs above 163 bpm ease off 5-10W"
           },
           {
             "type": "cooldown",
-            "duration_secs": 480,
+            "duration_secs": 600,
             "target_type": "power",
-            "target_low": 60,
-            "target_high": 100,
-            "description": "Z1 step-down, reduce power every 2 min, HR below 135 bpm before stopping"
-          }
-        ]
-      },
-      {
-        "day": "Sunday",
-        "date": "2026-06-07",
-        "sport": "cycling_indoor",
-        "name": "Active Recovery Spin",
-        "total_duration_secs": 1800,
-        "planned_tss": 14,
-        "focus": "Flush the week's load, active recovery, stay below Z2",
-        "steps": [
-          {
-            "type": "warmup",
-            "duration_secs": 300,
-            "target_type": "power",
-            "target_low": 60,
-            "target_high": 95,
-            "description": "Z1 very light spin, cadence 80-85 rpm"
-          },
-          {
-            "type": "interval",
-            "duration_secs": 1200,
-            "target_type": "power",
-            "target_low": 88,
-            "target_high": 105,
-            "description": "Z1 recovery ride, cadence 82-88 rpm, HR below 145 bpm throughout — blood flow only"
-          },
-          {
-            "type": "cooldown",
-            "duration_secs": 300,
-            "target_type": "power",
-            "target_low": 50,
-            "target_high": 85,
-            "description": "Ease off completely, gentle spin, HR settling"
+            "target_low": 70,
+            "target_high": 90,
+            "description": "Z1 full unload, HR below 130 bpm before stopping, stretch quads and hip flexors"
           }
         ]
       }
@@ -237,139 +259,153 @@
   },
   {
     "week_index": 2,
-    "week_of": "2026-06-08",
+    "week_of": "2026-06-15",
     "phase": "base",
-    "target_tss": 155,
-    "summary": "Extend aerobic volume slightly, introduce first taste of Z3 tempo on the bike (short blocks only), progress strength to 3 rounds, keep run easy.",
+    "target_tss": 160,
+    "summary": "Extend base volume: Saturday ride grows to 60+ min with first structured cadence or light tempo variation; strength moves to 3 rounds; second run session introduced or existing run extended to 35 min.",
     "sessions": [
       {
         "day": "Monday",
         "sport": "cycling_indoor",
-        "name": "Steady Aerobic Spin",
-        "focus": "Extended Z2, build aerobic duration from week 1",
+        "name": "Aerobic Spin \u2014 Extended",
+        "focus": "Z2 base, slight power progression from week 1",
         "planned_tss": 25
       },
       {
         "day": "Tuesday",
-        "sport": "running",
-        "name": "Easy Aerobic Run",
-        "focus": "Z1-Z2 run, slightly extended duration",
-        "planned_tss": 22
+        "sport": "cycling_indoor",
+        "name": "Easy Recovery Spin",
+        "focus": "Z1 active recovery",
+        "planned_tss": 14
       },
       {
         "day": "Wednesday",
         "sport": "cycling_indoor",
-        "name": "Active Recovery Spin",
-        "focus": "Z1 flush, keep easy",
-        "planned_tss": 14
+        "name": "Cadence & Tempo Introduction",
+        "focus": "First taste of Z3 (142-168W) with short 5-min blocks, still mostly Z2",
+        "planned_tss": 28
       },
       {
         "day": "Thursday",
-        "sport": "strength",
-        "name": "Lower Body & Core Strength — 3 Rounds",
-        "focus": "Progress to 3 rounds, same movements, introduce single-leg load",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "focus": "Z1-Z2 run, extend to 35 min, relaxed HR control",
         "planned_tss": 22
       },
       {
         "day": "Friday",
-        "sport": "cycling_indoor",
-        "name": "Z3 Taste — Short Sweet Spot Blocks",
-        "focus": "3x5min at high Z2/low Z3 (135-155W) — first aerobic stress above base",
-        "planned_tss": 28
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 3 Rounds",
+        "focus": "Progress to 3 rounds, introduce 22kg goblet squat if ready",
+        "planned_tss": 20
       },
       {
         "day": "Saturday",
         "sport": "cycling_indoor",
-        "name": "Aerobic Long Ride",
-        "focus": "Longest Z2 ride yet — extend to 50min main set",
-        "planned_tss": 48
+        "name": "Aerobic Base Ride \u2014 Volume Step",
+        "focus": "50 min continuous Z2, build aerobic duration",
+        "planned_tss": 55
       }
     ]
   },
   {
     "week_index": 3,
-    "week_of": "2026-06-15",
+    "week_of": "2026-06-22",
     "phase": "build",
-    "target_tss": 175,
-    "summary": "Enter build phase — introduce proper sweet spot intervals (Z3 sustained blocks), extend Saturday ride to full 60 min at Z2, progress strength loading.",
+    "target_tss": 185,
+    "summary": "Transition to build: introduce first genuine threshold intervals on cycling (2x10 min Z4); run extends to 40 min with a short Z3 tempo segment; strength consolidates at 3 rounds with load progression.",
     "sessions": [
       {
         "day": "Monday",
         "sport": "cycling_indoor",
-        "name": "Aerobic Base Spin",
-        "focus": "Z2 aerobic, higher cadence drill maintained",
+        "name": "Aerobic Spin",
+        "focus": "Z2 base maintenance, moderate cadence",
         "planned_tss": 25
       },
       {
         "day": "Tuesday",
-        "sport": "running",
-        "name": "Easy Run with Strides",
-        "focus": "Z2 run plus 4x20s light pickups at end — neuromuscular activation",
-        "planned_tss": 26
-      },
-      {
-        "day": "Wednesday",
         "sport": "cycling_indoor",
-        "name": "Recovery Spin",
+        "name": "Easy Recovery Spin",
         "focus": "Z1 active recovery",
         "planned_tss": 14
       },
       {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Threshold Introduction \u2014 2x10 min",
+        "focus": "First Z4 threshold blocks (169-185W), 5 min recovery between, aerobic wrap",
+        "planned_tss": 38
+      },
+      {
         "day": "Thursday",
-        "sport": "strength",
-        "name": "Lower Body & Core — Load Progression",
-        "focus": "Increase dumbbell weight on goblet squat and RDL, 3 rounds",
-        "planned_tss": 25
+        "sport": "running",
+        "name": "Aerobic Run with Short Tempo",
+        "focus": "35 min Z2 with 2x3 min Z3 tempo inserts, HR-controlled",
+        "planned_tss": 28
       },
       {
         "day": "Friday",
-        "sport": "cycling_indoor",
-        "name": "Sweet Spot Intervals — 3x8min",
-        "focus": "Z3 sweet spot (142-165W), 3x8min — first real aerobic stress of the block",
-        "planned_tss": 40
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Load Progression",
+        "focus": "22kg goblet squat, single-leg RDL introduced, 3 rounds",
+        "planned_tss": 22
       },
       {
         "day": "Saturday",
         "sport": "cycling_indoor",
-        "name": "Long Aerobic Ride",
-        "focus": "60 min Z2 — aerobic engine development at peak base volume",
-        "planned_tss": 52
+        "name": "Long Aerobic Base Ride",
+        "focus": "55 min continuous Z2, aerobic engine development",
+        "planned_tss": 60
       }
     ]
   },
   {
     "week_index": 4,
-    "week_of": "2026-06-22",
+    "week_of": "2026-06-29",
     "phase": "recovery",
-    "target_tss": 85,
-    "summary": "Recovery week — cut volume ~40%, all sessions easy Z1-Z2, no intensity. Let adaptation from weeks 1-3 consolidate before next block begins.",
+    "target_tss": 100,
+    "summary": "Planned recovery week: drop volume ~40%, all sessions easy Z1-Z2 only, no threshold, no new load \u2014 let the first 3 weeks of adaptation land and consolidate.",
     "sessions": [
       {
         "day": "Monday",
         "sport": "cycling_indoor",
         "name": "Easy Recovery Spin",
-        "focus": "Z1 only, short — 20 min, flush legs",
-        "planned_tss": 12
+        "focus": "Z1 only, flush legs, 20-25 min",
+        "planned_tss": 14
+      },
+      {
+        "day": "Tuesday",
+        "sport": "cycling_indoor",
+        "name": "Short Aerobic Spin",
+        "focus": "Light Z2, 25 min, no structure",
+        "planned_tss": 18
       },
       {
         "day": "Wednesday",
-        "sport": "running",
-        "name": "Easy Short Run",
-        "focus": "Z1 conversational 20 min — movement only, no load",
-        "planned_tss": 14
+        "sport": "cycling_indoor",
+        "name": "Easy Spin",
+        "focus": "Z1-Z2 easy feel, 25 min, cadence focus only",
+        "planned_tss": 16
       },
       {
         "day": "Thursday",
-        "sport": "strength",
-        "name": "Light Maintenance Strength",
-        "focus": "2 rounds only, reduce load by 20%, maintain movement patterns",
+        "sport": "running",
+        "name": "Short Easy Run",
+        "focus": "25 min Z1-Z2 only, fully conversational, no tempo",
         "planned_tss": 14
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Light Mobility & Core",
+        "focus": "1-2 rounds only, reduce load, prioritise mobility and dead bug core work",
+        "planned_tss": 10
       },
       {
         "day": "Saturday",
         "sport": "cycling_indoor",
         "name": "Easy Aerobic Ride",
-        "focus": "40 min Z2 — maintain aerobic stimulus without accumulating fatigue",
+        "focus": "35 min Z2 only, no structure, enjoy the movement",
         "planned_tss": 28
       }
     ]
