@@ -1,3 +1,28 @@
+var SW_VERSION = '20260602-4';
+
+// On install, skip waiting so new SW activates immediately
+self.addEventListener('install', function(event) {
+  self.skipWaiting();
+});
+
+// On activate, claim all clients so this SW controls every open tab right away
+self.addEventListener('activate', function(event) {
+  event.waitUntil(self.clients.claim());
+});
+
+// Network-first for HTML navigation: always try the network so updates land
+// immediately. Falls back to cache only if completely offline.
+self.addEventListener('fetch', function(event) {
+  var req = event.request;
+  if (req.mode === 'navigate' || req.url.indexOf('dashboard.html') > -1) {
+    event.respondWith(
+      fetch(req).catch(function() { return caches.match(req); })
+    );
+    return;
+  }
+  // All other requests pass through normally
+});
+
 self.addEventListener('push', function(event) {
   if (!event.data) return;
   var d;

@@ -1365,10 +1365,6 @@ function renderPlanArray(arr,wk){
         (stepsHTML||noteHTML?stepsHTML+noteHTML:(isOutline?'<div style="font-size:12px;color:var(--t3)">Session detail will be generated when this week becomes active.</div>':""))+
       '</div></div>';
     box.appendChild(el);
-    if(isStrength){
-      el.querySelector(".day-body").classList.add("open");
-      el.querySelector(".chev").classList.add("open");
-    }
   });
   renderPushZone();
 }
