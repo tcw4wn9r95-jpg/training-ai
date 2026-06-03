@@ -203,7 +203,8 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .proj-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
 
 /* Plan */
-.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+  position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0 8px;margin-top:-4px}
 .week-nav button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);
   background:var(--bg2);color:var(--t2);font-size:18px;cursor:pointer}
 .week-nav .lbl{text-align:center}
@@ -601,7 +602,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260603-1";
+const BUILD="20260603-2";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -631,7 +632,9 @@ function showPage(id,btn){
   document.querySelectorAll(".nav button").forEach(b=>b.classList.remove("active"));
   document.getElementById("page-"+id).classList.add("active");
   btn.classList.add("active");
-  document.getElementById("scroll").scrollTop=0;
+  var s=document.getElementById("scroll");
+  if(id==="coach") setTimeout(function(){s.scrollTop=s.scrollHeight;},50);
+  else s.scrollTop=0;
 }
 async function fetchJSON(p){try{var r=await fetch(RAW+"/"+p+"?t="+Date.now());return r.ok?await r.json():null;}catch(e){return null;}}
 async function fetchText(p){try{var r=await fetch(RAW+"/"+p+"?t="+Date.now());return r.ok?await r.text():"";}catch(e){return "";}}
@@ -1649,7 +1652,7 @@ function showStatus(m,t){var el=document.getElementById("av-status");el.textCont
 function addCoachMessage(text,isUser){
   var c=document.getElementById("coach-msgs");
   var b=document.createElement("div");b.className="bubble "+(isUser?"me":"ai");b.textContent=text;
-  c.appendChild(b);document.getElementById("scroll").scrollTop=document.getElementById("scroll").scrollHeight;
+  c.appendChild(b);var s=document.getElementById("scroll");setTimeout(function(){s.scrollTop=s.scrollHeight;},50);
 }
 function askQuick(q){document.getElementById("coach-input").value=q;sendCoachMessage();}
 var LOG_CHECKIN_TOOL={
@@ -1696,7 +1699,7 @@ async function sendCoachMessage(){
   var _tb=document.createElement("div");_tb.id="coach-thinking";_tb.className="bubble ai";
   _tb.innerHTML='<span class="label">Coach Claudio is thinking</span><span class="dots"><span></span><span></span><span></span></span>';
   document.getElementById("coach-msgs").appendChild(_tb);
-  document.getElementById("scroll").scrollTop=document.getElementById("scroll").scrollHeight;
+  setTimeout(function(){var s=document.getElementById("scroll");s.scrollTop=s.scrollHeight;},50);
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
   var recentW=workouts.filter(w=>new Date(w.date)>=cutoff);
   var tss=recentW.reduce((s,w)=>s+getTSS(w),0), km=recentW.reduce((s,w)=>s+(w.distance_km||0),0);
