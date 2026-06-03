@@ -1,5 +1,17 @@
 [
   {
+    "date": "2026-06-03",
+    "sport": "cycling_indoor",
+    "duration_min": 45.2,
+    "distance_km": 13.98,
+    "avg_hr": 145.0,
+    "max_hr": 160.0,
+    "avg_pace_min_km": null,
+    "avg_power_watts": 115.0,
+    "calories": 383.0,
+    "tss": 31.8
+  },
+  {
     "date": "2026-06-01",
     "sport": "cycling_indoor",
     "duration_min": 30.7,
