@@ -3,6 +3,8 @@
   "short_name": "Coach Claudio",
   "description": "Your AI training companion",
   "start_url": "/training-ai/dashboard.html",
+  "scope": "/training-ai/",
+  "id": "/training-ai/",
   "display": "standalone",
   "background_color": "#09090b",
   "theme_color": "#09090b",

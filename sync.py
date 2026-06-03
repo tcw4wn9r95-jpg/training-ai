@@ -96,12 +96,32 @@ if os.path.exists("goals.json"):
 
 # Body weight is single-sourced in the NutriPrep nutrition app — read Diego's
 # weight log so the training plan is weight-aware (power-to-weight, fuelling).
+# NutriPrep now lives in its own repo, so read over the shared cross-repo
+# channel (raw.githubusercontent) and fall back to the local copy while the
+# nutrition/ folder still exists in this repo (dual-run period).
 weight_block = ""
-_wlog_path = os.path.join("nutrition", "users", "diego", "weight_log.json")
-if os.path.exists(_wlog_path):
+def _load_diego_weightlog():
+    import urllib.request
+    url = ("https://raw.githubusercontent.com/tcw4wn9r95-jpg/"
+           "nutriprep/main/users/diego/weight_log.json")
     try:
-        with open(_wlog_path) as f:
-            _wlog = sorted(json.load(f), key=lambda x: x.get("date", ""))
+        with urllib.request.urlopen(url, timeout=10) as r:
+            return json.load(r)
+    except Exception:
+        pass
+    _local = os.path.join("nutrition", "users", "diego", "weight_log.json")
+    if os.path.exists(_local):
+        try:
+            with open(_local) as f:
+                return json.load(f)
+        except Exception:
+            pass
+    return None
+
+_wlog_raw = _load_diego_weightlog()
+if _wlog_raw:
+    try:
+        _wlog = sorted(_wlog_raw, key=lambda x: x.get("date", ""))
         if _wlog:
             _latest = _wlog[-1]
             _recent = _wlog[-4:]
