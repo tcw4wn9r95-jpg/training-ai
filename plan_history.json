@@ -214,5 +214,45 @@
         "focus": "Sustained aerobic base \u2014 longest ride in current block"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-08",
+    "generated": "2026-06-04",
+    "phase": "base",
+    "planned_tss": 90,
+    "last_7d_actual_tss": 79,
+    "last_28d_actual_tss": 79,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Easy Spin \u2014 Reconnect",
+        "planned_tss": 18,
+        "focus": "Reactivate aerobic system after family pause, zero pressure"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Ride \u2014 Gentle Extension",
+        "planned_tss": 22,
+        "focus": "Extend aerobic stimulus, steady Z2, rebuild consistency"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Full-Body Strength \u2014 Shoulder-Safe Return",
+        "planned_tss": 18,
+        "focus": "Reactivate legs and core with zero shoulder load \u2014 healing shoulder fully protected"
+      },
+      {
+        "day": "Saturday",
+        "sport": "cycling_indoor",
+        "name": "Longer Aerobic Ride \u2014 Return Anchor",
+        "planned_tss": 32,
+        "focus": "Rebuild weekly long ride habit, progressive Z2 aerobic base"
+      }
+    ]
   }
 ]

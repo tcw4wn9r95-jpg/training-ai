@@ -1,1 +1,160 @@
-[]
+[
+  {
+    "day": "Monday",
+    "date": "2026-06-08",
+    "sport": "cycling_indoor",
+    "name": "Easy Spin \u2014 Reconnect",
+    "total_duration_secs": 1800,
+    "planned_tss": 18,
+    "focus": "Reactivate aerobic system after family pause, zero pressure",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 106,
+        "description": "Easy spin Z1, 80-90 rpm, HR <145 bpm \u2014 just find your rhythm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "power",
+        "target_low": 106,
+        "target_high": 130,
+        "description": "Steady Z2 aerobic, 85-95 rpm, HR 146-158 bpm \u2014 conversational effort, no surging"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 100,
+        "description": "Easy spin, let HR drop below 130 bpm before stopping"
+      }
+    ]
+  },
+  {
+    "day": "Wednesday",
+    "date": "2026-06-10",
+    "sport": "cycling_indoor",
+    "name": "Aerobic Ride \u2014 Gentle Extension",
+    "total_duration_secs": 2100,
+    "planned_tss": 22,
+    "focus": "Extend aerobic stimulus, steady Z2, rebuild consistency",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 106,
+        "description": "Easy spin Z1, 80-90 rpm \u2014 controlled build"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1500,
+        "target_type": "power",
+        "target_low": 110,
+        "target_high": 130,
+        "description": "Z2 steady aerobic, HR 146-162 bpm, cadence 88-95 rpm \u2014 if power drifts above 135W, ease back"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 100,
+        "description": "Easy spin, HR below 130 bpm"
+      }
+    ]
+  },
+  {
+    "day": "Friday",
+    "date": "2026-06-12",
+    "sport": "strength",
+    "name": "Full-Body Strength \u2014 Shoulder-Safe Return",
+    "total_duration_secs": 1800,
+    "planned_tss": 18,
+    "focus": "Reactivate legs and core with zero shoulder load \u2014 healing shoulder fully protected",
+    "notes": "2 rounds (return week \u2014 reduced from 3): 10x Goblet Squat 16kg, 10x Romanian Deadlift 16kg, 8/leg TRX Split Squat bodyweight, 15x Banded Glute Bridge (band around knees, 2s hold at top), 8/side Dead Bug (slow and controlled), 10/side Pallof Press light band (anti-rotation). 60s rest between exercises, 90s between rounds. Shoulder note: zero overhead work, zero pressing, zero loading through shoulder joint. If RDL grip causes any shoulder discomfort, drop to 11kg dumbbells immediately.",
+    "exercises": [
+      {
+        "name": "Goblet Squat"
+      },
+      {
+        "name": "Romanian Deadlift"
+      },
+      {
+        "name": "TRX Split Squat"
+      },
+      {
+        "name": "Banded Glute Bridge"
+      },
+      {
+        "name": "Dead Bug"
+      },
+      {
+        "name": "Pallof Press"
+      }
+    ],
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "description": "Leg swings 10 each leg, hip circles 10 each direction, bodyweight squats 10, glute bridges 10"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "description": "2 rounds: Goblet Squat 10x16kg, RDL 10x16kg, TRX Split Squat 8/leg, Banded Glute Bridge 15x, Dead Bug 8/side, Pallof Press 10/side \u2014 60s between exercises, 90s between rounds"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "description": "Hip flexor stretch 30s each, hamstring stretch 30s each, deep glute stretch 30s each"
+      }
+    ]
+  },
+  {
+    "day": "Saturday",
+    "date": "2026-06-13",
+    "sport": "cycling_indoor",
+    "name": "Longer Aerobic Ride \u2014 Return Anchor",
+    "total_duration_secs": 3000,
+    "planned_tss": 32,
+    "focus": "Rebuild weekly long ride habit, progressive Z2 aerobic base",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 600,
+        "target_type": "power",
+        "target_low": 80,
+        "target_high": 110,
+        "description": "Progressive build: start <100W, increase ~5W every 2 min, arrive at 110W \u2014 Z1 to low Z2, HR building to 146-150 bpm"
+      },
+      {
+        "type": "repeat",
+        "repeat_count": 2,
+        "steps": [
+          {
+            "type": "interval",
+            "duration_secs": 900,
+            "target_type": "power",
+            "target_low": 110,
+            "target_high": 135,
+            "description": "Z2 aerobic, 88-95 rpm, HR 146-162 bpm \u2014 first repeat hold 110-120W, second repeat nudge to 120-135W if HR stable. Back off immediately if HR exceeds 165 bpm"
+          }
+        ]
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 600,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 105,
+        "description": "Step down from 105W to below 90W by minute 8, spin to HR below 125 bpm before stopping"
+      }
+    ]
+  }
+]
