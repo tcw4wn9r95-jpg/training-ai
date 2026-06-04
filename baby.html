@@ -45,6 +45,13 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
   background:#fff;border:3px solid var(--pc,#fff);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.45)}
 .pain-slider::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--pc,#fff);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.45)}
 .pain-scale{display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-top:4px}
+.flag-label{font-size:12px;color:var(--t2);margin-top:18px;margin-bottom:8px}
+.flag-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.flag-chip{display:inline-flex;align-items:center;gap:5px;padding:8px 12px;border-radius:999px;border:1px solid var(--line);background:var(--bg3);color:var(--t1);font-size:13px;cursor:pointer}
+.flag-chip:active{transform:scale(.95)}
+.flag-chip.sel{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 22%,var(--bg3));color:#fff}
+.log .flags{display:flex;gap:5px;flex-wrap:wrap;margin-top:4px}
+.log .flags span{font-size:11px;color:var(--t2);background:var(--bg3);border:1px solid var(--line);border-radius:7px;padding:1px 7px}
 
 /* kpis */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -112,7 +119,9 @@ canvas{width:100%;display:block}
       <div class="pain-val" id="painVal">5.0</div>
       <input type="range" id="painSlider" class="pain-slider" min="1" max="10" step="0.1" value="5">
       <div class="pain-scale"><span>1 · mild</span><span>10 · intense</span></div>
-      <button class="bigbtn start" id="painSave" style="margin-top:14px">Log contraction</button>
+      <div class="flag-label">¿Qué estabas haciendo? (opcional)</div>
+      <div class="flag-row" id="flagRow"></div>
+      <button class="bigbtn start" id="painSave" style="margin-top:16px">Log contraction</button>
     </div>
   </div>
 
@@ -223,16 +232,36 @@ toggle.onclick=function(){
     showPain();
   }
 };
+var FLAGS=[
+  {id:"position",emoji:"🔄",label:"Cambio de posición"},
+  {id:"shower",emoji:"🚿",label:"Ducha caliente"},
+  {id:"walking",emoji:"🚶",label:"Caminar"},
+  {id:"sleeping",emoji:"😴",label:"Dormir"}
+];
+function flagById(id){for(var i=0;i<FLAGS.length;i++)if(FLAGS[i].id===id)return FLAGS[i];return{emoji:"🏷️",label:id};}
+
 var painSlider=document.getElementById("painSlider"),painValEl=document.getElementById("painVal"),painPrompt=document.getElementById("painPrompt");
+var selFlags=[];
+function renderFlagChips(){
+  var row=document.getElementById("flagRow");row.innerHTML="";
+  FLAGS.forEach(function(f){
+    var b=document.createElement("div");b.className="flag-chip"+(selFlags.indexOf(f.id)>-1?" sel":"");
+    b.innerHTML=f.emoji+" "+f.label;
+    b.onclick=function(){var k=selFlags.indexOf(f.id);if(k>-1)selFlags.splice(k,1);else selFlags.push(f.id);renderFlagChips();};
+    row.appendChild(b);
+  });
+}
 function updatePainUI(){var p=parseFloat(painSlider.value),c=painColor(p);painValEl.textContent=p.toFixed(1);painValEl.style.setProperty("--pc",c);painSlider.style.setProperty("--pc",c);}
 painSlider.addEventListener("input",updatePainUI);
 document.getElementById("painSave").onclick=function(){
-  pendingEnd.pain=parseFloat(painSlider.value);data.push(pendingEnd);save(data);pendingEnd=null;
+  pendingEnd.pain=parseFloat(painSlider.value);
+  if(selFlags.length)pendingEnd.flags=selFlags.slice();
+  data.push(pendingEnd);save(data);pendingEnd=null;
   painPrompt.style.display="none";
   timerEl.textContent="0:00";stateEl.textContent="Logged ✓  Tap start for the next one";
   render();
 };
-function showPain(){painSlider.value=5;updatePainUI();painPrompt.style.display="block";}
+function showPain(){painSlider.value=5;updatePainUI();selFlags=[];renderFlagChips();painPrompt.style.display="block";}
 
 // ---- render ----
 function render(){
@@ -267,8 +296,9 @@ function drawLog(){
   var html="";
   for(var i=data.length-1;i>=0;i--){
     var c=data[i];var gap=i>0?(c.start-data[i-1].start)/60000:null;
+    var flagsHtml=(c.flags&&c.flags.length)?'<div class="flags">'+c.flags.map(function(id){var f=flagById(id);return '<span>'+f.emoji+' '+f.label+'</span>';}).join('')+'</div>':'';
     html+='<li><span class="pill">'+fmtTime(c.start)+'</span>'+
-      '<span class="meta"><b>'+fmtDur(dur(c))+'</b> long'+(gap!=null?' · '+gap.toFixed(1)+'m after prev':'')+'</span>'+
+      '<span class="meta"><b>'+fmtDur(dur(c))+'</b> long'+(gap!=null?' · '+gap.toFixed(1)+'m after prev':'')+flagsHtml+'</span>'+
       '<span class="pn" style="--pc:'+painColor(c.pain)+'">'+fmtPain(c.pain)+'</span>'+
       '<button class="del" data-i="'+i+'">✕</button></li>';
   }
@@ -357,7 +387,8 @@ function drawChart(){
 function buildPrompt(){
   var rows=data.map(function(c,i){
     var gap=i>0?((c.start-data[i-1].start)/60000).toFixed(1):"";
-    return (i+1)+". start "+fmtTime(c.start)+", length "+Math.round(dur(c))+"s, pain "+(c.pain||"?")+"/10"+(gap?", "+gap+" min after previous":"");
+    var fl=(c.flags&&c.flags.length)?", acción: "+c.flags.map(function(id){return flagById(id).label;}).join(" + "):"";
+    return (i+1)+". start "+fmtTime(c.start)+", length "+Math.round(dur(c))+"s, pain "+(c.pain||"?")+"/10"+(gap?", "+gap+" min after previous":"")+fl;
   }).join("\n");
   // derived trend: earlier half vs most-recent half, to ground the analysis
   function avg(a){a=a.filter(function(x){return x!=null&&!isNaN(x)});return a.length?a.reduce(function(x,y){return x+y},0)/a.length:null}
@@ -377,6 +408,8 @@ function buildPrompt(){
     "Do NOT assume they are at an early/just-starting stage or that they should simply wait at home — read what the data actually shows. "+
     "Do NOT make the 5-1-1 rule the centre of the report; treat contraction timing as just one of several signals.\n\n"+
     "LOG (most recent last):\n"+rows+"\n\n"+stats+"\n\n"+
+    "Some contractions include an 'acción' = what the person was doing around that time (e.g. ducha caliente, caminar, cambio de posición, dormir). "+
+    "When such actions are present, assess in the insights whether they appear to coincide with any change in frequency, length or intensity (e.g. did a warm shower space contractions out?). Only claim a link if the data suggests one.\n\n"+
     "Write a focused markdown report in Spanish with these four sections (use these exact Spanish headings):\n"+
     "## Cómo va la cosa — 2-3 sentences reading the actual trajectory: are contractions getting closer, longer, and/or more intense, and how fast? Name the trend in plain numbers.\n"+
     "## Claves de los datos — 3-5 specific bullets drawn from THIS data: rate of change, regularity vs. erratic spacing, how pain tracks with frequency/length, any clear shift in the most recent stretch, and what pattern this resembles (e.g. early / active / transition-like) without overstating certainty.\n"+
@@ -458,8 +491,8 @@ async function genReport(){
 
 // ---- export / clear ----
 document.getElementById("exportBtn").onclick=function(){
-  var rows=[["start","end","length_sec","pain"]].concat(data.map(function(c){
-    return [new Date(c.start).toISOString(),new Date(c.end).toISOString(),Math.round(dur(c)),c.pain||""];
+  var rows=[["start","end","length_sec","pain","flags"]].concat(data.map(function(c){
+    return [new Date(c.start).toISOString(),new Date(c.end).toISOString(),Math.round(dur(c)),c.pain||"",(c.flags||[]).join("|")];
   }));
   var csv=rows.map(function(r){return r.join(",")}).join("\n");
   var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
@@ -489,14 +522,16 @@ function parseBackup(txt){
   txt=txt.trim();if(!txt)return[];
   if(txt[0]==="["||txt[0]==="{"){ // JSON
     var j=JSON.parse(txt);if(!Array.isArray(j))j=[j];
-    return j.map(function(c){return {start:+new Date(c.start),end:+new Date(c.end),pain:c.pain!=null?parseFloat(c.pain):undefined};});
+    return j.map(function(c){var o={start:+new Date(c.start),end:+new Date(c.end),pain:c.pain!=null?parseFloat(c.pain):undefined};if(c.flags&&c.flags.length)o.flags=c.flags;return o;});
   }
-  // CSV: start,end,length_sec,pain  (header optional)
+  // CSV: start,end,length_sec,pain,flags  (header optional; flags separated by |)
   return txt.split(/\r?\n/).map(function(l){return l.split(",")})
     .filter(function(r){return r.length>=2 && !/^start/i.test(r[0])})
     .map(function(r){var st=+new Date(r[0]),en=+new Date(r[1]);
       if(isNaN(en)&&r[2])en=st+parseFloat(r[2])*1000;
-      return {start:st,end:en,pain:r[3]!=null&&r[3]!==""?parseFloat(r[3]):undefined};});
+      var o={start:st,end:en,pain:r[3]!=null&&r[3]!==""?parseFloat(r[3]):undefined};
+      if(r[4]&&r[4].trim())o.flags=r[4].trim().split("|");
+      return o;});
 }
 document.getElementById("importBtn").onclick=function(){
   var msg=document.getElementById("importMsg");
