@@ -146,6 +146,7 @@ canvas{width:100%;display:block}
       </div>
     </div>
     <div class="report" id="report"></div>
+    <button class="btn" id="copyBtn" style="display:none;margin-top:12px">📋 Copiar reporte</button>
   </div>
 
   <!-- Log -->
@@ -395,8 +396,40 @@ function mdToHtml(md){
   if(inUl)out+="</ul>";
   return out.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
 }
-var reportBtn=document.getElementById("reportBtn"),reportEl=document.getElementById("report");
+var reportBtn=document.getElementById("reportBtn"),reportEl=document.getElementById("report"),lastReportMd="";
 function getKey(){return localStorage.getItem(KEY_STORE)||""}
+// markdown -> WhatsApp text (headings & **bold** -> *bold*, bullets -> •)
+function mdToWhatsApp(md){
+  return md.split("\n").map(function(l){
+    if(/^##\s+/.test(l))return "*"+l.replace(/^##\s+/,"").trim()+"*";
+    if(/^#\s+/.test(l))return "*"+l.replace(/^#\s+/,"").trim()+"*";
+    if(/^[-*]\s+/.test(l))return "• "+l.replace(/^[-*]\s+/,"");
+    return l;
+  }).join("\n").replace(/\*\*([^*]+)\*\*/g,"*$1*").trim();
+}
+document.getElementById("copyBtn").onclick=async function(){
+  var btn=this;if(!lastReportMd)return;
+  var title="*Esperando a Chimilungui*\n\n";
+  var plain=title+mdToWhatsApp(lastReportMd);
+  var html="<h3>Esperando a Chimilungui</h3>"+reportEl.innerHTML;
+  try{
+    if(navigator.clipboard&&window.ClipboardItem){
+      await navigator.clipboard.write([new ClipboardItem({
+        "text/html":new Blob([html],{type:"text/html"}),
+        "text/plain":new Blob([plain],{type:"text/plain"})
+      })]);
+    }else{
+      await navigator.clipboard.writeText(plain);
+    }
+    btn.textContent="✅ ¡Copiado! Pégalo en WhatsApp";
+  }catch(e){
+    // last-resort fallback
+    var ta=document.createElement("textarea");ta.value=plain;document.body.appendChild(ta);
+    ta.select();try{document.execCommand("copy");btn.textContent="✅ ¡Copiado!";}catch(_){btn.textContent="No se pudo copiar";}
+    document.body.removeChild(ta);
+  }
+  setTimeout(function(){btn.textContent="📋 Copiar reporte";},2500);
+};
 document.getElementById("keySave").onclick=function(){
   var k=document.getElementById("keyInput").value.trim();
   if(k){localStorage.setItem(KEY_STORE,k);document.getElementById("keyBox").style.display="none";genReport();}
@@ -412,8 +445,11 @@ async function genReport(){
       body:JSON.stringify({model:MODEL,max_tokens:900,messages:[{role:"user",content:buildPrompt()}]})});
     var j=await res.json();
     if(j.error)throw new Error(j.error.message||"API error");
-    reportEl.innerHTML=mdToHtml(j.content[0].text);
+    lastReportMd=j.content[0].text;
+    reportEl.innerHTML=mdToHtml(lastReportMd);
+    document.getElementById("copyBtn").style.display="block";
   }catch(e){
+    document.getElementById("copyBtn").style.display="none";
     reportEl.innerHTML='<p style="color:var(--red)">Could not generate report: '+e.message+'</p>'+
       '<button class="linkbtn" id="resetKey">Update API key</button>';
     var rk=document.getElementById("resetKey");if(rk)rk.onclick=function(){localStorage.removeItem(KEY_STORE);document.getElementById("keyBox").style.display="block";reportEl.innerHTML="";};
@@ -430,7 +466,7 @@ document.getElementById("exportBtn").onclick=function(){
   a.download="contractions.csv";a.click();
 };
 document.getElementById("clearBtn").onclick=function(){
-  if(confirm("Delete all logged contractions? This can't be undone.")){data=[];save(data);render();reportEl.innerHTML="";}
+  if(confirm("Delete all logged contractions? This can't be undone.")){data=[];save(data);render();reportEl.innerHTML="";lastReportMd="";document.getElementById("copyBtn").style.display="none";}
 };
 
 // ---- find / restore data ----
