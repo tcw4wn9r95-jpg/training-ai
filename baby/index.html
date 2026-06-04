@@ -58,9 +58,8 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .banner.calm{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:#a7f3d0}
 .banner.go{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);color:#fecaca}
 
-canvas{width:100%;height:200px;display:block}
-.legend{display:flex;gap:14px;font-size:11px;color:var(--t2);margin-top:8px;justify-content:center;flex-wrap:wrap}
-.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:4px;vertical-align:middle}
+canvas{width:100%;display:block}
+.legend{font-size:11px;color:var(--t3);margin-top:10px;text-align:center;line-height:1.5}
 
 /* list */
 .log{list-style:none;margin:0;padding:0}
@@ -131,12 +130,8 @@ canvas{width:100%;height:200px;display:block}
   <!-- Chart -->
   <div class="card">
     <h2>Trends</h2>
-    <canvas id="chart" width="528" height="200"></canvas>
-    <div class="legend">
-      <span><i style="background:var(--accent2)"></i>Length (s)</span>
-      <span><i style="background:var(--accent)"></i>Interval (min)</span>
-      <span><i style="background:var(--amber)"></i>Pain (1–10)</span>
-    </div>
+    <canvas id="chart"></canvas>
+    <div class="legend">Dashed lines mark the 5-1-1 guide: ~5 min apart, ~1 min long.</div>
   </div>
 
   <!-- AI report -->
@@ -269,39 +264,76 @@ function drawLog(){
 // ---- chart (canvas, no deps) ----
 function drawChart(){
   var cv=document.getElementById("chart"),ctx=cv.getContext("2d");
-  var dpr=window.devicePixelRatio||1, W=cv.clientWidth, H=200;
-  cv.width=W*dpr;cv.height=H*dpr;ctx.scale(dpr,dpr);
-  ctx.clearRect(0,0,W,H);
+  var dpr=window.devicePixelRatio||1, W=cv.clientWidth;
   var pts=data.slice(-20);
-  if(pts.length<2){ctx.fillStyle="#62626e";ctx.font="13px sans-serif";ctx.textAlign="center";ctx.fillText("Log at least 2 contractions to see trends",W/2,H/2);return}
-  var pad={l:8,r:8,t:14,b:22}, cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
+  if(pts.length<2){
+    var hE=120;cv.style.height=hE+"px";cv.width=W*dpr;cv.height=hE*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+    ctx.clearRect(0,0,W,hE);ctx.fillStyle="#62626e";ctx.font="13px sans-serif";ctx.textAlign="center";
+    ctx.fillText("Log at least 2 contractions to see trends",W/2,hE/2);return;
+  }
+  var panelH=92, gap=16, top=4, axisH=18;
+  var H=top+panelH*3+gap*2+axisH;
+  cv.style.height=H+"px";cv.width=W*dpr;cv.height=H*dpr;ctx.setTransform(dpr,0,0,dpr,0,0);
+  ctx.clearRect(0,0,W,H);
+
   var durs=pts.map(function(c){return dur(c)});
   var pains=pts.map(function(c){return c.pain||0});
   var ivs=pts.map(function(c,i){return i>0?(c.start-pts[i-1].start)/60000:null});
-  var maxDur=Math.max(60,Math.max.apply(null,durs))*1.15;
-  var maxIv=Math.max(8,Math.max.apply(null,ivs.filter(function(x){return x!=null})))*1.1;
-  var n=pts.length, bw=cw/n*0.5;
-  function x(i){return pad.l+cw*(i+0.5)/n}
-  // duration bars
-  pts.forEach(function(c,i){
-    var h=ch*durs[i]/maxDur, xx=x(i);
-    ctx.fillStyle="rgba(192,132,252,.55)";
-    ctx.fillRect(xx-bw/2,pad.t+ch-h,bw,h);
-  });
-  // interval line (pink)
-  ctx.strokeStyle="#f472b6";ctx.lineWidth=2;ctx.beginPath();var started=false;
-  pts.forEach(function(c,i){if(ivs[i]==null)return;var yy=pad.t+ch-ch*Math.min(ivs[i],maxIv)/maxIv;
-    if(!started){ctx.moveTo(x(i),yy);started=true}else ctx.lineTo(x(i),yy);});
-  ctx.stroke();
-  // pain line (amber, scale 0-10)
-  ctx.strokeStyle="#fbbf24";ctx.lineWidth=2;ctx.beginPath();
-  pts.forEach(function(c,i){var yy=pad.t+ch-ch*pains[i]/10;if(i===0)ctx.moveTo(x(i),yy);else ctx.lineTo(x(i),yy);});
-  ctx.stroke();
-  pts.forEach(function(c,i){var yy=pad.t+ch-ch*pains[i]/10;ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.arc(x(i),yy,2.5,0,7);ctx.fill();});
-  // time axis labels (first / last)
-  ctx.fillStyle="#62626e";ctx.font="10px sans-serif";ctx.textAlign="left";
-  ctx.fillText(fmtTime(pts[0].start),pad.l,H-6);
-  ctx.textAlign="right";ctx.fillText(fmtTime(pts[pts.length-1].start),W-pad.r,H-6);
+  var n=pts.length, L=10, R=10, plotW=W-L-R;
+  function px(i){return L+(n===1?plotW/2:plotW*i/(n-1))}
+
+  // one labelled panel: header + reference line + series
+  function panel(y0,opts){
+    var hy=y0, py=y0+20, ph=panelH-20;                 // header row, then plot
+    function yv(v){return py+ph-ph*Math.max(0,Math.min(v,opts.max))/opts.max}
+    // header: name (left) + latest value (right, colored)
+    ctx.textAlign="left";ctx.font="600 11px sans-serif";ctx.fillStyle="#a0a0aa";
+    ctx.fillText(opts.label.toUpperCase(),L,hy+4);
+    ctx.textAlign="right";ctx.font="800 14px ui-monospace,monospace";ctx.fillStyle=opts.valColor||opts.color;
+    ctx.fillText(opts.latest,W-R,hy+5);
+    // baseline + top gridline
+    ctx.strokeStyle="rgba(255,255,255,.06)";ctx.lineWidth=1;
+    ctx.beginPath();ctx.moveTo(L,py+ph);ctx.lineTo(W-R,py+ph);ctx.moveTo(L,py);ctx.lineTo(W-R,py);ctx.stroke();
+    ctx.fillStyle="#62626e";ctx.font="9px sans-serif";ctx.textAlign="left";ctx.fillText(opts.topLabel,L,py-2);
+    // reference (dashed) line, e.g. the 5-1-1 thresholds
+    if(opts.ref){var ry=yv(opts.ref.v);ctx.setLineDash([4,4]);ctx.strokeStyle=opts.ref.color;ctx.lineWidth=1;
+      ctx.beginPath();ctx.moveTo(L,ry);ctx.lineTo(W-R,ry);ctx.stroke();ctx.setLineDash([]);
+      ctx.fillStyle=opts.ref.color;ctx.font="9px sans-serif";ctx.textAlign="right";ctx.fillText(opts.ref.label,W-R,ry-3);}
+    if(opts.type==="bar"){
+      var bw=Math.min(22,plotW/n*0.6);
+      pts.forEach(function(c,i){if(opts.vals[i]==null)return;var h=ph-(yv(opts.vals[i])-py),xx=px(i);
+        ctx.fillStyle=opts.color;ctx.fillRect(xx-bw/2,yv(opts.vals[i]),bw,h);});
+    }else{
+      // smooth-ish line through points, then markers
+      ctx.strokeStyle=opts.color;ctx.lineWidth=2.5;ctx.lineJoin="round";ctx.beginPath();var started=false;
+      pts.forEach(function(c,i){if(opts.vals[i]==null)return;var xx=px(i),yy=yv(opts.vals[i]);
+        if(!started){ctx.moveTo(xx,yy);started=true}else ctx.lineTo(xx,yy);});
+      ctx.stroke();
+      pts.forEach(function(c,i){if(opts.vals[i]==null)return;var xx=px(i),yy=yv(opts.vals[i]);
+        ctx.fillStyle=opts.dotColor?opts.dotColor(opts.vals[i]):opts.color;
+        ctx.strokeStyle="#111114";ctx.lineWidth=2;
+        ctx.beginPath();ctx.arc(xx,yy,3.5,0,7);ctx.fill();ctx.stroke();});
+    }
+  }
+
+  var lastIv=ivs[n-1]!=null?ivs[n-1]:ivs.filter(function(x){return x!=null}).slice(-1)[0];
+  var maxIv=Math.max(8,Math.max.apply(null,ivs.filter(function(x){return x!=null})))*1.15;
+  var maxDur=Math.max(80,Math.max.apply(null,durs))*1.15;
+
+  panel(top,{label:"Time apart",type:"line",vals:ivs,max:maxIv,color:"#f472b6",
+    latest:lastIv!=null?lastIv.toFixed(1)+" min":"–",topLabel:Math.round(maxIv)+" min",
+    ref:{v:5,label:"5 min",color:"rgba(248,113,113,.7)"}});
+  panel(top+panelH+gap,{label:"Length",type:"bar",vals:durs,max:maxDur,color:"rgba(192,132,252,.65)",valColor:"#c084fc",
+    latest:fmtDur(durs[n-1]),topLabel:Math.round(maxDur)+"s",
+    ref:{v:60,label:"1 min",color:"rgba(192,132,252,.55)"}});
+  panel(top+(panelH+gap)*2,{label:"Pain",type:"line",vals:pains,max:10,color:"rgba(255,255,255,.18)",
+    dotColor:painColor,valColor:painColor(pains[n-1]),latest:fmtPain(pains[n-1])+" /10",topLabel:"10"});
+
+  // shared time axis
+  ctx.fillStyle="#62626e";ctx.font="10px sans-serif";var ay=H-4;
+  ctx.textAlign="left";ctx.fillText(fmtTime(pts[0].start),L,ay);
+  if(n>2){ctx.textAlign="center";ctx.fillText(fmtTime(pts[Math.floor((n-1)/2)].start),W/2,ay);}
+  ctx.textAlign="right";ctx.fillText(fmtTime(pts[n-1].start),W-R,ay);
 }
 
 // ---- Claude report ----
