@@ -158,6 +158,22 @@ canvas{width:100%;display:block}
     </div>
   </div>
 
+  <!-- Recovery -->
+  <div class="card">
+    <h2>Find / restore data</h2>
+    <div style="font-size:12px;color:var(--t2);margin-bottom:10px">If your earlier entries aren't showing, scan this browser's storage, or paste a backup (CSV export or JSON) to restore them.</div>
+    <div class="row2">
+      <button class="btn" id="scanBtn">🔍 Scan storage</button>
+      <button class="btn" id="importToggle">📥 Paste backup</button>
+    </div>
+    <pre id="scanOut" style="display:none;white-space:pre-wrap;word-break:break-word;font-family:var(--mono);font-size:11px;color:var(--t2);background:var(--bg3);border-radius:10px;padding:10px;margin-top:10px;max-height:200px;overflow:auto"></pre>
+    <div id="importBox" style="display:none;margin-top:10px">
+      <textarea id="importText" placeholder="Paste CSV or JSON here…" style="width:100%;min-height:90px;background:var(--bg3);border:1px solid var(--line);border-radius:10px;color:var(--t1);padding:10px;font-family:var(--mono);font-size:12px"></textarea>
+      <button class="btn primary" id="importBtn" style="margin-top:8px">Restore into tracker</button>
+      <div id="importMsg" style="font-size:12px;margin-top:8px"></div>
+    </div>
+  </div>
+
   <div class="muted">⚠️ This is a personal tracking tool, not medical advice.<br>If you're worried, call your midwife or doctor. Common guidance: head in when contractions are ~5 min apart, lasting ~1 min, for 1 hour (the 5-1-1 rule).</div>
 </div>
 
@@ -399,6 +415,48 @@ document.getElementById("exportBtn").onclick=function(){
 };
 document.getElementById("clearBtn").onclick=function(){
   if(confirm("Delete all logged contractions? This can't be undone.")){data=[];save(data);render();reportEl.innerHTML="";}
+};
+
+// ---- find / restore data ----
+document.getElementById("scanBtn").onclick=function(){
+  var out=document.getElementById("scanOut");out.style.display="block";
+  var lines=["This browser · "+location.origin,""];
+  var cur=load();
+  lines.push("Currently loaded here: "+cur.length+" contraction(s)  (key: "+STORE+")");
+  lines.push("");
+  lines.push("All saved keys on this site ("+localStorage.length+"):");
+  for(var i=0;i<localStorage.length;i++){var k=localStorage.key(i);var v=localStorage.getItem(k)||"";
+    lines.push("• "+k+"  ("+v.length+" chars)"+(k===STORE?"  ← your contractions":""));}
+  if(localStorage.length===0)lines.push("(nothing saved in this browser for this site)");
+  out.textContent=lines.join("\n");
+};
+document.getElementById("importToggle").onclick=function(){
+  var b=document.getElementById("importBox");b.style.display=b.style.display==="none"?"block":"none";
+};
+function parseBackup(txt){
+  txt=txt.trim();if(!txt)return[];
+  if(txt[0]==="["||txt[0]==="{"){ // JSON
+    var j=JSON.parse(txt);if(!Array.isArray(j))j=[j];
+    return j.map(function(c){return {start:+new Date(c.start),end:+new Date(c.end),pain:c.pain!=null?parseFloat(c.pain):undefined};});
+  }
+  // CSV: start,end,length_sec,pain  (header optional)
+  return txt.split(/\r?\n/).map(function(l){return l.split(",")})
+    .filter(function(r){return r.length>=2 && !/^start/i.test(r[0])})
+    .map(function(r){var st=+new Date(r[0]),en=+new Date(r[1]);
+      if(isNaN(en)&&r[2])en=st+parseFloat(r[2])*1000;
+      return {start:st,end:en,pain:r[3]!=null&&r[3]!==""?parseFloat(r[3]):undefined};});
+}
+document.getElementById("importBtn").onclick=function(){
+  var msg=document.getElementById("importMsg");
+  try{
+    var rows=parseBackup(document.getElementById("importText").value)
+      .filter(function(c){return c.start&&c.end&&!isNaN(c.start)&&!isNaN(c.end)});
+    if(!rows.length){msg.style.color="var(--red)";msg.textContent="Couldn't find any valid entries in that text.";return;}
+    var seen={};data.forEach(function(c){seen[c.start]=1;});
+    var added=0;rows.forEach(function(c){if(!seen[c.start]){data.push(c);seen[c.start]=1;added++;}});
+    save(data);render();
+    msg.style.color="var(--green)";msg.textContent="Restored "+added+" entr"+(added===1?"y":"ies")+" ("+rows.length+" read, duplicates skipped).";
+  }catch(e){msg.style.color="var(--red)";msg.textContent="Could not parse that: "+e.message;}
 };
 
 window.addEventListener("resize",drawChart);
