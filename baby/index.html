@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="theme-color" content="#09090b">
+<title>Contraction Tracker</title>
+<style>
+:root{
+  --bg:#09090b; --bg2:#111114; --bg3:#1a1a1f; --line:rgba(255,255,255,.07);
+  --t1:#f2f2f3; --t2:#a0a0aa; --t3:#62626e;
+  --accent:#f472b6; --accent2:#c084fc; --green:#34d399; --amber:#fbbf24; --red:#f87171;
+  --r:16px; --font:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,"SF Mono",Menlo,Monaco,monospace;
+}
+*{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{margin:0;padding:0}
+body{background:var(--bg);color:var(--t1);font-family:var(--font);
+  line-height:1.5;padding:env(safe-area-inset-top) 0 env(safe-area-inset-bottom);}
+.wrap{max-width:560px;margin:0 auto;padding:18px 16px 60px}
+h1{font-size:20px;font-weight:800;margin:0;letter-spacing:-.02em}
+.sub{font-size:12px;color:var(--t2);margin-top:2px}
+header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px}
+.tag{font-size:11px;color:var(--accent);font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.card{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);padding:16px;margin-bottom:14px}
+.card h2{font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.06em;margin:0 0 12px}
+
+/* timer */
+.timer-card{text-align:center;background:linear-gradient(180deg,#16121a,#111114);position:relative;overflow:hidden}
+.timer-card::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--accent),var(--accent2))}
+.timer-time{font-family:var(--mono);font-size:54px;font-weight:800;letter-spacing:-.03em;line-height:1;margin:6px 0 4px}
+.timer-state{font-size:13px;color:var(--t2);min-height:18px}
+.timer-state.live{color:var(--accent);font-weight:600}
+.bigbtn{width:100%;border:none;border-radius:14px;padding:18px;font-size:18px;font-weight:800;
+  margin-top:16px;cursor:pointer;color:#fff;transition:transform .08s ease,filter .15s ease}
+.bigbtn:active{transform:scale(.985)}
+.bigbtn.start{background:linear-gradient(135deg,var(--accent),var(--accent2))}
+.bigbtn.stop{background:linear-gradient(135deg,#fb7185,#f43f5e)}
+
+/* pain prompt */
+.pain-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px}
+.pain-dot{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--bg3);
+  color:var(--t1);font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.pain-dot:active{transform:scale(.92)}
+.pain-1,.pain-2,.pain-3{--pc:var(--green)} .pain-4,.pain-5,.pain-6,.pain-7{--pc:var(--amber)} .pain-8,.pain-9,.pain-10{--pc:var(--red)}
+.pain-dot.sel{border-color:var(--pc);background:color-mix(in srgb,var(--pc) 22%,var(--bg3));color:#fff}
+
+/* kpis */
+.kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.kpi{background:var(--bg3);border-radius:12px;padding:12px 8px;text-align:center}
+.kpi .v{font-family:var(--mono);font-size:20px;font-weight:800}
+.kpi .l{font-size:10px;color:var(--t2);text-transform:uppercase;letter-spacing:.05em;margin-top:3px}
+
+/* 511 banner */
+.banner{border-radius:12px;padding:12px 14px;font-size:13px;display:flex;gap:10px;align-items:flex-start;margin-top:12px}
+.banner .ic{font-size:18px;line-height:1}
+.banner.calm{background:rgba(52,211,153,.1);border:1px solid rgba(52,211,153,.25);color:#a7f3d0}
+.banner.go{background:rgba(248,113,113,.12);border:1px solid rgba(248,113,113,.3);color:#fecaca}
+
+canvas{width:100%;height:200px;display:block}
+.legend{display:flex;gap:14px;font-size:11px;color:var(--t2);margin-top:8px;justify-content:center;flex-wrap:wrap}
+.legend i{width:10px;height:10px;border-radius:3px;display:inline-block;margin-right:4px;vertical-align:middle}
+
+/* list */
+.log{list-style:none;margin:0;padding:0}
+.log li{display:flex;align-items:center;gap:10px;padding:10px 0;border-top:1px solid var(--line);font-size:14px}
+.log li:first-child{border-top:none}
+.log .pill{font-family:var(--mono);font-weight:700;font-size:13px;min-width:54px}
+.log .meta{flex:1;color:var(--t2);font-size:12px}
+.log .meta b{color:var(--t1);font-weight:600}
+.log .pn{font-weight:800;font-family:var(--mono);width:26px;text-align:center;color:var(--pc,var(--t2))}
+.log .del{background:none;border:none;color:var(--t3);font-size:16px;cursor:pointer;padding:4px}
+.empty{color:var(--t3);font-size:13px;text-align:center;padding:20px 0}
+
+/* report */
+.btn{width:100%;border:1px solid var(--line);background:var(--bg3);color:var(--t1);
+  border-radius:12px;padding:13px;font-size:14px;font-weight:700;cursor:pointer}
+.btn.primary{background:linear-gradient(135deg,var(--accent2),var(--accent));border:none;color:#fff}
+.btn:disabled{opacity:.5;cursor:default}
+.report{font-size:14px;line-height:1.6;margin-top:14px}
+.report h3{font-size:15px;margin:14px 0 6px}
+.report h2{font-size:16px;color:var(--t1);text-transform:none;letter-spacing:0;margin:16px 0 6px}
+.report ul{margin:6px 0;padding-left:20px}
+.report p{margin:6px 0}
+.report strong{color:#fff}
+.muted{color:var(--t3);font-size:11px;line-height:1.5;margin-top:14px;text-align:center}
+.keyrow{display:flex;gap:8px;margin-top:10px}
+.keyrow input{flex:1;background:var(--bg3);border:1px solid var(--line);border-radius:10px;color:var(--t1);padding:10px 12px;font-size:13px;font-family:var(--mono)}
+.linkbtn{background:none;border:none;color:var(--accent);font-size:12px;cursor:pointer;text-decoration:underline;padding:0}
+.row2{display:flex;gap:10px}.row2>*{flex:1}
+.spin{display:inline-block;width:14px;height:14px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:sp .7s linear infinite;vertical-align:-2px;margin-right:6px}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div>
+      <div class="tag">🤱 Baby on the way</div>
+      <h1>Contraction Tracker</h1>
+      <div class="sub" id="sub">No contractions logged yet</div>
+    </div>
+  </header>
+
+  <!-- Live timer -->
+  <div class="card timer-card">
+    <div class="timer-time" id="timer">0:00</div>
+    <div class="timer-state" id="state">Tap start when a contraction begins</div>
+    <button class="bigbtn start" id="toggle">Start contraction</button>
+    <div id="painPrompt" style="display:none">
+      <div style="font-size:13px;color:var(--t2);margin-top:16px">How painful was it? (1–10)</div>
+      <div class="pain-row" id="painRow"></div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="card">
+    <h2>Last hour</h2>
+    <div class="kpis">
+      <div class="kpi"><div class="v" id="kCount">–</div><div class="l">Contractions</div></div>
+      <div class="kpi"><div class="v" id="kFreq">–</div><div class="l">Avg apart</div></div>
+      <div class="kpi"><div class="v" id="kDur">–</div><div class="l">Avg length</div></div>
+    </div>
+    <div id="banner"></div>
+  </div>
+
+  <!-- Chart -->
+  <div class="card">
+    <h2>Trends</h2>
+    <canvas id="chart" width="528" height="200"></canvas>
+    <div class="legend">
+      <span><i style="background:var(--accent2)"></i>Length (s)</span>
+      <span><i style="background:var(--accent)"></i>Interval (min)</span>
+      <span><i style="background:var(--amber)"></i>Pain (1–10)</span>
+    </div>
+  </div>
+
+  <!-- AI report -->
+  <div class="card">
+    <h2>Claude report</h2>
+    <button class="btn primary" id="reportBtn">✨ Ask Claude to analyze my data</button>
+    <div id="keyBox" style="display:none">
+      <div style="font-size:12px;color:var(--t2);margin-top:10px">Paste your Anthropic API key (stored only on this device, shared with the coach app):</div>
+      <div class="keyrow">
+        <input id="keyInput" type="password" placeholder="sk-ant-..." autocomplete="off">
+        <button class="btn" style="width:auto;padding:10px 14px" id="keySave">Save</button>
+      </div>
+    </div>
+    <div class="report" id="report"></div>
+  </div>
+
+  <!-- Log -->
+  <div class="card">
+    <h2>History</h2>
+    <ul class="log" id="log"><li class="empty">Nothing logged yet.</li></ul>
+    <div class="row2" style="margin-top:14px">
+      <button class="btn" id="exportBtn">Export</button>
+      <button class="btn" id="clearBtn">Clear all</button>
+    </div>
+  </div>
+
+  <div class="muted">⚠️ This is a personal tracking tool, not medical advice.<br>If you're worried, call your midwife or doctor. Common guidance: head in when contractions are ~5 min apart, lasting ~1 min, for 1 hour (the 5-1-1 rule).</div>
+</div>
+
+<script>
+"use strict";
+var STORE="baby_contractions";
+var KEY_STORE="anthropic_key";      // shared with the coach app
+var MODEL="claude-haiku-4-5-20251001";
+
+// ---- state ----
+function load(){try{return JSON.parse(localStorage.getItem(STORE)||"[]")}catch(e){return[]}}
+function save(d){localStorage.setItem(STORE,JSON.stringify(d))}
+var data=load();              // [{start, end, pain}]  epoch ms
+var active=null;              // start time of in-progress contraction
+var tickT=null, pendingEnd=null;
+
+// ---- helpers ----
+function fmtClock(ms){var s=Math.floor(ms/1000);var m=Math.floor(s/60);s%=60;return m+":"+(s<10?"0":"")+s}
+function fmtTime(t){return new Date(t).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}
+function fmtDur(sec){if(sec<60)return Math.round(sec)+"s";var m=Math.floor(sec/60);return m+"m"+(Math.round(sec%60)?" "+Math.round(sec%60)+"s":"")}
+function dur(c){return (c.end-c.start)/1000}                      // seconds
+function painColor(p){return p>=8?"var(--red)":p>=4?"var(--amber)":"var(--green)"}
+function intervals(arr){ // minutes between consecutive starts
+  var out=[];for(var i=1;i<arr.length;i++)out.push((arr[i].start-arr[i-1].start)/60000);return out;
+}
+function lastHour(){var cut=Date.now()-3600000;return data.filter(function(c){return c.start>=cut})}
+
+// ---- timer ----
+var timerEl=document.getElementById("timer"),stateEl=document.getElementById("state"),toggle=document.getElementById("toggle");
+function tick(){if(active)timerEl.textContent=fmtClock(Date.now()-active)}
+toggle.onclick=function(){
+  if(!active){ // start
+    active=Date.now();
+    toggle.textContent="Stop contraction";toggle.className="bigbtn stop";
+    stateEl.textContent="Contraction in progress…";stateEl.className="timer-state live";
+    document.getElementById("painPrompt").style.display="none";
+    tick();tickT=setInterval(tick,500);
+  }else{ // stop -> ask pain
+    clearInterval(tickT);
+    pendingEnd={start:active,end:Date.now()};
+    active=null;
+    toggle.textContent="Start contraction";toggle.className="bigbtn start";
+    stateEl.textContent="Lasted "+fmtDur((pendingEnd.end-pendingEnd.start)/1000)+" — log the pain";
+    stateEl.className="timer-state";
+    showPain();
+  }
+};
+function showPain(){
+  var row=document.getElementById("painRow");row.innerHTML="";
+  for(var i=1;i<=10;i++){(function(p){
+    var b=document.createElement("div");b.className="pain-dot pain-"+p;b.textContent=p;
+    b.onclick=function(){
+      pendingEnd.pain=p;data.push(pendingEnd);save(data);pendingEnd=null;
+      document.getElementById("painPrompt").style.display="none";
+      timerEl.textContent="0:00";stateEl.textContent="Logged ✓  Tap start for the next one";
+      render();
+    };row.appendChild(b);
+  })(i)}
+  document.getElementById("painPrompt").style.display="block";
+}
+
+// ---- render ----
+function render(){
+  data.sort(function(a,b){return a.start-b.start});
+  // sub
+  document.getElementById("sub").textContent = data.length? data.length+" logged · last at "+fmtTime(data[data.length-1].start) : "No contractions logged yet";
+  // kpis (last hour)
+  var lh=lastHour();
+  document.getElementById("kCount").textContent=lh.length||"0";
+  var iv=intervals(lh);
+  document.getElementById("kFreq").textContent=iv.length?(iv.reduce(function(a,b){return a+b},0)/iv.length).toFixed(1)+"m":"–";
+  document.getElementById("kDur").textContent=lh.length?fmtDur(lh.reduce(function(a,c){return a+dur(c)},0)/lh.length):"–";
+  drawBanner(lh,iv);
+  drawChart();
+  drawLog();
+}
+function drawBanner(lh,iv){
+  var el=document.getElementById("banner");
+  if(lh.length<3){el.innerHTML="";return}
+  var avgIv=iv.reduce(function(a,b){return a+b},0)/iv.length;
+  var avgDur=lh.reduce(function(a,c){return a+dur(c)},0)/lh.length;
+  // 5-1-1: ~5 min apart, ~60s long, sustained over the last hour
+  if(avgIv<=5.5 && avgDur>=50 && lh.length>=8){
+    el.innerHTML='<div class="banner go"><span class="ic">🚨</span><div><b>This looks like the 5-1-1 pattern.</b> Contractions are close together, long, and regular. It may be time to call your provider / head in.</div></div>';
+  }else{
+    el.innerHTML='<div class="banner calm"><span class="ic">🌿</span><div>Tracking steadily. Avg '+avgIv.toFixed(1)+' min apart, '+fmtDur(avgDur)+' long. Keep logging.</div></div>';
+  }
+}
+function drawLog(){
+  var ul=document.getElementById("log");
+  if(!data.length){ul.innerHTML='<li class="empty">Nothing logged yet.</li>';return}
+  var html="";
+  for(var i=data.length-1;i>=0;i--){
+    var c=data[i];var gap=i>0?(c.start-data[i-1].start)/60000:null;
+    html+='<li><span class="pill">'+fmtTime(c.start)+'</span>'+
+      '<span class="meta"><b>'+fmtDur(dur(c))+'</b> long'+(gap!=null?' · '+gap.toFixed(1)+'m after prev':'')+'</span>'+
+      '<span class="pn" style="--pc:'+painColor(c.pain)+'">'+(c.pain||"–")+'</span>'+
+      '<button class="del" data-i="'+i+'">✕</button></li>';
+  }
+  ul.innerHTML=html;
+  Array.prototype.forEach.call(ul.querySelectorAll(".del"),function(b){
+    b.onclick=function(){data.splice(+b.getAttribute("data-i"),1);save(data);render();};
+  });
+}
+
+// ---- chart (canvas, no deps) ----
+function drawChart(){
+  var cv=document.getElementById("chart"),ctx=cv.getContext("2d");
+  var dpr=window.devicePixelRatio||1, W=cv.clientWidth, H=200;
+  cv.width=W*dpr;cv.height=H*dpr;ctx.scale(dpr,dpr);
+  ctx.clearRect(0,0,W,H);
+  var pts=data.slice(-20);
+  if(pts.length<2){ctx.fillStyle="#62626e";ctx.font="13px sans-serif";ctx.textAlign="center";ctx.fillText("Log at least 2 contractions to see trends",W/2,H/2);return}
+  var pad={l:8,r:8,t:14,b:22}, cw=W-pad.l-pad.r, ch=H-pad.t-pad.b;
+  var durs=pts.map(function(c){return dur(c)});
+  var pains=pts.map(function(c){return c.pain||0});
+  var ivs=pts.map(function(c,i){return i>0?(c.start-pts[i-1].start)/60000:null});
+  var maxDur=Math.max(60,Math.max.apply(null,durs))*1.15;
+  var maxIv=Math.max(8,Math.max.apply(null,ivs.filter(function(x){return x!=null})))*1.1;
+  var n=pts.length, bw=cw/n*0.5;
+  function x(i){return pad.l+cw*(i+0.5)/n}
+  // duration bars
+  pts.forEach(function(c,i){
+    var h=ch*durs[i]/maxDur, xx=x(i);
+    ctx.fillStyle="rgba(192,132,252,.55)";
+    ctx.fillRect(xx-bw/2,pad.t+ch-h,bw,h);
+  });
+  // interval line (pink)
+  ctx.strokeStyle="#f472b6";ctx.lineWidth=2;ctx.beginPath();var started=false;
+  pts.forEach(function(c,i){if(ivs[i]==null)return;var yy=pad.t+ch-ch*Math.min(ivs[i],maxIv)/maxIv;
+    if(!started){ctx.moveTo(x(i),yy);started=true}else ctx.lineTo(x(i),yy);});
+  ctx.stroke();
+  // pain line (amber, scale 0-10)
+  ctx.strokeStyle="#fbbf24";ctx.lineWidth=2;ctx.beginPath();
+  pts.forEach(function(c,i){var yy=pad.t+ch-ch*pains[i]/10;if(i===0)ctx.moveTo(x(i),yy);else ctx.lineTo(x(i),yy);});
+  ctx.stroke();
+  pts.forEach(function(c,i){var yy=pad.t+ch-ch*pains[i]/10;ctx.fillStyle="#fbbf24";ctx.beginPath();ctx.arc(x(i),yy,2.5,0,7);ctx.fill();});
+  // time axis labels (first / last)
+  ctx.fillStyle="#62626e";ctx.font="10px sans-serif";ctx.textAlign="left";
+  ctx.fillText(fmtTime(pts[0].start),pad.l,H-6);
+  ctx.textAlign="right";ctx.fillText(fmtTime(pts[pts.length-1].start),W-pad.r,H-6);
+}
+
+// ---- Claude report ----
+function buildPrompt(){
+  var rows=data.map(function(c,i){
+    var gap=i>0?((c.start-data[i-1].start)/60000).toFixed(1):"";
+    return (i+1)+". start "+fmtTime(c.start)+", length "+Math.round(dur(c))+"s, pain "+(c.pain||"?")+"/10"+(gap?", "+gap+" min after previous":"");
+  }).join("\n");
+  return "You are a calm, supportive assistant helping expectant parents understand their labor contraction log. "+
+    "You are NOT a doctor; do not diagnose. Below is the logged data (most recent last).\n\n"+rows+
+    "\n\nWrite a short, warm report in markdown with these sections:\n"+
+    "## Summary — 2-3 sentences on the overall pattern (total count, span of time, how things are trending).\n"+
+    "## What the numbers say — bullets on average length, average interval, how regular they are, and the pain trend.\n"+
+    "## 5-1-1 check — plainly state whether the data is approaching the common 5-1-1 guideline (≈5 min apart, ≈1 min long, sustained ≈1 hour), and roughly how close.\n"+
+    "## Gentle reminder — one short, reassuring line reminding them to trust their body and call their provider with any concerns.\n"+
+    "Keep it concise and encouraging.";
+}
+function mdToHtml(md){
+  var esc=function(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};
+  var lines=esc(md).split("\n"),out="",inUl=false;
+  lines.forEach(function(l){
+    if(/^##\s+/.test(l)){if(inUl){out+="</ul>";inUl=false}out+="<h2>"+l.replace(/^##\s+/,"")+"</h2>";}
+    else if(/^[-*]\s+/.test(l)){if(!inUl){out+="<ul>";inUl=true}out+="<li>"+l.replace(/^[-*]\s+/,"")+"</li>";}
+    else if(l.trim()===""){if(inUl){out+="</ul>";inUl=false}}
+    else{if(inUl){out+="</ul>";inUl=false}out+="<p>"+l+"</p>";}
+  });
+  if(inUl)out+="</ul>";
+  return out.replace(/\*\*([^*]+)\*\*/g,"<strong>$1</strong>");
+}
+var reportBtn=document.getElementById("reportBtn"),reportEl=document.getElementById("report");
+function getKey(){return localStorage.getItem(KEY_STORE)||""}
+document.getElementById("keySave").onclick=function(){
+  var k=document.getElementById("keyInput").value.trim();
+  if(k){localStorage.setItem(KEY_STORE,k);document.getElementById("keyBox").style.display="none";genReport();}
+};
+reportBtn.onclick=genReport;
+async function genReport(){
+  if(data.length<2){reportEl.innerHTML='<p style="color:var(--t3)">Log at least a couple of contractions first.</p>';return}
+  if(!getKey()){document.getElementById("keyBox").style.display="block";reportEl.innerHTML="";return}
+  reportBtn.disabled=true;reportEl.innerHTML='<p><span class="spin"></span>Claude is reading your log…</p>';
+  try{
+    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+      headers:{"Content-Type":"application/json","x-api-key":getKey(),"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+      body:JSON.stringify({model:MODEL,max_tokens:900,messages:[{role:"user",content:buildPrompt()}]})});
+    var j=await res.json();
+    if(j.error)throw new Error(j.error.message||"API error");
+    reportEl.innerHTML=mdToHtml(j.content[0].text);
+  }catch(e){
+    reportEl.innerHTML='<p style="color:var(--red)">Could not generate report: '+e.message+'</p>'+
+      '<button class="linkbtn" id="resetKey">Update API key</button>';
+    var rk=document.getElementById("resetKey");if(rk)rk.onclick=function(){localStorage.removeItem(KEY_STORE);document.getElementById("keyBox").style.display="block";reportEl.innerHTML="";};
+  }finally{reportBtn.disabled=false}
+}
+
+// ---- export / clear ----
+document.getElementById("exportBtn").onclick=function(){
+  var rows=[["start","end","length_sec","pain"]].concat(data.map(function(c){
+    return [new Date(c.start).toISOString(),new Date(c.end).toISOString(),Math.round(dur(c)),c.pain||""];
+  }));
+  var csv=rows.map(function(r){return r.join(",")}).join("\n");
+  var a=document.createElement("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));
+  a.download="contractions.csv";a.click();
+};
+document.getElementById("clearBtn").onclick=function(){
+  if(confirm("Delete all logged contractions? This can't be undone.")){data=[];save(data);render();reportEl.innerHTML="";}
+};
+
+window.addEventListener("resize",drawChart);
+render();
+</script>
+</body>
+</html>
