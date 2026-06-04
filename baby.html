@@ -371,16 +371,17 @@ function buildPrompt(){
     "- Length (s): earlier "+fix(avg(durs.slice(0,h)),"")+" → recent "+fix(avg(durs.slice(h)),"")+"\n"+
     "- Pain (/10): earlier "+fix(avg(pains.slice(0,h)),"")+" → recent "+fix(avg(pains.slice(h)),"");
   return "You are a sharp, supportive labor-data analyst helping expectant parents read their contraction log. "+
+    "Write the ENTIRE report in Spanish (Español), including the section headings. "+
     "You are NOT a doctor and must not diagnose — but DO give concrete, data-driven insight, not generic reassurance. "+
     "Do NOT assume they are at an early/just-starting stage or that they should simply wait at home — read what the data actually shows. "+
     "Do NOT make the 5-1-1 rule the centre of the report; treat contraction timing as just one of several signals.\n\n"+
     "LOG (most recent last):\n"+rows+"\n\n"+stats+"\n\n"+
-    "Write a focused markdown report:\n"+
-    "## Where things stand — 2-3 sentences reading the actual trajectory: are contractions getting closer, longer, and/or more intense, and how fast? Name the trend in plain numbers.\n"+
-    "## Key insights — 3-5 specific bullets drawn from THIS data: rate of change, regularity vs. erratic spacing, how pain tracks with frequency/length, any clear shift in the most recent stretch, and what pattern this resembles (e.g. early / active / transition-like) without overstating certainty.\n"+
-    "## What to watch next — 2-3 concrete, observable things in the data that would signal a meaningful change, tailored to where they already are.\n"+
-    "## One reminder — a single short line: trust your body and call your provider/midwife with concerns or if waters break, bleeding, or reduced movement.\n"+
-    "Be specific and use their numbers. Keep it tight.";
+    "Write a focused markdown report in Spanish with these four sections (use these exact Spanish headings):\n"+
+    "## Cómo va la cosa — 2-3 sentences reading the actual trajectory: are contractions getting closer, longer, and/or more intense, and how fast? Name the trend in plain numbers.\n"+
+    "## Claves de los datos — 3-5 specific bullets drawn from THIS data: rate of change, regularity vs. erratic spacing, how pain tracks with frequency/length, any clear shift in the most recent stretch, and what pattern this resembles (e.g. early / active / transition-like) without overstating certainty.\n"+
+    "## Qué vigilar ahora — 2-3 concrete, observable things in the data that would signal a meaningful change, tailored to where they already are.\n"+
+    "## Un recordatorio — a single short line: trust your body and call your provider/midwife with concerns or if waters break, bleeding, or reduced movement.\n"+
+    "Be specific and use their numbers. Keep it tight. Remember: everything in Spanish.";
 }
 function mdToHtml(md){
   var esc=function(s){return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")};
