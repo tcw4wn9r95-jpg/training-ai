@@ -37,13 +37,14 @@ header{display:flex;align-items:center;justify-content:space-between;margin-bott
 .bigbtn.start{background:linear-gradient(135deg,var(--accent),var(--accent2))}
 .bigbtn.stop{background:linear-gradient(135deg,#fb7185,#f43f5e)}
 
-/* pain prompt */
-.pain-row{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin-top:10px}
-.pain-dot{width:38px;height:38px;border-radius:10px;border:1px solid var(--line);background:var(--bg3);
-  color:var(--t1);font-weight:700;font-size:15px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.pain-dot:active{transform:scale(.92)}
-.pain-1,.pain-2,.pain-3{--pc:var(--green)} .pain-4,.pain-5,.pain-6,.pain-7{--pc:var(--amber)} .pain-8,.pain-9,.pain-10{--pc:var(--red)}
-.pain-dot.sel{border-color:var(--pc);background:color-mix(in srgb,var(--pc) 22%,var(--bg3));color:#fff}
+/* pain prompt slider */
+.pain-val{font-family:var(--mono);font-size:44px;font-weight:800;line-height:1;margin:14px 0 8px;color:var(--pc,var(--amber));transition:color .12s}
+.pain-slider{-webkit-appearance:none;appearance:none;width:100%;height:12px;border-radius:7px;outline:none;margin:4px 0;
+  background:linear-gradient(90deg,hsl(140,75%,52%),hsl(60,80%,52%),hsl(0,80%,55%))}
+.pain-slider::-webkit-slider-thumb{-webkit-appearance:none;width:30px;height:30px;border-radius:50%;
+  background:#fff;border:3px solid var(--pc,#fff);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.pain-slider::-moz-range-thumb{width:30px;height:30px;border-radius:50%;background:#fff;border:3px solid var(--pc,#fff);cursor:pointer;box-shadow:0 2px 8px rgba(0,0,0,.45)}
+.pain-scale{display:flex;justify-content:space-between;font-size:11px;color:var(--t3);margin-top:4px}
 
 /* kpis */
 .kpis{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -108,8 +109,11 @@ canvas{width:100%;height:200px;display:block}
     <div class="timer-state" id="state">Tap start when a contraction begins</div>
     <button class="bigbtn start" id="toggle">Start contraction</button>
     <div id="painPrompt" style="display:none">
-      <div style="font-size:13px;color:var(--t2);margin-top:16px">How painful was it? (1–10)</div>
-      <div class="pain-row" id="painRow"></div>
+      <div style="font-size:13px;color:var(--t2);margin-top:16px">How painful was it?</div>
+      <div class="pain-val" id="painVal">5.0</div>
+      <input type="range" id="painSlider" class="pain-slider" min="1" max="10" step="0.1" value="5">
+      <div class="pain-scale"><span>1 · mild</span><span>10 · intense</span></div>
+      <button class="bigbtn start" id="painSave" style="margin-top:14px">Log contraction</button>
     </div>
   </div>
 
@@ -180,7 +184,8 @@ function fmtClock(ms){var s=Math.floor(ms/1000);var m=Math.floor(s/60);s%=60;ret
 function fmtTime(t){return new Date(t).toLocaleTimeString([],{hour:"numeric",minute:"2-digit"})}
 function fmtDur(sec){if(sec<60)return Math.round(sec)+"s";var m=Math.floor(sec/60);return m+"m"+(Math.round(sec%60)?" "+Math.round(sec%60)+"s":"")}
 function dur(c){return (c.end-c.start)/1000}                      // seconds
-function painColor(p){return p>=8?"var(--red)":p>=4?"var(--amber)":"var(--green)"}
+function painColor(p){if(!p)return"var(--t3)";var h=Math.max(0,Math.min(140,140-(p-1)/9*140));return"hsl("+h+",78%,55%)"}
+function fmtPain(p){if(p==null)return"–";return Number.isInteger(p)?String(p):p.toFixed(1)}
 function intervals(arr){ // minutes between consecutive starts
   var out=[];for(var i=1;i<arr.length;i++)out.push((arr[i].start-arr[i-1].start)/60000);return out;
 }
@@ -206,19 +211,16 @@ toggle.onclick=function(){
     showPain();
   }
 };
-function showPain(){
-  var row=document.getElementById("painRow");row.innerHTML="";
-  for(var i=1;i<=10;i++){(function(p){
-    var b=document.createElement("div");b.className="pain-dot pain-"+p;b.textContent=p;
-    b.onclick=function(){
-      pendingEnd.pain=p;data.push(pendingEnd);save(data);pendingEnd=null;
-      document.getElementById("painPrompt").style.display="none";
-      timerEl.textContent="0:00";stateEl.textContent="Logged ✓  Tap start for the next one";
-      render();
-    };row.appendChild(b);
-  })(i)}
-  document.getElementById("painPrompt").style.display="block";
-}
+var painSlider=document.getElementById("painSlider"),painValEl=document.getElementById("painVal"),painPrompt=document.getElementById("painPrompt");
+function updatePainUI(){var p=parseFloat(painSlider.value),c=painColor(p);painValEl.textContent=p.toFixed(1);painValEl.style.setProperty("--pc",c);painSlider.style.setProperty("--pc",c);}
+painSlider.addEventListener("input",updatePainUI);
+document.getElementById("painSave").onclick=function(){
+  pendingEnd.pain=parseFloat(painSlider.value);data.push(pendingEnd);save(data);pendingEnd=null;
+  painPrompt.style.display="none";
+  timerEl.textContent="0:00";stateEl.textContent="Logged ✓  Tap start for the next one";
+  render();
+};
+function showPain(){painSlider.value=5;updatePainUI();painPrompt.style.display="block";}
 
 // ---- render ----
 function render(){
@@ -255,7 +257,7 @@ function drawLog(){
     var c=data[i];var gap=i>0?(c.start-data[i-1].start)/60000:null;
     html+='<li><span class="pill">'+fmtTime(c.start)+'</span>'+
       '<span class="meta"><b>'+fmtDur(dur(c))+'</b> long'+(gap!=null?' · '+gap.toFixed(1)+'m after prev':'')+'</span>'+
-      '<span class="pn" style="--pc:'+painColor(c.pain)+'">'+(c.pain||"–")+'</span>'+
+      '<span class="pn" style="--pc:'+painColor(c.pain)+'">'+fmtPain(c.pain)+'</span>'+
       '<button class="del" data-i="'+i+'">✕</button></li>';
   }
   ul.innerHTML=html;
