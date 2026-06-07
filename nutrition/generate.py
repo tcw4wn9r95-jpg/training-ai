@@ -497,8 +497,70 @@ if (BASE / "inventory.json").exists():
         inventory = json.load(f)
 inv_index = {it["name_en"].strip().lower(): it for it in inventory.get("items", [])}
 
-# For each item: required = what the week needs; available = pantry; to_buy = shortfall.
-# The new pantry balance after shopping = max(required, available).
+# ── Price book (load early: needed for net-weight packaging + pricing) ─────────
+# generate.py both READS the price book (net weight, store, price) and TOPS IT UP
+# with a stub for any new product, without clobbering values the household set.
+import math
+price_book = {"products": {}}
+if (BASE / "price_book.json").exists():
+    try:
+        with open(BASE / "price_book.json") as f:
+            price_book = json.load(f)
+    except Exception:
+        price_book = {"products": {}}
+products = price_book.setdefault("products", {})
+
+
+def _default_price_unit(kind):
+    return {"mass": "kg", "volume": "L"}.get(kind, "item")
+
+
+def _net_of(name_key):
+    """Parsed package size for a product, or None. Only valid if it has a usable amount."""
+    nw = (products.get(name_key) or {}).get("net_weight")
+    if not nw:
+        return None
+    q = units.parse_qty(nw)
+    return q if (q.get("kind") != "unknown" and q.get("amount")) else None
+
+
+def _package_price(price_eur, price_unit, net):
+    """Price of ONE package, from the unit price + package size."""
+    if price_eur is None or not net:
+        return None
+    if net["kind"] == "mass" and price_unit == "kg":
+        return price_eur * net["amount"] / 1000.0
+    if net["kind"] == "volume" and price_unit == "L":
+        return price_eur * net["amount"] / 1000.0
+    if net["kind"] == "count" and price_unit == "item":
+        return price_eur * net["amount"]
+    if price_unit == "item":
+        return price_eur  # price entered as per-package/jar
+    return None
+
+
+def _line_cost(qty_str, price_eur, price_unit, have_at_home=False):
+    """Cost of buying qty_str at price_eur per price_unit. None if not computable."""
+    if have_at_home:
+        return 0.0
+    if price_eur is None:
+        return None
+    q = units.parse_qty(qty_str or "")
+    kind, amt = q.get("kind"), q.get("amount")
+    if kind == "mass" and price_unit == "kg":
+        return round(price_eur * (amt or 0) / 1000.0, 2)      # parse_qty mass → grams
+    if kind == "volume" and price_unit == "L":
+        return round(price_eur * (amt or 0) / 1000.0, 2)      # parse_qty volume → ml
+    if kind == "count" and price_unit == "item":
+        return round(price_eur * (amt or 0), 2)
+    if kind == "unknown" and price_unit == "item":
+        return round(price_eur * (amt or 1), 2)
+    return None  # unit/kind mismatch — leave unpriced
+
+# For each item: required = what the week needs; have = pantry. Packaged staples
+# (with a net_weight) are bought in WHOLE packages and the fridge is depleted by
+# the week's consumption, so we only re-buy when a pack runs out. Everything else
+# keeps the simple top-up-to-required behaviour.
 new_inventory_items = []
 for item in shopping_json:
     name_key = item.get("name_en", "").strip().lower()
@@ -507,8 +569,26 @@ for item in shopping_json:
     have = None
     if have_item:
         have = {"amount": have_item.get("amount"), "kind": have_item.get("kind", "unknown"), "unit": have_item.get("unit", "")}
+    have_amt = have["amount"] if (have and have.get("kind") == required["kind"] and have.get("amount") is not None) else 0.0
+    net = _net_of(name_key)
 
-    if required["kind"] != "unknown" and have and have["kind"] == required["kind"] and have.get("unit") == required.get("unit"):
+    if net and required["kind"] != "unknown" and net["kind"] == required["kind"]:
+        # Packaged staple: buy whole packs to cover the shortfall, then deplete the
+        # fridge by this week's consumption so we re-buy only when a pack runs out.
+        shortfall = max(0.0, (required["amount"] or 0) - have_amt)
+        packs = 0 if shortfall <= 0.001 else math.ceil(shortfall / net["amount"])
+        bought = packs * net["amount"]
+        new_balance = max(0.0, have_amt + bought - (required["amount"] or 0))
+        item["packages"] = packs
+        item["net_weight"] = units.format_qty(net["amount"], net["kind"], net["unit"])
+        if packs == 0:
+            item["have_at_home"] = True
+            item["qty"] = "✓ in pantry"
+        else:
+            item["have_at_home"] = False
+            item["qty"] = f"{packs} × {item['net_weight']}"
+        kind, unit = required["kind"], required["unit"]
+    elif required["kind"] != "unknown" and have and have["kind"] == required["kind"] and have.get("unit") == required.get("unit"):
         to_buy_amt = max(0.0, (required["amount"] or 0) - (have["amount"] or 0))
         new_balance = max(required["amount"] or 0, have["amount"] or 0)
         if to_buy_amt <= 0.001:
@@ -541,42 +621,6 @@ for item in shopping_json:
 
 shopping_sorted = sorted(shopping_json, key=lambda x: x.get("aisle", "zzz"))
 
-# ── Price book: per-product supermarket + unit price (maintained over time) ───
-# generate.py both READS the price book (to cost the list + assign stores) and
-# TOPS IT UP with a stub for any new product, without ever clobbering a price the
-# household has set in the Product Library.
-price_book = {"products": {}}
-if (BASE / "price_book.json").exists():
-    try:
-        with open(BASE / "price_book.json") as f:
-            price_book = json.load(f)
-    except Exception:
-        price_book = {"products": {}}
-products = price_book.setdefault("products", {})
-
-
-def _default_price_unit(kind):
-    return {"mass": "kg", "volume": "L"}.get(kind, "item")
-
-
-def _line_cost(qty_str, price_eur, price_unit, have_at_home=False):
-    """Cost of buying qty_str at price_eur per price_unit. None if not computable."""
-    if have_at_home:
-        return 0.0
-    if price_eur is None:
-        return None
-    q = units.parse_qty(qty_str or "")
-    kind, amt = q.get("kind"), q.get("amount")
-    if kind == "mass" and price_unit == "kg":
-        return round(price_eur * (amt or 0) / 1000.0, 2)      # parse_qty mass → grams
-    if kind == "volume" and price_unit == "L":
-        return round(price_eur * (amt or 0) / 1000.0, 2)      # parse_qty volume → ml
-    if kind == "count" and price_unit == "item":
-        return round(price_eur * (amt or 0), 2)
-    if kind == "unknown" and price_unit == "item":
-        return round(price_eur * (amt or 1), 2)
-    return None  # unit/kind mismatch — leave unpriced
-
 est_by_supermarket = {}
 total_known = 0.0
 unpriced = 0
@@ -592,11 +636,12 @@ for item in shopping_sorted:
             "supermarket": (item.get("stores") or [None])[0],
             "price_eur": None,
             "price_unit": _default_price_unit(q.get("kind")),
+            "net_weight": None,
             "updated": today.isoformat(),
         }
         products[key] = entry
     else:
-        # Refresh metadata only; never overwrite a user-set price/supermarket.
+        # Refresh metadata only; never overwrite a user-set price/supermarket/net weight.
         if item.get("name_fr"):
             entry["name_fr"] = item.get("name_fr")
         if item.get("aisle"):
@@ -604,11 +649,22 @@ for item in shopping_sorted:
         entry.setdefault("price_unit", _default_price_unit(q.get("kind")))
         entry.setdefault("supermarket", (item.get("stores") or [None])[0])
         entry.setdefault("price_eur", None)
+        entry.setdefault("net_weight", None)
 
     sm = entry.get("supermarket")
     price = entry.get("price_eur")
     punit = entry.get("price_unit") or _default_price_unit(q.get("kind"))
-    cost = _line_cost(item.get("qty", ""), price, punit, item.get("have_at_home"))
+    if "packages" in item:
+        # Packaged staple: cost = whole packs bought × price of one pack.
+        pp = _package_price(price, punit, _net_of(key))
+        if item.get("have_at_home"):
+            cost = 0.0
+        elif pp is not None:
+            cost = round(item["packages"] * pp, 2)
+        else:
+            cost = None
+    else:
+        cost = _line_cost(item.get("qty", ""), price, punit, item.get("have_at_home"))
     item["supermarket"] = sm
     item["unit_price_eur"] = price
     item["price_unit"] = punit
