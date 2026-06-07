@@ -541,12 +541,100 @@ for item in shopping_json:
 
 shopping_sorted = sorted(shopping_json, key=lambda x: x.get("aisle", "zzz"))
 
-total_est_eur = round(budget * 0.85)  # rough estimate (85% of budget)
+# ── Price book: per-product supermarket + unit price (maintained over time) ───
+# generate.py both READS the price book (to cost the list + assign stores) and
+# TOPS IT UP with a stub for any new product, without ever clobbering a price the
+# household has set in the Product Library.
+price_book = {"products": {}}
+if (BASE / "price_book.json").exists():
+    try:
+        with open(BASE / "price_book.json") as f:
+            price_book = json.load(f)
+    except Exception:
+        price_book = {"products": {}}
+products = price_book.setdefault("products", {})
+
+
+def _default_price_unit(kind):
+    return {"mass": "kg", "volume": "L"}.get(kind, "item")
+
+
+def _line_cost(qty_str, price_eur, price_unit, have_at_home=False):
+    """Cost of buying qty_str at price_eur per price_unit. None if not computable."""
+    if have_at_home:
+        return 0.0
+    if price_eur is None:
+        return None
+    q = units.parse_qty(qty_str or "")
+    kind, amt = q.get("kind"), q.get("amount")
+    if kind == "mass" and price_unit == "kg":
+        return round(price_eur * (amt or 0) / 1000.0, 2)      # parse_qty mass → grams
+    if kind == "volume" and price_unit == "L":
+        return round(price_eur * (amt or 0) / 1000.0, 2)      # parse_qty volume → ml
+    if kind == "count" and price_unit == "item":
+        return round(price_eur * (amt or 0), 2)
+    if kind == "unknown" and price_unit == "item":
+        return round(price_eur * (amt or 1), 2)
+    return None  # unit/kind mismatch — leave unpriced
+
+est_by_supermarket = {}
+total_known = 0.0
+unpriced = 0
+for item in shopping_sorted:
+    key = item.get("name_en", "").strip().lower()
+    q = units.parse_qty(item.get("qty", ""))
+    entry = products.get(key)
+    if entry is None:
+        entry = {
+            "name_en": item.get("name_en", ""),
+            "name_fr": item.get("name_fr", ""),
+            "aisle": item.get("aisle", ""),
+            "supermarket": (item.get("stores") or [None])[0],
+            "price_eur": None,
+            "price_unit": _default_price_unit(q.get("kind")),
+            "updated": today.isoformat(),
+        }
+        products[key] = entry
+    else:
+        # Refresh metadata only; never overwrite a user-set price/supermarket.
+        if item.get("name_fr"):
+            entry["name_fr"] = item.get("name_fr")
+        if item.get("aisle"):
+            entry["aisle"] = item.get("aisle")
+        entry.setdefault("price_unit", _default_price_unit(q.get("kind")))
+        entry.setdefault("supermarket", (item.get("stores") or [None])[0])
+        entry.setdefault("price_eur", None)
+
+    sm = entry.get("supermarket")
+    price = entry.get("price_eur")
+    punit = entry.get("price_unit") or _default_price_unit(q.get("kind"))
+    cost = _line_cost(item.get("qty", ""), price, punit, item.get("have_at_home"))
+    item["supermarket"] = sm
+    item["unit_price_eur"] = price
+    item["price_unit"] = punit
+    item["line_cost_eur"] = cost
+
+    if item.get("have_at_home"):
+        continue
+    if cost is None:
+        unpriced += 1
+    else:
+        total_known += cost
+        if sm:
+            est_by_supermarket[sm] = round(est_by_supermarket.get(sm, 0.0) + cost, 2)
+
+priced_total = round(total_known)
+# Fall back to the old heuristic only while nothing has been priced yet.
+est_total_eur = priced_total if priced_total > 0 else round(budget * 0.85)
+price_book["updated"] = today.isoformat()
 
 shopping_out = {
     "week_of": next_monday.isoformat(),
     "currency": "EUR",
-    "est_total_eur": total_est_eur,
+    "est_total_eur": est_total_eur,
+    "est_by_supermarket": est_by_supermarket,
+    "unpriced_count": unpriced,
+    "budget_eur": budget,
     "items": shopping_sorted,
 }
 
@@ -682,6 +770,9 @@ with open(BASE / "weekly_menu.json", "w") as f:
 
 with open(BASE / "shopping_list.json", "w") as f:
     json.dump(shopping_out, f, indent=2)
+
+with open(BASE / "price_book.json", "w") as f:
+    json.dump(price_book, f, indent=2, ensure_ascii=False)
 
 with open(BASE / "prep_plan.json", "w") as f:
     json.dump(prep_out, f, indent=2)

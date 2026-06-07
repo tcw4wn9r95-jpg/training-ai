@@ -266,6 +266,36 @@
   .setup-input-bar input { flex: 1; border: 1.5px solid var(--hair); border-radius: 999px; padding: 11px 16px; font-size: 15px; background: var(--bg); color: var(--ink); }
   .setup-input-bar input:focus { outline: none; border-color: var(--pine); }
   #setup-generate-wrap { padding: 10px 14px; background: var(--surface); border-top: 1px solid var(--hair); }
+
+  /* Shopping: budget + supermarket grouping */
+  .filter-row { display: flex; gap: 8px; overflow-x: auto; -webkit-overflow-scrolling: touch; padding-bottom: 6px; margin-bottom: 10px; scrollbar-width: none; }
+  .filter-row::-webkit-scrollbar { display: none; }
+  .filter-chip { flex: 0 0 auto; border: 1.5px solid var(--hair); background: var(--surface); color: var(--muted); font-size: 13px; font-weight: 600; border-radius: 999px; padding: 7px 14px; cursor: pointer; }
+  .filter-chip.active { background: var(--pine); border-color: var(--pine); color: #fff; }
+  .store-group { margin-bottom: 18px; }
+  .store-subtotal { display: flex; justify-content: space-between; align-items: baseline; font-family: var(--serif); font-size: 17px; font-weight: 600; color: var(--pine); padding: 2px 2px 8px; border-bottom: 1px solid var(--hair); margin-bottom: 10px; }
+  .store-subtotal span:last-child { font-size: 14px; color: var(--muted); }
+  .shop-right { display: flex; flex-direction: column; align-items: flex-end; gap: 2px; min-width: 70px; }
+  .shop-price { font-size: 12px; font-weight: 700; color: var(--clay); }
+  .shop-price.pantry { color: var(--faint); font-weight: 600; font-style: italic; }
+  .shop-price.none { color: var(--sage); border: 1px dashed var(--sage); border-radius: 6px; padding: 1px 6px; cursor: pointer; }
+
+  /* Product Library overlay */
+  .library-overlay { position: fixed; inset: 0; z-index: 250; background: var(--bg); display: flex; flex-direction: column; }
+  .library-overlay.hidden { display: none; }
+  .lib-search { width: 100%; border: 1.5px solid var(--hair); border-radius: 999px; padding: 10px 16px; font-size: 15px; background: var(--surface); color: var(--ink); }
+  .lib-search:focus { outline: none; border-color: var(--pine); }
+  #lib-list { flex: 1; overflow-y: auto; -webkit-overflow-scrolling: touch; padding: 12px 14px calc(20px + var(--safe-b)); display: flex; flex-direction: column; gap: 10px; }
+  .lib-row { background: var(--surface); border-radius: var(--r-sm); padding: 12px 14px; box-shadow: var(--shadow); }
+  .lib-names .shop-en { display: flex; align-items: center; gap: 8px; }
+  .lib-inputs { display: flex; gap: 8px; align-items: center; margin-top: 10px; }
+  .lib-sm { flex: 1 1 auto; min-width: 0; }
+  .lib-sm, .lib-unit { border: 1.5px solid var(--hair); border-radius: 10px; padding: 9px 8px; font-size: 14px; background: var(--surface); color: var(--ink); -webkit-appearance: none; appearance: none; }
+  .lib-unit { flex: 0 0 64px; }
+  .lib-price { flex: 0 0 78px; border: 1.5px solid var(--hair); border-radius: 10px; padding: 9px 10px; font-size: 15px; background: var(--surface); color: var(--ink); text-align: right; }
+  .lib-sm:focus, .lib-unit:focus, .lib-price:focus { outline: none; border-color: var(--pine); }
+  .lib-save { flex: 0 0 auto; border: none; background: var(--sage-pale); color: var(--pine); font-weight: 700; font-size: 13px; border-radius: 10px; padding: 9px 14px; cursor: pointer; }
+  .lib-save.dirty { background: var(--pine); color: #fff; }
 </style>
 </head>
 <body>
@@ -285,6 +315,16 @@
 
 <div class="meal-overlay hidden" id="meal-overlay">
   <div class="meal-sheet" id="meal-sheet-content"></div>
+</div>
+
+<div class="library-overlay hidden" id="library-overlay">
+  <div class="setup-header">
+    <div class="setup-logo">🏷️</div>
+    <div><div class="setup-title">Product library</div><div class="setup-sub">Set the shop & price for each product</div></div>
+    <button class="setup-close" onclick="closeLibrary()">✕</button>
+  </div>
+  <div style="padding:10px 14px 0"><input id="lib-search" class="lib-search" type="text" placeholder="Search products…" oninput="renderLibrary()"></div>
+  <div id="lib-list"></div>
 </div>
 
 <div class="setup-overlay hidden" id="setup-overlay">
@@ -338,11 +378,15 @@
 
   <!-- SHOPPING -->
   <div class="tab-pane" id="pane-shopping">
-    <div class="row-between" style="margin-bottom:12px">
+    <div class="row-between" style="margin-bottom:10px">
       <div class="section-title" style="margin-bottom:0">Shopping list</div>
-      <div id="shop-total" style="font-size:13px;color:var(--muted)"></div>
     </div>
-    <button class="btn btn-outline btn-block" style="margin-bottom:12px" onclick="markAllBought()">✓ Mark all bought → add to fridge</button>
+    <div id="budget-card"></div>
+    <div style="display:flex;gap:8px;margin-bottom:12px">
+      <button class="btn btn-outline btn-ic" style="flex:1" onclick="openLibrary()"><svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"><path d="M21 8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16Z"/><path d="m3.3 7 8.7 5 8.7-5"/><path d="M12 22V12"/></svg>Product library</button>
+      <button class="btn btn-ic" style="flex:1" onclick="markAllBought()">✓ Mark bought</button>
+    </div>
+    <div id="shop-filter" class="filter-row"></div>
     <div id="shopping-list-content"></div>
   </div>
 
@@ -430,7 +474,7 @@
       <div id="goals-display"></div>
       <button class="btn btn-outline btn-block" style="margin-top:12px" onclick="startSetup()">🌿 Set up / review my plan with Coach Léa</button>
     </div>
-    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v13 · nutriprep</div>
+    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v14 · nutriprep</div>
     <div style="height:20px"></div>
   </div>
 </div>
@@ -457,8 +501,7 @@
 const GITHUB_REPO = "tcw4wn9r95-jpg/nutriprep";
 const GITHUB_BRANCH = "main";
 const RAW = `https://raw.githubusercontent.com/${GITHUB_REPO}/${GITHUB_BRANCH}`;
-// Shared cross-repo channel: read AthleteIQ's public data from the training-ai repo.
-const RAW_ROOT = `https://raw.githubusercontent.com/tcw4wn9r95-jpg/training-ai/main`;
+const RAW_ROOT = `https://raw.githubusercontent.com/tcw4wn9r95-jpg/training-ai/main`; // shared channel: AthleteIQ
 const VAPID_PUBLIC_KEY = ""; // Set after: npx web-push generate-vapid-keys
 
 const SLOT_LABELS = {
@@ -499,7 +542,10 @@ function emptyIcon(name){
 // ── State ─────────────────────────────────────────────────────────────────────
 let identity = localStorage.getItem("nutriprep_identity") || null;
 let weekMenu = null, shoppingList = null, prepPlan = null, planStatus = null, inventory = null, trainingPlan = null, sleepData = null;
-let householdData = null;
+let householdData = null, priceBook = null;
+const SUPERMARKETS = ["Cactus","Auchan","Delhaize","Aldi","Lidl","Match","Pall Center"];
+const PRICE_UNITS = ["kg","L","item"];
+let shopFilter = "all"; // active supermarket filter on the Shopping tab
 let userGoals = {}, userWeightLog = [], userCheckins = [], userMealLogs = [];
 let coachHistory = [], setupHistory = [];
 let checkedItems = JSON.parse(localStorage.getItem("nutriprep_checked") || "{}");
@@ -572,6 +618,7 @@ async function loadSharedData(){
   try{ planStatus=await ghFetch("plan_status.json"); }catch(_){ planStatus=null; }
   try{ inventory=await ghFetch("inventory.json"); }catch(_){ inventory=null; }
   try{ householdData=await ghFetch("household.json"); }catch(_){ householdData=null; }
+  try{ priceBook=await ghFetch("price_book.json"); }catch(_){ priceBook={products:{}}; }
   // Cross-app reads from the training app (AthleteIQ) at the repo root
   try{ trainingPlan=await (await fetch(`${RAW_ROOT}/weekly_plan.json?t=${Date.now()}`)).json(); }catch(_){ trainingPlan=null; }
   try{ sleepData=await (await fetch(`${RAW_ROOT}/sleep.json?t=${Date.now()}`)).json(); }catch(_){ sleepData=null; }
@@ -812,23 +859,131 @@ async function attachMealVideo(){
 }
 
 // ── SHOPPING ────────────────────────────────────────────────────────────────────
+// ── Price-book helpers (mirror generate.py costing) ─────────────────────────────
+function pbKey(name){ return String(name||"").trim().toLowerCase(); }
+function pbEntry(name){ const p=(priceBook&&priceBook.products)||{}; return p[pbKey(name)]||null; }
+function eur(n){ return "€"+(Math.round(n*100)/100).toFixed(2); }
+function defaultUnitFor(qty){ const k=parseQty(qty||"").kind; return k==="mass"?"kg":k==="volume"?"L":"item"; }
+function lineCostJS(qty, price, unit, have){
+  if(have) return 0;
+  if(price==null||price==="") return null;
+  price=Number(price); if(isNaN(price)) return null;
+  const q=parseQty(qty), k=q.kind, a=q.amount;
+  if(k==="mass"&&unit==="kg") return Math.round(price*(a||0)/10)/100;
+  if(k==="volume"&&unit==="L") return Math.round(price*(a||0)/10)/100;
+  if(k==="count"&&unit==="item") return Math.round(price*(a||0)*100)/100;
+  if(k==="unknown"&&unit==="item") return Math.round(price*(a||1)*100)/100;
+  return null;
+}
+function itemStore(it){ if(it.supermarket) return it.supermarket; const e=pbEntry(it.name_en); return (e&&e.supermarket)||null; }
+function itemCost(it){
+  if(it.line_cost_eur!=null) return it.line_cost_eur;
+  const e=pbEntry(it.name_en); if(!e) return null;
+  return lineCostJS(it.qty, e.price_eur, e.price_unit||"item", it.have_at_home);
+}
+
 function renderShopping(){
   const wrap=document.getElementById("shopping-list-content");
-  if(!shoppingList||!shoppingList.items){ wrap.innerHTML=`<div class="empty"><div class="ic">${emptyIcon("bag")}</div><p>No shopping list yet.</p></div>`; return; }
-  document.getElementById("shop-total").textContent=shoppingList.est_total_eur?`Est. €${shoppingList.est_total_eur}`:"";
-  const byAisle={}; shoppingList.items.forEach(it=>{ const a=it.aisle||"General"; (byAisle[a]=byAisle[a]||[]).push(it); });
-  wrap.innerHTML=Object.keys(byAisle).sort().map(aisle=>{
-    const items=byAisle[aisle].map(it=>{
-      const key=it.name_en||""; const checked=checkedItems[key]?" checked":"";
-      const inPantry=it.have_at_home; const stores=(it.stores||[]).slice(0,3).map(s=>`<span class="store-chip">${s}</span>`).join("");
-      return `<div class="shop-item${inPantry?" in-pantry":""}">
-        <button class="shop-check${checked}" onclick="toggleCheck('${key.replace(/'/g,"\\'")}',this)">${checked?"✓":""}</button>
-        <div class="shop-names"><div class="shop-en">${it.name_en||""}</div><div class="shop-fr">${it.name_fr||""}</div><div class="shop-stores">${stores}</div></div>
-        <div class="shop-qty">${it.qty||""}</div>
-      </div>`;
+  const fr=document.getElementById("shop-filter");
+  const bc=document.getElementById("budget-card");
+  if(!shoppingList||!shoppingList.items){ if(bc)bc.innerHTML=""; if(fr)fr.innerHTML=""; wrap.innerHTML=`<div class="empty"><div class="ic">${emptyIcon("bag")}</div><p>No shopping list yet.</p></div>`; return; }
+  const items=shoppingList.items;
+  // Budget card: total vs household budget.
+  const budget=shoppingList.budget_eur||(householdData&&householdData.budget_eur_per_week)||0;
+  let total=0, unpriced=0;
+  items.forEach(it=>{ if(it.have_at_home)return; const c=itemCost(it); if(c==null)unpriced++; else total+=c; });
+  total=Math.round(total*100)/100;
+  const over=budget&&total>budget; const pct=budget?Math.min(100,Math.round(total/budget*100)):0;
+  if(bc) bc.innerHTML=`<div class="card" style="padding:14px 16px;margin-bottom:12px">
+    <div class="row-between"><div style="font-family:var(--serif);font-size:21px;color:${over?'var(--clay)':'var(--pine)'}">${eur(total)}${budget?` <span style="font-size:13px;color:var(--muted);font-family:var(--sans)">/ ${eur(budget)}</span>`:''}</div>
+    <div style="font-size:12px;color:var(--muted)">${unpriced?unpriced+' to price':'all priced'}</div></div>
+    ${budget?`<div class="progress-bar-wrap" style="margin-top:8px"><div class="progress-bar-fill" style="width:${pct}%;${over?'background:var(--clay)':''}"></div></div>`:''}</div>`;
+  // Filter chips for the supermarkets present.
+  const stores=[...new Set(items.filter(it=>!it.have_at_home).map(itemStore).filter(Boolean))].sort();
+  if(shopFilter!=="all"&&!stores.includes(shopFilter)) shopFilter="all";
+  if(fr) fr.innerHTML=`<button class="filter-chip${shopFilter==='all'?' active':''}" onclick="setShopFilter('all')">All</button>`+
+    stores.map(s=>`<button class="filter-chip${shopFilter===s?' active':''}" onclick="setShopFilter('${s.replace(/'/g,"\\'")}')">${s}</button>`).join("");
+  // Group by supermarket → section.
+  const groups={};
+  items.forEach(it=>{ const s=itemStore(it)||"__unassigned__"; const a=it.aisle||"General"; ((groups[s]=groups[s]||{})[a]=groups[s][a]||[]).push(it); });
+  let storeKeys=Object.keys(groups).filter(s=>s!=="__unassigned__").sort();
+  if(groups["__unassigned__"]) storeKeys.push("__unassigned__");
+  if(shopFilter!=="all") storeKeys=storeKeys.filter(s=>s===shopFilter);
+  wrap.innerHTML=storeKeys.map(store=>{
+    const aisles=groups[store]; let sub=0;
+    Object.values(aisles).forEach(arr=>arr.forEach(it=>{ if(!it.have_at_home){ const c=itemCost(it); if(c!=null)sub+=c; } }));
+    sub=Math.round(sub*100)/100;
+    const unassigned=store==="__unassigned__";
+    const head=`<div class="store-subtotal"><span>${unassigned?'Unassigned':store}</span><span>${sub>0?eur(sub):(unassigned?'set prices':'')}</span></div>`;
+    const hint=unassigned?`<div style="font-size:12px;color:var(--muted);margin:0 2px 8px">Open the product library to set a shop &amp; price.</div>`:"";
+    const body=Object.keys(aisles).sort().map(aisle=>{
+      const rows=aisles[aisle].map(it=>{
+        const key=it.name_en||""; const checked=checkedItems[key]?" checked":""; const inPantry=it.have_at_home; const c=itemCost(it);
+        const price=inPantry?`<span class="shop-price pantry">in pantry</span>`:(c!=null?`<span class="shop-price">${eur(c)}</span>`:`<span class="shop-price none" onclick="openLibrary('${key.replace(/'/g,"\\'")}')">+ price</span>`);
+        return `<div class="shop-item${inPantry?" in-pantry":""}">
+          <button class="shop-check${checked}" onclick="toggleCheck('${key.replace(/'/g,"\\'")}',this)">${checked?"✓":""}</button>
+          <div class="shop-names"><div class="shop-en">${it.name_en||""}</div><div class="shop-fr">${it.name_fr||""}</div></div>
+          <div class="shop-right"><div class="shop-qty">${it.qty||""}</div>${price}</div>
+        </div>`;
+      }).join("");
+      return `<div class="aisle-section"><div class="aisle-label">${aisle}</div>${rows}</div>`;
     }).join("");
-    return `<div class="aisle-section"><div class="aisle-label">${aisle}</div>${items}</div>`;
+    return `<div class="store-group">${head}${hint}${body}</div>`;
   }).join("");
+}
+function setShopFilter(s){ shopFilter=s; renderShopping(); }
+
+// ── Product Library overlay ─────────────────────────────────────────────────────
+function openLibrary(focusKey){ document.getElementById("library-overlay").classList.remove("hidden"); const s=document.getElementById("lib-search"); if(s&&focusKey)s.value=""; renderLibrary(typeof focusKey==="string"?focusKey:null); }
+function closeLibrary(){ document.getElementById("library-overlay").classList.add("hidden"); }
+function attrEsc(s){ return String(s).replace(/&/g,"&amp;").replace(/"/g,"&quot;"); }
+function renderLibrary(focusKey){
+  const list=document.getElementById("lib-list"); if(!list)return;
+  priceBook=priceBook||{products:{}}; priceBook.products=priceBook.products||{};
+  const q=((document.getElementById("lib-search")||{}).value||"").trim().toLowerCase();
+  const onList=new Set(), meta={};
+  ((shoppingList&&shoppingList.items)||[]).forEach(it=>{ const k=pbKey(it.name_en); onList.add(k); meta[k]={name_en:it.name_en,name_fr:it.name_fr,aisle:it.aisle,stores:it.stores,qty:it.qty}; });
+  Object.entries(priceBook.products).forEach(([k,e])=>{ if(!meta[k])meta[k]={name_en:e.name_en,name_fr:e.name_fr,aisle:e.aisle,stores:[]}; });
+  let keys=Object.keys(meta);
+  if(q) keys=keys.filter(k=>(meta[k].name_en||"").toLowerCase().includes(q)||(meta[k].name_fr||"").toLowerCase().includes(q));
+  keys.sort((a,b)=>{ const oa=onList.has(a)?0:1, ob=onList.has(b)?0:1; return oa!==ob?oa-ob:(meta[a].name_en||"").localeCompare(meta[b].name_en||""); });
+  if(!keys.length){ list.innerHTML=`<div class="empty"><p>No products yet. Generate a plan first, then come back to price them.</p></div>`; return; }
+  list.innerHTML=keys.map(k=>{
+    const m=meta[k], e=priceBook.products[k]||{};
+    const defUnit=e.price_unit||defaultUnitFor(m.qty);
+    const sm=e.supermarket||(m.stores&&m.stores[0])||"";
+    const price=(e.price_eur!=null)?e.price_eur:"";
+    const smOpts=['<option value="">— shop —</option>'].concat(SUPERMARKETS.map(s=>`<option value="${s}"${s===sm?' selected':''}>${s}</option>`)).join("");
+    const unitOpts=PRICE_UNITS.map(u=>`<option value="${u}"${u===defUnit?' selected':''}>/${u}</option>`).join("");
+    return `<div class="lib-row" data-key="${attrEsc(k)}">
+      <div class="lib-names"><div class="shop-en">${m.name_en||""}${onList.has(k)?' <span class="chip">on list</span>':''}</div><div class="shop-fr">${m.name_fr||""}</div></div>
+      <div class="lib-inputs">
+        <select class="lib-sm" onchange="markLibDirty(this)">${smOpts}</select>
+        <input class="lib-price" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" value="${price}" oninput="markLibDirty(this)">
+        <select class="lib-unit" onchange="markLibDirty(this)">${unitOpts}</select>
+        <button class="lib-save" onclick="saveProduct(this)">Save</button>
+      </div>
+    </div>`;
+  }).join("");
+  if(focusKey){ [...list.children].forEach(row=>{ if(row.dataset&&row.dataset.key===focusKey){ row.scrollIntoView({block:"center"}); const p=row.querySelector(".lib-price"); if(p)p.focus(); } }); }
+}
+function markLibDirty(el){ const row=el.closest(".lib-row"); if(row){ const b=row.querySelector(".lib-save"); if(b)b.classList.add("dirty"); } }
+async function saveProduct(btn){
+  const row=btn.closest(".lib-row"); if(!row)return; const k=row.dataset.key;
+  const sm=row.querySelector(".lib-sm").value||null;
+  const priceRaw=row.querySelector(".lib-price").value;
+  const unit=row.querySelector(".lib-unit").value||"item";
+  const price=(priceRaw==="")?null:Number(priceRaw);
+  priceBook=priceBook||{products:{}}; priceBook.products=priceBook.products||{};
+  const prev=priceBook.products[k]||{};
+  let name_en=prev.name_en, name_fr=prev.name_fr, aisle=prev.aisle;
+  const it=((shoppingList&&shoppingList.items)||[]).find(x=>pbKey(x.name_en)===k);
+  if(it){ name_en=it.name_en; name_fr=it.name_fr; aisle=it.aisle; }
+  priceBook.products[k]={...prev, name_en:name_en||k, name_fr:name_fr||"", aisle:aisle||"", supermarket:sm, price_eur:(price!=null&&!isNaN(price))?price:null, price_unit:unit, updated:todayISO()};
+  priceBook.updated=todayISO();
+  btn.disabled=true; const old=btn.textContent; btn.textContent="…";
+  try{ await ghWrite("price_book.json", priceBook, `Price: ${name_en||k} (${identity})`); btn.classList.remove("dirty"); btn.textContent="✓"; setTimeout(()=>{btn.textContent="Save"; btn.disabled=false;},1200); renderShopping(); }
+  catch(e){ btn.disabled=false; btn.textContent=old; alert("Couldn't save: "+e.message); }
 }
 function toggleCheck(key,btn){ checkedItems[key]=!checkedItems[key]; localStorage.setItem("nutriprep_checked",JSON.stringify(checkedItems)); btn.classList.toggle("checked"); btn.textContent=checkedItems[key]?"✓":""; }
 async function markAllBought(){
