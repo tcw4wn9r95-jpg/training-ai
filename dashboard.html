@@ -170,7 +170,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .hero-title{font-size:23px;font-weight:800;letter-spacing:-.5px;margin:6px 0 3px;line-height:1.15}
 .hero-sub{font-size:13px;color:var(--t2)}
 .hero-stats{display:flex;gap:18px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
-.hero-stat .v{font-size:18px;font-weight:800;font-family:var(--mono)}
+.hero-stat .v{font-size:18px;font-weight:800}
 .hero-stat .l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
 
 /* Form/readiness banner */
@@ -203,13 +203,22 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .proj-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
 
 /* Plan */
-.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;
+.week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:0;
   position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0 8px;margin-top:-4px}
 .week-nav button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);
   background:var(--bg2);color:var(--t2);font-size:18px;cursor:pointer}
 .week-nav .lbl{text-align:center}
 .week-nav .lbl .w{font-size:15px;font-weight:700}
 .week-nav .lbl .d{font-size:11px;color:var(--t3);margin-top:1px}
+/* Week strip */
+.week-strip{display:flex;gap:4px;margin:10px 0 14px;padding:12px 14px;
+  background:var(--bg2);border:1px solid var(--line);border-radius:14px}
+.ws-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
+  cursor:pointer;-webkit-tap-highlight-color:transparent}
+.ws-day:active{opacity:.7}
+.ws-abbr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.ws-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
+.ws-dot svg{width:14px;height:14px}
 .refresh-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
   padding:11px;margin-bottom:14px;border-radius:11px;border:1px solid var(--line);
   background:var(--bg2);color:var(--t2);font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)}
@@ -283,7 +292,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   padding:13px;color:var(--t1);font-family:var(--font);font-size:14px;resize:vertical;min-height:70px;margin-bottom:6px}
 
 /* Coach chat */
-#coach-msgs{display:flex;flex-direction:column;gap:10px;margin-bottom:14px;min-height:200px}
+#coach-msgs{display:flex;flex-direction:column;gap:10px;margin-bottom:10px;min-height:200px}
 .bubble{max-width:85%;padding:12px 14px;border-radius:15px;font-size:14px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
 .bubble.me{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:5px}
 .bubble.ai{align-self:flex-start;background:var(--bg3);color:var(--t1);border-bottom-left-radius:5px}
@@ -291,9 +300,17 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .coach-input-row textarea{margin:0;min-height:46px;max-height:120px}
 .coach-send{width:46px;height:46px;min-width:46px;border-radius:12px;border:none;
   background:var(--brand);color:#09090b;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.quick-q{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.quick-q button{padding:8px 13px;border-radius:18px;border:1px solid var(--line);
-  background:var(--bg2);color:var(--t2);font-size:12px;cursor:pointer}
+.quick-q{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:10px;padding-top:8px}
+.quick-q button{padding:6px 12px;border-radius:16px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--t2);font-size:11px;font-weight:600;cursor:pointer;font-family:var(--font)}
+.quick-q button:active{background:var(--bg3)}
+/* Monthly activity summary */
+.month-stats{display:flex;gap:0;margin-bottom:12px;background:var(--bg2);
+  border:1px solid var(--line);border-radius:14px;overflow:hidden}
+.month-stat{flex:1;padding:12px 8px;text-align:center;border-right:1px solid var(--line)}
+.month-stat:last-child{border-right:none}
+.month-stat .msv{font-size:17px;font-weight:800;font-family:var(--mono);color:var(--t1)}
+.month-stat .msl{font-size:9px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:2px}
 
 /* Setup drawer */
 .drawer-bg{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:90;display:none}
@@ -390,7 +407,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <div class="hero-stat"><div class="v" id="today-focus" style="font-size:13px">—</div><div class="l" id="today-focus-l">Focus</div></div>
       </div>
       <div id="today-coach-note" style="display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,200,150,.07);border:1px solid rgba(0,200,150,.18);font-size:12px;color:var(--t2);line-height:1.55"></div>
-      <div id="today-synopsis" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--t2);line-height:1.55;font-family:var(--mono)"></div>
+      <div id="today-synopsis" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--t2);line-height:1.55"></div>
     </div>
     <div id="block-overview"></div>
 
@@ -465,6 +482,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="lbl"><div class="w" id="plan-wlabel">This Week</div><div class="d" id="plan-wdate"></div></div>
       <button id="plan-next" onclick="shiftWeek(1)">›</button>
     </div>
+    <div class="week-strip" id="week-strip" style="display:none"></div>
     <button class="refresh-btn" id="gen-btn" onclick="generatePlan()" style="background:linear-gradient(135deg,#006e53,#00c896);color:#fff;border-color:transparent">
       <svg width="15" height="15" viewBox="0 0 16 16" fill="none" id="gen-ic"><path d="M8 1.5l1.7 4.3 4.3.4-3.3 2.8 1 4.2L8 11l-3.7 2.2 1-4.2-3.3-2.8 4.3-.4z" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg>
       <span id="gen-label">Generate plan</span>
@@ -480,15 +498,16 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
   <!-- LOG -->
   <div class="page" id="page-log">
+    <div id="activity-stats" class="month-stats" style="display:none"></div>
     <div class="chips" style="display:flex;align-items:center;gap:8px">
       <div style="display:flex;gap:8px;flex:1;flex-wrap:wrap">
         <div class="chip active" onclick="filterLog('all',this)">All</div>
-        <div class="chip" onclick="filterLog('running',this)">Run</div>
-        <div class="chip" onclick="filterLog('cycling',this)">Bike</div>
+        <div class="chip" onclick="filterLog('running',this)">Running</div>
+        <div class="chip" onclick="filterLog('cycling',this)">Cycling</div>
         <div class="chip" onclick="filterLog('strength',this)">Strength</div>
         <div class="chip" onclick="filterLog('other',this)">Other</div>
       </div>
-      <button id="sync-btn" onclick="syncGarmin()" style="flex-shrink:0;font-size:12px;font-weight:600;background:rgba(0,200,150,.12);color:#00c896;border:1px solid rgba(0,200,150,.3);border-radius:20px;padding:5px 13px;cursor:pointer;white-space:nowrap">↻ Sync Garmin</button>
+      <button id="sync-btn" onclick="syncGarmin()" style="flex-shrink:0;font-size:12px;font-weight:600;background:rgba(0,200,150,.12);color:#00c896;border:1px solid rgba(0,200,150,.3);border-radius:20px;padding:5px 13px;cursor:pointer;white-space:nowrap">↻ Sync</button>
     </div>
     <div id="sync-status" style="font-size:12px;color:var(--t3);padding:4px 0 2px;min-height:18px"></div>
     <div class="card"><div id="log-list"></div></div>
@@ -496,7 +515,8 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
   <!-- AVAILABILITY -->
   <div class="page" id="page-avail">
-    <div class="card-h" style="margin-bottom:14px">Typical training week · tap a day to toggle</div>
+    <div style="font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:4px">Weekly Schedule</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:16px">Set which days you can train and for how long.</div>
     <div class="av-grid" id="av-grid"></div>
     <textarea id="av-notes" placeholder="Notes for Coach Claudio (e.g. travelling Thu, long ride Sat with friends)…"></textarea>
     <button class="btn" onclick="saveAvail()">Save to Coach Claudio</button>
@@ -505,15 +525,18 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
   <!-- COACH -->
   <div class="page" id="page-coach">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
+      <div style="font-size:17px;font-weight:800;letter-spacing:-.3px">Coach Claudio</div>
+      <button onclick="clearChatHistory()" style="background:none;border:none;font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px">Clear</button>
+    </div>
+    <div id="coach-msgs"></div>
     <div class="quick-q">
       <button onclick="askQuick('How does my training look this week?')">This week?</button>
       <button onclick="askQuick('Should I train today or rest?')">Train today?</button>
       <button onclick="askQuick('How is my fitness trending?')">Trend?</button>
-      <button onclick="askQuick('I want to check in on how I am feeling and recovering.')">How I feel</button>
+      <button onclick="askQuick('I want to check in on how I am feeling and recovering.')">Check in</button>
       <button onclick="askQuick('I have some pain I want to tell you about.')">Report pain</button>
     </div>
-    <div style="text-align:right;padding:0 2px 4px"><button onclick="clearChatHistory()" style="background:none;border:none;font-size:11px;color:var(--t3);cursor:pointer;padding:4px 8px">Clear history</button></div>
-    <div id="coach-msgs"></div>
     <div class="coach-input-row">
       <textarea id="coach-input" placeholder="Ask Coach Claudio…"></textarea>
       <button class="coach-send" onclick="sendCoachMessage()" id="coach-send">
@@ -530,16 +553,16 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <button onclick="showPage('plan',this)">
     <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Plan</button>
   <button onclick="showPage('log',this)">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M4 18l4-6 4 3 4-7 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Log</button>
+    <svg viewBox="0 0 24 24" fill="none"><path d="M4 18l4-6 4 3 4-7 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Activity</button>
   <button onclick="showPage('avail',this)">
-    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Avail</button>
+    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Schedule</button>
   <button onclick="showPage('coach',this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M20 11.5a7.5 7.5 0 01-10.5 6.9L4 20l1.6-5A7.5 7.5 0 1120 11.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Coach</button>
 </div>
 
 <div class="drawer-bg" id="drawer-bg" onclick="toggleSetup()"></div>
 <div class="drawer" id="drawer">
-  <h3>Setup</h3>
+  <h3>Settings</h3>
   <p>Stored only on this device. Needed for saving availability and chatting with Coach Claudio.</p>
   <div class="field">
     <label>GitHub token <a href="https://github.com/settings/tokens/new" target="_blank">create one →</a></label>
@@ -602,7 +625,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260603-6";
+const BUILD="20260607-1";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -982,7 +1005,7 @@ function renderTodayHero(){
     document.getElementById("today-dur").textContent=Math.round((session.total_duration_secs||0)/60)+"m";
     document.getElementById("today-dur-l").textContent="Duration";
     document.getElementById("today-tss").textContent=session.planned_tss||"—";
-    document.getElementById("today-tss-l").textContent="Planned TSS";
+    document.getElementById("today-tss-l").textContent="Load (TSS)";
     document.getElementById("today-focus").textContent=(session.focus||"—").split(",")[0];
     document.getElementById("today-focus-l").textContent="Focus";
     stats.style.display="flex";
@@ -1164,7 +1187,8 @@ function renderPlanForOffset(){
   if(wk&&wk.sessions&&wk.sessions.length){
     renderPlanArray(wk.sessions,wk);
   } else if(!planBlock||!planBlock.length){
-    box.innerHTML='<div class="empty">No plan generated yet.<br><br>1️⃣ Set your availability in the <b>Avail</b> tab<br>2️⃣ Tap <b>Generate plan</b></div>';
+    renderWeekStrip(null);
+    box.innerHTML='<div class="empty">No plan generated yet.<br><br>1️⃣ Set your availability in the <b>Schedule</b> tab<br>2️⃣ Tap <b>Generate plan</b></div>';
   } else if(weekOffset===0&&planMon&&planMon>localDateStr(mondayOf(0))){
     // Current week has no plan but a future plan exists — offer to generate for this week
     var planStartLabel=new Date(planMon+"T00:00:00").toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"});
@@ -1397,10 +1421,74 @@ function closeExerciseOverlay(){
   document.getElementById("ex-overlay").style.display="none";
   document.body.style.overflow="";
 }
+function renderWeekStrip(arr){
+  var strip=document.getElementById("week-strip");
+  if(!strip)return;
+  if(!arr||!arr.length){strip.style.display="none";return;}
+  var today=new Date().toISOString().split("T")[0];
+  var abbrs=["M","T","W","T","F","S","S"];
+  var dayNames=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  // Map day name → session
+  var byDay={};
+  arr.forEach(function(s){var di=dayNames.indexOf(s.day||"");if(di>-1)byDay[di]=s;});
+  // Get Monday of the viewed week
+  var viewMon=mondayOf(weekOffset);
+  strip.style.display="flex";
+  strip.innerHTML=abbrs.map(function(abbr,i){
+    var d=new Date(viewMon);d.setDate(viewMon.getDate()+i);
+    var ds=d.toISOString().split("T")[0];
+    var isToday=ds===today;
+    var sess=byDay[i];
+    var dotBg="var(--bg3)",dotClr="var(--t3)";
+    if(sess){
+      var st=sess.sport==="running"?"run":sess.sport&&sess.sport.indexOf("cycl")>-1?"bike":sess.sport==="strength"?"strength":"other";
+      var cl=sportClr(st);dotBg=cl[0];dotClr=cl[1];
+    }
+    return '<div class="ws-day" onclick="scrollToPlanDay('+i+')">'+
+      '<div class="ws-abbr" style="color:'+(isToday?"var(--brand)":"var(--t3)")+'">'+abbr+'</div>'+
+      '<div class="ws-dot" style="background:'+dotBg+';color:'+dotClr+';'+(isToday?"box-shadow:0 0 0 2px var(--brand)":"")+'">'+
+        (sess?sportIcon(sess.sport==="running"?"run":sess.sport&&sess.sport.indexOf("cycl")>-1?"bike":sess.sport==="strength"?"strength":"other"):'<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2" fill="currentColor" opacity=".3"/></svg>')+
+      '</div>'+
+    '</div>';
+  }).join("");
+}
+function scrollToPlanDay(dayIdx){
+  var dayNames=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+  var name=dayNames[dayIdx];
+  var cards=document.querySelectorAll("#plan-days .day");
+  for(var i=0;i<_planSessions.length;i++){
+    if((_planSessions[i]||{}).day===name&&cards[i]){
+      cards[i].scrollIntoView({behavior:"smooth",block:"start"});
+      return;
+    }
+  }
+}
+function renderActivityStats(){
+  var el=document.getElementById("activity-stats");
+  if(!el)return;
+  if(!workouts.length){el.style.display="none";return;}
+  var now=new Date(),yr=now.getFullYear(),mo=now.getMonth();
+  var firstOfMonth=(yr+"-"+(mo<9?"0":"")+(mo+1)+"-01");
+  var mn=workouts.filter(function(w){return w.date>=firstOfMonth;});
+  if(!mn.length){el.style.display="none";return;}
+  var totDist=mn.reduce(function(s,w){return s+(w.distance_km||0);},0);
+  var totMin=mn.reduce(function(s,w){return s+(w.duration_min||0);},0);
+  var totTss=mn.reduce(function(s,w){return s+getTSS(w);},0);
+  var h=Math.floor(totMin/60),m=Math.round(totMin%60);
+  var parts=[
+    {v:mn.length,l:"sessions"},
+    totDist>0?{v:totDist.toFixed(0),l:"km"}:null,
+    {v:(h>0?h+"h ":"")+m+"m",l:"total time"},
+    {v:Math.round(totTss),l:"TSS"}
+  ].filter(Boolean);
+  el.style.display="flex";
+  el.innerHTML=parts.map(function(p){return '<div class="month-stat"><div class="msv">'+p.v+'</div><div class="msl">'+p.l+'</div></div>';}).join("");
+}
 function renderPlanArray(arr,wk){
   var box=document.getElementById("plan-days");
   _planSessions=[];
-  if(!arr||!arr.length){box.innerHTML='<div class="empty">No plan yet.<br><br>1️⃣ Set your availability in the <b>Avail</b> tab<br>2️⃣ Come back here and tap <b>Generate plan</b></div>';return;}
+  renderWeekStrip(arr);
+  if(!arr||!arr.length){box.innerHTML='<div class="empty">No plan yet.<br><br>1️⃣ Set your availability in the <b>Schedule</b> tab<br>2️⃣ Come back here and tap <b>Generate plan</b></div>';return;}
   box.innerHTML="";
   var isOutline=wk&&!wk.detailed;
   if(wk&&wk.phase){
@@ -1430,18 +1518,26 @@ function renderPlanArray(arr,wk){
     var isStrength=sp==="strength";
 
     var el=document.createElement("div");el.className="day";
+    el.style.boxShadow="inset 4px 0 0 "+col;
+    // Header: day label on top, session name below; duration badge on right
+    var durBadge=dur?'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;margin-right:4px">'+
+      '<span style="font-size:14px;font-weight:800;color:var(--t1);font-family:var(--mono)">'+dur+'<span style="font-size:10px;font-weight:600;color:var(--t3)">m</span></span>'+
+      (s.planned_tss?'<span style="font-size:10px;color:var(--t3);font-weight:600">'+s.planned_tss+' tss</span>':"")+
+    '</div>':"";
     el.innerHTML=
       '<div class="day-head" onclick="toggleDay(this)">'+
         '<div class="day-ic" style="background:'+bg+';color:'+col+'">'+sportIcon(st)+'</div>'+
-        '<div class="day-meta"><div class="day-name">'+(s.name||"Session")+
-          ' <span class="tag" style="background:'+bg+';color:'+col+'">'+sp.replace("_"," ")+'</span>'+ibHTML+'</div>'+
-          '<div class="day-line">'+metaLine+'</div></div>'+
+        '<div class="day-meta">'+
+          '<div class="day-line" style="margin-top:0;margin-bottom:2px">'+dayLabel+'</div>'+
+          '<div class="day-name">'+(s.name||"Session")+ibHTML+'</div>'+
+        '</div>'+
+        durBadge+
         '<div class="chev"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
       '</div>'+
       '<div class="day-body"><div class="day-inner">'+
-        (isStrength?'<button class="ex-btn" onclick="openExerciseOverlay('+idx+')" style="width:100%;justify-content:center;margin-bottom:12px">▶ Today\'s Exercises</button>':"")+
+        (isStrength?'<button class="ex-btn" onclick="openExerciseOverlay('+idx+')" style="width:100%;justify-content:center;margin-bottom:12px">▶ Exercises &amp; Videos</button>':"")+
         (s.focus?'<div style="font-size:13px;color:var(--t2);margin-bottom:10px">'+s.focus+'</div>':"")+
-        (stepsHTML||noteHTML?stepsHTML+noteHTML:(isOutline?'<div style="font-size:12px;color:var(--t3)">Session detail will be generated when this week becomes active.</div>':""))+
+        (stepsHTML||noteHTML?stepsHTML+noteHTML:(isOutline?'<div style="font-size:12px;color:var(--t3)">Session detail firms up when this week becomes active.</div>':""))+
       '</div></div>';
     box.appendChild(el);
   });
@@ -1648,10 +1744,11 @@ async function pollPushStatus(attempt){
 // ── LOG ───────────────────────────────────────────────────────
 function filterLog(f,btn){logFilter=f;document.querySelectorAll(".chip").forEach(c=>c.classList.remove("active"));btn.classList.add("active");renderLog();}
 function renderLog(){
+  renderActivityStats();
   var list=document.getElementById("log-list");
   var acts=workouts.slice().reverse();
   if(logFilter!=="all")acts=acts.filter(w=>{var s=sportOf(w);return logFilter==="running"?s==="run":logFilter==="cycling"?s==="bike":logFilter==="strength"?s==="strength":logFilter==="other"?!["run","bike","strength"].includes(s):true;});
-  if(!acts.length){list.innerHTML='<div class="empty">No activities yet. Tap ↻ Sync Garmin to fetch your workouts.</div>';return;}
+  if(!acts.length){list.innerHTML='<div class="empty">No activities yet. Tap ↻ Sync to fetch your workouts.</div>';return;}
   list.innerHTML=acts.map(function(w,i){
     var st=sportOf(w),cl=sportClr(st);
     var label={run:"Running",bike:"Cycling",strength:"Strength"}[st]||"Activity";
