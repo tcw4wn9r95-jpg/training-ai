@@ -1,7 +1,7 @@
 """
 Luxembourg product localisation: English → French translations + supermarket availability.
 
-Stores covered: Cactus, Auchan, Delhaize, Aldi, Lidl, Match, Pall Center.
+Stores covered: Cactus, Auchan, Delhaize, Aldi, Lidl, Match, Grand Frais.
 If an item is not in the curated dict, the LLM-provided French name is kept
 and all major stores are listed as available.
 """
@@ -132,7 +132,7 @@ _PRODUCTS = {
     "vegetable stock":        {"fr": "Bouillon de légumes",    "aisle": "Canned Goods / Épicerie", "stores": ["Cactus", "Auchan", "Delhaize", "Aldi", "Lidl"]},
     "chicken stock":          {"fr": "Bouillon de poulet",     "aisle": "Canned Goods / Épicerie", "stores": ["Cactus", "Auchan", "Delhaize", "Aldi", "Lidl"]},
     "coconut milk":           {"fr": "Lait de coco",           "aisle": "International / Asie","stores": ["Cactus", "Auchan", "Delhaize", "Aldi"]},
-    "protein powder":         {"fr": "Protéine en poudre",     "aisle": "Health / Santé",      "stores": ["Cactus", "Auchan", "Delhaize", "Pall Center"]},
+    "protein powder":         {"fr": "Protéine en poudre",     "aisle": "Health / Santé",      "stores": ["Cactus", "Auchan", "Delhaize", "Grand Frais"]},
     "dark chocolate":         {"fr": "Chocolat noir",          "aisle": "Confectionery / Confiserie", "stores": ["Cactus", "Auchan", "Delhaize", "Aldi", "Lidl"]},
 }
 # fmt: on
