@@ -254,5 +254,45 @@
         "focus": "Rebuild weekly long ride habit, progressive Z2 aerobic base"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-08",
+    "generated": "2026-06-07",
+    "phase": "base",
+    "planned_tss": 94,
+    "last_7d_actual_tss": 79,
+    "last_28d_actual_tss": 79,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Easy Spin: Re-ignition",
+        "planned_tss": 18,
+        "focus": "Restart aerobic engine at low cost, pure Z2 stimulus"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "strength",
+        "name": "Lower Body & Core (Shoulder-Safe)",
+        "planned_tss": 20,
+        "focus": "Re-engage legs, glutes, and core without loading the shoulder"
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Easy Spin: Aerobic Flush",
+        "planned_tss": 18,
+        "focus": "Low-intensity aerobic stimulus, flush Wednesday leg fatigue"
+      },
+      {
+        "day": "Saturday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Builder: Z2 Endurance Ride",
+        "planned_tss": 38,
+        "focus": "Longest aerobic session of the week \u2014 base durability and fat oxidation"
+      }
+    ]
   }
 ]
