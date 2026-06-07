@@ -292,6 +292,8 @@
   .lib-sm { flex: 1 1 100%; min-width: 0; }
   .lib-sm, .lib-unit { border: 1.5px solid var(--hair); border-radius: 10px; padding: 9px 10px; font-size: 14px; background: var(--surface); color: var(--ink); -webkit-appearance: none; appearance: none; }
   .lib-unit { flex: 0 0 72px; }
+  .lib-net { flex: 1 1 100%; min-width: 0; border: 1.5px solid var(--hair); border-radius: 10px; padding: 9px 12px; font-size: 13px; background: var(--surface); color: var(--ink); }
+  .lib-net:focus { outline: none; border-color: var(--pine); }
   .lib-price { flex: 1 1 auto; min-width: 0; border: 1.5px solid var(--hair); border-radius: 10px; padding: 9px 12px; font-size: 15px; background: var(--surface); color: var(--ink); text-align: right; }
   .lib-sm:focus, .lib-unit:focus, .lib-price:focus { outline: none; border-color: var(--pine); }
   .lib-save { flex: 0 0 auto; border: none; background: var(--sage-pale); color: var(--pine); font-weight: 700; font-size: 13px; border-radius: 10px; padding: 9px 18px; cursor: pointer; }
@@ -474,7 +476,7 @@
       <div id="goals-display"></div>
       <button class="btn btn-outline btn-block" style="margin-top:12px" onclick="startSetup()">🌿 Set up / review my plan with Coach Léa</button>
     </div>
-    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v15 · nutriprep</div>
+    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v16 · nutriprep</div>
     <div style="height:20px"></div>
   </div>
 </div>
@@ -953,12 +955,14 @@ function renderLibrary(focusKey){
     const defUnit=e.price_unit||defaultUnitFor(m.qty);
     const sm=e.supermarket||(m.stores&&m.stores[0])||"";
     const price=(e.price_eur!=null)?e.price_eur:"";
+    const netVal=e.net_weight||"";
     const smOpts=['<option value="">— shop —</option>'].concat(SUPERMARKETS.map(s=>`<option value="${s}"${s===sm?' selected':''}>${s}</option>`)).join("");
     const unitOpts=PRICE_UNITS.map(u=>`<option value="${u}"${u===defUnit?' selected':''}>/${u}</option>`).join("");
     return `<div class="lib-row" data-key="${attrEsc(k)}">
       <div class="lib-names"><div class="shop-en">${m.name_en||""}${onList.has(k)?' <span class="chip">on list</span>':''}</div><div class="shop-fr">${m.name_fr||""}</div></div>
       <div class="lib-inputs">
         <select class="lib-sm" onchange="markLibDirty(this)">${smOpts}</select>
+        <input class="lib-net" type="text" placeholder="Net weight per pack — optional (e.g. 200 g)" value="${attrEsc(netVal)}" oninput="markLibDirty(this)">
         <input class="lib-price" type="number" inputmode="decimal" step="0.01" min="0" placeholder="0.00" value="${price}" oninput="markLibDirty(this)">
         <select class="lib-unit" onchange="markLibDirty(this)">${unitOpts}</select>
         <button class="lib-save" onclick="saveProduct(this)">Save</button>
@@ -973,13 +977,14 @@ async function saveProduct(btn){
   const sm=row.querySelector(".lib-sm").value||null;
   const priceRaw=row.querySelector(".lib-price").value;
   const unit=row.querySelector(".lib-unit").value||"item";
+  const net=(row.querySelector(".lib-net").value||"").trim()||null;
   const price=(priceRaw==="")?null:Number(priceRaw);
   priceBook=priceBook||{products:{}}; priceBook.products=priceBook.products||{};
   const prev=priceBook.products[k]||{};
   let name_en=prev.name_en, name_fr=prev.name_fr, aisle=prev.aisle;
   const it=((shoppingList&&shoppingList.items)||[]).find(x=>pbKey(x.name_en)===k);
   if(it){ name_en=it.name_en; name_fr=it.name_fr; aisle=it.aisle; }
-  priceBook.products[k]={...prev, name_en:name_en||k, name_fr:name_fr||"", aisle:aisle||"", supermarket:sm, price_eur:(price!=null&&!isNaN(price))?price:null, price_unit:unit, updated:todayISO()};
+  priceBook.products[k]={...prev, name_en:name_en||k, name_fr:name_fr||"", aisle:aisle||"", supermarket:sm, price_eur:(price!=null&&!isNaN(price))?price:null, price_unit:unit, net_weight:net, updated:todayISO()};
   priceBook.updated=todayISO();
   btn.disabled=true; const old=btn.textContent; btn.textContent="…";
   try{ await ghWrite("price_book.json", priceBook, `Price: ${name_en||k} (${identity})`); btn.classList.remove("dirty"); btn.textContent="✓"; setTimeout(()=>{btn.textContent="Save"; btn.disabled=false;},1200); renderShopping(); }
