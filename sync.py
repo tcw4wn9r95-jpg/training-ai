@@ -94,11 +94,9 @@ if os.path.exists("goals.json"):
     except Exception:
         goals = {}
 
-# Body weight is single-sourced in the NutriPrep nutrition app — read Diego's
-# weight log so the training plan is weight-aware (power-to-weight, fuelling).
-# NutriPrep now lives in its own repo, so read over the shared cross-repo
-# channel (raw.githubusercontent) and fall back to the local copy while the
-# nutrition/ folder still exists in this repo (dual-run period).
+# Body weight is single-sourced in the NutriPrep app, which now lives in its own
+# repo (tcw4wn9r95-jpg/nutriprep). Read Diego's weight log over the shared
+# cross-repo channel so the training plan stays weight-aware. Best-effort.
 weight_block = ""
 def _load_diego_weightlog():
     import urllib.request
@@ -108,15 +106,7 @@ def _load_diego_weightlog():
         with urllib.request.urlopen(url, timeout=10) as r:
             return json.load(r)
     except Exception:
-        pass
-    _local = os.path.join("nutrition", "users", "diego", "weight_log.json")
-    if os.path.exists(_local):
-        try:
-            with open(_local) as f:
-                return json.load(f)
-        except Exception:
-            pass
-    return None
+        return None
 
 _wlog_raw = _load_diego_weightlog()
 if _wlog_raw:
