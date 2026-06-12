@@ -476,7 +476,7 @@
       <div id="goals-display"></div>
       <button class="btn btn-outline btn-block" style="margin-top:12px" onclick="startSetup()">🌿 Set up / review my plan with Coach Léa</button>
     </div>
-    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v16</div>
+    <div style="text-align:center;font-size:11px;color:var(--faint);padding:8px 0 4px">NutriPrep · build v17</div>
     <div style="height:20px"></div>
   </div>
 </div>
@@ -1213,12 +1213,49 @@ function urlBase64ToUint8Array(b64){ const pad="=".repeat((4-b64.length%4)%4); c
 
 // ── PLAN UPLOAD ───────────────────────────────────────────────────────────────
 async function uploadPlan(input){
-  const file=input.files[0]; if(!file)return; const status=document.getElementById("upload-status"); status.textContent="Uploading…";
+  const file=input.files[0]; if(!file)return; const status=document.getElementById("upload-status");
+  if(!cfg("gh_token")){ status.textContent="Add a GitHub token (with 'repo' + 'workflow' scope) in Settings first."; showTab("settings"); return; }
+  status.textContent="Uploading…";
+  let base=null; try{ base=JSON.stringify(await ghFetch("nutrition_plan.json")); }catch(_){}
   const reader=new FileReader();
   reader.onload=async e=>{ const b64=e.target.result.split(",")[1]; const ext=file.name.split(".").pop().toLowerCase(); const filename=`nutritionist_plan_upload.${ext}`;
-    try{ await ghWriteRaw(filename,b64,`Upload nutritionist plan ${todayISO()}`); status.textContent=`✓ Uploaded. Run the "Parse Nutritionist Plan" workflow on GitHub Actions to process it.`; }
+    try{
+      await ghWriteRaw(filename,b64,`Upload nutritionist plan ${todayISO()}`);
+      const res=await dispatchParse(filename);
+      if(res.ok){ status.textContent="🌿 Uploaded. Coach Léa is reading your plan to set each person's daily targets… (~1–2 min)"; startParsePoll(base); }
+      else if(res.error==="no_token"){ status.textContent="Uploaded ✓. Add a token with the 'workflow' scope in Settings to auto-process it."; }
+      else { status.textContent="Uploaded ✓, but couldn't start parsing ("+res.error+"). Make sure your token has the 'workflow' scope."; }
+    }
     catch(e){ status.textContent="Upload failed: "+e.message; } };
   reader.readAsDataURL(file);
+}
+// Dispatch the nutritionist-plan parser (sets each person's macro targets — the
+// baseline for all meal planning), then poll until the parsed plan lands.
+async function dispatchParse(filename){
+  const token=cfg("gh_token"); if(!token) return {ok:false, error:"no_token"};
+  try{
+    const r=await fetch(`https://api.github.com/repos/${GITHUB_REPO}/actions/workflows/nutrition_parse.yml/dispatches`,{
+      method:"POST",headers:{Authorization:`Bearer ${token}`,Accept:"application/vnd.github+json","Content-Type":"application/json"},
+      body:JSON.stringify({ref:GITHUB_BRANCH,inputs:{filename}})});
+    if(r.status===204) return {ok:true};
+    const d=await r.json().catch(()=>({})); return {ok:false, error:d.message||("HTTP "+r.status)};
+  }catch(e){ return {ok:false, error:e.message}; }
+}
+let _parsePollTimer=null;
+function startParsePoll(base){
+  if(_parsePollTimer) clearInterval(_parsePollTimer);
+  const status=document.getElementById("upload-status"); let tries=0;
+  _parsePollTimer=setInterval(async()=>{
+    tries++;
+    let plan=null; try{ plan=await ghFetch("nutrition_plan.json"); }catch(_){}
+    if(plan && JSON.stringify(plan)!==base){
+      clearInterval(_parsePollTimer); _parsePollTimer=null;
+      await loadUserData(); renderGoals(); if(typeof renderToday==="function")renderToday();
+      const conf=(plan.confidence!=null)?` · confidence ${Math.round(plan.confidence*100)}%`:"";
+      const low=(plan.confidence!=null&&plan.confidence<0.6)?" Low confidence — please double-check the targets.":"";
+      status.textContent=`✓ Daily targets set for Diego & Diana${conf}.${low} Tap "Regenerate" on Home to build meals around them.`;
+    } else if(tries>=24){ clearInterval(_parsePollTimer); _parsePollTimer=null; status.textContent="Still processing — give it another minute (Actions › Parse Nutritionist Plan)."; }
+  }, 15000);
 }
 
 // ── GOALS DISPLAY ───────────────────────────────────────────────────────────────
