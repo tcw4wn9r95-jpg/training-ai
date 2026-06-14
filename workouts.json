@@ -34,17 +34,5 @@
     "avg_power_watts": 0,
     "calories": 408.0,
     "tss": 27.1
-  },
-  {
-    "date": "2026-04-26",
-    "sport": "hiking",
-    "duration_min": 149.6,
-    "distance_km": 9.09,
-    "avg_hr": 125.0,
-    "max_hr": 204.0,
-    "avg_pace_min_km": null,
-    "avg_power_watts": 0,
-    "calories": 906.0,
-    "tss": 82.5
   }
 ]

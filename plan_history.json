@@ -294,5 +294,59 @@
         "focus": "Longest aerobic session of the week \u2014 base durability and fat oxidation"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-15",
+    "generated": "2026-06-14",
+    "phase": "build",
+    "planned_tss": 143,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 79,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Spin Reactivation",
+        "planned_tss": 18,
+        "focus": "Restart the aerobic engine, easy and consistent"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 20,
+        "focus": "Weekly running stimulus, aerobic base, leg turnover"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet-Spot Intro",
+        "planned_tss": 25,
+        "focus": "First structured effort \u2014 sweet-spot stimulus, sub-threshold"
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Active Recovery Spin",
+        "planned_tss": 12,
+        "focus": "Flush the legs, keep movement, add zero fatigue"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Lower Body and Core",
+        "planned_tss": 18,
+        "focus": "Leg strength, posterior chain, core stability \u2014 shoulder fully unloaded"
+      },
+      {
+        "day": "Saturday",
+        "sport": "cycling_indoor",
+        "name": "Longer Aerobic Ride",
+        "planned_tss": 50,
+        "focus": "Build aerobic volume, metabolic base, fat-burning Z2 stimulus"
+      }
+    ]
   }
 ]
