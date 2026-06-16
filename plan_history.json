@@ -348,5 +348,38 @@
         "focus": "Build aerobic volume, metabolic base, fat-burning Z2 stimulus"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-22",
+    "generated": "2026-06-16",
+    "phase": "peak",
+    "planned_tss": 70,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 79,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Base Ride",
+        "planned_tss": 22,
+        "focus": "Reactivate aerobic system, Zone 2 only"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Threshold Taste \u2014 2x6min",
+        "planned_tss": 28,
+        "focus": "Brief threshold stimulus, sweet-spot to low Z4"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Lower Body & Core",
+        "planned_tss": 20,
+        "focus": "Leg and core strength endurance, shoulder-safe"
+      }
+    ]
   }
 ]
