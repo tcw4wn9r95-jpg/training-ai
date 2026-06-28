@@ -381,5 +381,38 @@
         "focus": "Leg and core strength endurance, shoulder-safe"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-29",
+    "generated": "2026-06-28",
+    "phase": "recovery",
+    "planned_tss": 53,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 79,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Ride",
+        "planned_tss": 18,
+        "focus": "Re-establish movement habit, aerobic stimulus without stress"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Ride \u2014 Cadence Focus",
+        "planned_tss": 20,
+        "focus": "Aerobic efficiency and neuromuscular cadence work at low intensity"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Bodyweight & Band Strength \u2014 Shoulder Safe",
+        "planned_tss": 15,
+        "focus": "Reactivate lower body and core, protect shoulder, build movement quality"
+      }
+    ]
   }
 ]
