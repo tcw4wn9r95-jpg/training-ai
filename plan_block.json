@@ -4,16 +4,16 @@
     "week_of": "2026-07-06",
     "phase": "base",
     "target_tss": 56,
-    "summary": "Controlled re-entry after extended break and back strain \u2014 three 30-min sessions, all easy/moderate, rebuild habit and protect recovery.",
+    "summary": "Controlled re-entry after extended break and back strain — three 30-min sessions, all easy/moderate, rebuild habit and protect recovery.",
     "sessions": [
       {
-        "day": "Monday",
-        "date": "2026-07-06",
+        "day": "Thursday",
+        "date": "2026-07-09",
         "sport": "cycling_indoor",
-        "name": "Easy Aerobic Spin",
+        "name": "Easy Aerobic Spin — Pre-Conditioning",
         "total_duration_secs": 1800,
-        "planned_tss": 22,
-        "focus": "Rebuild aerobic movement habit at Z2, conversational effort",
+        "planned_tss": 20,
+        "focus": "Light aerobic movement, test back response, easy Z2 conversational effort",
         "steps": [
           {
             "type": "warmup",
@@ -21,7 +21,7 @@
             "target_type": "power",
             "target_low": 70,
             "target_high": 106,
-            "description": "Z1 easy spin, 80-85 rpm, HR <145 bpm \u2014 let legs wake up"
+            "description": "Z1 easy spin, 80-85 rpm, HR <145 bpm — let legs wake up, relaxed shoulders"
           },
           {
             "type": "interval",
@@ -29,7 +29,7 @@
             "target_type": "power",
             "target_low": 106,
             "target_high": 141,
-            "description": "Z2 steady aerobic, 85-90 rpm, HR 146-162 bpm \u2014 conversational pace throughout"
+            "description": "Z2 steady aerobic, 85-90 rpm, HR 146-162 bpm — conversational pace, upright posture, monitor back throughout"
           },
           {
             "type": "cooldown",
@@ -37,97 +37,45 @@
             "target_type": "power",
             "target_low": 60,
             "target_high": 100,
-            "description": "Z1 soft pedal, drop cadence, HR settle below 130 bpm"
+            "description": "Z1 soft pedal, drop cadence, HR settle below 130 bpm — check back feels neutral"
           }
         ]
       },
       {
-        "day": "Wednesday",
-        "date": "2026-07-08",
+        "day": "Thursday",
+        "date": "2026-07-09",
         "sport": "strength",
-        "name": "Anti-Flexion Lower Body & Core",
+        "name": "Light Back-Safe Upper Body & Core",
         "total_duration_secs": 1800,
-        "planned_tss": 18,
-        "focus": "Lower body and core activation \u2014 spine-neutral, no spinal flexion under load, back-safe re-entry",
-        "notes": "2 rounds: 10x Goblet Squat 6kg (spine tall), 8/side TRX Split Squat (upright torso), 15x Banded Glute Bridge (squeeze at top), 20m x2 Farmer's Carry 6kg each hand (anti-lateral core brace), 6/side Dead Bug (slow and controlled). 60s rest between exercises, 90s between rounds. NO spinal flexion under load. Stop any exercise that causes back discomfort and report.",
-        "exercises": [
-          {
-            "name": "Goblet Squat"
-          },
-          {
-            "name": "TRX Split Squat"
-          },
-          {
-            "name": "Banded Glute Bridge"
-          },
-          {
-            "name": "Farmer's Carry"
-          },
-          {
-            "name": "Dead Bug"
-          }
-        ],
+        "planned_tss": 15,
+        "focus": "Bodyweight and light dumbbell work — anti-rotation core, arm strength, zero spinal flexion",
+        "notes": "3 rounds: 10x Dead Bug (slow, controlled), 8/side Pallof Press 6kg (anti-rotation core), 10x Dumbbell Bent-Over Row 6kg (hinge at hips, neutral spine), 8/side Single-Leg Glute Bridge (glute activation, core brace), 10x Dumbbell Curl 6kg (arm strength), 10x Dumbbell Overhead Press 6kg (shoulder stability). 45s rest between exercises, 60s between rounds. Stop any movement that causes back discomfort.",
         "steps": [
           {
             "type": "warmup",
             "duration_secs": 300,
-            "description": "Hip circles 10 each direction, lateral leg swings 10/side, bodyweight glute bridge 15 reps, slow bodyweight squat 10 reps focusing on posture"
+            "description": "Cat-cow 10 reps (gentle spinal mobility), hip circles 10 each direction, arm circles 10 each direction, bodyweight glute bridge 15 reps, scapular push-ups 10 reps"
           },
           {
             "type": "repeat",
-            "repeat_count": 2,
+            "repeat_count": 3,
             "steps": [
               {
                 "type": "interval",
-                "duration_secs": 480,
-                "description": "Goblet Squat 6kg x10 \u2192 TRX Split Squat x8/side \u2192 Banded Glute Bridge x15 \u2192 Farmer's Carry 6kg x20m (x2 lengths) \u2192 Dead Bug x6/side. 60s rest between exercises."
+                "duration_secs": 540,
+                "description": "Dead Bug x10 → Pallof Press 6kg x8/side → Dumbbell Bent-Over Row 6kg x10 → Single-Leg Glute Bridge x8/side → Dumbbell Curl 6kg x10 → Dumbbell Overhead Press 6kg x10. 45s rest between exercises."
               },
               {
                 "type": "recovery",
-                "duration_secs": 90,
-                "description": "90 seconds rest between rounds \u2014 walk around, breathe, check back feels neutral"
+                "duration_secs": 60,
+                "description": "60 seconds rest between rounds — walk around, breathe, check spine feels neutral"
               }
             ]
           },
           {
             "type": "cooldown",
             "duration_secs": 300,
-            "description": "90/90 hip stretch 45s/side, standing quad stretch 30s/side, modified child's pose on fists (no lumbar flexion \u2014 forehead on folded arms)"
-          }
-        ]
-      },
-      {
-        "day": "Friday",
-        "date": "2026-07-10",
-        "sport": "running",
-        "name": "Easy Run Z1\u2013Z2",
-        "total_duration_secs": 1800,
-        "planned_tss": 16,
-        "focus": "Low-intensity aerobic stimulus, reintroduce running movement pattern with back-safe posture",
-        "steps": [
-          {
-            "type": "warmup",
-            "duration_secs": 300,
-            "target_type": "pace",
-            "target_low": 600,
-            "target_high": 480,
-            "description": "Brisk walk, Z1 \u2014 tall spine, relaxed shoulders, HR <130 bpm"
-          },
-          {
-            "type": "interval",
-            "duration_secs": 1200,
-            "target_type": "pace",
-            "target_low": 450,
-            "target_high": 405,
-            "description": "Z1-Z2 easy running >6:45/km, HR <155 bpm \u2014 walk 60s if HR exceeds 160 bpm, short strides, light core brace, nasal breathing where possible"
-          },
-          {
-            "type": "cooldown",
-            "duration_secs": 300,
-            "target_type": "pace",
-            "target_low": 600,
-            "target_high": 480,
-            "description": "Walk, HR below 120 bpm before stopping \u2014 check back for any discomfort"
+            "description": "Child's pose on fists 45s (no lumbar flexion), standing quad stretch 30s/side, shoulders and chest stretch 30s"
           }
         ]
       }
@@ -139,7 +87,7 @@
     "week_of": "2026-07-13",
     "phase": "base",
     "target_tss": 65,
-    "summary": "Continue base build \u2014 extend cycling duration slightly, add a second strength round, and reinforce running habit. Still 80% easy, no intensity.",
+    "summary": "Continue base build — extend cycling duration slightly, add a second strength round, and reinforce running habit. Still 80% easy, no intensity.",
     "sessions": [
       {
         "day": "Monday",
@@ -151,7 +99,7 @@
       {
         "day": "Wednesday",
         "sport": "strength",
-        "name": "Lower Body & Core \u2014 Progress to 3 Rounds",
+        "name": "Lower Body & Core — Progress to 3 Rounds",
         "focus": "Add third round at same loads, build volume tolerance, spine-neutral",
         "planned_tss": 22
       },
@@ -159,7 +107,7 @@
         "day": "Friday",
         "sport": "running",
         "name": "Easy Run with Strides",
-        "focus": "Z1-Z2 run with 4x15s relaxed strides at end \u2014 neuromuscular activation",
+        "focus": "Z1-Z2 run with 4x15s relaxed strides at end — neuromuscular activation",
         "planned_tss": 17
       }
     ]
@@ -169,19 +117,19 @@
     "week_of": "2026-07-20",
     "phase": "build",
     "target_tss": 80,
-    "summary": "Introduce first threshold stimulus on the bike \u2014 one Z3 sweet-spot block within a 30-min ride. Strength moves to 8-11kg on key lifts. Run stays easy.",
+    "summary": "Introduce first threshold stimulus on the bike — one Z3 sweet-spot block within a 30-min ride. Strength moves to 8-11kg on key lifts. Run stays easy.",
     "sessions": [
       {
         "day": "Monday",
         "sport": "cycling_indoor",
         "name": "Sweet Spot Introduction",
-        "focus": "2x8 min at Z3 sweet spot (142-160W), long recovery \u2014 first threshold stimulus",
+        "focus": "2x8 min at Z3 sweet spot (142-160W), long recovery — first threshold stimulus",
         "planned_tss": 34
       },
       {
         "day": "Wednesday",
         "sport": "strength",
-        "name": "Lower Body Strength \u2014 Load Progression",
+        "name": "Lower Body Strength — Load Progression",
         "focus": "Progress to 11kg goblet squat and carries, add single-leg RDL with 6kg",
         "planned_tss": 24
       },
@@ -199,20 +147,20 @@
     "week_of": "2026-07-27",
     "phase": "recovery",
     "target_tss": 38,
-    "summary": "Recovery week \u2014 cut volume 40%, drop all intensity, easy movement only. Let adaptation from the 3-week base block consolidate before next cycle.",
+    "summary": "Recovery week — cut volume 40%, drop all intensity, easy movement only. Let adaptation from the 3-week base block consolidate before next cycle.",
     "sessions": [
       {
         "day": "Monday",
         "sport": "cycling_indoor",
         "name": "Recovery Spin",
-        "focus": "Z1 only, <110W, 20-25 min \u2014 flush legs, no stimulus",
+        "focus": "Z1 only, <110W, 20-25 min — flush legs, no stimulus",
         "planned_tss": 14
       },
       {
         "day": "Wednesday",
         "sport": "strength",
         "name": "Mobility & Light Activation",
-        "focus": "Bodyweight only \u2014 hip mobility, dead bugs, glute bridges, TRX rows light \u2014 no loading",
+        "focus": "Bodyweight only — hip mobility, dead bugs, glute bridges, TRX rows light — no loading",
         "planned_tss": 12
       },
       {
