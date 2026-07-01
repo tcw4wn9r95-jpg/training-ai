@@ -1928,6 +1928,17 @@ async function sendCoachMessage(){
   // Recent sessions detail so Coach can reference actual workouts
   var last5=workouts.slice(-5).map(function(w){return (w.date||"")+": "+(w.type||w.sport||"session")+" "+(w.distance_km?w.distance_km.toFixed(1)+"km ":"")+(getTSS(w)?Math.round(getTSS(w))+"TSS":"");}).join(" | ");
   var goalLine=goals?("Primary goal: "+(goals.primary_goal||"—")+(goals.target_event?("; event: "+goals.target_event+(goals.target_date?" on "+goals.target_date:"")):"")+"; sport priority: "+(goals.sport_priority||"balanced")+(goals.injuries&&goals.injuries!=="none"?"; known injuries: "+goals.injuries:"")):"No goals set yet.";
+  // Availability — set by Diego on the Availability tab. The coach MUST respect this when editing/generating plans.
+  var availLine=(function(){
+    var avail=DAYS.filter(function(d){return avState[d]&&avState[d].available;});
+    var unavail=DAYS.filter(function(d){return !avState[d]||!avState[d].available;});
+    var detail=avail.map(function(d){var h=avState[d].hours;return d+" ("+(h>=1?h+"h":Math.round(h*60)+"min")+")";}).join(", ");
+    var notes=((document.getElementById("av-notes")||{}).value||"").trim();
+    var s="Weekly availability (set by Diego on the Availability tab): "+(detail||"none marked");
+    if(unavail.length)s+=". Unavailable — NEVER schedule a session on these days: "+unavail.join(", ");
+    if(notes)s+=". Availability notes: "+notes;
+    return s+".";
+  })();
 
   var sys="You are Coach Claudio, Diego's personal endurance coach — the calibre of coach who works with high-performing age-group and elite athletes. You combine deep exercise-physiology knowledge with the warmth and directness of a great human coach. You are friendly and encouraging but you never sugar-coat the science: every recommendation is grounded in training principles (progressive overload, polarised 80/20 intensity, specificity, periodisation, supercompensation, and adequate recovery).\n\n"+
     "TODAY'S DATE: "+new Date().toISOString().split("T")[0]+" ("+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})+")\n\n"+
@@ -1938,9 +1949,11 @@ async function sendCoachMessage(){
     "• If he reports a session felt HARDER than expected at normal numbers: a flag for accumulated fatigue or under-recovery — ease off. If EASIER: he may be fitter; consider nudging targets up.\n"+
     "• Always weigh his subjective feedback ALONGSIDE the objective data below. When they conflict, the body wins.\n\n"+
     "WHEN ADJUSTING THE PLAN: call edit_plan with the FULL updated plan, keeping unchanged sessions intact. Explain the reasoning briefly in your reply so he learns. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\n"+
+    "RESPECT HIS AVAILABILITY: Diego sets which days he can train and how long on the Availability tab (shown below). NEVER schedule or move a session onto a day he has marked unavailable, and keep each day's total training time within the hours he has available. If a change he asks for would require training on an unavailable day, say so and propose an available day instead.\n\n"+
     "WORKOUT DESIGN: Build every session like you're handing it to a serious athlete. Warmup and cooldown are non-negotiable. For any session with structured intensity (fartlek, intervals, tempo, sweet-spot, threshold, VO2) ALWAYS use repeat blocks so the Garmin shows each step individually. Every step needs a specific description with zone label + target number — never write 'work' or 'effort'. A world-class coach writes '6×3min threshold @ 5:05/km (Z4), 90s easy jog between' — not 'main set 18min'.\n\n"+
     "═══ DIEGO'S CURRENT PICTURE ═══\n"+
     goalLine+"\n"+
+    availLine+"\n"+
     "This week so far: "+recentW.length+" sessions, "+Math.round(tss)+" TSS, "+km.toFixed(1)+" km\n"+
     "Fitness (CTL): "+Math.round(ctl)+" — 28-day trend "+(rampRate>=0?"+":"")+rampRate+" ("+(rampRate>1?"building":rampRate<-1?"detraining":"holding steady")+")\n"+
     "Fatigue (ATL): "+Math.round(atl)+"\n"+
