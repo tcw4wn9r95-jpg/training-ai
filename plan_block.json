@@ -159,47 +159,186 @@
     "sessions": [
       {
         "day": "Monday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Spin",
-        "focus": "Z2 easy, active recovery from weekend",
-        "planned_tss": 10
-      },
-      {
-        "day": "Tuesday",
-        "sport": "strength",
-        "name": "Lower Body + Core Progression",
-        "focus": "Introduce step-up, progress carries to 2x11kg",
-        "planned_tss": 10
+        "date": "2026-07-13",
+        "sport": "running",
+        "name": "Easy Run",
+        "total_duration_secs": 1800,
+        "planned_tss": 15,
+        "focus": "Aerobic base, low intensity — 1x weekly run focus",
+        "steps": [
+          {
+            "type": "warmup",
+            "duration_secs": 600,
+            "target_type": "pace",
+            "target_low": 420,
+            "target_high": 390,
+            "description": "Easy warm-up jog @ 6:30/km (Z1), leg swings, dynamic stretches"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 600,
+            "target_type": "pace",
+            "target_low": 390,
+            "target_high": 360,
+            "description": "Z2 easy run @ 6:00-6:30/km — conversational pace, steady effort"
+          },
+          {
+            "type": "cooldown",
+            "duration_secs": 600,
+            "target_type": "pace",
+            "target_low": 420,
+            "target_high": 390,
+            "description": "Easy cool-down jog @ 6:30/km (Z1), static stretches — quads, hamstrings, calves"
+          }
+        ]
       },
       {
         "day": "Wednesday",
+        "date": "2026-07-15",
         "sport": "cycling_indoor",
-        "name": "Threshold Introduction — 3x6 min Z3/Z4",
-        "focus": "First structured threshold intervals at 142-169W, 3x6 min with 4 min recovery",
-        "planned_tss": 22
+        "name": "Easy Spin",
+        "total_duration_secs": 1800,
+        "planned_tss": 12,
+        "focus": "Aerobic recovery, build base fitness — deliberate Z1-Z2 effort",
+        "steps": [
+          {
+            "type": "warmup",
+            "duration_secs": 300,
+            "target_type": "power",
+            "target_low": 60,
+            "target_high": 80,
+            "description": "Free spin, easy cadence, no pressure — 90 rpm"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 1200,
+            "target_type": "power",
+            "target_low": 88,
+            "target_high": 110,
+            "description": "Z1-Z2 easy spin @ 88-110W (Z2 floor), cadence 88-92 rpm, HR <145 bpm"
+          },
+          {
+            "type": "cooldown",
+            "duration_secs": 300,
+            "target_type": "power",
+            "target_low": 55,
+            "target_high": 75,
+            "description": "Easy spin, cadence falls to ~70 rpm, relax shoulders"
+          }
+        ]
       },
       {
         "day": "Thursday",
-        "sport": "cycling_indoor",
-        "name": "Easy Recovery Spin",
-        "focus": "Z1, flush legs post-threshold, 25 min",
-        "planned_tss": 6
-      },
-      {
-        "day": "Friday",
-        "sport": "running",
-        "name": "Easy Aerobic Run",
-        "focus": "Z2 run, 30 min, one run per week maintained",
-        "planned_tss": 12
+        "date": "2026-07-16",
+        "sport": "strength",
+        "name": "Upper Body + Anti-Rotation Core (Back-Safe)",
+        "total_duration_secs": 1800,
+        "planned_tss": 10,
+        "focus": "Upper back stability, shoulder health, spine-safe core — no spinal flexion or heavy pressing",
+        "notes": "2 rounds: 8x band pull-apart, 10x incline dumbbell press 4kg per arm, 12x TRX Y-raise, 10x dead bug per side (slow, controlled), 15x bird dog per side. 60-90s rest between rounds. Keep chest up, core braced throughout. No spinal flexion under load.",
+        "exercises": [
+          {
+            "name": "Band Pull-Apart"
+          },
+          {
+            "name": "Incline Dumbbell Press"
+          },
+          {
+            "name": "TRX Y-Raise"
+          },
+          {
+            "name": "Dead Bug"
+          },
+          {
+            "name": "Bird Dog"
+          }
+        ],
+        "steps": [
+          {
+            "type": "warmup",
+            "duration_secs": 300,
+            "description": "Arm circles forward and back, band pull-aparts × 15 light, scapular wall slides × 10, bodyweight bird dog × 5 per side"
+          },
+          {
+            "type": "repeat",
+            "repeat_count": 2,
+            "steps": [
+              {
+                "type": "interval",
+                "duration_secs": 480,
+                "description": "8x band pull-apart → 10x incline dumbbell press 4kg per arm → 12x TRX Y-raise → 10x dead bug per side → 15x bird dog per side"
+              },
+              {
+                "type": "recovery",
+                "duration_secs": 75,
+                "description": "Rest between rounds — walk around, check posture, breathe"
+              }
+            ]
+          },
+          {
+            "type": "cooldown",
+            "duration_secs": 300,
+            "description": "Doorway chest stretch, shoulder blade squeeze holds, gentle thoracic twist — hold each 30-45s"
+          }
+        ]
       },
       {
         "day": "Saturday",
-        "sport": "cycling_indoor",
-        "name": "Long Aerobic Ride",
-        "focus": "80 min Z2, cardiac volume, fat oxidation",
-        "planned_tss": 30
+        "date": "2026-07-18",
+        "sport": "strength",
+        "name": "Lower Body + Anti-Rotation Core",
+        "total_duration_secs": 1800,
+        "planned_tss": 10,
+        "focus": "Posterior chain, hip stability, spine-safe anti-rotation core — no spinal flexion under load",
+        "notes": "2 rounds: 10x goblet squat 11kg, 8x TRX split squat per leg, 15x banded glute bridge (pause 1s at top), 2x20m farmer's carry 2x6kg, 10x Pallof press per side (light band, hold 2s). 60-90s rest between rounds. No spinal flexion under load. Posture over load throughout.",
+        "exercises": [
+          {
+            "name": "Goblet Squat"
+          },
+          {
+            "name": "TRX Split Squat"
+          },
+          {
+            "name": "Banded Glute Bridge"
+          },
+          {
+            "name": "Farmer's Carry"
+          },
+          {
+            "name": "Pallof Press"
+          }
+        ],
+        "steps": [
+          {
+            "type": "warmup",
+            "duration_secs": 300,
+            "description": "Leg swings front/back and side, hip circles, 10x bodyweight squat, 10x bodyweight glute bridge"
+          },
+          {
+            "type": "repeat",
+            "repeat_count": 2,
+            "steps": [
+              {
+                "type": "interval",
+                "duration_secs": 480,
+                "description": "10x goblet squat 11kg → 8x TRX split squat per leg → 15x banded glute bridge → 2x20m farmer's carry 2x6kg → 10x Pallof press per side"
+              },
+              {
+                "type": "recovery",
+                "duration_secs": 75,
+                "description": "Rest between rounds — walk around, breathe, check posture for next round"
+              }
+            ]
+          },
+          {
+            "type": "cooldown",
+            "duration_secs": 300,
+            "description": "Kneeling hip flexor stretch, figure-4 or pigeon pose, seated glute stretch — hold each 30-45s"
+          }
+        ]
       }
-    ]
+    ],
+    "detailed": true
   },
   {
     "week_index": 4,
