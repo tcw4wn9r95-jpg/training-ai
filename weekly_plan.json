@@ -1,47 +1,47 @@
 [
   {
-    "day": "Monday",
-    "date": "2026-06-29",
+    "day": "Thursday",
+    "date": "2026-07-02",
     "sport": "cycling_indoor",
-    "name": "Aerobic Spin \u2014 Habit Reset",
+    "name": "Active Recovery Spin",
     "total_duration_secs": 1800,
-    "planned_tss": 9,
-    "focus": "Re-establish daily movement habit; pure aerobic base at Z1/Z2 boundary",
+    "planned_tss": 6,
+    "focus": "Flush legs, parasympathetic recovery — deliberately easy",
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 300,
         "target_type": "power",
-        "target_low": 70,
-        "target_high": 88,
-        "description": "Easy spin, build cadence to 80-85 rpm, HR <145 bpm"
+        "target_low": 60,
+        "target_high": 80,
+        "description": "Free spin, easy cadence, no pressure"
       },
       {
         "type": "interval",
         "duration_secs": 1200,
         "target_type": "power",
-        "target_low": 106,
-        "target_high": 130,
-        "description": "Z2 steady, cadence 85-90 rpm, HR 146-158 bpm. Drop to 88-105W if HR climbs with sleep deficit."
+        "target_low": 88,
+        "target_high": 105,
+        "description": "Z1 upper / Z2 floor, cadence 88-95 rpm, HR <150 bpm. Drop to 70-88W if HR won't settle below 150."
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
         "target_type": "power",
-        "target_low": 60,
-        "target_high": 80,
-        "description": "Easy spin down, cadence drops naturally"
+        "target_low": 55,
+        "target_high": 75,
+        "description": "Easy spin, cadence falls to ~70 rpm"
       }
     ]
   },
   {
-    "day": "Tuesday",
-    "date": "2026-06-30",
+    "day": "Friday",
+    "date": "2026-07-03",
     "sport": "strength",
     "name": "Lower Body + Anti-Rotation Core",
     "total_duration_secs": 1800,
     "planned_tss": 8,
-    "focus": "Posterior chain, hip stability, spine-safe anti-rotation core \u2014 no spinal flexion under load",
+    "focus": "Posterior chain, hip stability, spine-safe anti-rotation core — no spinal flexion under load",
     "notes": "2 rounds: 10x goblet squat 11kg, 8x TRX split squat per leg, 15x banded glute bridge (pause 1s at top), 2x20m farmer's carry 2x6kg, 10x Pallof press per side (light band, hold 2s). 60-90s rest between rounds. No spinal flexion under load. Posture over load throughout.",
     "exercises": [
       {
@@ -73,173 +73,19 @@
           {
             "type": "interval",
             "duration_secs": 480,
-            "description": "10x goblet squat 11kg \u2192 8x TRX split squat per leg \u2192 15x banded glute bridge \u2192 2x20m farmer's carry 2x6kg \u2192 10x Pallof press per side"
+            "description": "10x goblet squat 11kg → 8x TRX split squat per leg → 15x banded glute bridge → 2x20m farmer's carry 2x6kg → 10x Pallof press per side"
           },
           {
             "type": "recovery",
             "duration_secs": 75,
-            "description": "Rest between rounds \u2014 walk around, breathe, check posture for next round"
+            "description": "Rest between rounds — walk around, breathe, check posture for next round"
           }
         ]
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
-        "description": "Kneeling hip flexor stretch, figure-4 or pigeon pose, seated glute stretch \u2014 hold each 30-45s"
-      }
-    ]
-  },
-  {
-    "day": "Wednesday",
-    "date": "2026-07-01",
-    "sport": "running",
-    "name": "Easy Aerobic Run",
-    "total_duration_secs": 1800,
-    "planned_tss": 10,
-    "focus": "Weekly run stimulus; Z1 warm-up into Z2 aerobic, movement quality over pace",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 300,
-        "target_type": "pace",
-        "target_low": 480,
-        "target_high": 420,
-        "description": "Walk/jog Z1, >7:00/km, HR <145 bpm \u2014 let legs loosen"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 1200,
-        "target_type": "pace",
-        "target_low": 405,
-        "target_high": 375,
-        "description": "Z2 aerobic, 6:15-6:45/km, HR 146-162 bpm. If HR exceeds 162 bpm, slow to Z1 pace."
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 300,
-        "target_type": "pace",
-        "target_low": 500,
-        "target_high": 420,
-        "description": "Walk or slow jog Z1, HR returning <145 bpm"
-      }
-    ]
-  },
-  {
-    "day": "Thursday",
-    "date": "2026-07-02",
-    "sport": "cycling_indoor",
-    "name": "Active Recovery Spin",
-    "total_duration_secs": 1800,
-    "planned_tss": 6,
-    "focus": "Flush legs post-run, parasympathetic recovery \u2014 deliberately easy",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 60,
-        "target_high": 80,
-        "description": "Free spin, easy cadence, no pressure"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 1200,
-        "target_type": "power",
-        "target_low": 88,
-        "target_high": 105,
-        "description": "Z1 upper / Z2 floor, cadence 88-95 rpm, HR <150 bpm. Drop to 70-88W if HR won't settle below 150."
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 55,
-        "target_high": 75,
-        "description": "Easy spin, cadence falls to ~70 rpm"
-      }
-    ]
-  },
-  {
-    "day": "Friday",
-    "date": "2026-07-03",
-    "sport": "cycling_indoor",
-    "name": "Aerobic Cycling with Cadence Focus",
-    "total_duration_secs": 1800,
-    "planned_tss": 9,
-    "focus": "Aerobic efficiency and neuromuscular cadence economy at Z2",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 88,
-        "target_high": 106,
-        "description": "Build cadence from 80 to 90 rpm, HR moving toward 146 bpm"
-      },
-      {
-        "type": "repeat",
-        "repeat_count": 3,
-        "steps": [
-          {
-            "type": "interval",
-            "duration_secs": 360,
-            "target_type": "power",
-            "target_low": 106,
-            "target_high": 130,
-            "description": "Z2, cadence 90-95 rpm, HR 146-160 bpm. Smooth circles \u2014 prioritise cadence over power."
-          },
-          {
-            "type": "recovery",
-            "duration_secs": 120,
-            "target_type": "power",
-            "target_low": 70,
-            "target_high": 88,
-            "description": "Easy spin recovery between efforts"
-          }
-        ]
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 60,
-        "target_high": 80,
-        "description": "Wind down, cadence 80 rpm, HR returning below 145 bpm"
-      }
-    ]
-  },
-  {
-    "day": "Saturday",
-    "date": "2026-07-04",
-    "sport": "cycling_indoor",
-    "name": "Longer Aerobic Ride",
-    "total_duration_secs": 3600,
-    "planned_tss": 14,
-    "focus": "Aerobic volume, fat oxidation, steady-state base \u2014 longest session of the week",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 600,
-        "target_type": "power",
-        "target_low": 70,
-        "target_high": 106,
-        "description": "Build from 70W to 106W over 10 min, cadence 80-85 rpm"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 2100,
-        "target_type": "power",
-        "target_low": 106,
-        "target_high": 130,
-        "description": "Z2 steady, cadence 85-90 rpm, HR 146-160 bpm. If HR drifts above 162 bpm in second half, reduce 10-15W \u2014 cardiac drift is expected."
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 900,
-        "target_type": "power",
-        "target_low": 70,
-        "target_high": 88,
-        "description": "15 min easy spin, HR returning below 145 bpm by end"
+        "description": "Kneeling hip flexor stretch, figure-4 or pigeon pose, seated glute stretch — hold each 30-45s"
       }
     ]
   }
