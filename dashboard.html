@@ -626,7 +626,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260701-2";
+const BUILD="20260701-3";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1875,12 +1875,13 @@ var LOG_CHECKIN_TOOL={
 };
 var EDIT_PLAN_TOOL={
   name:"edit_plan",
-  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. Return the COMPLETE updated plan — every session for the week, not just the changed one.\n\nDAY RULES: Keep every session on its existing day. Do not move sessions to a different week or change dates. MULTIPLE SESSIONS PER DAY: use day:'Monday' for both entries — NEVER 'Monday Morning', 'Monday Evening', 'Monday AM'. Valid day values ONLY: Monday Tuesday Wednesday Thursday Friday Saturday Sunday.\n\nREQUIRED SESSION FIELDS: day, date (YYYY-MM-DD — copy the existing date; NEVER invent a new one), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, steps array.\n\nWORKOUT STRUCTURE — MANDATORY FOR ALL RUNNING AND CYCLING SESSIONS:\nEvery session must have: warmup step → main block → cooldown step. A single monolithic 'work' block is NEVER acceptable — Diego sees each step on his Garmin and needs to know exactly what to do.\n\nTARGET TYPES (required on every running/cycling step):\n• running → target_type:'pace', target_low/target_high in SECONDS PER KM (low=slower number, high=faster number; easy=390-360, threshold=315-300, Z4=285-270, Z5=270-250)\n• cycling_indoor → target_type:'power', target_low/target_high in watts\n• cycling_outdoor → target_type:'heart_rate', target_low/target_high in bpm\n• strength → description only; top-level notes field with full circuit\n\nStep types available: 'warmup' | 'interval' | 'recovery' | 'cooldown' | 'rest'\n\nSTEP DESCRIPTIONS must be specific — include effort label + zone + target. Examples: 'Surge @ 4:30/km (Z4-5)', 'Float recovery @ 6:30/km (Z1)', 'Threshold @ 175W (Z4)', 'Easy Z2 @ 130W'. NEVER write 'work', 'effort', or 'main set'.\n\nINTERVAL/FARTLEK/TEMPO/SWEET-SPOT/THRESHOLD: ALWAYS use repeat blocks {type:'repeat',repeat_count:N,steps:[workStep,recoveryStep]}. Inside a repeat: one interval step (the hard effort) + one recovery step. Never flatten intervals into a single step.\n\nEXAMPLE — Fartlek run 35 min (8×1min surges):\n[{type:'warmup',duration_secs:600,target_type:'pace',target_low:420,target_high:390,description:'Easy warm-up jog @ 6:30/km, leg swings, skips'},\n {type:'repeat',repeat_count:8,steps:[\n  {type:'interval',duration_secs:60,target_type:'pace',target_low:275,target_high:260,description:'Surge @ 4:20/km (Z4-5) — controlled and fast'},\n  {type:'recovery',duration_secs:90,target_type:'pace',target_low:400,target_high:380,description:'Float @ 6:20/km (Z1-2) — easy jog, recover fully'}\n ]},\n {type:'cooldown',duration_secs:450,target_type:'pace',target_low:430,target_high:400,description:'Easy cool-down @ 6:40/km, quad and calf stretches'}]\n\nEXAMPLE — Threshold run 45 min (3×8min):\n[{type:'warmup',duration_secs:900,...},\n {type:'repeat',repeat_count:3,steps:[\n  {type:'interval',duration_secs:480,target_type:'pace',target_low:315,target_high:300,description:'Threshold @ 5:00-5:15/km (Z4) — comfortably hard, controlled breathing'},\n  {type:'recovery',duration_secs:120,target_type:'pace',target_low:420,target_high:390,description:'Easy jog recovery @ 6:30/km (Z1)'}\n ]},\n {type:'cooldown',duration_secs:600,...}]\n\nEXAMPLE — Sweet-spot cycling 60 min (2×20min):\n[{type:'warmup',duration_secs:600,target_type:'power',target_low:80,target_high:130,description:'Gradual build, 90rpm'},\n {type:'repeat',repeat_count:2,steps:[\n  {type:'interval',duration_secs:1200,target_type:'power',target_low:158,target_high:175,description:'Sweet-spot 88% FTP @ 158-175W (Z3-4) — steady, controlled effort'},\n  {type:'recovery',duration_secs:300,target_type:'power',target_low:80,target_high:110,description:'Easy spin @ 80-110W (Z1), recover HR below 140'}\n ]},\n {type:'cooldown',duration_secs:600,target_type:'power',target_low:60,target_high:100,description:'Easy cool-down spin @ 60-100W'}]\n\nEasy/Z2 sessions: warmup + one steady interval step + cooldown is acceptable (no repeat block needed for continuous efforts).",
+  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. Return the COMPLETE updated plan — every session for the week, not just the changed one.\n\nWHICH WEEK — IMPORTANT: Each edit_plan call changes exactly ONE week. Pass week_of = the Monday date (YYYY-MM-DD) of the week you are editing; the available weeks are listed under 'WEEKLY BLOCK' in your context. Omit week_of only to edit the current active week. To restructure several weeks (e.g. two future weeks), call edit_plan once PER week — you cannot change multiple weeks in a single call. A rest day just means no session on that day.\n\nDAY RULES: MULTIPLE SESSIONS PER DAY: use day:'Monday' for both entries — NEVER 'Monday Morning', 'Monday Evening', 'Monday AM'. Valid day values ONLY: Monday Tuesday Wednesday Thursday Friday Saturday Sunday.\n\nREQUIRED SESSION FIELDS: day, date (YYYY-MM-DD — copy the existing date; NEVER invent a new one), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, steps array.\n\nWORKOUT STRUCTURE — MANDATORY FOR ALL RUNNING AND CYCLING SESSIONS:\nEvery session must have: warmup step → main block → cooldown step. A single monolithic 'work' block is NEVER acceptable — Diego sees each step on his Garmin and needs to know exactly what to do.\n\nTARGET TYPES (required on every running/cycling step):\n• running → target_type:'pace', target_low/target_high in SECONDS PER KM (low=slower number, high=faster number; easy=390-360, threshold=315-300, Z4=285-270, Z5=270-250)\n• cycling_indoor → target_type:'power', target_low/target_high in watts\n• cycling_outdoor → target_type:'heart_rate', target_low/target_high in bpm\n• strength → description only; top-level notes field with full circuit\n\nStep types available: 'warmup' | 'interval' | 'recovery' | 'cooldown' | 'rest'\n\nSTEP DESCRIPTIONS must be specific — include effort label + zone + target. Examples: 'Surge @ 4:30/km (Z4-5)', 'Float recovery @ 6:30/km (Z1)', 'Threshold @ 175W (Z4)', 'Easy Z2 @ 130W'. NEVER write 'work', 'effort', or 'main set'.\n\nINTERVAL/FARTLEK/TEMPO/SWEET-SPOT/THRESHOLD: ALWAYS use repeat blocks {type:'repeat',repeat_count:N,steps:[workStep,recoveryStep]}. Inside a repeat: one interval step (the hard effort) + one recovery step. Never flatten intervals into a single step.\n\nEXAMPLE — Fartlek run 35 min (8×1min surges):\n[{type:'warmup',duration_secs:600,target_type:'pace',target_low:420,target_high:390,description:'Easy warm-up jog @ 6:30/km, leg swings, skips'},\n {type:'repeat',repeat_count:8,steps:[\n  {type:'interval',duration_secs:60,target_type:'pace',target_low:275,target_high:260,description:'Surge @ 4:20/km (Z4-5) — controlled and fast'},\n  {type:'recovery',duration_secs:90,target_type:'pace',target_low:400,target_high:380,description:'Float @ 6:20/km (Z1-2) — easy jog, recover fully'}\n ]},\n {type:'cooldown',duration_secs:450,target_type:'pace',target_low:430,target_high:400,description:'Easy cool-down @ 6:40/km, quad and calf stretches'}]\n\nEXAMPLE — Threshold run 45 min (3×8min):\n[{type:'warmup',duration_secs:900,...},\n {type:'repeat',repeat_count:3,steps:[\n  {type:'interval',duration_secs:480,target_type:'pace',target_low:315,target_high:300,description:'Threshold @ 5:00-5:15/km (Z4) — comfortably hard, controlled breathing'},\n  {type:'recovery',duration_secs:120,target_type:'pace',target_low:420,target_high:390,description:'Easy jog recovery @ 6:30/km (Z1)'}\n ]},\n {type:'cooldown',duration_secs:600,...}]\n\nEXAMPLE — Sweet-spot cycling 60 min (2×20min):\n[{type:'warmup',duration_secs:600,target_type:'power',target_low:80,target_high:130,description:'Gradual build, 90rpm'},\n {type:'repeat',repeat_count:2,steps:[\n  {type:'interval',duration_secs:1200,target_type:'power',target_low:158,target_high:175,description:'Sweet-spot 88% FTP @ 158-175W (Z3-4) — steady, controlled effort'},\n  {type:'recovery',duration_secs:300,target_type:'power',target_low:80,target_high:110,description:'Easy spin @ 80-110W (Z1), recover HR below 140'}\n ]},\n {type:'cooldown',duration_secs:600,target_type:'power',target_low:60,target_high:100,description:'Easy cool-down spin @ 60-100W'}]\n\nEasy/Z2 sessions: warmup + one steady interval step + cooldown is acceptable (no repeat block needed for continuous efforts).",
   input_schema:{
     type:"object",
     properties:{
+      week_of:{type:"string",description:"Monday date (YYYY-MM-DD) of the week being edited. Must match one of the weeks listed under WEEKLY BLOCK in your context. Omit to edit the current active week."},
       summary:{type:"string",description:"One short sentence describing what you changed, shown to Diego."},
-      plan:{type:"array",description:"The complete updated weekly plan array.",items:{
+      plan:{type:"array",description:"The complete updated weekly plan array for the target week.",items:{
         type:"object",
         properties:{
           day:{type:"string"},date:{type:"string"},sport:{type:"string"},
@@ -1940,6 +1941,15 @@ async function sendCoachMessage(){
     if(notes)s+=". Availability notes: "+notes;
     return s+".";
   })();
+  // Weekly block — the multi-week plan. The coach edits a specific week by passing its week_of to edit_plan.
+  var blockLine=(function(){
+    if(!planBlock||!planBlock.length)return "WEEKLY BLOCK: none generated yet.";
+    var rows=planBlock.map(function(w){
+      var uniq=[];(w.sessions||[]).forEach(function(s){if(uniq.indexOf(s.day)<0)uniq.push(s.day);});
+      return "• week_of "+w.week_of+": "+(w.sessions&&w.sessions.length?(w.sessions.length+" sessions ("+uniq.join(", ")+")"):"no sessions")+(w.detailed?" [active/detailed]":"");
+    }).join("\n");
+    return "WEEKLY BLOCK (pass a week's week_of to edit_plan to change THAT week; one edit_plan call = one week):\n"+rows;
+  })();
 
   var sys="You are Coach Claudio, Diego's personal endurance coach — the calibre of coach who works with high-performing age-group and elite athletes. You combine deep exercise-physiology knowledge with the warmth and directness of a great human coach. You are friendly and encouraging but you never sugar-coat the science: every recommendation is grounded in training principles (progressive overload, polarised 80/20 intensity, specificity, periodisation, supercompensation, and adequate recovery).\n\n"+
     "TODAY'S DATE: "+new Date().toISOString().split("T")[0]+" ("+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})+")\n\n"+
@@ -1949,7 +1959,8 @@ async function sendCoachMessage(){
     "• If he reports FATIGUE, poor sleep, high stress, or low motivation: respect it. These blunt adaptation. Pull back intensity, swap a hard session for easy/recovery, or add rest. A planned session is a hypothesis, not a contract.\n"+
     "• If he reports a session felt HARDER than expected at normal numbers: a flag for accumulated fatigue or under-recovery — ease off. If EASIER: he may be fitter; consider nudging targets up.\n"+
     "• Always weigh his subjective feedback ALONGSIDE the objective data below. When they conflict, the body wins.\n\n"+
-    "WHEN ADJUSTING THE PLAN: call edit_plan with the FULL updated plan, keeping unchanged sessions intact. Explain the reasoning briefly in your reply so he learns. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\n"+
+    "WHEN ADJUSTING THE PLAN: call edit_plan with the FULL updated plan for the week you're changing, keeping unchanged sessions intact. Explain the reasoning briefly in your reply so he learns. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\n"+
+    "EDITING A SPECIFIC WEEK: edit_plan changes ONE week per call. To change a FUTURE week, pass that week's Monday date as week_of (see WEEKLY BLOCK below) — omitting week_of only edits the current active week. If Diego asks to restructure several weeks (e.g. \"weeks of July 6 and July 13\"), make a SEPARATE edit_plan call for each week; never assume a single call updates them all.\n\n"+
     "RESPECT HIS AVAILABILITY: Diego sets which days he can train and how long on the Availability tab (shown below). NEVER schedule or move a session onto a day he has marked unavailable, and keep each day's total training time within the hours he has available. If a change he asks for would require training on an unavailable day, say so and propose an available day instead.\n\n"+
     "WORKOUT DESIGN: Build every session like you're handing it to a serious athlete. Warmup and cooldown are non-negotiable. For any session with structured intensity (fartlek, intervals, tempo, sweet-spot, threshold, VO2) ALWAYS use repeat blocks so the Garmin shows each step individually. Every step needs a specific description with zone label + target number — never write 'work' or 'effort'. A world-class coach writes '6×3min threshold @ 5:05/km (Z4), 90s easy jog between' — not 'main set 18min'.\n\n"+
     "═══ DIEGO'S CURRENT PICTURE ═══\n"+
@@ -1975,7 +1986,8 @@ async function sendCoachMessage(){
       if(planMon===thisMon)return "Plan covers THIS week ("+planMon+").\n";
       return "Plan covers week of "+planMon+" (starts in the future). Current week ("+thisMon+") has no sessions. Use generate_plan tool with start_week=0 if Diego wants to start training this week.\n";
     })()+
-    "Current plan JSON: "+JSON.stringify(planJson);
+    blockLine+"\n"+
+    "Current active-week plan JSON: "+JSON.stringify(planJson);
   coachHistory.push({role:"user",content:msg});
   try{
     var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
@@ -2020,14 +2032,17 @@ async function sendCoachMessage(){
 
     if(toolUse){
       var newPlan=toolUse.input.plan, summary=toolUse.input.summary||"Plan updated";
-      var result=await commitPlanEdit(newPlan,summary);
+      var result=await commitPlanEdit(newPlan,summary,toolUse.input.week_of);
       var okEdit=result&&result.ok;
-      toolResults.push({type:"tool_result",tool_use_id:toolUse.id,content:okEdit?"Plan saved successfully.":"Save failed — Diego must add a GitHub token."});
+      toolResults.push({type:"tool_result",tool_use_id:toolUse.id,content:okEdit?"Plan saved successfully for week of "+(result.targetMon||"active week")+".":"Save failed — Diego must add a GitHub token."});
       if(okEdit){
-        planJson=result.fixed;
-        var wk=planBlock.find(function(w){return w.week_of===result.anchorMon;});
+        if(result.isActive)planJson=result.fixed;
+        var wk=planBlock.find(function(w){return w.week_of===result.targetMon;});
         if(wk){wk.sessions=result.fixed;wk.detailed=true;}
-        weekOffset=planStartOffset();updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();
+        else{planBlock.push({week_of:result.targetMon,sessions:result.fixed,detailed:true});planBlock.sort(function(a,b){return a.week_of<b.week_of?-1:1;});}
+        // Jump the Plan view to the week that changed so Diego sees it.
+        var vo=planStartOffset();for(var o=0;o<=16;o++){if(localDateStr(mondayOf(o))===result.targetMon){vo=o;break;}}
+        weekOffset=vo;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();
         addCoachMessage("✅ "+summary+"\n\nIt's updated here — review it and push to Garmin when ready.",false);
       }
     }
@@ -2041,37 +2056,44 @@ async function sendCoachMessage(){
   finally{send.disabled=false;send.style.opacity="1";}
 }
 
-async function commitPlanEdit(newPlan,summary){
+async function commitPlanEdit(newPlan,summary,weekOf){
   var token=getToken();
   if(!token){addCoachMessage("⚠️ To save plan edits I need your GitHub token (gear icon, top right).",false);return false;}
   try{
-    // Enforce dates from the trusted block anchor — never trust the model's dates
-    var anchorMon=planAnchorMon();
-    var wd=weekDatesFrom(anchorMon);
+    // Resolve which week is being edited. Default to the active/pushable week.
+    var activeMon=getPlanJsonMon()||planAnchorMon();
+    var validWeeks=(planBlock||[]).map(function(w){return w.week_of;});
+    var targetMon=(weekOf&&/^\d{4}-\d{2}-\d{2}$/.test(weekOf))?weekOf:activeMon;
+    // If the model named a week that isn't in the block (and isn't the active week), fall back to active.
+    if(targetMon!==activeMon&&validWeeks.indexOf(targetMon)===-1)targetMon=activeMon;
+    var isActive=(targetMon===activeMon);
+    // Enforce dates from the target week — never trust the model's dates.
+    var wd=weekDatesFrom(targetMon);
     // Normalize day names (model occasionally returns lowercase or mixed case)
     function normDay(d){if(!d)return "";return d.charAt(0).toUpperCase()+d.slice(1).toLowerCase();}
     var fixed=newPlan.filter(function(s){return normDay(s.day)&&wd[normDay(s.day)];}).map(function(s){var c=Object.assign({},s);c.day=normDay(c.day);c.date=wd[c.day];return c;});
 
-    // Fetch shas for both files before writing anything
-    var wpMeta=await(await fetch(API+"/weekly_plan.json",{headers:{Authorization:"Bearer "+token}})).json();
+    // Patch the target week in plan_block.json (source for every week's display).
     var pbMeta=await(await fetch(API+"/plan_block.json",{headers:{Authorization:"Bearer "+token}})).json();
-
-    // PUT weekly_plan.json first
-    var r1=await fetch(API+"/weekly_plan.json",{method:"PUT",
-      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
-      body:JSON.stringify({message:"Coach edit: "+summary,content:btoa(unescape(encodeURIComponent(JSON.stringify(fixed,null,2)))),sha:wpMeta.sha})});
-    if(!r1.ok){addCoachMessage("Save error — plan not changed.",false);return false;}
-
-    // PUT plan_block.json — patch the active week's sessions in place
     var block=JSON.parse(decodeURIComponent(escape(atob(pbMeta.content.replace(/\n/g,'')))));
-    var wk=block.find(function(w){return w.week_of===anchorMon;});
+    var wk=block.find(function(w){return w.week_of===targetMon;});
     if(wk){wk.sessions=fixed;wk.detailed=true;}
+    else{block.push({week_of:targetMon,sessions:fixed,detailed:true});block.sort(function(a,b){return a.week_of<b.week_of?-1:1;});}
     var r2=await fetch(API+"/plan_block.json",{method:"PUT",
       headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
-      body:JSON.stringify({message:"Coach edit (block): "+summary,content:btoa(unescape(encodeURIComponent(JSON.stringify(block,null,2)))),sha:pbMeta.sha})});
-    if(!r2.ok){addCoachMessage("⚠️ Plan saved but the block overview didn't update — tap Refresh if needed.",false);}
+      body:JSON.stringify({message:"Coach edit (block, week "+targetMon+"): "+summary,content:btoa(unescape(encodeURIComponent(JSON.stringify(block,null,2)))),sha:pbMeta.sha})});
+    if(!r2.ok){addCoachMessage("Save error — plan not changed.",false);return false;}
 
-    return {ok:true,fixed:fixed,anchorMon:anchorMon};
+    // weekly_plan.json only represents the active/pushable week — rewrite it only when that's what changed.
+    if(isActive){
+      var wpMeta=await(await fetch(API+"/weekly_plan.json",{headers:{Authorization:"Bearer "+token}})).json();
+      var r1=await fetch(API+"/weekly_plan.json",{method:"PUT",
+        headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+        body:JSON.stringify({message:"Coach edit: "+summary,content:btoa(unescape(encodeURIComponent(JSON.stringify(fixed,null,2)))),sha:wpMeta.sha})});
+      if(!r1.ok){addCoachMessage("⚠️ Block updated but the active week didn't save — tap Refresh if needed.",false);}
+    }
+
+    return {ok:true,fixed:fixed,targetMon:targetMon,isActive:isActive};
   }catch(e){addCoachMessage("Save error: "+e.message,false);return false;}
 }
 async function commitCheckin(input){
