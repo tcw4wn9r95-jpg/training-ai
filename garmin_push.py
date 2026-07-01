@@ -151,10 +151,19 @@ def cleanup_existing(client, plan_json):
     """Delete matching templates and unschedule ALL workouts in the next 4 weeks."""
     print("\nCleaning up existing workouts for the next 4 weeks...")
 
-    # Sweep window: from the earliest plan date (or today) through 4 weeks forward
+    # Sweep window: 4 full weeks starting from the MONDAY of the earliest plan
+    # week. Anchoring on Monday (not the first session date, which is often a
+    # Thu/Fri) ensures stale workouts earlier in that week are also cleared —
+    # otherwise old Mon–Wed sessions survive in the first week.
     plan_dates = {s.get("date", "") for s in plan_json if s.get("date")}
-    start_date = date.fromisoformat(min(plan_dates)) if plan_dates else date.today()
-    end_date = start_date + timedelta(weeks=4)
+    earliest = date.fromisoformat(min(plan_dates)) if plan_dates else date.today()
+    start_date = earliest - timedelta(days=earliest.weekday())  # Monday of that week
+    # Cover 4 full weeks (Mon..Sun), and never stop short of the last plan date.
+    end_date = start_date + timedelta(weeks=4) - timedelta(days=1)
+    if plan_dates:
+        latest = date.fromisoformat(max(plan_dates))
+        if latest > end_date:
+            end_date = latest
 
     # Build set of months to query
     months = set()
