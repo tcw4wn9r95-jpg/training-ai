@@ -414,5 +414,38 @@
         "focus": "Reactivate lower body and core, protect shoulder, build movement quality"
       }
     ]
+  },
+  {
+    "week_of": "2026-07-06",
+    "generated": "2026-07-01",
+    "phase": "base",
+    "planned_tss": 56,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 32,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Spin",
+        "planned_tss": 22,
+        "focus": "Rebuild aerobic movement habit at Z2, conversational effort"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "strength",
+        "name": "Anti-Flexion Lower Body & Core",
+        "planned_tss": 18,
+        "focus": "Lower body and core activation \u2014 spine-neutral, no spinal flexion under load, back-safe re-entry"
+      },
+      {
+        "day": "Friday",
+        "sport": "running",
+        "name": "Easy Run Z1\u2013Z2",
+        "planned_tss": 16,
+        "focus": "Low-intensity aerobic stimulus, reintroduce running movement pattern with back-safe posture"
+      }
+    ]
   }
 ]

@@ -1,95 +1,51 @@
 [
   {
     "day": "Monday",
-    "date": "2026-06-29",
+    "date": "2026-07-06",
     "sport": "cycling_indoor",
-    "name": "Easy Aerobic Ride",
+    "name": "Easy Aerobic Spin",
     "total_duration_secs": 1800,
-    "planned_tss": 18,
-    "focus": "Re-establish movement habit, aerobic stimulus without stress",
+    "planned_tss": 22,
+    "focus": "Rebuild aerobic movement habit at Z2, conversational effort",
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 300,
         "target_type": "power",
         "target_low": 70,
-        "target_high": 105,
-        "description": "Z1 easy spin, 85-90 rpm, HR below 145 bpm"
+        "target_high": 106,
+        "description": "Z1 easy spin, 80-85 rpm, HR <145 bpm \u2014 let legs wake up"
       },
       {
         "type": "interval",
         "duration_secs": 1200,
         "target_type": "power",
         "target_low": 106,
-        "target_high": 130,
-        "description": "Z2 steady aerobic, 88-92 rpm, HR 146-158 bpm. If HR runs high due to fatigue, back off to low end of power window."
+        "target_high": 141,
+        "description": "Z2 steady aerobic, 85-90 rpm, HR 146-162 bpm \u2014 conversational pace throughout"
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
         "target_type": "power",
         "target_low": 60,
-        "target_high": 90,
-        "description": "Z1 soft pedal, HR below 130 bpm before stopping"
+        "target_high": 100,
+        "description": "Z1 soft pedal, drop cadence, HR settle below 130 bpm"
       }
     ]
   },
   {
     "day": "Wednesday",
-    "date": "2026-07-01",
-    "sport": "cycling_indoor",
-    "name": "Easy Aerobic Ride \u2014 Cadence Focus",
-    "total_duration_secs": 1800,
-    "planned_tss": 20,
-    "focus": "Aerobic efficiency and neuromuscular cadence work at low intensity",
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 70,
-        "target_high": 105,
-        "description": "Z1 easy spin, 85 rpm, HR settling below 145 bpm"
-      },
-      {
-        "type": "repeat",
-        "repeat_count": 4,
-        "steps": [
-          {
-            "type": "interval",
-            "duration_secs": 300,
-            "target_type": "power",
-            "target_low": 106,
-            "target_high": 135,
-            "description": "Z2 cadence block \u2014 alternate each rep: 85 rpm / 95-100 rpm / 80 rpm / 90 rpm. HR 146-160 bpm. Reduce power if HR exceeds 165 bpm."
-          }
-        ]
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 60,
-        "target_high": 90,
-        "description": "Z1 soft spin, breathe down, HR below 130 bpm"
-      }
-    ]
-  },
-  {
-    "day": "Friday",
-    "date": "2026-07-03",
+    "date": "2026-07-08",
     "sport": "strength",
-    "name": "Bodyweight & Band Strength \u2014 Shoulder Safe",
+    "name": "Anti-Flexion Lower Body & Core",
     "total_duration_secs": 1800,
-    "planned_tss": 15,
-    "focus": "Reactivate lower body and core, protect shoulder, build movement quality",
-    "notes": "2 rounds: 10x goblet squat 16kg, 10x RDL 16kg, 8x TRX split squat each leg, 15x banded glute bridge, 8x dead bug each side, 30s plank. Rest 60-75s between exercises, 90s between rounds. Avoid any shoulder loading \u2014 substitute dead bug for any pressing or pulling. Stop thoracic stretch if shoulder pinches.",
+    "planned_tss": 18,
+    "focus": "Lower body and core activation \u2014 spine-neutral, no spinal flexion under load, back-safe re-entry",
+    "notes": "2 rounds: 10x Goblet Squat 6kg (spine tall), 8/side TRX Split Squat (upright torso), 15x Banded Glute Bridge (squeeze at top), 20m x2 Farmer's Carry 6kg each hand (anti-lateral core brace), 6/side Dead Bug (slow and controlled). 60s rest between exercises, 90s between rounds. NO spinal flexion under load. Stop any exercise that causes back discomfort and report.",
     "exercises": [
       {
         "name": "Goblet Squat"
-      },
-      {
-        "name": "Romanian Deadlift"
       },
       {
         "name": "TRX Split Squat"
@@ -98,27 +54,73 @@
         "name": "Banded Glute Bridge"
       },
       {
-        "name": "Dead Bug"
+        "name": "Farmer's Carry"
       },
       {
-        "name": "Plank"
+        "name": "Dead Bug"
       }
     ],
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 300,
-        "description": "Leg swings front/back and lateral x10 each, hip circles x10 each direction, bodyweight squat x10 slow, glute bridge x10"
+        "description": "Hip circles 10 each direction, lateral leg swings 10/side, bodyweight glute bridge 15 reps, slow bodyweight squat 10 reps focusing on posture"
       },
       {
-        "type": "interval",
-        "duration_secs": 1200,
-        "description": "2 rounds: goblet squat 16kg x10, RDL 16kg x10, TRX split squat x8 each leg, banded glute bridge x15, dead bug x8 each side, plank 30s. Rest 60-75s between exercises, 90s between rounds."
+        "type": "repeat",
+        "repeat_count": 2,
+        "steps": [
+          {
+            "type": "interval",
+            "duration_secs": 480,
+            "description": "Goblet Squat 6kg x10 \u2192 TRX Split Squat x8/side \u2192 Banded Glute Bridge x15 \u2192 Farmer's Carry 6kg x20m (x2 lengths) \u2192 Dead Bug x6/side. 60s rest between exercises."
+          },
+          {
+            "type": "recovery",
+            "duration_secs": 90,
+            "description": "90 seconds rest between rounds \u2014 walk around, breathe, check back feels neutral"
+          }
+        ]
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
-        "description": "Hip flexor stretch 30s each side, lying hamstring stretch 30s each side, child's pose 30s, gentle thoracic rotation \u2014 skip if shoulder protests"
+        "description": "90/90 hip stretch 45s/side, standing quad stretch 30s/side, modified child's pose on fists (no lumbar flexion \u2014 forehead on folded arms)"
+      }
+    ]
+  },
+  {
+    "day": "Friday",
+    "date": "2026-07-10",
+    "sport": "running",
+    "name": "Easy Run Z1\u2013Z2",
+    "total_duration_secs": 1800,
+    "planned_tss": 16,
+    "focus": "Low-intensity aerobic stimulus, reintroduce running movement pattern with back-safe posture",
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 600,
+        "target_high": 480,
+        "description": "Brisk walk, Z1 \u2014 tall spine, relaxed shoulders, HR <130 bpm"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "pace",
+        "target_low": 450,
+        "target_high": 405,
+        "description": "Z1-Z2 easy running >6:45/km, HR <155 bpm \u2014 walk 60s if HR exceeds 160 bpm, short strides, light core brace, nasal breathing where possible"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 600,
+        "target_high": 480,
+        "description": "Walk, HR below 120 bpm before stopping \u2014 check back for any discomfort"
       }
     ]
   }

@@ -1,95 +1,100 @@
-# Training Plan — Week of 29 June 2026
+# Training Plan — Week of 06 July 2026
 
-**Generated:** 28 June 2026  
+**Generated:** 01 July 2026  
 **Available days:** Monday, Wednesday, Friday  
 
 ---
 
-# Training Plan — Week of 29 June 2026
+# Training Plan — Week of 6 July 2026
 
-**Generated:** 22 June 2026
-**Available days:** Monday, Wednesday, Friday (30 min each — all other days REST)
-**Phase:** Recovery — Genuine Reset
-**Athlete context:** Week 4 of Diego's journey. Baby is now 25 days old. Sleep remains severely disrupted: 7-day avg 56/100, last night 49/100 with only 5.08h total and under 1h deep sleep. Actual TSS last two weeks: 0. The body has been under significant allostatic load — newborn stress, broken sleep, and detraining. Recovery week is not a passive label here; it is an active prescription.
+**Generated:** 1 July 2026
+**Available days:** Monday, Wednesday, Friday (30 min each)
+**Phase:** Base — Controlled Re-entry
+**Week in journey:** 5
 
 ---
 
 > **Coach's note — read this first, Diego.**
 >
-> Here's where we are honestly: the plan said peak week last week. You logged zero TSS. That's not failure — that's life with a newborn, and it's completely understandable. But it does mean we can't pretend the last two weeks of training happened, because physiologically they didn't.
+> Let's be straight with each other: the last several weeks have been a wash in terms of training load, and that's fine. You have a newborn. Your sleep last night was 3h 58m with 1.7h deep — that's not a training problem, that's a biology problem, and it's temporary. Your 7-day sleep average sits at 54/100, which physiologically puts you in a state where cortisol is chronically elevated, recovery is blunted, and the stimulus-to-adaptation window is narrower than normal.
 >
-> So rather than force-continuing an arc that's been interrupted, I'm using this recovery week as a genuine re-entry point. Three short sessions, all aerobic, nothing that spikes your stress hormones further. The goal this week is simple: move your body, protect your sleep, rebuild the habit. No TSS heroics. No intensity. Just consistency.
+> Added to that: you've just come back with a lower back muscular strain, physio-cleared but fresh. That changes what strength work looks like this week — we go light, we go anti-flexion, and we treat every rep as movement quality practice, not a fitness test.
 >
-> Next week we begin a fresh 4-week base-build arc calibrated to where you actually are — not where the spreadsheet says you should be. That's good coaching.
+> So here's the honest coaching decision: we are not picking up from the planned arc as if nothing happened. We're starting the base phase fresh, at the lowest viable load — three 30-minute sessions, all easy or moderate, nothing that compounds your stress or risks your back. The TSS target this week is modest on purpose. Supercompensation requires a stimulus AND recovery. Right now we can provide a gentle stimulus. Recovery will come in stolen moments. That's the deal.
+>
+> One more thing: your shoulder is recovering. No overhead pressing, no loaded pulling. All upper body work this week stays in the horizontal plane with bands and light dumbbells only.
+>
+> Let's build the habit. Fitness follows consistency, not heroics.
 
 ---
 
-### Monday 29 June — Easy Aerobic Ride
+### Monday 6 July — Easy Aerobic Spin
 
-**Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Re-establish movement habit, aerobic stimulus without stress
+**Sport:** Indoor Cycling
+**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Rebuild aerobic movement habit at Z2, nothing more
 
 #### Warm-up
-- 5 min at Z1 (70–105W) — easy leg turnover, 85–90 rpm, HR settling below 145 bpm. No urgency whatsoever.
+- 5 min at Z1 (<106W), easy cadence 80–85 rpm — let the legs wake up, no urgency
 
 #### Main set
-- 20 min steady Z2 (106–130W) — conversational effort, 88–92 rpm, HR drifting into 146–158 bpm range. Power is the primary guide; if HR is running higher than usual (common with sleep deprivation), back off to the lower end of the power window and let HR lead.
+- 20 min steady Z2 power: **106–141W**, target cadence 85–90 rpm
+- HR should drift toward 146–162 bpm but don't chase it — power is your guide
+- This should feel genuinely easy: you can hold a conversation, breathing is controlled
 
 #### Cool-down
-- 5 min at Z1 (60–90W) — soft pedalling, let HR drop below 130 bpm before you stop.
+- 5 min at Z1 (<100W), drop cadence, soft pedalling — let HR settle below 130 bpm
 
-**Coach notes:** This session should feel almost embarrassingly easy. That is intentional. Your aerobic system needs the signal; your nervous system does not need the load. If you feel flat or hollow at any point, cut the main set to 15 min and call it a success — you showed up.
+**Coach notes:** The temptation after weeks off is to do more. Resist it. 30 minutes at Z2 is the entire session — not a warmup for something harder. If HR is running high (>165 bpm at these watts) that's a signal your fatigue is real; drop to 90–110W and still call it a win.
 
 ---
 
-### Wednesday 1 July — Easy Aerobic Ride (Cadence Focus)
-
-**Sport:** Cycling Indoor
-**Duration:** 30 min | **Planned TSS:** 20 | **Focus:** Aerobic efficiency, neuromuscular cadence work at low intensity
-
-#### Warm-up
-- 5 min Z1 (70–105W), 85 rpm — same gentle re-entry as Monday.
-
-#### Main set
-- 20 min with cadence blocks, all within Z2 (106–135W):
-  - 5 min at 85 rpm — your base rhythm
-  - 5 min at 95–100 rpm — higher cadence, same power, feel the difference in muscular vs. cardiovascular load
-  - 5 min at 80 rpm — slightly more muscular, slight power bump if comfortable (up to 135W)
-  - 5 min at 90 rpm — find your natural sweet spot
-
-#### Cool-down
-- 5 min Z1 (60–90W) — soft spin, breathe it out.
-
-**Coach notes:** Cadence variation trains neuromuscular efficiency without adding cardiovascular stress — this is exactly the kind of low-cost, high-return work that suits this week. Keep HR in 146–160 bpm throughout. If it climbs above 165, reduce power, not cadence.
-
----
-
-### Friday 3 July — Bodyweight & Band Strength (Shoulder Safe)
+### Wednesday 8 July — Strength: Anti-Flexion Lower Body & Core
 
 **Sport:** Strength
-**Duration:** 30 min | **Planned TSS:** 15 | **Focus:** Reactivate lower body and core, maintain shoulder healing, build movement quality
+**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Lower body and core activation — spine-neutral, no spinal flexion under load
 
 #### Warm-up
-- 5 min: leg swings (front/back, lateral) × 10 each leg, hip circles × 10 each direction, bodyweight squat × 10 slow, glute bridge × 10. Get warm, not winded.
+- 5 min: hip circles (10 each direction), lateral leg swings (10/side), glute bridges bodyweight (15 reps), slow bodyweight squat (10 reps focusing on posture)
 
 #### Main set
-- 2 rounds (not 3 — we are in recovery week, volume is the lever we pull down):
+**2 rounds** (not 3 — you're re-entering after 6 months; quality over volume)
 
-  | Exercise | Load | Reps |
-  |---|---|---|
-  | Goblet Squat | 16 kg | 10 |
-  | Romanian Deadlift | 16 kg | 10 |
-  | TRX Split Squat | Bodyweight | 8 each leg |
-  | Banded Glute Bridge | Light band | 15 |
-  | Dead Bug | Bodyweight | 8 each side |
-  | Plank | Bodyweight | 30 sec |
+| Exercise | Load | Reps | Notes |
+|---|---|---|---|
+| Goblet Squat | 6 kg | 10 | Spine tall, chest up, slow descent |
+| TRX Split Squat | Bodyweight | 8/side | Back knee toward floor, upright torso |
+| Banded Glute Bridge | Band (medium) | 15 | Drive through heels, squeeze at top |
+| Farmer's Carry | 6 kg each hand | 20m × 2 | Walk slowly, brace core, shoulders packed — anti-lateral flexion |
+| Dead Bug | Bodyweight | 6/side | Slow, controlled — core anti-extension |
 
-  Rest 60–75 sec between exercises. Rest 90 sec between rounds. Move with control — this is quality work, not a circuit race.
+- 60 seconds rest between exercises, 90 seconds between rounds
+- Total work time: ~18–20 minutes
 
 #### Cool-down
-- 5 min: hip flexor stretch (30 sec each side), hamstring stretch lying down (30 sec each side), child's pose (30 sec), gentle thoracic rotation (avoid shoulder aggravation — stop if any pinch).
+- 5 min: 90/90 hip stretch (45s/side), standing quad stretch (30s/side), child's pose modified on fists (avoid lumbar flexion — rest forehead on folded arms instead of reaching forward)
 
-**Coach notes:** Dropped to 16 kg and 2 rounds deliberately — recovery week means recovery in the gym too. The dead bug replaces any pressing or pulling that could load the shoulder. Focus on bracing and breathing through each rep. If anything pulls at the shoulder during the thoracic stretch, skip it entirely.
+**Coach notes:** The 6 kg loads are intentional — this is a movement quality session, not a hypertrophy session. Your back is 6 days post-diagnosis and physio-cleared for training, not cleared for loading. Farmer's carries are the highest-value movement here: they train anti-lateral core stability, load the legs, and keep the spine long and braced — exactly the pattern your back needs right now. If anything causes back discomfort mid-set, stop the exercise and note it for next check-in.
+
+---
+
+### Friday 10 July — Easy Run (Zone 1–2 Walk/Run)
+
+**Sport:** Running
+**Duration:** 30 min | **Planned TSS:** 16 | **Focus:** Low-intensity aerobic stimulus, reintroduce running movement
+
+#### Warm-up
+- 5 min walk at brisk pace, focus on posture — tall spine, relaxed shoulders, avoid forward lean
+
+#### Main set
+- 20 min easy running at Z1–Z2 pace: **>6:45/km**, HR target <155 bpm
+- If HR creeps above 160 bpm, take a 60-second walk break — no shame, that's the prescription
+- This is not a run/walk failure; it's a legitimate aerobic interval strategy (Maffetone-style)
+- Focus on short strides, relaxed foot strike, and keeping breathing nasal if possible
+
+#### Cool-down
+- 5 min walk, bring HR below 120 bpm before stopping
+
+**Coach notes:** Running after a lower back strain means posture matters more than pace today. Keep your core lightly braced throughout — imagine your belt buckle slightly toward your spine, not a hard brace. Avoid overstriding (foot landing far ahead of your centre of mass) as this compresses the lumbar. Short, quick steps are your friend. If your back talks to you at any point, walk it out and end the session early — and report it immediately.
 
 ---
 
@@ -97,16 +102,13 @@
 
 | Day | Session | TSS |
 |---|---|---|
-| Monday | Easy Aerobic Ride | 18 |
-| Wednesday | Easy Aerobic Ride — Cadence Focus | 20 |
-| Friday | Bodyweight & Band Strength | 15 |
-| **Total** | | **~53 TSS** |
+| Monday | Easy Aerobic Spin | 22 |
+| Wednesday | Strength: Anti-Flexion Lower Body & Core | 18 |
+| Friday | Easy Run Z1–Z2 | 16 |
+| **Total** | | **~56 TSS** |
 
-**Phase:** Recovery
-**Week focus:** Genuine re-entry after two missed weeks and chronically disrupted sleep. All sessions aerobic or movement-quality only. Zero intensity. The adaptation from the earlier weeks can only land when the body is allowed to rest — this week is that landing strip. Show up, stay easy, sleep when the baby lets you.
-
----
+**Phase:** Base | **Weekly focus:** Re-establish the training habit with three short, controlled sessions that respect your sleep deficit, protect your recovering back, and lay the aerobic foundation for the next three weeks of progressive build. No intensity, no ego — just showing up.
 
 ---
 
-## Section 2: JSON Plan
+---
