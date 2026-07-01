@@ -447,5 +447,59 @@
         "focus": "Low-intensity aerobic stimulus, reintroduce running movement pattern with back-safe posture"
       }
     ]
+  },
+  {
+    "week_of": "2026-06-29",
+    "generated": "2026-07-01",
+    "phase": "base",
+    "planned_tss": 56,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 32,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Spin \u2014 Habit Reset",
+        "planned_tss": 9,
+        "focus": "Re-establish daily movement habit; pure aerobic base at Z1/Z2 boundary"
+      },
+      {
+        "day": "Tuesday",
+        "sport": "strength",
+        "name": "Lower Body + Anti-Rotation Core",
+        "planned_tss": 8,
+        "focus": "Posterior chain, hip stability, spine-safe anti-rotation core \u2014 no spinal flexion under load"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 10,
+        "focus": "Weekly run stimulus; Z1 warm-up into Z2 aerobic, movement quality over pace"
+      },
+      {
+        "day": "Thursday",
+        "sport": "cycling_indoor",
+        "name": "Active Recovery Spin",
+        "planned_tss": 6,
+        "focus": "Flush legs post-run, parasympathetic recovery \u2014 deliberately easy"
+      },
+      {
+        "day": "Friday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Cycling with Cadence Focus",
+        "planned_tss": 9,
+        "focus": "Aerobic efficiency and neuromuscular cadence economy at Z2"
+      },
+      {
+        "day": "Saturday",
+        "sport": "cycling_indoor",
+        "name": "Longer Aerobic Ride",
+        "planned_tss": 14,
+        "focus": "Aerobic volume, fat oxidation, steady-state base \u2014 longest session of the week"
+      }
+    ]
   }
 ]
