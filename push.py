@@ -80,10 +80,15 @@ outline_sessions = []
 try:
     with open("plan_block.json") as f:
         plan_block = json.load(f)
-    # Identify the detailed (week 1) week_of so we don't double-push it
-    detailed_week_of = next((wk["week_of"] for wk in plan_block if wk.get("detailed")), None)
-    if not detailed_week_of and plan_json:
-        detailed_week_of = plan_json[0].get("date", "")[:10]
+    # Identify week 1 (the week weekly_plan.json covers) so we don't double-push
+    # it. Derive it from the plan's own dates — the `detailed` flag is only a
+    # fallback, since coach-edited future weeks also carry detailed=true.
+    detailed_week_of = None
+    if plan_json and plan_json[0].get("date"):
+        d0 = date.fromisoformat(plan_json[0]["date"][:10])
+        detailed_week_of = (d0 - timedelta(days=d0.weekday())).isoformat()
+    if not detailed_week_of:
+        detailed_week_of = next((wk["week_of"] for wk in plan_block if wk.get("detailed")), None)
     for wk in plan_block:
         if wk.get("week_of") == detailed_week_of:
             continue  # skip week 1 — already in weekly_plan.json
@@ -102,12 +107,20 @@ print("Logged in.")
 uploaded = push_plan_to_garmin(client, all_sessions)
 
 try:
-    status = {
+    # Merge into the existing status so generator-written fields
+    # (week_of, generated, sessions) survive the push.
+    try:
+        with open("plan_status.json") as f:
+            status = json.load(f)
+    except Exception:
+        status = {}
+    status.update({
         "status": "pushed" if uploaded else "push_failed",
         "uploaded": uploaded,
         "total": len(all_sessions),
         "pushed": uploaded > 0,
-    }
+        "pushed_at": date.today().isoformat(),
+    })
     with open("plan_status.json", "w") as f:
         json.dump(status, f, indent=2)
     print("Wrote plan_status.json")

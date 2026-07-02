@@ -160,6 +160,8 @@ else:
     taper_note = ""
 
 availability_notes = availability.get("notes", "")
+max_sessions = int(availability.get("max_sessions_per_week") or 0)
+prefer_rest_between = bool(availability.get("prefer_rest_between"))
 days_data = availability.get("days", {})
 if days_data:
     available_days = [d for d, v in days_data.items() if v.get("available")]
@@ -467,7 +469,10 @@ You have planned the following weeks already. The plan must CONTINUE this arc �
 
 ## NEXT WEEK AVAILABILITY
 {week_schedule}
-Respect available hours strictly. {f"Athlete note: {availability_notes}" if availability_notes else ""}
+Respect available hours strictly. Available days are days the athlete CAN train — not days he must train.
+{f"HARD LIMIT: schedule at most {max_sessions} training days this week. Even though more days are available, pick the best {max_sessions} for the plan's goals." if max_sessions else ""}
+{"SPACING: the athlete prefers rest days BETWEEN training days — avoid back-to-back sessions wherever possible." if prefer_rest_between else ""}
+{f"Athlete note: {availability_notes}" if availability_notes else ""}
 
 ## TRAINING DATA (last 6 weeks)
 {json.dumps(workouts, indent=2)}
