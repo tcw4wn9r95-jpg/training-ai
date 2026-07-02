@@ -12,7 +12,8 @@
 <link rel="apple-touch-icon" href="apple-touch-icon.png">
 <link rel="manifest" href="manifest.json">
 <title>Coach Claudio</title>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<link rel="preconnect" href="https://cdnjs.cloudflare.com" crossorigin>
+<script defer src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -140,7 +141,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
   border-top:1px solid var(--line);z-index:50}
 .nav button{flex:1;background:none;border:none;color:var(--t3);
   display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;
-  font-size:10px;font-weight:600;cursor:pointer;letter-spacing:.2px}
+  font-size:11px;font-weight:600;cursor:pointer;letter-spacing:.2px}
 .nav button.active{color:var(--brand)}
 .nav button svg{width:22px;height:22px}
 
@@ -171,7 +172,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .hero-sub{font-size:13px;color:var(--t2)}
 .hero-stats{display:flex;gap:18px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)}
 .hero-stat .v{font-size:18px;font-weight:800}
-.hero-stat .l{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
+.hero-stat .l{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:1px}
 
 /* Form/readiness banner */
 .form-banner{display:flex;align-items:center;gap:14px;padding:16px;border-radius:var(--r);
@@ -189,10 +190,10 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .kpi{background:var(--bg2);border:1px solid var(--line);border-radius:12px;padding:13px 12px;text-align:center}
 .kpi .v{font-size:21px;font-weight:800;font-family:var(--mono);letter-spacing:-.5px}
 .kpi .l{font-size:9.5px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:3px}
-.kpi .d{font-size:10px;font-weight:600;margin-top:3px}
+.kpi .d{font-size:11px;font-weight:600;margin-top:3px}
 
 .chart-box{height:200px;position:relative}
-.pmc-rb{font-size:10px;font-weight:700;padding:3px 9px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--t3);cursor:pointer;letter-spacing:.3px}
+.pmc-rb{font-size:11px;font-weight:700;padding:9px 13px;border-radius:12px;border:1px solid var(--line);background:transparent;color:var(--t3);cursor:pointer;letter-spacing:.3px}
 .pmc-rb.active{background:rgba(59,130,246,.18);border-color:rgba(59,130,246,.4);color:#3b82f6}
 .chart-sm{height:150px;position:relative}
 .proj-stats{display:flex;gap:12px;margin-bottom:8px}
@@ -200,7 +201,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .proj-now{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--t2);display:inline-block}
 .proj-arrow{display:inline-block;margin:0 7px;color:var(--blue);font-weight:700}
 .proj-future{font-size:20px;font-weight:800;font-family:var(--mono);color:var(--blue);display:inline-block}
-.proj-label{font-size:10px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
+.proj-label{font-size:11px;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-top:5px}
 
 /* Plan */
 .week-nav{display:flex;align-items:center;justify-content:space-between;margin-bottom:0;
@@ -216,7 +217,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .ws-day{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;
   cursor:pointer;-webkit-tap-highlight-color:transparent}
 .ws-day:active{opacity:.7}
-.ws-abbr{font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
+.ws-abbr{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.4px}
 .ws-dot{width:28px;height:28px;border-radius:50%;display:flex;align-items:center;justify-content:center}
 .ws-dot svg{width:14px;height:14px}
 .refresh-btn{display:flex;align-items:center;justify-content:center;gap:8px;width:100%;
@@ -232,7 +233,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .day-ic svg{width:21px;height:21px}
 .day-meta{flex:1;min-width:0}
 .day-name{font-size:15px;font-weight:700;display:flex;align-items:center;gap:8px;flex-wrap:wrap}
-.tag{font-size:10px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px}
+.tag{font-size:11px;font-weight:700;padding:2px 8px;border-radius:20px;text-transform:uppercase;letter-spacing:.4px}
 .day-line{font-size:12px;color:var(--t3);margin-top:2px}
 .chev{color:var(--t3);transition:transform .25s}
 .chev.open{transform:rotate(90deg)}
@@ -326,8 +327,14 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .field label{font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px}
 .field input{width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:11px;
   padding:13px;color:var(--t1);font-size:14px;font-family:var(--mono)}
-.field a{color:var(--brand);font-size:12px;text-decoration:none}
+.field a{color:var(--brand);font-size:12px;text-decoration:none;display:inline-block;padding:8px 4px;margin:-8px 0 -8px -4px}
 .empty{color:var(--t3);text-align:center;padding:40px 20px;font-size:14px;line-height:1.6}
+/* Wide screens: keep the mobile-first column readable, centred */
+@media(min-width:700px){
+  #scroll{max-width:560px;margin:0 auto}
+  .drawer{max-width:560px;left:50%;right:auto;width:100%;transform:translate(-50%,100%)}
+  .drawer.open{transform:translate(-50%,0)}
+}
 .spin{animation:sp 1s linear infinite}
 @keyframes sp{to{transform:rotate(360deg)}}
 @keyframes tdot{0%,80%,100%{transform:translateY(0);opacity:.4}40%{transform:translateY(-5px);opacity:1}}
@@ -418,7 +425,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <div class="form-state" id="form-state">Form —</div>
         <div class="form-desc" id="form-desc">Sync your training to see readiness.</div>
         <div class="form-rec" id="form-rec"></div>
-        <div style="font-size:10px;color:var(--t3);margin-top:5px;cursor:pointer" onclick="toggleFormInfo()">ⓘ What do these mean?</div>
+        <div style="font-size:11px;color:var(--t3);margin-top:5px;cursor:pointer" onclick="toggleFormInfo()">ⓘ What do these mean?</div>
         <div id="form-info-text" style="display:none;font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5;background:rgba(255,255,255,.03);border-radius:6px;padding:6px 8px">TSB = Fitness (CTL, 42-day avg) − Fatigue (ATL, 7-day avg). Positive = fresh; negative = under training load. −10 to +5 is the optimal zone. CTL rises with consistent training; ATL spikes after hard days and drops quickly on rest.</div>
       </div>
     </div>
@@ -479,9 +486,9 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <!-- PLAN -->
   <div class="page" id="page-plan">
     <div class="week-nav">
-      <button id="plan-prev" onclick="shiftWeek(-1)">‹</button>
+      <button id="plan-prev" onclick="shiftWeek(-1)" aria-label="Previous week">‹</button>
       <div class="lbl"><div class="w" id="plan-wlabel">This Week</div><div class="d" id="plan-wdate"></div></div>
-      <button id="plan-next" onclick="shiftWeek(1)">›</button>
+      <button id="plan-next" onclick="shiftWeek(1)" aria-label="Next week">›</button>
     </div>
     <div class="week-strip" id="week-strip" style="display:none"></div>
     <button class="refresh-btn" id="gen-btn" onclick="generatePlan()" style="background:linear-gradient(135deg,#006e53,#00c896);color:#fff;border-color:transparent">
@@ -519,6 +526,26 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <div style="font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:4px">Weekly Schedule</div>
     <div style="font-size:13px;color:var(--t2);margin-bottom:16px">Set which days you can train and for how long.</div>
     <div class="av-grid" id="av-grid"></div>
+    <div style="background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div>
+          <div style="font-size:14px;font-weight:700">Sessions per week</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:2px">Caps the plan even when more days are free</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button onclick="adjMaxSessions(-1)" aria-label="Fewer sessions" style="width:40px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t1);font-size:18px;cursor:pointer">−</button>
+          <span id="max-sess-val" style="font-family:var(--mono);font-weight:700;font-size:15px;min-width:36px;text-align:center">Any</span>
+          <button onclick="adjMaxSessions(1)" aria-label="More sessions" style="width:40px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t1);font-size:18px;cursor:pointer">+</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+        <div>
+          <div style="font-size:14px;font-weight:700">Rest between sessions</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:2px">Prefer rest days between training days</div>
+        </div>
+        <button id="spread-btn" onclick="toggleSpread()" style="min-width:64px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t2);font-size:14px;font-weight:700;cursor:pointer">Off</button>
+      </div>
+    </div>
     <textarea id="av-notes" placeholder="Notes for Coach Claudio (e.g. travelling Thu, long ride Sat with friends)…"></textarea>
     <button class="btn" onclick="saveAvail()">Save to Coach Claudio</button>
     <div class="status" id="av-status"></div>
@@ -626,7 +653,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260701-3";
+const BUILD="20260702-1";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -857,7 +884,7 @@ function renderGoalBanner(ctlNow,atlNow){
         '<div class="gb-top"><span class="gb-eyebrow">🎯 Goal</span></div>'+
         '<div class="gb-goal">'+esc(goals.primary_goal)+'</div>'+
         '<div style="margin-top:10px">'+
-          '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3)">'+metricLabel+'</div>'+
+          '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3)">'+metricLabel+'</div>'+
           '<div style="font-size:22px;font-weight:800;font-family:var(--mono);color:var(--t1);margin-top:3px">'+
             curVal+'<span style="font-size:12px;font-weight:600;color:var(--t2);margin-left:6px">'+trendStr+'</span>'+
           '</div>'+
@@ -1067,7 +1094,11 @@ async function loadHeroCoachNote(w,session,el){
 var CD={responsive:true,maintainAspectRatio:false,
   plugins:{legend:{display:false},tooltip:{backgroundColor:"#1c2127",borderColor:"rgba(255,255,255,.1)",borderWidth:1,titleColor:"#f4f6f8",bodyColor:"#aeb6c0",padding:10,cornerRadius:8}},
   scales:{x:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7480",font:{size:9},maxTicksLimit:6}},y:{grid:{color:"rgba(255,255,255,.04)"},ticks:{color:"#6b7480",font:{size:9}},beginAtZero:true}}};
-function mk(id,cfg){var c=document.getElementById(id);if(c){if(c._ch)c._ch.destroy();c._ch=new Chart(c,cfg);}}
+function mk(id,cfg){
+  // Chart.js loads with `defer`; retry briefly if a render fires first
+  if(typeof Chart==="undefined"){setTimeout(function(){mk(id,cfg);},120);return;}
+  var c=document.getElementById(id);if(c){if(c._ch)c._ch.destroy();c._ch=new Chart(c,cfg);}
+}
 
 function setPmcRange(days){
   pmcDays=days;
@@ -1135,9 +1166,13 @@ function weekDatesFrom(monIso){
   return map;
 }
 function planAnchorMon(){
+  // The active/pushable week is defined by weekly_plan.json's dates. The
+  // `detailed` flag is only a fallback — edited future weeks also carry it.
+  var pj=getPlanJsonMon();
+  if(pj)return pj;
   var dw=(planBlock||[]).find(function(w){return w.detailed===true;});
   if(dw&&dw.week_of)return dw.week_of;
-  return getPlanJsonMon()||localDateStr(mondayOf(0));
+  return localDateStr(mondayOf(0));
 }
 
 function getPlanJsonMon(){
@@ -1246,7 +1281,7 @@ function renderBlockOverview(){
     return '<div style="display:flex;align-items:center;gap:10px;padding:9px 0;border-bottom:1px solid var(--line)">'+
       '<span style="width:8px;height:8px;border-radius:50%;flex-shrink:0;background:'+phClr+(isActive?';box-shadow:0 0 0 2px var(--bg),0 0 0 4px '+phClr:"")+'"></span>'+
       '<div style="flex:1;min-width:0">'+
-        '<div style="font-size:12px;font-weight:600;color:'+phClr+'">'+phL+(isActive?' <span style="font-size:10px;background:rgba(59,130,246,.15);color:#3b82f6;padding:1px 5px;border-radius:4px;font-weight:700">NOW</span>':'')+' week</div>'+
+        '<div style="font-size:12px;font-weight:600;color:'+phClr+'">'+phL+(isActive?' <span style="font-size:11px;background:rgba(59,130,246,.15);color:#3b82f6;padding:1px 5px;border-radius:4px;font-weight:700">NOW</span>':'')+' week</div>'+
         (w.summary?'<div style="font-size:11px;color:var(--t3);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">'+esc(w.summary)+'</div>':'')+
       '</div>'+
       '<div style="text-align:right;flex-shrink:0">'+
@@ -1498,7 +1533,12 @@ function renderPlanArray(arr,wk){
     box.innerHTML='<div style="display:flex;align-items:center;gap:8px;margin-bottom:14px;padding:11px 14px;border-radius:11px;background:var(--bg2)">'+
       '<span style="width:9px;height:9px;border-radius:50%;background:'+phClr+'"></span>'+
       '<span style="font-size:13px;font-weight:700;color:'+phClr+'">'+ph+' week</span>'+
-      (wk.target_tss?'<span style="font-size:12px;color:var(--t3);margin-left:auto">target '+wk.target_tss+' TSS</span>':"")+
+      (function(){
+        var planned=arr.reduce(function(t,s){return t+(s.planned_tss||0);},0);
+        if(planned&&wk.target_tss&&Math.abs(planned-wk.target_tss)>5)return '<span style="font-size:12px;color:var(--t3);margin-left:auto">planned '+planned+' · block target '+wk.target_tss+' TSS</span>';
+        if(wk.target_tss)return '<span style="font-size:12px;color:var(--t3);margin-left:auto">target '+wk.target_tss+' TSS</span>';
+        return planned?'<span style="font-size:12px;color:var(--t3);margin-left:auto">planned '+planned+' TSS</span>':"";
+      })()+
       '</div>'+
       (isOutline?'<div style="font-size:12px;color:var(--t3);margin-bottom:14px;line-height:1.5">📋 Outline — detailed targets firm up when this becomes the current week.'+(wk.summary?'<br>'+esc(wk.summary):"")+'</div>':"");
   }
@@ -1522,8 +1562,8 @@ function renderPlanArray(arr,wk){
     el.style.boxShadow="inset 4px 0 0 "+col;
     // Header: day label on top, session name below; duration badge on right
     var durBadge=dur?'<div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;margin-right:4px">'+
-      '<span style="font-size:14px;font-weight:800;color:var(--t1);font-family:var(--mono)">'+dur+'<span style="font-size:10px;font-weight:600;color:var(--t3)">m</span></span>'+
-      (s.planned_tss?'<span style="font-size:10px;color:var(--t3);font-weight:600">'+s.planned_tss+' tss</span>':"")+
+      '<span style="font-size:14px;font-weight:800;color:var(--t1);font-family:var(--mono)">'+dur+'<span style="font-size:11px;font-weight:600;color:var(--t3)">m</span></span>'+
+      (s.planned_tss?'<span style="font-size:11px;color:var(--t3);font-weight:600">'+s.planned_tss+' tss</span>':"")+
     '</div>':"";
     el.innerHTML=
       '<div class="day-head" onclick="toggleDay(this)">'+
@@ -1592,7 +1632,7 @@ async function generatePlan(){
   var avail=await fetchJSON("availability.json");
   var anyDays=avail&&avail.days&&Object.values(avail.days).some(function(d){return d&&d.available;});
   if(!anyDays){
-    var go=confirm("You haven't set your availability for next week. Set it in the Avail tab first?\n\nTap OK to go to Avail, or Cancel to generate anyway.");
+    var go=confirm("You haven't set your availability for next week. Set it in the Schedule tab first?\n\nTap OK to go to Schedule, or Cancel to generate anyway.");
     if(go){
       var avBtn=document.querySelector(".nav button[onclick*=\"'avail'\"]");
       if(avBtn)showPage("avail",avBtn);
@@ -1677,7 +1717,12 @@ function renderPushZone(){
   // Only show the push button on the current week with a real plan
   if(weekOffset!==0||!planJson||!planJson.length){zone.style.display="none";return;}
   zone.style.display="block";
-  if(planStatus&&planStatus.pushed){
+  var dirty=false;try{dirty=localStorage.getItem("plan_dirty")==="1";}catch(e){}
+  if(planStatus&&planStatus.pushed&&dirty){
+    status.innerHTML='⚠️ Plan changed since the last push — re-push to update your Garmin calendar.';
+    status.style.color="#f59e0b";
+    btn.textContent="Push changes 🚀";
+  }else if(planStatus&&planStatus.pushed){
     status.innerHTML='✓ Pushed to Garmin'+(planStatus.uploaded?(' · '+planStatus.uploaded+' workouts on your calendar'):'')+'. Re-push if you made changes.';
     status.style.color="var(--green)";
     btn.textContent="Push again 🚀";
@@ -1698,6 +1743,13 @@ async function pushToGarmin(){
     status.style.color="var(--red)";
     return;
   }
+  // Preview what the push will do before dispatching — it replaces the whole window.
+  var activeMon=planAnchorMon();
+  var futureCount=(planBlock||[]).reduce(function(t,w){return t+((w.week_of!==activeMon&&w.sessions)?w.sessions.length:0);},0);
+  var totalCount=planJson.length+futureCount;
+  var rangeStart=new Date(activeMon+"T00:00:00"),rangeEnd=new Date(rangeStart);rangeEnd.setDate(rangeStart.getDate()+27);
+  var fmt=function(d){return d.toLocaleDateString("en-GB",{day:"numeric",month:"short"});};
+  if(!confirm("Push to Garmin?\n\nThis REPLACES everything on your Garmin calendar from "+fmt(rangeStart)+" to "+fmt(rangeEnd)+" with "+totalCount+" planned workout"+(totalCount===1?"":"s")+".\n\nContinue?"))return;
   btn.disabled=true;btn.style.opacity="0.6";btn.textContent="Sending to Garmin…";
   status.style.color="var(--t2)";
   status.textContent="Triggering push… this takes ~1–2 minutes on Garmin's side.";
@@ -1708,6 +1760,7 @@ async function pushToGarmin(){
       body:JSON.stringify({ref:"main"})
     });
     if(r.status===204){
+      try{localStorage.removeItem("plan_dirty");}catch(e2){}
       status.innerHTML="🚀 Push started! Your workouts will be on Garmin in ~1–2 min.<br>Open Garmin Connect and sync your Fenix.";
       status.style.color="var(--green)";
       btn.textContent="Pushed 🚀";
@@ -1837,19 +1890,42 @@ function renderAvail(){
 }
 function toggleAv(n){avState[n].available=!avState[n].available;renderAvail();}
 function adjH(n,d){avState[n].hours=Math.max(0.5,Math.min(4,+(avState[n].hours+d).toFixed(1)));renderAvail();}
-async function saveAvail(){
+// Training pattern preferences — persisted in availability.json, honoured by
+// the plan generator, the coach prompt, and the edit_plan hard guard.
+var avPrefs={max_sessions:0,spread:false};
+function adjMaxSessions(d){
+  var v=avPrefs.max_sessions;
+  if(d>0)v=v===0?3:Math.min(7,v+1);
+  else v=v<=3?0:v-1;
+  avPrefs.max_sessions=v;renderPrefs();
+}
+function toggleSpread(){avPrefs.spread=!avPrefs.spread;renderPrefs();}
+function renderPrefs(){
+  var v=document.getElementById("max-sess-val");
+  if(v)v.textContent=avPrefs.max_sessions?String(avPrefs.max_sessions):"Any";
+  var sb=document.getElementById("spread-btn");
+  if(sb){sb.textContent=avPrefs.spread?"On":"Off";sb.style.background=avPrefs.spread?"var(--brand-dim, rgba(0,200,150,.15))":"var(--bg3)";sb.style.color=avPrefs.spread?"var(--brand)":"var(--t2)";}
+}
+async function putAvailability(){
   var token=getToken();
-  if(!token){showStatus("Add your GitHub token first (gear icon).","err");return;}
-  var payload={days:{},notes:document.getElementById("av-notes").value.trim()};
+  if(!token)return false;
+  var payload={days:{},notes:document.getElementById("av-notes").value.trim(),
+    max_sessions_per_week:avPrefs.max_sessions||0,prefer_rest_between:!!avPrefs.spread};
   DAYS.forEach(d=>payload.days[d]={available:avState[d].available,hours:avState[d].hours});
-  showStatus("Saving…","");
   try{
     var g=await(await fetch(API+"/availability.json",{headers:{Authorization:"Bearer "+token}})).json();
     var r=await fetch(API+"/availability.json",{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
       body:JSON.stringify({message:"Availability update",content:btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2)))),sha:g.sha})});
-    if(r.ok){var ds=DAYS.filter(d=>avState[d].available);showStatus("Saved · "+ds.join(", ")+". Mid-week changes? Ask Coach below.","ok");}
-    else{var e=await r.json();showStatus("Error: "+(e.message||"failed"),"err");}
-  }catch(e){showStatus("Network error: "+e.message,"err");}
+    return r.ok;
+  }catch(e){return false;}
+}
+async function saveAvail(){
+  var token=getToken();
+  if(!token){showStatus("Add your GitHub token first (gear icon).","err");return;}
+  showStatus("Saving…","");
+  var ok=await putAvailability();
+  if(ok){var ds=DAYS.filter(d=>avState[d].available);showStatus("Saved · "+ds.join(", ")+". Mid-week changes? Ask Coach below.","ok");}
+  else showStatus("Error: save failed — check your token.","err");
 }
 function showStatus(m,t){var el=document.getElementById("av-status");el.textContent=m;el.className="status "+(t||"");}
 
@@ -1875,7 +1951,7 @@ var LOG_CHECKIN_TOOL={
 };
 var EDIT_PLAN_TOOL={
   name:"edit_plan",
-  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. Return the COMPLETE updated plan — every session for the week, not just the changed one.\n\nWHICH WEEK — IMPORTANT: Each edit_plan call changes exactly ONE week. Pass week_of = the Monday date (YYYY-MM-DD) of the week you are editing; the available weeks are listed under 'WEEKLY BLOCK' in your context. Omit week_of only to edit the current active week. To restructure several weeks (e.g. two future weeks), call edit_plan once PER week — you cannot change multiple weeks in a single call. A rest day just means no session on that day.\n\nDAY RULES: MULTIPLE SESSIONS PER DAY: use day:'Monday' for both entries — NEVER 'Monday Morning', 'Monday Evening', 'Monday AM'. Valid day values ONLY: Monday Tuesday Wednesday Thursday Friday Saturday Sunday.\n\nREQUIRED SESSION FIELDS: day, date (YYYY-MM-DD — copy the existing date; NEVER invent a new one), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, steps array.\n\nWORKOUT STRUCTURE — MANDATORY FOR ALL RUNNING AND CYCLING SESSIONS:\nEvery session must have: warmup step → main block → cooldown step. A single monolithic 'work' block is NEVER acceptable — Diego sees each step on his Garmin and needs to know exactly what to do.\n\nTARGET TYPES (required on every running/cycling step):\n• running → target_type:'pace', target_low/target_high in SECONDS PER KM (low=slower number, high=faster number; easy=390-360, threshold=315-300, Z4=285-270, Z5=270-250)\n• cycling_indoor → target_type:'power', target_low/target_high in watts\n• cycling_outdoor → target_type:'heart_rate', target_low/target_high in bpm\n• strength → description only; top-level notes field with full circuit\n\nStep types available: 'warmup' | 'interval' | 'recovery' | 'cooldown' | 'rest'\n\nSTEP DESCRIPTIONS must be specific — include effort label + zone + target. Examples: 'Surge @ 4:30/km (Z4-5)', 'Float recovery @ 6:30/km (Z1)', 'Threshold @ 175W (Z4)', 'Easy Z2 @ 130W'. NEVER write 'work', 'effort', or 'main set'.\n\nINTERVAL/FARTLEK/TEMPO/SWEET-SPOT/THRESHOLD: ALWAYS use repeat blocks {type:'repeat',repeat_count:N,steps:[workStep,recoveryStep]}. Inside a repeat: one interval step (the hard effort) + one recovery step. Never flatten intervals into a single step.\n\nEXAMPLE — Fartlek run 35 min (8×1min surges):\n[{type:'warmup',duration_secs:600,target_type:'pace',target_low:420,target_high:390,description:'Easy warm-up jog @ 6:30/km, leg swings, skips'},\n {type:'repeat',repeat_count:8,steps:[\n  {type:'interval',duration_secs:60,target_type:'pace',target_low:275,target_high:260,description:'Surge @ 4:20/km (Z4-5) — controlled and fast'},\n  {type:'recovery',duration_secs:90,target_type:'pace',target_low:400,target_high:380,description:'Float @ 6:20/km (Z1-2) — easy jog, recover fully'}\n ]},\n {type:'cooldown',duration_secs:450,target_type:'pace',target_low:430,target_high:400,description:'Easy cool-down @ 6:40/km, quad and calf stretches'}]\n\nEXAMPLE — Threshold run 45 min (3×8min):\n[{type:'warmup',duration_secs:900,...},\n {type:'repeat',repeat_count:3,steps:[\n  {type:'interval',duration_secs:480,target_type:'pace',target_low:315,target_high:300,description:'Threshold @ 5:00-5:15/km (Z4) — comfortably hard, controlled breathing'},\n  {type:'recovery',duration_secs:120,target_type:'pace',target_low:420,target_high:390,description:'Easy jog recovery @ 6:30/km (Z1)'}\n ]},\n {type:'cooldown',duration_secs:600,...}]\n\nEXAMPLE — Sweet-spot cycling 60 min (2×20min):\n[{type:'warmup',duration_secs:600,target_type:'power',target_low:80,target_high:130,description:'Gradual build, 90rpm'},\n {type:'repeat',repeat_count:2,steps:[\n  {type:'interval',duration_secs:1200,target_type:'power',target_low:158,target_high:175,description:'Sweet-spot 88% FTP @ 158-175W (Z3-4) — steady, controlled effort'},\n  {type:'recovery',duration_secs:300,target_type:'power',target_low:80,target_high:110,description:'Easy spin @ 80-110W (Z1), recover HR below 140'}\n ]},\n {type:'cooldown',duration_secs:600,target_type:'power',target_low:60,target_high:100,description:'Easy cool-down spin @ 60-100W'}]\n\nEasy/Z2 sessions: warmup + one steady interval step + cooldown is acceptable (no repeat block needed for continuous efforts).",
+  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. Return the COMPLETE updated plan — every session for the week, not just the changed one.\n\nWHICH WEEK — IMPORTANT: Each edit_plan call changes exactly ONE week. Pass week_of = the Monday date (YYYY-MM-DD) of the week you are editing; the available weeks are listed under 'WEEKLY BLOCK' in your context. Omit week_of only to edit the current active week. To restructure several weeks, make one edit_plan call PER week — multiple edit_plan calls in the same reply are fine and each will be saved. A rest day just means no session on that day.\n\nVALIDATION: Edits that put a session on an unavailable day, exceed a day's available hours, or exceed the athlete's max sessions per week are REJECTED — you'll get the reason back; fix the plan and call edit_plan again.\n\nDAY RULES: MULTIPLE SESSIONS PER DAY: use day:'Monday' for both entries — NEVER 'Monday Morning', 'Monday Evening', 'Monday AM'. Valid day values ONLY: Monday Tuesday Wednesday Thursday Friday Saturday Sunday.\n\nREQUIRED SESSION FIELDS: day, date (YYYY-MM-DD — copy the existing date; NEVER invent a new one), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, steps array.\n\nWORKOUT STRUCTURE — MANDATORY FOR ALL RUNNING AND CYCLING SESSIONS:\nEvery session must have: warmup step → main block → cooldown step. A single monolithic 'work' block is NEVER acceptable — Diego sees each step on his Garmin and needs to know exactly what to do.\n\nTARGET TYPES (required on every running/cycling step):\n• running → target_type:'pace', target_low/target_high in SECONDS PER KM (low=slower number, high=faster number; easy=390-360, threshold=315-300, Z4=285-270, Z5=270-250)\n• cycling_indoor → target_type:'power', target_low/target_high in watts\n• cycling_outdoor → target_type:'heart_rate', target_low/target_high in bpm\n• strength → description only; top-level notes field with full circuit\n\nStep types available: 'warmup' | 'interval' | 'recovery' | 'cooldown' | 'rest'\n\nSTEP DESCRIPTIONS must be specific — include effort label + zone + target. Examples: 'Surge @ 4:30/km (Z4-5)', 'Float recovery @ 6:30/km (Z1)', 'Threshold @ 175W (Z4)', 'Easy Z2 @ 130W'. NEVER write 'work', 'effort', or 'main set'.\n\nINTERVAL/FARTLEK/TEMPO/SWEET-SPOT/THRESHOLD: ALWAYS use repeat blocks {type:'repeat',repeat_count:N,steps:[workStep,recoveryStep]}. Inside a repeat: one interval step (the hard effort) + one recovery step. Never flatten intervals into a single step.\n\nEXAMPLE — Fartlek run 35 min (8×1min surges):\n[{type:'warmup',duration_secs:600,target_type:'pace',target_low:420,target_high:390,description:'Easy warm-up jog @ 6:30/km, leg swings, skips'},\n {type:'repeat',repeat_count:8,steps:[\n  {type:'interval',duration_secs:60,target_type:'pace',target_low:275,target_high:260,description:'Surge @ 4:20/km (Z4-5) — controlled and fast'},\n  {type:'recovery',duration_secs:90,target_type:'pace',target_low:400,target_high:380,description:'Float @ 6:20/km (Z1-2) — easy jog, recover fully'}\n ]},\n {type:'cooldown',duration_secs:450,target_type:'pace',target_low:430,target_high:400,description:'Easy cool-down @ 6:40/km, quad and calf stretches'}]\n\nEXAMPLE — Threshold run 45 min (3×8min):\n[{type:'warmup',duration_secs:900,...},\n {type:'repeat',repeat_count:3,steps:[\n  {type:'interval',duration_secs:480,target_type:'pace',target_low:315,target_high:300,description:'Threshold @ 5:00-5:15/km (Z4) — comfortably hard, controlled breathing'},\n  {type:'recovery',duration_secs:120,target_type:'pace',target_low:420,target_high:390,description:'Easy jog recovery @ 6:30/km (Z1)'}\n ]},\n {type:'cooldown',duration_secs:600,...}]\n\nEXAMPLE — Sweet-spot cycling 60 min (2×20min):\n[{type:'warmup',duration_secs:600,target_type:'power',target_low:80,target_high:130,description:'Gradual build, 90rpm'},\n {type:'repeat',repeat_count:2,steps:[\n  {type:'interval',duration_secs:1200,target_type:'power',target_low:158,target_high:175,description:'Sweet-spot 88% FTP @ 158-175W (Z3-4) — steady, controlled effort'},\n  {type:'recovery',duration_secs:300,target_type:'power',target_low:80,target_high:110,description:'Easy spin @ 80-110W (Z1), recover HR below 140'}\n ]},\n {type:'cooldown',duration_secs:600,target_type:'power',target_low:60,target_high:100,description:'Easy cool-down spin @ 60-100W'}]\n\nEasy/Z2 sessions: warmup + one steady interval step + cooldown is acceptable (no repeat block needed for continuous efforts).",
   input_schema:{
     type:"object",
     properties:{
@@ -1907,6 +1983,19 @@ var GENERATE_PLAN_TOOL={
     required:["start_week","message"]
   }
 };
+var SET_AVAILABILITY_TOOL={
+  name:"set_availability",
+  description:"Update Diego's weekly training schedule (the Schedule tab) when he tells you his availability or preferences changed — e.g. 'I can't train Wednesdays anymore', 'only 4 sessions a week from now on', 'Saturdays I have 2 hours now'. Pass ONLY the fields that change; everything else is preserved. This persists and is used for every future plan.",
+  input_schema:{
+    type:"object",
+    properties:{
+      days:{type:"object",description:"Only the days being changed, keyed by day name. Each value: {available:boolean, hours:number (0.5-4)}. e.g. {\"Wednesday\":{\"available\":false},\"Saturday\":{\"available\":true,\"hours\":2}}"},
+      max_sessions_per_week:{type:"integer",description:"Cap on training days per week (0 = no cap). Set when Diego expresses a preference like 'max 4 days a week'."},
+      prefer_rest_between:{type:"boolean",description:"true if Diego prefers rest days between training days (no back-to-back sessions)."},
+      notes:{type:"string",description:"Replacement for the schedule notes field, if he gives standing notes for planning."}
+    }
+  }
+};
 
 async function sendCoachMessage(){
   var input=document.getElementById("coach-input"), send=document.getElementById("coach-send");
@@ -1930,15 +2019,17 @@ async function sendCoachMessage(){
   // Recent sessions detail so Coach can reference actual workouts
   var last5=workouts.slice(-5).map(function(w){return (w.date||"")+": "+(w.type||w.sport||"session")+" "+(w.distance_km?w.distance_km.toFixed(1)+"km ":"")+(getTSS(w)?Math.round(getTSS(w))+"TSS":"");}).join(" | ");
   var goalLine=goals?("Primary goal: "+(goals.primary_goal||"—")+(goals.target_event?("; event: "+goals.target_event+(goals.target_date?" on "+goals.target_date:"")):"")+"; sport priority: "+(goals.sport_priority||"balanced")+(goals.injuries&&goals.injuries!=="none"?"; known injuries: "+goals.injuries:"")):"No goals set yet.";
-  // Availability — set by Diego on the Availability tab. The coach MUST respect this when editing/generating plans.
+  // Availability — set by Diego on the Schedule tab. The coach MUST respect this when editing/generating plans.
   var availLine=(function(){
     var avail=DAYS.filter(function(d){return avState[d]&&avState[d].available;});
     var unavail=DAYS.filter(function(d){return !avState[d]||!avState[d].available;});
     var detail=avail.map(function(d){var h=avState[d].hours;return d+" ("+(h>=1?h+"h":Math.round(h*60)+"min")+")";}).join(", ");
     var notes=((document.getElementById("av-notes")||{}).value||"").trim();
-    var s="Weekly availability (set by Diego on the Availability tab): "+(detail||"none marked");
+    var s="Weekly schedule (set by Diego on the Schedule tab): "+(detail||"none marked");
     if(unavail.length)s+=". Unavailable — NEVER schedule a session on these days: "+unavail.join(", ");
-    if(notes)s+=". Availability notes: "+notes;
+    if(avPrefs.max_sessions)s+=". PREFERENCE: at most "+avPrefs.max_sessions+" training days per week, even though more days are free — pick the best "+avPrefs.max_sessions;
+    if(avPrefs.spread)s+=". PREFERENCE: rest days between training days — avoid back-to-back sessions where possible";
+    if(notes)s+=". Schedule notes: "+notes;
     return s+".";
   })();
   // Weekly block — the multi-week plan. The coach edits a specific week by passing its week_of to edit_plan.
@@ -1960,8 +2051,8 @@ async function sendCoachMessage(){
     "• If he reports a session felt HARDER than expected at normal numbers: a flag for accumulated fatigue or under-recovery — ease off. If EASIER: he may be fitter; consider nudging targets up.\n"+
     "• Always weigh his subjective feedback ALONGSIDE the objective data below. When they conflict, the body wins.\n\n"+
     "WHEN ADJUSTING THE PLAN: call edit_plan with the FULL updated plan for the week you're changing, keeping unchanged sessions intact. Explain the reasoning briefly in your reply so he learns. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\n"+
-    "EDITING A SPECIFIC WEEK: edit_plan changes ONE week per call. To change a FUTURE week, pass that week's Monday date as week_of (see WEEKLY BLOCK below) — omitting week_of only edits the current active week. If Diego asks to restructure several weeks (e.g. \"weeks of July 6 and July 13\"), make a SEPARATE edit_plan call for each week; never assume a single call updates them all.\n\n"+
-    "RESPECT HIS AVAILABILITY: Diego sets which days he can train and how long on the Availability tab (shown below). NEVER schedule or move a session onto a day he has marked unavailable, and keep each day's total training time within the hours he has available. If a change he asks for would require training on an unavailable day, say so and propose an available day instead.\n\n"+
+    "EDITING A SPECIFIC WEEK: edit_plan changes ONE week per call. To change a FUTURE week, pass that week's Monday date as week_of (see WEEKLY BLOCK below) — omitting week_of only edits the current active week. If Diego asks to restructure several weeks (e.g. \"weeks of July 6 and July 13\"), make a SEPARATE edit_plan call for each week — several calls in one reply are fine, and each is saved and confirmed individually.\n\n"+
+    "RESPECT HIS SCHEDULE: Diego sets which days he can train, for how long, and how many sessions per week he wants on the Schedule tab (shown below). NEVER schedule or move a session onto a day he has marked unavailable, keep each day within its available hours, and honour his max-sessions preference. Edits that violate this are automatically rejected with the reason — fix and retry. When he tells you his availability or preferences CHANGED, call set_availability to persist it.\n\n"+
     "WORKOUT DESIGN: Build every session like you're handing it to a serious athlete. Warmup and cooldown are non-negotiable. For any session with structured intensity (fartlek, intervals, tempo, sweet-spot, threshold, VO2) ALWAYS use repeat blocks so the Garmin shows each step individually. Every step needs a specific description with zone label + target number — never write 'work' or 'effort'. A world-class coach writes '6×3min threshold @ 5:05/km (Z4), 90s easy jog between' — not 'main set 18min'.\n\n"+
     "═══ DIEGO'S CURRENT PICTURE ═══\n"+
     goalLine+"\n"+
@@ -1989,74 +2080,119 @@ async function sendCoachMessage(){
     blockLine+"\n"+
     "Current active-week plan JSON: "+JSON.stringify(planJson);
   coachHistory.push({role:"user",content:msg});
+  repairCoachHistory();
   try{
-    var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
-      headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL,GENERATE_PLAN_TOOL],messages:coachHistory})});
-    var data=await res.json();
-    var _th=document.getElementById("coach-thinking");if(_th)_th.remove();
-    if(data.error){addCoachMessage("Error: "+data.error.message,false);return;}
+    // Agentic loop: keep going while the coach calls tools, so multi-week
+    // edits and edit→checkin→summary sequences complete in one user turn.
+    var rounds=0,MAX_ROUNDS=5;
+    while(rounds<MAX_ROUNDS){
+      rounds++;
+      var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+        headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
+        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL,GENERATE_PLAN_TOOL,SET_AVAILABILITY_TOOL],messages:coachHistory})});
+      var data=await res.json();
+      var _th=document.getElementById("coach-thinking");if(_th)_th.remove();
+      if(data.error){addCoachMessage("Error: "+data.error.message,false);break;}
+      coachHistory.push({role:"assistant",content:data.content});
 
-    // Process all content blocks: text + tool_use (may be multiple tools in one turn)
-    var textParts=[], toolUse=null, checkinUse=null, genPlanUse=null;
-    (data.content||[]).forEach(function(b){
-      if(b.type==="text")textParts.push(b.text);
-      else if(b.type==="tool_use"&&b.name==="edit_plan")toolUse=b;
-      else if(b.type==="tool_use"&&b.name==="log_checkin")checkinUse=b;
-      else if(b.type==="tool_use"&&b.name==="generate_plan")genPlanUse=b;
-    });
-    coachHistory.push({role:"assistant",content:data.content});
+      // Process every content block in order — each tool_use gets exactly one tool_result.
+      var toolResults=[];
+      for(var bi=0;bi<(data.content||[]).length;bi++){
+        var b=data.content[bi];
+        if(b.type==="text"){if(b.text&&b.text.trim())addCoachMessage(b.text,false);continue;}
+        if(b.type!=="tool_use")continue;
 
-    if(textParts.length)addCoachMessage(textParts.join("\n"),false);
-
-    // Collect tool_results so the turn is properly closed for every tool call
-    var toolResults=[];
-
-    if(checkinUse){
-      var okC=await commitCheckin(checkinUse.input);
-      toolResults.push({type:"tool_result",tool_use_id:checkinUse.id,content:okC?"Check-in saved — the next plan will account for this.":"Couldn't save check-in (no GitHub token)."});
-      if(okC){
-        var sev=checkinUse.input.severity;
-        var icon=sev==="important"?"🔴":sev==="caution"?"🟡":"📝";
-        addCoachMessage(icon+" Noted and saved to your record — I'll factor this into your training.",false);
+        if(b.name==="log_checkin"){
+          var okC=await commitCheckin(b.input);
+          toolResults.push({type:"tool_result",tool_use_id:b.id,content:okC?"Check-in saved — the next plan will account for this.":"Couldn't save check-in (no GitHub token)."});
+          if(okC){
+            var sev=b.input.severity;
+            addCoachMessage((sev==="important"?"🔴":sev==="caution"?"🟡":"📝")+" Noted and saved to your record — I'll factor this into your training.",false);
+          }
+        }else if(b.name==="generate_plan"){
+          var sw=b.input.start_week||1;
+          addCoachMessage(b.input.message||"Generating your plan…",false);
+          toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Plan generation triggered for "+(sw===0?"this week":"next week")+"."});
+          generatePlanForWeek(sw);
+        }else if(b.name==="set_availability"){
+          var okA=await commitAvailability(b.input);
+          toolResults.push({type:"tool_result",tool_use_id:b.id,content:okA?"Schedule updated and saved.":"Couldn't save the schedule (no GitHub token)."});
+          if(okA)addCoachMessage("🗓 Schedule updated — you can review it anytime on the Schedule tab.",false);
+        }else if(b.name==="edit_plan"){
+          var summary=b.input.summary||"Plan updated";
+          var result=await commitPlanEdit(b.input.plan,summary,b.input.week_of);
+          if(result&&result.ok){
+            toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Plan saved successfully for week of "+result.targetMon+"."});
+            if(result.isActive)planJson=result.fixed;
+            var wk=planBlock.find(function(w){return w.week_of===result.targetMon;});
+            if(wk){wk.sessions=result.fixed;wk.detailed=true;}
+            else{planBlock.push({week_of:result.targetMon,sessions:result.fixed,detailed:true});planBlock.sort(function(a,b2){return a.week_of<b2.week_of?-1:1;});}
+            // Jump the Plan view to the week that changed so Diego sees it.
+            var vo=planStartOffset();for(var o=0;o<=16;o++){if(localDateStr(mondayOf(o))===result.targetMon){vo=o;break;}}
+            weekOffset=vo;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();
+            addCoachMessage("✅ "+summary+"\n\nIt's updated here — review it and push to Garmin when ready.",false);
+            appendUndoChip();
+          }else{
+            var reason=(result&&result.reason)?result.reason:"Save failed — Diego must add a GitHub token.";
+            toolResults.push({type:"tool_result",tool_use_id:b.id,content:"EDIT REJECTED: "+reason+(result&&result.reason?" Adjust the plan to fit his schedule and call edit_plan again.":"")});
+          }
+        }else{
+          toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Unknown tool."});
+        }
       }
-    }
 
-    if(genPlanUse){
-      var sw=genPlanUse.input.start_week||1;
-      var gpMsg=genPlanUse.input.message||"Generating your plan…";
-      addCoachMessage(gpMsg,false);
-      toolResults.push({type:"tool_result",tool_use_id:genPlanUse.id,content:"Plan generation triggered for "+(sw===0?"this week":"next week")+"."});
-      generatePlanForWeek(sw);
-    }
-
-    if(toolUse){
-      var newPlan=toolUse.input.plan, summary=toolUse.input.summary||"Plan updated";
-      var result=await commitPlanEdit(newPlan,summary,toolUse.input.week_of);
-      var okEdit=result&&result.ok;
-      toolResults.push({type:"tool_result",tool_use_id:toolUse.id,content:okEdit?"Plan saved successfully for week of "+(result.targetMon||"active week")+".":"Save failed — Diego must add a GitHub token."});
-      if(okEdit){
-        if(result.isActive)planJson=result.fixed;
-        var wk=planBlock.find(function(w){return w.week_of===result.targetMon;});
-        if(wk){wk.sessions=result.fixed;wk.detailed=true;}
-        else{planBlock.push({week_of:result.targetMon,sessions:result.fixed,detailed:true});planBlock.sort(function(a,b){return a.week_of<b.week_of?-1:1;});}
-        // Jump the Plan view to the week that changed so Diego sees it.
-        var vo=planStartOffset();for(var o=0;o<=16;o++){if(localDateStr(mondayOf(o))===result.targetMon){vo=o;break;}}
-        weekOffset=vo;updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();
-        addCoachMessage("✅ "+summary+"\n\nIt's updated here — review it and push to Garmin when ready.",false);
-      }
-    }
-
-    if(toolResults.length){
+      if(!toolResults.length)break; // plain text reply — turn complete
       coachHistory.push({role:"user",content:toolResults});
+      if(rounds<MAX_ROUNDS){
+        var tb=document.createElement("div");tb.id="coach-thinking";tb.className="bubble ai";
+        tb.innerHTML='<span class="label">Coach Claudio is thinking</span><span class="dots"><span></span><span></span><span></span></span>';
+        document.getElementById("coach-msgs").appendChild(tb);
+      }
     }
+    var _th2=document.getElementById("coach-thinking");if(_th2)_th2.remove();
     if(coachHistory.length>20)coachHistory=safeSliceHistory(coachHistory,20);
     saveChatHistory();
-  }catch(e){var _th=document.getElementById("coach-thinking");if(_th)_th.remove();addCoachMessage("Network error: "+e.message,false);}
+  }catch(e){var _the=document.getElementById("coach-thinking");if(_the)_the.remove();addCoachMessage("Network error: "+e.message,false);}
   finally{send.disabled=false;send.style.opacity="1";}
 }
 
-async function commitPlanEdit(newPlan,summary,weekOf){
+// Self-heal: every assistant tool_use must be answered by a tool_result in the
+// NEXT user message. A dropped result (old bug, interrupted request, stale
+// localStorage) would make the API reject the whole history — repair instead.
+function repairCoachHistory(){
+  for(var i=0;i<coachHistory.length;i++){
+    var m=coachHistory[i];
+    if(m.role!=="assistant"||!Array.isArray(m.content))continue;
+    var uses=m.content.filter(function(b){return b.type==="tool_use";});
+    if(!uses.length)continue;
+    var next=coachHistory[i+1];
+    var have=(next&&next.role==="user"&&Array.isArray(next.content))?next.content.filter(function(b){return b.type==="tool_result";}).map(function(b){return b.tool_use_id;}):[];
+    var missing=uses.filter(function(u){return have.indexOf(u.id)<0;});
+    if(!missing.length)continue;
+    var patch=missing.map(function(u){return {type:"tool_result",tool_use_id:u.id,content:"Interrupted — this call was not executed."};});
+    if(next&&next.role==="user"&&Array.isArray(next.content)){next.content=patch.concat(next.content);}
+    else{coachHistory.splice(i+1,0,{role:"user",content:patch});}
+  }
+}
+
+// Hard guard: the plan must fit Diego's schedule regardless of what the model says.
+function validatePlanAgainstSchedule(fixed){
+  var problems=[];
+  var byDay={};
+  fixed.forEach(function(s){byDay[s.day]=(byDay[s.day]||0)+(s.total_duration_secs||0);});
+  Object.keys(byDay).forEach(function(d){
+    var av=avState[d];
+    if(!av||!av.available){problems.push(d+" is marked unavailable (rest day) on his schedule");return;}
+    var cap=Math.round((av.hours||0)*3600);
+    if(cap&&byDay[d]>cap)problems.push(d+" totals "+Math.round(byDay[d]/60)+"min but only "+Math.round(cap/60)+"min is available");
+  });
+  var trainDays=Object.keys(byDay).length;
+  if(avPrefs.max_sessions&&trainDays>avPrefs.max_sessions)problems.push("plan has "+trainDays+" training days but his max is "+avPrefs.max_sessions+" per week");
+  return problems.length?problems.join("; ")+".":null;
+}
+var _lastPlanEdit=null;
+async function commitPlanEdit(newPlan,summary,weekOf,opts){
+  opts=opts||{};
   var token=getToken();
   if(!token){addCoachMessage("⚠️ To save plan edits I need your GitHub token (gear icon, top right).",false);return false;}
   try{
@@ -2073,10 +2209,18 @@ async function commitPlanEdit(newPlan,summary,weekOf){
     function normDay(d){if(!d)return "";return d.charAt(0).toUpperCase()+d.slice(1).toLowerCase();}
     var fixed=newPlan.filter(function(s){return normDay(s.day)&&wd[normDay(s.day)];}).map(function(s){var c=Object.assign({},s);c.day=normDay(c.day);c.date=wd[c.day];return c;});
 
+    // Hard schedule guard (skipped for undo, which restores a previous state)
+    if(!opts.force){
+      var violation=validatePlanAgainstSchedule(fixed);
+      if(violation)return {ok:false,reason:violation};
+    }
+
     // Patch the target week in plan_block.json (source for every week's display).
     var pbMeta=await(await fetch(API+"/plan_block.json",{headers:{Authorization:"Bearer "+token}})).json();
     var block=JSON.parse(decodeURIComponent(escape(atob(pbMeta.content.replace(/\n/g,'')))));
     var wk=block.find(function(w){return w.week_of===targetMon;});
+    // Keep the pre-edit state so the last coach edit can be undone from chat.
+    if(!opts.skipBackup)_lastPlanEdit={weekOf:targetMon,prev:JSON.parse(JSON.stringify(wk?(wk.sessions||[]):[])),summary:summary};
     if(wk){wk.sessions=fixed;wk.detailed=true;}
     else{block.push({week_of:targetMon,sessions:fixed,detailed:true});block.sort(function(a,b){return a.week_of<b.week_of?-1:1;});}
     var r2=await fetch(API+"/plan_block.json",{method:"PUT",
@@ -2093,8 +2237,54 @@ async function commitPlanEdit(newPlan,summary,weekOf){
       if(!r1.ok){addCoachMessage("⚠️ Block updated but the active week didn't save — tap Refresh if needed.",false);}
     }
 
+    try{localStorage.setItem("plan_dirty","1");}catch(e2){}
     return {ok:true,fixed:fixed,targetMon:targetMon,isActive:isActive};
   }catch(e){addCoachMessage("Save error: "+e.message,false);return false;}
+}
+// Undo chip shown after each successful coach edit
+function appendUndoChip(){
+  if(!_lastPlanEdit)return;
+  var c=document.getElementById("coach-msgs");
+  var b=document.createElement("div");b.className="bubble ai";b.style.padding="8px 12px";
+  var btn=document.createElement("button");
+  btn.textContent="↩ Undo this edit";
+  btn.style.cssText="background:var(--bg3);border:1px solid var(--line);color:var(--t1);border-radius:10px;padding:9px 14px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)";
+  btn.onclick=function(){btn.disabled=true;btn.style.opacity="0.5";undoLastCoachEdit();};
+  b.appendChild(btn);c.appendChild(b);
+}
+async function undoLastCoachEdit(){
+  var u=_lastPlanEdit;
+  if(!u){addCoachMessage("Nothing to undo.",false);return;}
+  _lastPlanEdit=null;
+  var result=await commitPlanEdit(u.prev,"Undo: "+u.summary,u.weekOf,{force:true,skipBackup:true});
+  if(result&&result.ok){
+    if(result.isActive)planJson=result.fixed;
+    var wk=planBlock.find(function(w){return w.week_of===result.targetMon;});
+    if(wk)wk.sessions=result.fixed;
+    updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();
+    addCoachMessage("↩ Reverted — the week of "+result.targetMon+" is back to how it was before the last edit.",false);
+    coachHistory.push({role:"user",content:"[System note: Diego pressed Undo — the last edit_plan change for week of "+result.targetMon+" has been reverted.]"});
+    saveChatHistory();
+  }else{
+    addCoachMessage("Couldn't undo — "+((result&&result.reason)||"save failed")+".",false);
+  }
+}
+// Coach-initiated schedule update (set_availability tool)
+async function commitAvailability(input){
+  input=input||{};
+  if(input.days){
+    DAYS.forEach(function(d){
+      if(!input.days[d])return;
+      if(!avState[d])avState[d]={available:false,hours:1};
+      if(typeof input.days[d].available==="boolean")avState[d].available=input.days[d].available;
+      if(typeof input.days[d].hours==="number")avState[d].hours=Math.max(0.5,Math.min(4,input.days[d].hours));
+    });
+  }
+  if(typeof input.max_sessions_per_week==="number")avPrefs.max_sessions=Math.max(0,Math.min(7,Math.round(input.max_sessions_per_week)));
+  if(typeof input.prefer_rest_between==="boolean")avPrefs.spread=input.prefer_rest_between;
+  if(typeof input.notes==="string")document.getElementById("av-notes").value=input.notes;
+  renderAvail();renderPrefs();
+  return await putAvailability();
 }
 async function commitCheckin(input){
   // Append a subjective check-in to checkins.json so the plan generator can read it.
@@ -2184,9 +2374,9 @@ async function runOnboardingTurn(){
   var sys="You are Coach Claudio, a warm, encouraging endurance coach onboarding a new athlete, Diego. "+
     "Have a natural conversation to understand his goals. Ask ONE question at a time — never a list. "+
     "Cover: his primary goal; any target event + date; how he wants to split running/cycling/strength; injuries or limitations; and his current weekly training volume and longest sessions. "+
-    "Do NOT ask about availability, preferred days, or hours per week — he sets that himself in the Availability tab each week. "+
+    "Do NOT ask about availability, preferred days, or hours per week — he sets that himself in the Schedule tab each week. "+
     "Acknowledge each answer briefly before the next question. He does running, cycling (indoor + outdoor) and home strength (TRX, bands, dumbbells). "+
-    "When you have enough to build a tailored plan, call save_goals, then give a short sign-off. Mention he can set his exact training schedule anytime in the Availability tab. Keep each message short.";
+    "When you have enough to build a tailored plan, call save_goals, then give a short sign-off. Mention he can set his exact training schedule anytime in the Schedule tab. Keep each message short.";
   try{
     var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
       headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
@@ -2204,7 +2394,7 @@ async function runOnboardingTurn(){
         renderGoalsSummary();
         document.getElementById("ob-close").textContent="Done";
         setTimeout(function(){
-          obMsg("Goals are saved ✨\n\nTwo quick steps before your first plan:\n\n1️⃣ Open the **Avail** tab and set your typical weekly availability (which days, how many hours).\n\n2️⃣ Come back to the **Plan** tab and tap **Generate plan**. I'll build you a tailored 4-week block based on your goals and availability.\n\nWelcome aboard, Diego.",false);
+          obMsg("Goals are saved ✨\n\nTwo quick steps before your first plan:\n\n1️⃣ Open the **Schedule** tab and set your typical weekly availability (which days, how many hours).\n\n2️⃣ Come back to the **Plan** tab and tap **Generate plan**. I'll build you a tailored 4-week block based on your goals and availability.\n\nWelcome aboard, Diego.",false);
         },400);
       }
     }
@@ -2345,6 +2535,8 @@ async function init(){
   sleep=Array.isArray(r[8])?r[8]:[];
   if(prof){profile=prof;FTP=prof.cycling?.ftp_watts||FTP;LTHR=prof.running?.threshold_hr||LTHR;REST_HR=prof.running?.resting_hr||REST_HR;MAX_HR=prof.running?.max_hr||MAX_HR;}
   if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
+  if(avail){avPrefs.max_sessions=avail.max_sessions_per_week||0;avPrefs.spread=!!avail.prefer_rest_between;}
+  renderPrefs();
   weekOffset=planStartOffset();updateWeekLabel();
   renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
   renderPlanPreamble();renderBlockOverview();loadChatHistory();

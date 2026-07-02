@@ -1,26 +1,63 @@
-var SW_VERSION = '20260602-4';
+var SW_VERSION = '20260702-1';
+var SHELL_CACHE = 'shell-' + SW_VERSION;
+var CDN_CACHE = 'cdn-v1';
+var SHELL = ['./', './dashboard.html', './manifest.json', './apple-touch-icon.png', './icon-192.png', './icon-512.png'];
 
-// On install, skip waiting so new SW activates immediately
+// On install, precache the app shell and skip waiting so the new SW activates immediately
 self.addEventListener('install', function(event) {
-  self.skipWaiting();
+  event.waitUntil(
+    caches.open(SHELL_CACHE)
+      .then(function(c) { return c.addAll(SHELL); })
+      .catch(function() {})
+      .then(function() { return self.skipWaiting(); })
+  );
 });
 
-// On activate, claim all clients so this SW controls every open tab right away
+// On activate, drop old shell caches and claim all clients
 self.addEventListener('activate', function(event) {
-  event.waitUntil(self.clients.claim());
+  event.waitUntil(
+    caches.keys().then(function(keys) {
+      return Promise.all(keys.map(function(k) {
+        if (k.indexOf('shell-') === 0 && k !== SHELL_CACHE) return caches.delete(k);
+      }));
+    }).then(function() { return self.clients.claim(); })
+  );
 });
 
-// Network-first for HTML navigation: always try the network so updates land
-// immediately. Falls back to cache only if completely offline.
+// HTML navigation: network-first so updates land immediately, cached shell as
+// the offline fallback. CDN assets (Chart.js, fonts): stale-while-revalidate
+// so the home-screen app opens instantly and works offline.
 self.addEventListener('fetch', function(event) {
   var req = event.request;
+  if (req.method !== 'GET') return;
   if (req.mode === 'navigate' || req.url.indexOf('dashboard.html') > -1) {
     event.respondWith(
-      fetch(req).catch(function() { return caches.match(req); })
+      fetch(req).then(function(res) {
+        var copy = res.clone();
+        caches.open(SHELL_CACHE).then(function(c) { c.put(req, copy); });
+        return res;
+      }).catch(function() {
+        return caches.match(req).then(function(m) { return m || caches.match('./dashboard.html'); });
+      })
     );
     return;
   }
-  // All other requests pass through normally
+  if (req.url.indexOf('cdnjs.cloudflare.com') > -1 || req.url.indexOf('fonts.googleapis.com') > -1 || req.url.indexOf('fonts.gstatic.com') > -1) {
+    event.respondWith(
+      caches.match(req).then(function(cached) {
+        var net = fetch(req).then(function(res) {
+          if (res && (res.ok || res.type === 'opaque')) {
+            var copy = res.clone();
+            caches.open(CDN_CACHE).then(function(c) { c.put(req, copy); });
+          }
+          return res;
+        }).catch(function() { return cached; });
+        return cached || net;
+      })
+    );
+    return;
+  }
+  // All other requests (GitHub data) pass through normally
 });
 
 self.addEventListener('push', function(event) {

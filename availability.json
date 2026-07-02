@@ -29,5 +29,7 @@
       "hours": 2
     }
   },
-  "notes": ""
+  "notes": "",
+  "max_sessions_per_week": 4,
+  "prefer_rest_between": true
 }
