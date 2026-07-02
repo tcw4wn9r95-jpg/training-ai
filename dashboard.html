@@ -417,6 +417,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div id="today-coach-note" style="display:none;margin-top:10px;padding:10px 12px;border-radius:10px;background:rgba(0,200,150,.07);border:1px solid rgba(0,200,150,.18);font-size:12px;color:var(--t2);line-height:1.55"></div>
       <div id="today-synopsis" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--t2);line-height:1.55"></div>
     </div>
+    <div id="week-progress"></div>
     <div id="block-overview"></div>
 
     <div class="form-banner">
@@ -653,7 +654,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260702-1";
+const BUILD="20260702-2";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -776,7 +777,7 @@ function renderHome(){
     document.getElementById("kpi-atl").textContent="—";
     document.getElementById("kpi-week").textContent="—";
     var rEl=document.getElementById("kpi-ramp");if(rEl)rEl.textContent="CTL";
-    renderTodayHero();renderGoalBanner(0,0);drawSleep(sleep);
+    renderTodayHero();renderWeekProgress();renderGoalBanner(0,0);drawSleep(sleep);
     return;
   }
   var pmc=buildPMC(pmcDays);
@@ -792,6 +793,14 @@ function renderHome(){
   else if(tsb>-10){clr="#22c55e";state="Optimal Training";desc="Productive zone — you're absorbing load well. Keep the rhythm.";rec="Good productive load — don't add volume";}
   else if(tsb>-20){clr="#f59e0b";state="Building / Tired";desc="Carrying real fatigue. Normal mid-block. Keep easy days easy.";rec="Back off 10-15% if feeling heavy today";}
   else{clr="#ef4444";state="Deep Fatigue";desc="You're deep in the hole. Prioritise recovery to avoid overtraining.";rec="Prioritise recovery — reduce or rest today";}
+  // Whoop-style readiness: last night's sleep modulates today's call —
+  // when sleep and training load disagree, the body wins.
+  var ls=(sleep&&sleep.length)?sleep[sleep.length-1]:null;
+  if(ls&&ls.score&&ls.date&&(new Date()-new Date(ls.date+"T00:00:00"))/864e5<2){
+    if(ls.score<55){clr="#ef4444";rec="Sleep "+ls.score+"/100 last night — go easy or rest today regardless of the plan";}
+    else if(ls.score<70){if(clr==="#22c55e"||clr==="#3b82f6")clr="#f59e0b";rec="Sleep "+ls.score+"/100 last night — keep intensity in check today";}
+    else if(ls.score>=85&&(clr==="#22c55e"||clr==="#3b82f6")){rec+=" · slept well ("+ls.score+"/100)";}
+  }
   g.textContent=(tsb>0?"+":"")+Math.round(tsb);
   g.style.background="conic-gradient("+clr+" "+Math.min(100,Math.abs(tsb)*2.5)+"%,var(--bg3) 0)";
   g.style.color=clr;
@@ -814,6 +823,7 @@ function renderHome(){
 
   drawPMC(pmc);drawLoad();drawSleep(sleep);
   renderTodayHero();
+  renderWeekProgress();
   renderProjection(ctl,atl);
   renderGoalBanner(ctl,atl);
 }
@@ -1457,6 +1467,49 @@ function closeExerciseOverlay(){
   document.getElementById("ex-overlay").style.display="none";
   document.body.style.overflow="";
 }
+// TrainingPeaks-style compliance: match a planned session to completed
+// activities on the same day + sport family and grade by duration ratio.
+function sessionStatus(s,fallbackDate){
+  var date=s.date||fallbackDate;
+  if(!date)return null;
+  var today=localDateStr(new Date());
+  if(date>today)return null;
+  var fam=(s.sport||"")==="running"?"run":(s.sport||"").indexOf("cycl")>-1?"bike":(s.sport||"")==="strength"?"strength":"other";
+  var done=workouts.filter(function(w){return w.date===date&&sportOf(w)===fam;});
+  if(done.length){
+    var mins=done.reduce(function(t,w){return t+(w.duration_min||0);},0);
+    var planned=(s.total_duration_secs||0)/60;
+    if(!planned||mins>=planned*0.8)return {k:"done",label:"✓ Done",c:"#22c55e",bg:"rgba(34,197,94,.14)"};
+    if(mins>=planned*0.5)return {k:"partial",label:"≈ Partial",c:"#f59e0b",bg:"rgba(245,158,11,.14)"};
+    return {k:"partial",label:"≈ Short",c:"#f59e0b",bg:"rgba(245,158,11,.14)"};
+  }
+  if(date===today)return {k:"today",label:"Today",c:"var(--brand)",bg:"var(--brand-dim)"};
+  return {k:"missed",label:"Missed",c:"#ef4444",bg:"rgba(239,68,68,.12)"};
+}
+// TrainerRoad-style weekly progress: sessions done vs planned, TSS vs target.
+function renderWeekProgress(){
+  var el=document.getElementById("week-progress");
+  if(!el)return;
+  var thisMon=localDateStr(mondayOf(0));
+  var arr=(getPlanJsonMon()===thisMon&&planJson.length)?planJson:(planForOffset(0)||[]);
+  if(!arr.length){el.innerHTML="";return;}
+  var doneN=0;
+  arr.forEach(function(s){var st=sessionStatus(s);if(st&&(st.k==="done"||st.k==="partial"))doneN++;});
+  var plannedTSS=arr.reduce(function(t,s){return t+(s.planned_tss||0);},0);
+  var doneTSS=Math.round(workouts.filter(function(w){return w.date>=thisMon;}).reduce(function(t,w){return t+getTSS(w);},0));
+  var pct=plannedTSS?Math.min(100,Math.round(doneTSS/plannedTSS*100)):Math.round(doneN/arr.length*100);
+  var barClr=pct>=100?"#22c55e":"var(--brand)";
+  el.innerHTML=
+    '<div style="background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px" onclick="showPage(\'plan\',document.querySelectorAll(\'.nav button\')[1])" role="button" aria-label="Open this week\'s plan">'+
+      '<div style="display:flex;align-items:baseline;justify-content:space-between">'+
+        '<span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)">This week</span>'+
+        '<span style="font-size:12px;color:var(--t2);font-weight:600">'+doneN+' of '+arr.length+' session'+(arr.length===1?"":"s")+(plannedTSS?' · '+doneTSS+'/'+plannedTSS+' TSS':'')+'</span>'+
+      '</div>'+
+      '<div style="height:6px;border-radius:4px;background:var(--bg3);margin-top:9px;overflow:hidden">'+
+        '<div style="height:100%;width:'+pct+'%;border-radius:4px;background:'+barClr+';transition:width .4s ease"></div>'+
+      '</div>'+
+    '</div>';
+}
 function renderWeekStrip(arr){
   var strip=document.getElementById("week-strip");
   if(!strip)return;
@@ -1475,14 +1528,17 @@ function renderWeekStrip(arr){
     var ds=d.toISOString().split("T")[0];
     var isToday=ds===today;
     var sess=byDay[i];
-    var dotBg="var(--bg3)",dotClr="var(--t3)";
+    var dotBg="var(--bg3)",dotClr="var(--t3)",dotExtra="";
     if(sess){
       var st=sess.sport==="running"?"run":sess.sport&&sess.sport.indexOf("cycl")>-1?"bike":sess.sport==="strength"?"strength":"other";
       var cl=sportClr(st);dotBg=cl[0];dotClr=cl[1];
+      var cs=sessionStatus(sess,ds);
+      if(cs&&(cs.k==="done"||cs.k==="partial"))dotExtra="box-shadow:0 0 0 2px "+(cs.k==="done"?"#22c55e":"#f59e0b")+";";
+      else if(cs&&cs.k==="missed")dotExtra="opacity:.4;";
     }
     return '<div class="ws-day" onclick="scrollToPlanDay('+i+')">'+
       '<div class="ws-abbr" style="color:'+(isToday?"var(--brand)":"var(--t3)")+'">'+abbr+'</div>'+
-      '<div class="ws-dot" style="background:'+dotBg+';color:'+dotClr+';'+(isToday?"box-shadow:0 0 0 2px var(--brand)":"")+'">'+
+      '<div class="ws-dot" style="background:'+dotBg+';color:'+dotClr+';'+dotExtra+(isToday?"box-shadow:0 0 0 2px var(--brand)":"")+'">'+
         (sess?sportIcon(sess.sport==="running"?"run":sess.sport&&sess.sport.indexOf("cycl")>-1?"bike":sess.sport==="strength"?"strength":"other"):'<svg viewBox="0 0 20 20" fill="none"><circle cx="10" cy="10" r="2" fill="currentColor" opacity=".3"/></svg>')+
       '</div>'+
     '</div>';
@@ -1556,6 +1612,8 @@ function renderPlanArray(arr,wk){
     var metaLine=dayLabel+(dur?' · '+dur+' min':"")+(s.planned_tss?' · '+s.planned_tss+' TSS':"");
     var ib=intensityBadge(s);
     var ibHTML=ib?'<span class="tag" style="background:'+ib.bg+';color:'+ib.c+'">'+ib.l+'</span>':"";
+    var st2=sessionStatus(s);
+    if(st2)ibHTML+='<span class="tag" style="background:'+st2.bg+';color:'+st2.c+';margin-left:4px">'+st2.label+'</span>';
     var isStrength=sp==="strength";
 
     var el=document.createElement("div");el.className="day";
