@@ -427,7 +427,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <div class="form-desc" id="form-desc">Sync your training to see readiness.</div>
         <div class="form-rec" id="form-rec"></div>
         <div style="font-size:11px;color:var(--t3);margin-top:5px;cursor:pointer" onclick="toggleFormInfo()">ⓘ What do these mean?</div>
-        <div id="form-info-text" style="display:none;font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5;background:rgba(255,255,255,.03);border-radius:6px;padding:6px 8px">TSB = Fitness (CTL, 42-day avg) − Fatigue (ATL, 7-day avg). Positive = fresh; negative = under training load. −10 to +5 is the optimal zone. CTL rises with consistent training; ATL spikes after hard days and drops quickly on rest.</div>
+        <div id="form-info-text" style="display:none;font-size:11px;color:var(--t3);margin-top:6px;line-height:1.5;background:rgba(255,255,255,.03);border-radius:6px;padding:6px 8px">TSB = Fitness (CTL, 42-day avg) − Fatigue (ATL, 7-day avg). Zones (Coggan/Friel): −10 to −30 = productive training; −10 to +10 = maintaining; +10 to +25 = race fresh; above +25 = transition (detraining); below −30 = high risk. Important: TSB only means something while you're training — with no recent load it drifts to 0 while fitness decays, so the app shows Detraining instead.</div>
       </div>
     </div>
 
@@ -654,7 +654,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260702-2";
+const BUILD="20260702-3";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -784,15 +784,27 @@ function renderHome(){
   var ctl=pmc.C[pmc.C.length-1], atl=pmc.A[pmc.A.length-1], tsb=pmc.T[pmc.T.length-1];
   var ctl7ago=pmc.C[pmc.C.length-8]||ctl, ramp=(ctl-ctl7ago).toFixed(1);
 
-  // Form gauge
+  // Form gauge — Coggan/Friel TSB zones, but TSB is only meaningful when
+  // there IS recent training: with zero load CTL and ATL both decay and TSB
+  // drifts to ~0, which looks "optimal" while you're actually detraining.
   var g=document.getElementById("form-gauge");
+  var cut14=new Date();cut14.setDate(cut14.getDate()-14);
+  var tss14=workouts.filter(function(w){return new Date(w.date)>=cut14;}).reduce(function(s,w){return s+getTSS(w);},0);
+  var lastDate=workouts.reduce(function(m,w){return w.date>m?w.date:m;},"2000-01-01");
+  var daysSince=Math.max(0,Math.round((new Date()-new Date(lastDate+"T00:00:00"))/864e5));
   var clr,state,desc;
   var rec;
-  if(tsb>15){clr="#3b82f6";state="Fresh / Tapered";desc="High form. Great for racing or a hard key session. If not racing, you may be detraining slightly.";rec="Hit targets — you're primed for quality";}
-  else if(tsb>5){clr="#22c55e";state="Good Form";desc="Well-balanced and ready. A good day for quality work or an event.";rec="Execute your zones precisely today";}
-  else if(tsb>-10){clr="#22c55e";state="Optimal Training";desc="Productive zone — you're absorbing load well. Keep the rhythm.";rec="Good productive load — don't add volume";}
-  else if(tsb>-20){clr="#f59e0b";state="Building / Tired";desc="Carrying real fatigue. Normal mid-block. Keep easy days easy.";rec="Back off 10-15% if feeling heavy today";}
-  else{clr="#ef4444";state="Deep Fatigue";desc="You're deep in the hole. Prioritise recovery to avoid overtraining.";rec="Prioritise recovery — reduce or rest today";}
+  if(tss14<30){
+    var since=daysSince>=14?Math.floor(daysSince/7)+" weeks":daysSince+" days";
+    if(ctl>=15){clr="#f59e0b";state="Detraining";desc="No meaningful training in the last "+since+". Fitness (CTL "+Math.round(ctl)+") is decaying — form only looks neutral because fatigue is zero, not because you're ready to perform.";rec="Restart gently — short easy sessions first, rebuild rhythm before intensity";}
+    else{clr="#6b7480";state="Off-Season / Rebuild";desc="Little training in the last "+since+" and the fitness base is low (CTL "+Math.round(ctl)+"). Form (TSB) isn't meaningful until you're training consistently again.";rec="Start small and consistent — the first weeks are about rhythm, not load";}
+  }
+  else if(tsb>25){clr="#3b82f6";state="Transition";desc="Very fresh — more rested than your training history supports. Extended time here means losing fitness (the post-race / detraining zone).";rec="Add load again unless you're deliberately recovering";}
+  else if(tsb>10){clr="#3b82f6";state="Race Fresh";desc="The taper zone (+10 to +25). Form is up without much fitness decay — ideal for racing or a peak effort.";rec="Hit targets — you're primed for quality";}
+  else if(tsb>-10){clr="#22c55e";state="Maintaining";desc="The grey zone — load and recovery are balanced. Fine for holding fitness, but you won't build much here.";rec="Comfortable place — add a quality session if you want to progress";}
+  else if(tsb>-20){clr="#22c55e";state="Optimal Training";desc="Productive overload (−10 to −20) — you're building and absorbing load well. Most of a good build block lives here.";rec="Good productive load — don't add volume";}
+  else if(tsb>-30){clr="#f59e0b";state="Heavy Build";desc="Approaching the fatigue limit (−20 to −30). Normal briefly mid-block, but keep easy days genuinely easy.";rec="Back off 10-15% if feeling heavy today";}
+  else{clr="#ef4444";state="High Risk";desc="Below −30 — overreached. Injury and illness risk climbs fast here. Prioritise recovery.";rec="Prioritise recovery — reduce or rest today";}
   // Whoop-style readiness: last night's sleep modulates today's call —
   // when sleep and training load disagree, the body wins.
   var ls=(sleep&&sleep.length)?sleep[sleep.length-1]:null;
@@ -2073,7 +2085,9 @@ async function sendCoachMessage(){
   var ctl28=pmc.C.length>28?pmc.C[pmc.C.length-29]:ctl;
   var ctlTrend=ctl-ctl28; // + = building fitness, - = detraining
   var rampRate=Math.round(ctlTrend*10)/10;
-  var formState=tsb<-30?"very fatigued (injury/illness risk)":tsb<-10?"fatigued (productive training stress)":tsb<5?"neutral/fresh":tsb<25?"fresh (peaked/tapered)":"very fresh (detraining or well-rested)";
+  var cut14c=new Date();cut14c.setDate(cut14c.getDate()-14);
+  var tss14c=workouts.filter(function(w){return new Date(w.date)>=cut14c;}).reduce(function(s,w){return s+getTSS(w);},0);
+  var formState=tss14c<30?"DETRAINED — no meaningful training in 2+ weeks, so TSB is not meaningful right now (fitness decaying, fatigue zero). Treat him as restarting: rebuild gradually, don't prescribe off his TSB":tsb<-30?"very fatigued (injury/illness risk)":tsb<-10?"fatigued (productive training stress)":tsb<10?"neutral — maintaining":tsb<25?"race fresh (peaked/tapered)":"transition zone (very fresh — detraining if it persists)";
   // Recent sessions detail so Coach can reference actual workouts
   var last5=workouts.slice(-5).map(function(w){return (w.date||"")+": "+(w.type||w.sport||"session")+" "+(w.distance_km?w.distance_km.toFixed(1)+"km ":"")+(getTSS(w)?Math.round(getTSS(w))+"TSS":"");}).join(" | ");
   var goalLine=goals?("Primary goal: "+(goals.primary_goal||"—")+(goals.target_event?("; event: "+goals.target_event+(goals.target_date?" on "+goals.target_date:"")):"")+"; sport priority: "+(goals.sport_priority||"balanced")+(goals.injuries&&goals.injuries!=="none"?"; known injuries: "+goals.injuries:"")):"No goals set yet.";
