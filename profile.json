@@ -32,8 +32,9 @@
     }
   },
   "strength": {
+    "location": "home",
     "equipment": ["TRX", "resistance bands", "dumbbells"],
-    "dumbbell_weights_kg": [6, 11, 16, 22],
+    "dumbbell_weights_kg": [4, 6, 11, 16, 20],
     "sessions_per_week_target": 2
   }
 }

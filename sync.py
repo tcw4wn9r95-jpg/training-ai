@@ -415,7 +415,54 @@ else:
 print("Calling Claude for training plan...")
 claude = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
 
+# Home strength equipment — single-sourced from profile.json. This is a HARD
+# constraint: Diego trains at home and owns nothing beyond this list.
+_strength_prof = profile.get("strength", {})
+_db_kg = _strength_prof.get("dumbbell_weights_kg", [4, 6, 11, 16, 20])
+_db_list = "/".join(str(w) for w in _db_kg)
+
+# Gym-only equipment that must never appear in a home plan. Checked against
+# every strength session after generation; one corrective retry, then hard fail.
+BANNED_EQUIPMENT = [
+    "barbell", "kettlebell", "cable", "smith", "machine", "leg press",
+    "pulldown", "pull-up", "pull up", "pullup", "chin-up", "chin up",
+    "bench press", "box jump", "medicine ball", "slam ball", "battle rope",
+    "sled", "squat rack", "weight plate", "ez bar", "trap bar", "gym",
+]
+
+def equipment_violations(sessions):
+    """Return a list of 'session: banned term' strings for gym equipment in strength sessions."""
+    found = []
+    for s in sessions or []:
+        if s.get("sport") != "strength":
+            continue
+        texts = [s.get("name", ""), s.get("focus", ""), s.get("notes", "")]
+        texts += [e.get("name", "") for e in s.get("exercises", [])]
+        texts += [e.get("name", "") for e in s.get("warmup_exercises", [])]
+        texts += [e.get("name", "") for e in s.get("cooldown_stretches", [])]
+
+        def walk(steps):
+            for st in steps or []:
+                texts.append(st.get("description", ""))
+                walk(st.get("steps"))
+        walk(s.get("steps"))
+        blob = " ".join(t.lower() for t in texts if t)
+        for term in BANNED_EQUIPMENT:
+            if term in blob:
+                found.append(f"{s.get('day','?')} '{s.get('name','?')}': contains '{term}'")
+    return found
+
 prompt = f"""You are Coach Claudio, Diego's endurance coach — the calibre who works with high-performing athletes. You write structured, periodised plans grounded in exercise physiology: progressive overload, polarised 80/20 intensity distribution, specificity to the goal, periodisation toward peak adaptation, supercompensation, and respect for recovery. Every session has a clear physiological purpose and explicit targets. You plan around how the athlete is actually responding — both the data AND their subjective feedback — never a generic template.
+
+## SCIENCE-BASED TRAINING ONLY — NON-NEGOTIABLE
+Every session must be defensible from established, peer-reviewed exercise science (the evidence base behind ACSM/NSCA guidelines and the endurance-training literature of Seiler, Coggan, Laursen). Concretely:
+- Progressive overload within safe bounds: weekly load rises ≤10% (TSS or volume), and running volume never jumps faster than the athlete's tissues can adapt.
+- Polarised intensity: ~80% of endurance volume easy (Z1-Z2), hard work concentrated in 1-2 quality sessions, never back-to-back hard days.
+- Strength training follows NSCA principles: compound multi-joint movements first, 2-4 sets of 6-15 reps at a load ~2-3 reps shy of failure (RIR 2-3), full range of motion, 48h+ between sessions loading the same muscle groups, and exercise selection that transfers to running/cycling (posterior chain, single-leg stability, core anti-rotation/anti-extension).
+- Manage the concurrent-training interference effect: keep heavy leg strength away from key running/cycling quality sessions (same-day easy or separate days).
+- Warm-up and cool-down are mandatory in every session: progressive warm-up (general → dynamic mobility → activation specific to the main set) and a cool-down with easy movement plus static stretching of the muscles just worked.
+- NO fad or gimmick programming: no untested 'functional' circus exercises, no random muscle confusion, no crash loading. If it wouldn't hold up in the literature, it doesn't go in the plan.
+- Each session's "focus" field must state its physiological purpose (the adaptation it targets), not a vague label.
 
 ## ATHLETE
 Name: Diego | Device: Garmin Fenix
@@ -440,8 +487,13 @@ Z5 VO2max: <4:30/km, >181 bpm
 Z1 <106W / <145 bpm | Z2 106-141W / 146-162 bpm | Z3 142-168W / 163-172 bpm
 Z4 169-195W / 173-181 bpm | Z5 196-239W / >181 bpm
 
-## STRENGTH EQUIPMENT
-TRX, resistance bands, dumbbells 6/11/16/22 kg
+## STRENGTH EQUIPMENT — HARD CONSTRAINT (home training, no gym)
+All strength sessions happen AT HOME. The ONLY equipment available:
+  - Dumbbells: {_db_list} kg
+  - TRX suspension trainer
+  - Resistance bands
+  - Bodyweight / floor mat
+NEVER prescribe anything requiring gym equipment: NO barbells, NO kettlebells, NO machines (leg press, lat pulldown, cable, smith), NO bench (use floor press instead of bench press), NO pull-up bar (use TRX rows or band pulldowns instead), NO plyo boxes, NO medicine balls. Every dumbbell load must be one of the available weights ({_db_list} kg) — never prescribe a weight he doesn't own. If an exercise normally needs gym kit, substitute the closest dumbbell/TRX/band/bodyweight equivalent. This is a hard restriction — a plan that violates it is rejected.
 
 ## RECENT LOAD
 Last 7 days: ~{last_wk_tss} TSS | Last 28 days: ~{last_4wk_tss} TSS
@@ -506,6 +558,11 @@ TARGET RULES (critical — match these precisely):
 - strength: no targets; put exercises in step "description" and a full list in top-level "notes".
   Also add an "exercises" array at the top level: each entry has only "name" (exercise name, title-cased).
   Do NOT include youtube_id — the app handles video lookup from a curated library.
+- EVERY session (all sports) must ALSO have top-level "warmup_exercises" and "cooldown_stretches" arrays:
+  the specific dynamic warm-up drills to do BEFORE the session and static stretches to do AFTER
+  (each entry has only "name", title-cased, e.g. {{"name": "Leg Swings"}}, {{"name": "Standing Quad Stretch"}}).
+  Pick drills/stretches that match the muscles the session actually uses. The app shows how-to videos for each.
+- STEP GRANULARITY (critical — this makes the workout usable on Garmin): break EVERY session into its real component steps, never a single blob. An interval/threshold/VO2/fartlek session — running OR cycling — must be a distinct warm-up step, then a "repeat" block whose inner steps are the work rep AND its recovery as SEPARATE steps (e.g. 5x [3min @ threshold] + [90s @ easy]), then any second set as its own repeat block, then a cool-down step. A 4x8min bike session has ≥4 top-level entries: warmup, repeat(interval+recovery), (optional 2nd repeat), cooldown — NOT one 40-minute interval. A progression run has a step per pace change. Only truly steady sessions (easy/recovery/long aerobic) may be warmup + one main step + cooldown. Give each work and recovery step its own specific description with zone label + target number — never "work" or "effort".
 - Use "repeat" blocks for intervals (e.g. 4x8min). Never flatten intervals.
 
 ```json
@@ -514,14 +571,27 @@ TARGET RULES (critical — match these precisely):
     "day": "Monday",
     "date": "{week_dates['Monday']}",
     "sport": "running",
-    "name": "Easy aerobic run",
-    "total_duration_secs": 2700,
-    "planned_tss": 35,
-    "focus": "Aerobic base, conversational",
+    "name": "Threshold 5x3min",
+    "total_duration_secs": 3300,
+    "planned_tss": 55,
+    "focus": "Lift running threshold with cruise intervals at LT pace",
+    "warmup_exercises": [
+      {{"name": "Leg Swings"}},
+      {{"name": "Walking Lunge"}},
+      {{"name": "High Knees"}}
+    ],
+    "cooldown_stretches": [
+      {{"name": "Standing Quad Stretch"}},
+      {{"name": "Hamstring Stretch"}},
+      {{"name": "Calf Stretch"}}
+    ],
     "steps": [
-      {{"type": "warmup", "duration_secs": 600, "target_type": "pace", "target_low": 450, "target_high": 405, "description": "Z1 easy, <145 bpm"}},
-      {{"type": "interval", "duration_secs": 1500, "target_type": "pace", "target_low": 405, "target_high": 375, "description": "Z2 aerobic 146-162 bpm"}},
-      {{"type": "cooldown", "duration_secs": 600, "target_type": "pace", "target_low": 480, "target_high": 420, "description": "Z1 easy"}}
+      {{"type": "warmup", "duration_secs": 720, "target_type": "pace", "target_low": 450, "target_high": 405, "description": "Z1-Z2 easy, build to 155 bpm, finish with 3x20s strides"}},
+      {{"type": "repeat", "repeat_count": 5, "steps": [
+        {{"type": "interval", "duration_secs": 180, "target_type": "pace", "target_low": 320, "target_high": 300, "description": "Z4 threshold 5:20-5:00/km, 173-181 bpm, controlled"}},
+        {{"type": "recovery", "duration_secs": 90, "target_type": "pace", "target_low": 480, "target_high": 420, "description": "Z1 easy jog, let HR drop under 150"}}
+      ]}},
+      {{"type": "cooldown", "duration_secs": 480, "target_type": "pace", "target_low": 480, "target_high": 420, "description": "Z1 easy jog down"}}
     ]
   }},
   {{
@@ -532,6 +602,15 @@ TARGET RULES (critical — match these precisely):
     "total_duration_secs": 4200,
     "planned_tss": 75,
     "focus": "Raise FTP with threshold repeats",
+    "warmup_exercises": [
+      {{"name": "Hip Circles"}},
+      {{"name": "Bodyweight Squat"}}
+    ],
+    "cooldown_stretches": [
+      {{"name": "Hip Flexor Stretch"}},
+      {{"name": "Figure Four Stretch"}},
+      {{"name": "Lower Back Stretch"}}
+    ],
     "steps": [
       {{"type": "warmup", "duration_secs": 900, "target_type": "power", "target_low": 88, "target_high": 120, "description": "Spin up, build to Z2"}},
       {{"type": "repeat", "repeat_count": 4, "steps": [
@@ -549,13 +628,23 @@ TARGET RULES (critical — match these precisely):
     "total_duration_secs": 2700,
     "planned_tss": 30,
     "focus": "Strength endurance for legs and core",
-    "notes": "3 rounds: 12x goblet squat 22kg, 10x RDL 22kg, 15x TRX split squat/leg, 20x band glute bridge, 45s plank. 60s rest between rounds.",
+    "notes": "3 rounds: 12x goblet squat 20kg, 10x RDL 20kg, 15x TRX split squat/leg, 20x band glute bridge, 45s plank. 60s rest between rounds.",
     "exercises": [
       {{"name": "Goblet Squat"}},
       {{"name": "Romanian Deadlift"}},
       {{"name": "TRX Split Squat"}},
       {{"name": "Banded Glute Bridge"}},
       {{"name": "Plank"}}
+    ],
+    "warmup_exercises": [
+      {{"name": "Leg Swings"}},
+      {{"name": "Hip Circles"}},
+      {{"name": "Bodyweight Squat"}}
+    ],
+    "cooldown_stretches": [
+      {{"name": "Hip Flexor Stretch"}},
+      {{"name": "Hamstring Stretch"}},
+      {{"name": "Glute Stretch"}}
     ],
     "steps": [
       {{"type": "warmup", "duration_secs": 300, "description": "Leg swings, hip circles, bodyweight squats"}},
@@ -581,52 +670,76 @@ After the JSON, add a SECOND ```json block (labelled exactly ```json-block) givi
 Project all 4 weeks with sensible progression (build weeks raise TSS, recovery week drops ~40%).
 """
 
-message = claude.messages.create(
-    model="claude-sonnet-4-6",  # Sonnet for plan generation — deeper reasoning on periodisation, check-ins, injuries. ~+$0.25/mo vs Haiku.
-    max_tokens=8000,
-    messages=[{"role": "user", "content": prompt}],
-)
-response = message.content[0].text
-print("Plan received from Claude.")
+def parse_plan_response(response):
+    """Split Claude's response into markdown, weekly sessions, and 4-week block outline."""
+    plan_md = response
+    plan_json = []
+    plan_block = []
+    parse_error = None
 
-# ── Split markdown & JSON ─────────────────────────────────────────────────────
-plan_md = response
-plan_json = []
-plan_block = []
+    # Parse the 4-week block outline first (labelled ```json-block) and remove it
+    if "```json-block" in response:
+        try:
+            block_part = response.split("```json-block")[1].split("```")[0].strip()
+            plan_block = json.loads(block_part)
+            # Enforce week_of dates — the LLM sometimes drifts from the prompt's week_dates
+            for i, wk in enumerate(plan_block):
+                wk["week_of"] = (next_monday + timedelta(days=7 * i)).isoformat()
+            print(f"Parsed {len(plan_block)} week(s) in block outline.")
+        except (json.JSONDecodeError, IndexError) as e:
+            print(f"WARNING: block outline parse failed: {e}")
+        # Strip the block section out so the detailed-plan parser doesn't trip on it
+        response_main = response.split("```json-block")[0]
+    else:
+        response_main = response
 
-# Parse the 4-week block outline first (labelled ```json-block) and remove it
-if "```json-block" in response:
-    try:
-        block_part = response.split("```json-block")[1].split("```")[0].strip()
-        plan_block = json.loads(block_part)
-        # Enforce week_of dates — the LLM sometimes drifts from the prompt's week_dates
-        for i, wk in enumerate(plan_block):
-            wk["week_of"] = (next_monday + timedelta(days=7 * i)).isoformat()
-        print(f"Parsed {len(plan_block)} week(s) in block outline.")
-    except (json.JSONDecodeError, IndexError) as e:
-        print(f"WARNING: block outline parse failed: {e}")
-    # Strip the block section out so the detailed-plan parser doesn't trip on it
-    response_main = response.split("```json-block")[0]
-else:
-    response_main = response
+    # Parse the detailed weekly plan
+    if "```json" in response_main:
+        parts = response_main.split("```json")
+        plan_md = parts[0].strip()
+        json_part = parts[1].split("```")[0].strip()
+        try:
+            plan_json = json.loads(json_part)
+            # Enforce session dates from week_dates — the LLM sometimes invents its own dates
+            for session in plan_json:
+                day_label = session.get("day", "")
+                if day_label in week_dates:
+                    session["date"] = week_dates[day_label]
+            print(f"Parsed {len(plan_json)} sessions.")
+        except json.JSONDecodeError as e:
+            parse_error = str(e)
+            print(f"WARNING: JSON parse failed: {e}")
+    return plan_md, plan_json, plan_block, parse_error
 
-# Parse the detailed weekly plan
-parse_error = None
-if "```json" in response_main:
-    parts = response_main.split("```json")
-    plan_md = parts[0].strip()
-    json_part = parts[1].split("```")[0].strip()
-    try:
-        plan_json = json.loads(json_part)
-        # Enforce session dates from week_dates — the LLM sometimes invents its own dates
-        for session in plan_json:
-            day_label = session.get("day", "")
-            if day_label in week_dates:
-                session["date"] = week_dates[day_label]
-        print(f"Parsed {len(plan_json)} sessions.")
-    except json.JSONDecodeError as e:
-        parse_error = str(e)
-        print(f"WARNING: JSON parse failed: {e}")
+# Generate, then enforce the home-equipment hard restriction. If the plan names
+# gym equipment, send it back once with the violations; if it still fails, abort
+# rather than commit a plan Diego can't execute at home.
+messages = [{"role": "user", "content": prompt}]
+plan_md, plan_json, plan_block, parse_error = "", [], [], None
+for attempt in range(2):
+    message = claude.messages.create(
+        model="claude-sonnet-4-6",  # Sonnet for plan generation — deeper reasoning on periodisation, check-ins, injuries. ~+$0.25/mo vs Haiku.
+        max_tokens=8000,
+        messages=messages,
+    )
+    response = message.content[0].text
+    print("Plan received from Claude.")
+    plan_md, plan_json, plan_block, parse_error = parse_plan_response(response)
+    violations = equipment_violations(plan_json)
+    if not violations:
+        break
+    print("EQUIPMENT VIOLATIONS in strength plan:\n  " + "\n  ".join(violations))
+    if attempt == 0:
+        print("Retrying with a correction...")
+        messages.append({"role": "assistant", "content": response})
+        messages.append({"role": "user", "content":
+            "REJECTED — the plan violates the home-equipment hard constraint:\n"
+            + "\n".join(violations)
+            + f"\n\nDiego trains at home with ONLY dumbbells ({_db_list} kg), TRX, resistance bands and bodyweight. "
+            "Replace every offending exercise with a dumbbell/TRX/band/bodyweight equivalent and resend the COMPLETE "
+            "output (all three sections: markdown plan, ```json plan, ```json-block outline) with everything else unchanged."})
+    else:
+        raise SystemExit("Plan generation failed — gym equipment still present after retry:\n" + "\n".join(violations))
 
 # Fail loudly if we didn't get a usable plan — better than committing an empty one
 if not plan_json:
