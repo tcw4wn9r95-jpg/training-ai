@@ -676,7 +676,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260705-2";
+const BUILD="20260705-3";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1393,6 +1393,8 @@ function intensityBadge(s){
   return null;
 }
 var _planSessions=[];
+var _curOverlayIdx=null;
+var videoLibrary={};
 // Verified YouTube video IDs for common strength exercises
 var EXERCISE_VIDEOS={
   "goblet squat":"MeIiIdhvXT4",
@@ -1588,11 +1590,27 @@ function sessionStretches(s){
   var own=(s.cooldown_stretches||[]).filter(function(e){return e&&e.name;});
   return enrichExercises(own.length?own:DEFAULT_STRETCHES[sportFam(s)].map(function(n){return{name:n};}));
 }
+function escAttr(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;");}
+// Manual fix affordance: if an embedded video is wrong or shows "unavailable",
+// the athlete pastes a working link here. It's saved to video_library.json in
+// the repo (keyed by exercise name) and merged over the built-in library on
+// every load, so the correction sticks for good — the library only grows.
+function videoFixHTML(){
+  return '<div class="vidfix" style="margin-top:8px">'+
+    '<button type="button" onclick="toggleVideoFix(this)" style="background:none;border:none;padding:0;font-size:11.5px;font-weight:600;color:var(--t3);cursor:pointer;text-decoration:underline">Video wrong or not loading? Fix it</button>'+
+    '<div class="vidfix-form" style="display:none;gap:6px;align-items:center;margin-top:8px">'+
+      '<input type="text" placeholder="Paste YouTube link" style="flex:1;min-width:0;background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:8px 10px;font-size:13px;color:var(--t1)">'+
+      '<button type="button" onclick="saveVideoFix(this)" style="background:var(--brand);border:none;border-radius:9px;padding:8px 14px;font-size:12.5px;font-weight:700;color:#04231b;cursor:pointer;white-space:nowrap;flex-shrink:0">Save</button>'+
+    '</div>'+
+    '<div class="vidfix-msg" style="font-size:11.5px;margin-top:6px"></div>'+
+  '</div>';
+}
 function exerciseItemHTML(ex){
   var guide=resolveGuide(ex.name);
   var dose=guide?(guide.secs?(guide.secs+"s"+(guide.side?" per side":" hold")):guide.reps):"";
+  var nameAttr=' data-exname="'+escAttr(ex.name)+'"';
   if(ex.youtube_id){
-    return '<div style="margin-bottom:22px">'+
+    return '<div class="ex-item" style="margin-bottom:22px"'+nameAttr+'>'+
       '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px"><span style="font-size:14px;font-weight:600;color:var(--t1)">'+esc(ex.name)+'</span>'+
       (dose?'<span style="font-size:12px;color:var(--t3)">'+esc(dose)+'</span>':"")+
       (guide&&guide.secs?'<button onclick="openTimer('+guide.secs+',\''+esc(ex.name).replace(/'/g,"")+'\')" style="margin-left:auto;background:var(--brand-dim);color:var(--brand);border:none;border-radius:9px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">⏱ '+guide.secs+'s</button>':"")+
@@ -1601,10 +1619,11 @@ function exerciseItemHTML(ex){
       '<iframe style="position:absolute;inset:0;width:100%;height:100%;border:0" src="https://www.youtube-nocookie.com/embed/'+esc(ex.youtube_id)+'?rel=0&modestbranding=1" allowfullscreen loading="lazy"></iframe>'+
       '</div>'+
       (guide?'<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:8px">'+esc(guide.cues)+'</div>':"")+
+      videoFixHTML()+
       '</div>';
   }
   var q=encodeURIComponent("how to "+ex.name+" exercise");
-  return '<div style="padding:13px 14px;background:var(--bg2);border-radius:12px;margin-bottom:10px">'+
+  return '<div class="ex-item" style="padding:13px 14px;background:var(--bg2);border-radius:12px;margin-bottom:10px"'+nameAttr+'>'+
     '<div style="display:flex;align-items:center;gap:8px">'+
       '<span style="font-size:14px;font-weight:600;color:var(--t1)">'+esc(ex.name)+'</span>'+
       (dose?'<span style="font-size:12px;color:var(--t3)">'+esc(dose)+'</span>':"")+
@@ -1614,7 +1633,70 @@ function exerciseItemHTML(ex){
       '</span>'+
     '</div>'+
     (guide?'<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:6px">'+esc(guide.cues)+'</div>':"")+
+    videoFixHTML()+
   '</div>';
+}
+function toggleVideoFix(btn){
+  var form=btn.nextElementSibling;
+  var open=form.style.display==="flex";
+  form.style.display=open?"none":"flex";
+  if(!open){var inp=form.querySelector("input");if(inp){inp.value="";setTimeout(function(){inp.focus();},0);}}
+}
+function extractYouTubeId(raw){
+  var s=(raw||"").trim();
+  if(/^[\w-]{11}$/.test(s))return s;
+  var m=s.match(/(?:youtu\.be\/|youtube(?:-nocookie)?\.com\/(?:watch\?v=|embed\/|shorts\/|v\/))([\w-]{11})/);
+  return m?m[1]:null;
+}
+async function saveVideoFix(btn){
+  var item=btn.closest(".ex-item");
+  var form=btn.parentElement;
+  var input=form.querySelector("input");
+  var msgEl=item.querySelector(".vidfix-msg");
+  var name=item.getAttribute("data-exname")||"";
+  var id=extractYouTubeId(input.value);
+  if(!id){msgEl.textContent="Couldn't read a video ID from that link.";msgEl.style.color="#ef4444";return;}
+  var token=getToken();
+  if(!token){msgEl.textContent="Add your GitHub token in settings (gear icon) to save this.";msgEl.style.color="#ef4444";return;}
+  btn.disabled=true;var origLabel=btn.textContent;btn.textContent="Saving…";
+  var key=name.toLowerCase().trim();
+  var ok=await commitVideoLibraryEntry(key,id);
+  btn.disabled=false;btn.textContent=origLabel;
+  if(!ok){msgEl.textContent="Couldn't save — check your connection and try again.";msgEl.style.color="#ef4444";return;}
+  EXERCISE_VIDEOS[key]=id;videoLibrary[key]=id;
+  msgEl.textContent="Saved ✓ — this video will be used everywhere from now on.";msgEl.style.color="#22c55e";
+  setTimeout(refreshExerciseOverlay,700);
+}
+async function commitVideoLibraryEntry(key,id){
+  var token=getToken();
+  if(!token)return false;
+  try{
+    var lib={},sha=null;
+    try{
+      var r=await fetch(API+"/video_library.json",{headers:{Authorization:"Bearer "+token}});
+      if(r.ok){
+        var meta=await r.json();
+        sha=meta.sha;
+        lib=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
+        if(!lib||typeof lib!=="object")lib={};
+      }
+    }catch(e){lib={};}
+    lib[key]=id;
+    var body={message:"Video fix: "+key,content:btoa(unescape(encodeURIComponent(JSON.stringify(lib,null,2))))};
+    if(sha)body.sha=sha;
+    var put=await fetch(API+"/video_library.json",{method:"PUT",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
+      body:JSON.stringify(body)});
+    return put.ok;
+  }catch(e){return false;}
+}
+function refreshExerciseOverlay(){
+  if(_curOverlayIdx==null)return;
+  var body=document.getElementById("ex-body");
+  var st=body?body.scrollTop:0;
+  openExerciseOverlay(_curOverlayIdx);
+  var body2=document.getElementById("ex-body");
+  if(body2)body2.scrollTop=st;
 }
 function exSectionHTML(title,sub,items,optional){
   if(!items||!items.length)return "";
@@ -1633,6 +1715,7 @@ function noteTimerChips(s){
 }
 function openExerciseOverlay(idx){
   var s=_planSessions[idx];if(!s)return;
+  _curOverlayIdx=idx;
   var isStrength=(s.sport||"")==="strength";
   var main=isStrength?parseExerciseList(s):[];
   document.getElementById("ex-title").textContent=s.name||"Today's Exercises";
@@ -1669,6 +1752,7 @@ function openExerciseOverlay(idx){
 function closeExerciseOverlay(){
   document.getElementById("ex-overlay").style.display="none";
   document.body.style.overflow="";
+  _curOverlayIdx=null;
 }
 
 // ── ACTIVITY TIMER ────────────────────────────────────────────
@@ -2971,7 +3055,7 @@ async function doRestart(){
 async function init(){
   var stamp=document.getElementById("build-stamp");if(stamp)stamp.textContent=BUILD;
   var _t=getToken();
-  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),apiGetJSON("weekly_plan.json",_t),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json"),apiGetJSON("plan_block.json",_t),fetchJSON("sleep.json")]);
+  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),apiGetJSON("weekly_plan.json",_t),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json"),apiGetJSON("plan_block.json",_t),fetchJSON("sleep.json"),fetchJSON("video_library.json")]);
   workouts=r[0]||[];planText=r[1]||"";
   // Fall back to raw CDN if apiGetJSON failed (expired token)
   planJson=r[2]||(await fetchJSON("weekly_plan.json"))||[];
@@ -2979,6 +3063,10 @@ async function init(){
   goals=(r[6]&&r[6].primary_goal)?r[6]:null;
   planBlock=Array.isArray(r[7])?r[7]:(await fetchJSON("plan_block.json"))||[];
   sleep=Array.isArray(r[8])?r[8]:[];
+  // Community-corrected video links persisted by athletes via "Fix it" in the
+  // exercise overlay. Merge over the built-in library so corrections always win.
+  videoLibrary=(r[9]&&typeof r[9]==="object")?r[9]:{};
+  Object.assign(EXERCISE_VIDEOS,videoLibrary);
   if(prof){profile=prof;FTP=prof.cycling?.ftp_watts||FTP;LTHR=prof.running?.threshold_hr||LTHR;REST_HR=prof.running?.resting_hr||REST_HR;MAX_HR=prof.running?.max_hr||MAX_HR;}
   if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
   if(avail){avPrefs.max_sessions=avail.max_sessions_per_week||0;avPrefs.spread=!!avail.prefer_rest_between;}
