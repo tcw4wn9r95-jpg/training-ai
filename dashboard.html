@@ -418,6 +418,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div id="today-synopsis" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--t2);line-height:1.55"></div>
     </div>
     <div id="week-progress"></div>
+    <div id="gamify"></div>
     <div id="block-overview"></div>
 
     <div class="form-banner">
@@ -639,6 +640,27 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <div id="ex-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px 40px"></div>
 </div>
 
+<!-- Activity timer overlay -->
+<div id="timer-overlay" style="display:none;position:fixed;inset:0;z-index:400;background:rgba(9,9,11,.82);backdrop-filter:blur(14px);align-items:center;justify-content:center" onclick="if(event.target===this)closeTimer()">
+  <div style="background:var(--bg2);border:1px solid var(--line);border-radius:24px;padding:28px 26px 22px;width:min(320px,88vw);text-align:center;box-shadow:0 24px 64px rgba(0,0,0,.5)">
+    <div id="timer-label" style="font-size:13px;font-weight:700;color:var(--t2);text-transform:uppercase;letter-spacing:.8px;margin-bottom:16px">Timer</div>
+    <div id="timer-ring" style="width:170px;height:170px;border-radius:50%;margin:0 auto;background:conic-gradient(var(--brand) 100%,var(--bg3) 0);display:flex;align-items:center;justify-content:center">
+      <div style="width:150px;height:150px;border-radius:50%;background:var(--bg2);display:flex;align-items:center;justify-content:center">
+        <span id="timer-time" style="font-family:var(--mono);font-size:40px;font-weight:800;color:var(--t1)">0:00</span>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;justify-content:center;margin-top:18px">
+      <button onclick="timerAdjust(-15)" style="background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:700;color:var(--t2);cursor:pointer">−15s</button>
+      <button id="timer-btn" onclick="timerToggle()" style="background:var(--brand);border:none;border-radius:12px;padding:10px 26px;font-size:15px;font-weight:800;color:#04231b;cursor:pointer;min-width:110px">Start</button>
+      <button onclick="timerAdjust(15)" style="background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:700;color:var(--t2);cursor:pointer">+15s</button>
+    </div>
+    <div style="display:flex;gap:14px;justify-content:center;margin-top:12px">
+      <button onclick="timerReset()" style="background:none;border:none;font-size:13px;font-weight:600;color:var(--t3);cursor:pointer;padding:6px 10px">Reset</button>
+      <button onclick="closeTimer()" style="background:none;border:none;font-size:13px;font-weight:600;color:var(--t3);cursor:pointer;padding:6px 10px">Close</button>
+    </div>
+  </div>
+</div>
+
 <!-- Onboarding overlay -->
 <div id="onboarding" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column">
   <div style="padding:calc(18px + env(safe-area-inset-top)) 18px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px">
@@ -654,7 +676,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260702-3";
+const BUILD="20260705-1";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -777,7 +799,7 @@ function renderHome(){
     document.getElementById("kpi-atl").textContent="—";
     document.getElementById("kpi-week").textContent="—";
     var rEl=document.getElementById("kpi-ramp");if(rEl)rEl.textContent="CTL";
-    renderTodayHero();renderWeekProgress();renderGoalBanner(0,0);drawSleep(sleep);
+    renderTodayHero();renderWeekProgress();renderGamify();renderGoalBanner(0,0);drawSleep(sleep);
     return;
   }
   var pmc=buildPMC(pmcDays);
@@ -836,6 +858,7 @@ function renderHome(){
   drawPMC(pmc);drawLoad();drawSleep(sleep);
   renderTodayHero();
   renderWeekProgress();
+  renderGamify();
   renderProjection(ctl,atl);
   renderGoalBanner(ctl,atl);
 }
@@ -1450,26 +1473,136 @@ function parseExerciseList(s){
     return vid?{name:ex.name,youtube_id:vid}:ex;
   });
 }
+// How-to guides for warm-up drills and cool-down stretches. secs>0 = timed hold
+// (per side when side=true), reps otherwise. Shown when no verified video exists.
+var STRETCH_GUIDE={
+  "leg swings":{reps:"12 per leg",cues:"Hold a wall, swing one leg forward and back, relaxed and controlled. Gradually increase the range."},
+  "hip circles":{reps:"10 each direction",cues:"Hands on hips, make big slow circles. Keep knees soft and core relaxed."},
+  "arm circles":{reps:"10 each direction",cues:"Arms straight out, small circles growing bigger. Forward then backward."},
+  "ankle circles":{reps:"10 per foot",cues:"Lift one foot, rotate the ankle slowly through its full range, both directions."},
+  "high knees":{secs:30,cues:"Jog on the spot driving knees to hip height. Light feet, tall posture, arms pumping."},
+  "butt kicks":{secs:30,cues:"Jog on the spot flicking heels to glutes. Quick light contacts, stay tall."},
+  "bodyweight squat":{reps:"12-15",cues:"Feet shoulder-width, sit back and down, chest up, knees tracking over toes. Smooth tempo."},
+  "cat cow":{reps:"8-10 slow",cues:"On all fours, alternate arching and rounding the spine with your breath."},
+  "inchworm":{reps:"6-8",cues:"From standing, walk hands out to a plank, hold 1s, walk feet toward hands. Legs as straight as comfortable."},
+  "torso twist":{reps:"10 per side",cues:"Feet planted hip-width, rotate the upper body side to side, letting arms swing loosely."},
+  "band pull-apart":{reps:"12-15",cues:"Arms straight ahead holding the band, pull apart until it touches your chest. Squeeze shoulder blades."},
+  "glute activation":{reps:"12-15",cues:"Band above knees, small side steps or bridges until you feel the glutes switch on."},
+  "worlds greatest stretch":{reps:"5 per side",cues:"Deep lunge, hand inside front foot, rotate and reach to the ceiling. Slow and controlled."},
+  "standing quad stretch":{secs:30,side:true,cues:"Pull your heel to your glutes, knees together, hips pushed slightly forward. Hold something for balance."},
+  "quad stretch":{secs:30,side:true,cues:"Pull your heel to your glutes, knees together, hips pushed slightly forward. Hold something for balance."},
+  "hamstring stretch":{secs:30,side:true,cues:"Heel on a low step, leg straight, hinge forward from the hips with a flat back until you feel the stretch."},
+  "calf stretch":{secs:30,side:true,cues:"Hands on the wall, back leg straight with heel pressed down. Bend the back knee slightly to shift lower."},
+  "hip flexor stretch":{secs:30,side:true,cues:"Half-kneeling lunge, tuck the pelvis and shift forward until you feel the front of the hip. Stay tall."},
+  "figure four stretch":{secs:30,side:true,cues:"On your back, ankle over the opposite knee, pull the supporting thigh toward you."},
+  "glute stretch":{secs:30,side:true,cues:"On your back, ankle over the opposite knee, pull the supporting thigh toward you."},
+  "pigeon pose":{secs:30,side:true,cues:"Front shin across the mat, back leg extended. Square the hips and fold forward as far as comfortable."},
+  "childs pose":{secs:45,cues:"Knees wide, sit back on your heels, arms stretched forward, forehead down. Breathe slow."},
+  "chest stretch":{secs:30,side:true,cues:"Forearm on a doorframe at shoulder height, step through gently until the chest opens."},
+  "shoulder stretch":{secs:30,side:true,cues:"Pull one arm across your chest with the other. Keep the shoulder down, don't shrug."},
+  "triceps stretch":{secs:30,side:true,cues:"Hand behind your neck, elbow to the ceiling; gently pull the elbow with the other hand."},
+  "lower back stretch":{secs:30,cues:"On your back, hug both knees to your chest and rock gently side to side."},
+  "downward dog":{secs:30,cues:"Hips high, heels pressing toward the floor, back long. Pedal the feet to move the stretch through the calves."},
+  "cobra stretch":{secs:30,cues:"Lying face down, press through the hands to lift the chest. Hips stay on the floor."},
+  "butterfly stretch":{secs:30,cues:"Seated, soles of feet together, knees dropping out. Hinge forward gently from the hips."},
+  "it band stretch":{secs:30,side:true,cues:"Cross one leg behind the other and lean away from the back leg, hip pushing out."},
+  "adductor stretch":{secs:30,side:true,cues:"Wide stance, shift your weight over one leg keeping the other straight, until the inner thigh stretches."},
+  "couch stretch":{secs:45,side:true,cues:"Back foot up on the sofa/wall, front foot forward in a lunge. Tuck the pelvis, stay tall."},
+  "neck stretch":{secs:20,side:true,cues:"Gently tilt your ear toward your shoulder, opposite hand reaching toward the floor."}
+};
+function resolveGuide(name){
+  var key=(name||"").toLowerCase().replace(/[()'’]/g,"").trim();
+  if(STRETCH_GUIDE[key])return STRETCH_GUIDE[key];
+  var words=key.split(/\s+/);
+  for(var k in STRETCH_GUIDE){
+    var kw=k.split(/\s+/);
+    if(kw.every(function(w){return words.indexOf(w)>-1}))return STRETCH_GUIDE[k];
+  }
+  return null;
+}
+// Fallback routines when a session doesn't carry its own warm-up/stretch lists
+var DEFAULT_WARMUP={
+  run:["Leg Swings","Hip Circles","Walking Lunge","High Knees","Butt Kicks"],
+  bike:["Hip Circles","Bodyweight Squat","Leg Swings","Cat Cow"],
+  strength:["Leg Swings","Hip Circles","Bodyweight Squat","Arm Circles"]
+};
+var DEFAULT_STRETCHES={
+  run:["Standing Quad Stretch","Hamstring Stretch","Calf Stretch","Hip Flexor Stretch","Glute Stretch"],
+  bike:["Hip Flexor Stretch","Hamstring Stretch","Figure Four Stretch","Chest Stretch","Lower Back Stretch"],
+  strength:["Hamstring Stretch","Hip Flexor Stretch","Glute Stretch","Chest Stretch","Childs Pose"]
+};
+function sportFam(s){var sp=s.sport||"";return sp==="running"?"run":sp.indexOf("cycl")>-1?"bike":"strength";}
+function enrichExercises(list){
+  return (list||[]).map(function(ex){
+    if(ex.youtube_id)return ex;
+    var vid=resolveVideoId(ex.name);
+    return vid?{name:ex.name,youtube_id:vid}:ex;
+  });
+}
+function sessionWarmups(s){
+  var own=(s.warmup_exercises||[]).filter(function(e){return e&&e.name;});
+  return enrichExercises(own.length?own:DEFAULT_WARMUP[sportFam(s)].map(function(n){return{name:n};}));
+}
+function sessionStretches(s){
+  var own=(s.cooldown_stretches||[]).filter(function(e){return e&&e.name;});
+  return enrichExercises(own.length?own:DEFAULT_STRETCHES[sportFam(s)].map(function(n){return{name:n};}));
+}
+function exerciseItemHTML(ex){
+  var guide=resolveGuide(ex.name);
+  var dose=guide?(guide.secs?(guide.secs+"s"+(guide.side?" per side":" hold")):guide.reps):"";
+  if(ex.youtube_id){
+    return '<div style="margin-bottom:22px">'+
+      '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px"><span style="font-size:14px;font-weight:600;color:var(--t1)">'+esc(ex.name)+'</span>'+
+      (dose?'<span style="font-size:12px;color:var(--t3)">'+esc(dose)+'</span>':"")+
+      (guide&&guide.secs?'<button onclick="openTimer('+guide.secs+',\''+esc(ex.name).replace(/'/g,"")+'\')" style="margin-left:auto;background:var(--brand-dim);color:var(--brand);border:none;border-radius:9px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">⏱ '+guide.secs+'s</button>':"")+
+      '</div>'+
+      '<div style="position:relative;padding-bottom:56.25%;border-radius:12px;overflow:hidden;background:var(--bg2)">'+
+      '<iframe style="position:absolute;inset:0;width:100%;height:100%;border:0" src="https://www.youtube-nocookie.com/embed/'+esc(ex.youtube_id)+'?rel=0&modestbranding=1" allowfullscreen loading="lazy"></iframe>'+
+      '</div></div>';
+  }
+  var q=encodeURIComponent("how to "+ex.name+" exercise");
+  return '<div style="padding:13px 14px;background:var(--bg2);border-radius:12px;margin-bottom:10px">'+
+    '<div style="display:flex;align-items:center;gap:8px">'+
+      '<span style="font-size:14px;font-weight:600;color:var(--t1)">'+esc(ex.name)+'</span>'+
+      (dose?'<span style="font-size:12px;color:var(--t3)">'+esc(dose)+'</span>':"")+
+      '<span style="margin-left:auto;display:flex;gap:8px;align-items:center">'+
+      (guide&&guide.secs?'<button onclick="openTimer('+guide.secs+',\''+esc(ex.name).replace(/'/g,"")+'\')" style="background:var(--brand-dim);color:var(--brand);border:none;border-radius:9px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">⏱ '+guide.secs+'s</button>':"")+
+      '<a href="https://www.youtube.com/results?search_query='+q+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--brand);text-decoration:none">▶ Watch</a>'+
+      '</span>'+
+    '</div>'+
+    (guide?'<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:6px">'+esc(guide.cues)+'</div>':"")+
+  '</div>';
+}
+function exSectionHTML(title,sub,items){
+  if(!items||!items.length)return "";
+  return '<div style="margin-bottom:26px">'+
+    '<div style="font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.8px;color:var(--brand);margin-bottom:2px">'+title+'</div>'+
+    (sub?'<div style="font-size:12px;color:var(--t3);margin-bottom:12px">'+sub+'</div>':'<div style="margin-bottom:12px"></div>')+
+    items.map(exerciseItemHTML).join("")+
+  '</div>';
+}
+// Timer presets found in strength notes, e.g. "45s plank. 60s rest between rounds."
+function noteTimerChips(s){
+  var out=[],seen={},re=/(\d{1,3})\s*(?:s|sec|seconds)\b/gi,m;
+  while((m=re.exec(s.notes||""))){var v=+m[1];if(v>=10&&v<=600&&!seen[v]){seen[v]=1;out.push(v);}}
+  return out;
+}
 function openExerciseOverlay(idx){
   var s=_planSessions[idx];if(!s)return;
-  var exercises=parseExerciseList(s);
+  var isStrength=(s.sport||"")==="strength";
+  var main=isStrength?parseExerciseList(s):[];
   document.getElementById("ex-title").textContent=s.name||"Today's Exercises";
   var html="";
-  exercises.forEach(function(ex){
-    if(ex.youtube_id){
-      html+='<div style="margin-bottom:22px">';
-      html+='<div style="font-size:14px;font-weight:600;color:var(--t1);margin-bottom:8px">'+esc(ex.name)+'</div>';
-      html+='<div style="position:relative;padding-bottom:56.25%;border-radius:12px;overflow:hidden;background:var(--bg2)">';
-      html+='<iframe style="position:absolute;inset:0;width:100%;height:100%;border:0" src="https://www.youtube-nocookie.com/embed/'+esc(ex.youtube_id)+'?rel=0&modestbranding=1" allowfullscreen loading="lazy"></iframe>';
-      html+='</div></div>';
-    } else {
-      var q=encodeURIComponent("TrainHeroic "+ex.name);
-      html+='<div style="display:flex;align-items:center;justify-content:space-between;padding:13px 14px;background:var(--bg2);border-radius:12px;margin-bottom:10px">';
-      html+='<span style="font-size:14px;color:var(--t1)">'+esc(ex.name)+'</span>';
-      html+='<a href="https://www.youtube.com/results?search_query='+q+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--brand);text-decoration:none">▶ Watch</a>';
-      html+='</div>';
-    }
-  });
+  var chips=isStrength?noteTimerChips(s):[];
+  if(chips.length){
+    html+='<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:20px;padding:11px 14px;background:var(--bg2);border-radius:12px">'+
+      '<span style="font-size:12px;font-weight:700;color:var(--t2)">⏱ Timers in this session:</span>'+
+      chips.map(function(v){return '<button onclick="openTimer('+v+',\'Session timer\')" style="background:var(--brand-dim);color:var(--brand);border:none;border-radius:9px;padding:5px 12px;font-size:12px;font-weight:700;cursor:pointer">'+v+'s</button>';}).join("")+
+    '</div>';
+  }
+  html+=exSectionHTML("Warm-up · before training","Dynamic drills — keep them moving, don't hold",sessionWarmups(s));
+  if(main.length)html+=exSectionHTML("Main set","",main);
+  html+=exSectionHTML("Cool-down · after training","Static stretches — ease in, no bouncing",sessionStretches(s));
   if(!html)html='<div style="text-align:center;color:var(--t3);padding:48px 20px;font-size:14px">No exercises found for this session.</div>';
   document.getElementById("ex-body").innerHTML=html;
   document.getElementById("ex-overlay").style.display="flex";
@@ -1478,6 +1611,164 @@ function openExerciseOverlay(idx){
 function closeExerciseOverlay(){
   document.getElementById("ex-overlay").style.display="none";
   document.body.style.overflow="";
+}
+
+// ── ACTIVITY TIMER ────────────────────────────────────────────
+var _timer={total:0,left:0,endAt:0,running:false,int:null};
+function openTimer(secs,label){
+  secs=Math.max(5,Math.round(secs||30));
+  clearInterval(_timer.int);
+  _timer.total=secs;_timer.left=secs;_timer.running=false;
+  document.getElementById("timer-label").textContent=label||"Timer";
+  document.getElementById("timer-btn").textContent="Start";
+  timerRender();
+  document.getElementById("timer-overlay").style.display="flex";
+}
+function timerRender(){
+  var m=Math.floor(_timer.left/60),s=Math.floor(_timer.left%60);
+  document.getElementById("timer-time").textContent=m+":"+(s<10?"0":"")+s;
+  var pct=_timer.total?Math.max(0,Math.min(100,_timer.left/_timer.total*100)):0;
+  document.getElementById("timer-ring").style.background="conic-gradient(var(--brand) "+pct+"%,var(--bg3) 0)";
+}
+function timerToggle(){
+  var btn=document.getElementById("timer-btn");
+  if(_timer.running){
+    _timer.left=Math.max(0,(_timer.endAt-Date.now())/1000);
+    _timer.running=false;clearInterval(_timer.int);
+    btn.textContent="Resume";
+    return;
+  }
+  if(_timer.left<=0)_timer.left=_timer.total;
+  _timer.endAt=Date.now()+_timer.left*1000;
+  _timer.running=true;btn.textContent="Pause";
+  timerRender();
+  _timer.int=setInterval(function(){
+    _timer.left=Math.max(0,(_timer.endAt-Date.now())/1000);
+    timerRender();
+    if(_timer.left<=0){
+      clearInterval(_timer.int);_timer.running=false;
+      btn.textContent="Restart";
+      timerDone();
+    }
+  },200);
+}
+function timerAdjust(d){
+  if(_timer.running){
+    _timer.endAt+=d*1000;
+    _timer.left=Math.max(0,(_timer.endAt-Date.now())/1000);
+  }else{
+    _timer.left=Math.max(0,_timer.left+d);
+  }
+  _timer.total=Math.max(5,_timer.total+d,Math.ceil(_timer.left));
+  timerRender();
+}
+function timerReset(){
+  clearInterval(_timer.int);_timer.running=false;_timer.left=_timer.total;
+  document.getElementById("timer-btn").textContent="Start";
+  timerRender();
+}
+function closeTimer(){
+  clearInterval(_timer.int);_timer.running=false;
+  document.getElementById("timer-overlay").style.display="none";
+}
+function timerDone(){
+  if(navigator.vibrate)try{navigator.vibrate([200,100,200,100,400]);}catch(e){}
+  try{
+    var ctx=new (window.AudioContext||window.webkitAudioContext)();
+    [0,0.25,0.5].forEach(function(t,i){
+      var o=ctx.createOscillator(),g=ctx.createGain();
+      o.connect(g);g.connect(ctx.destination);
+      o.type="sine";o.frequency.value=i===2?1318:880;
+      g.gain.setValueAtTime(0.001,ctx.currentTime+t);
+      g.gain.exponentialRampToValueAtTime(0.35,ctx.currentTime+t+0.02);
+      g.gain.exponentialRampToValueAtTime(0.001,ctx.currentTime+t+0.22);
+      o.start(ctx.currentTime+t);o.stop(ctx.currentTime+t+0.25);
+    });
+  }catch(e){}
+  document.getElementById("timer-ring").style.background="conic-gradient(#22c55e 100%,var(--bg3) 0)";
+  document.getElementById("timer-time").textContent="Done";
+}
+
+// ── GAMIFICATION: streaks & badges ────────────────────────────
+// A week keeps the streak alive with 2+ completed sessions. Completed weeks are
+// folded into localStorage so the streak survives beyond the 6-week Garmin window.
+var BADGES=[
+  {id:"first",icon:"🚀",name:"First Step",need:"1 session",test:function(g){return g.total>=1;},prog:function(g){return Math.min(1,g.total/1);}},
+  {id:"s10",icon:"💪",name:"10 Sessions",need:"10 sessions",test:function(g){return g.total>=10;},prog:function(g){return g.total/10;}},
+  {id:"s25",icon:"🏅",name:"25 Sessions",need:"25 sessions",test:function(g){return g.total>=25;},prog:function(g){return g.total/25;}},
+  {id:"s50",icon:"🎖",name:"50 Sessions",need:"50 sessions",test:function(g){return g.total>=50;},prog:function(g){return g.total/50;}},
+  {id:"s100",icon:"🏆",name:"100 Sessions",need:"100 sessions",test:function(g){return g.total>=100;},prog:function(g){return g.total/100;}},
+  {id:"w2",icon:"🔥",name:"2-Week Streak",need:"2 weeks",test:function(g){return g.best>=2;},prog:function(g){return g.best/2;}},
+  {id:"w4",icon:"⚡",name:"1-Month Habit",need:"4 weeks",test:function(g){return g.best>=4;},prog:function(g){return g.best/4;}},
+  {id:"w8",icon:"🚂",name:"8-Week Machine",need:"8 weeks",test:function(g){return g.best>=8;},prog:function(g){return g.best/8;}},
+  {id:"w12",icon:"👑",name:"12-Week Athlete",need:"12 weeks",test:function(g){return g.best>=12;},prog:function(g){return g.best/12;}}
+];
+var STREAK_MIN_SESSIONS=2;
+function isoAddDays(iso,n){var t=new Date(iso+"T00:00:00");t.setDate(t.getDate()+n);return localDateStr(t);}
+function isoMondayOf(iso){var t=new Date(iso+"T00:00:00");var dw=t.getDay()||7;t.setDate(t.getDate()-dw+1);return localDateStr(t);}
+function updateGamify(){
+  var st={countedThrough:null,streak:0,best:0,total:0,badges:{}};
+  try{var raw=JSON.parse(localStorage.getItem("gamify_state")||"{}");Object.assign(st,raw);}catch(e){}
+  if(!st.badges)st.badges={};
+  var thisMon=localDateStr(mondayOf(0));
+  if(workouts.length){
+    var start=st.countedThrough?isoAddDays(st.countedThrough,7)
+      :isoMondayOf(workouts.reduce(function(m,w){return (w.date&&w.date<m)?w.date:m;},thisMon));
+    // Fold every fully-elapsed week since the last count into the streak.
+    for(var mon=start;mon<thisMon;mon=isoAddDays(mon,7)){
+      var end=isoAddDays(mon,6);
+      var n=workouts.filter(function(w){return w.date>=mon&&w.date<=end;}).length;
+      st.streak=(n>=STREAK_MIN_SESSIONS)?st.streak+1:0;
+      if(st.streak>st.best)st.best=st.streak;
+      st.total+=n;
+      st.countedThrough=mon;
+    }
+  }
+  // Badge checks include the live (current, uncounted) week.
+  var wkN=workouts.filter(function(w){return w.date>=thisMon;}).length;
+  var live={total:st.total+wkN,best:Math.max(st.best,st.streak+(wkN>=STREAK_MIN_SESSIONS?1:0))};
+  var today=localDateStr(new Date());
+  BADGES.forEach(function(b){if(!st.badges[b.id]&&b.test(live))st.badges[b.id]=today;});
+  try{localStorage.setItem("gamify_state",JSON.stringify(st));}catch(e){}
+  return {st:st,wkN:wkN,live:live};
+}
+function renderGamify(){
+  var el=document.getElementById("gamify");if(!el)return;
+  var g=updateGamify(),st=g.st,wkN=g.wkN;
+  var secured=wkN>=STREAK_MIN_SESSIONS;
+  var streakNow=st.streak+(secured?1:0);
+  var need=STREAK_MIN_SESSIONS-wkN;
+  var msg,msgClr;
+  if(!workouts.length){msg="Complete your first session to light the streak.";msgClr="var(--t3)";}
+  else if(secured){msg="Streak secured this week ✓ — every week you show up, it grows.";msgClr="#22c55e";}
+  else if(st.streak>0){msg=need+" more session"+(need===1?"":"s")+" this week to keep your "+st.streak+"-week streak alive.";msgClr="#f59e0b";}
+  else{msg="Train "+STREAK_MIN_SESSIONS+"× this week to start a streak.";msgClr="var(--t3)";}
+  var earned=BADGES.filter(function(b){return st.badges[b.id];});
+  var next=BADGES.filter(function(b){return !st.badges[b.id];})
+    .sort(function(a,b){return b.prog(g.live)-a.prog(g.live);})[0];
+  var badgeHTML=earned.map(function(b){
+    return '<span title="'+b.name+'" style="display:inline-flex;align-items:center;gap:5px;background:var(--brand-dim);border-radius:9px;padding:5px 10px;font-size:12px;font-weight:700;color:var(--brand)">'+b.icon+' '+b.name+'</span>';
+  }).join("");
+  if(next){
+    var p=Math.min(99,Math.round(next.prog(g.live)*100));
+    badgeHTML+='<span title="Next: '+next.name+' ('+next.need+')" style="display:inline-flex;align-items:center;gap:5px;background:var(--bg3);border-radius:9px;padding:5px 10px;font-size:12px;font-weight:600;color:var(--t3)">'+next.icon+' '+next.name+' · '+p+'%</span>';
+  }
+  var dots="";
+  for(var i=0;i<Math.max(STREAK_MIN_SESSIONS,wkN);i++){
+    dots+='<span style="width:9px;height:9px;border-radius:50%;display:inline-block;margin-right:5px;background:'+(i<wkN?"#22c55e":"var(--bg3)")+'"></span>';
+  }
+  el.innerHTML=
+    '<div style="background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:15px 16px;margin-bottom:14px">'+
+      '<div style="display:flex;align-items:center;gap:12px">'+
+        '<div style="font-size:30px;line-height:1;filter:'+(streakNow>0?"none":"grayscale(1) opacity(.45)")+'">🔥</div>'+
+        '<div style="flex:1">'+
+          '<div style="font-size:19px;font-weight:800;letter-spacing:-.3px">'+streakNow+'-week streak</div>'+
+          '<div style="font-size:11.5px;color:var(--t3)">Best '+Math.max(st.best,streakNow)+' · '+(st.total+wkN)+' total sessions · this week '+dots+'</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:12.5px;color:'+msgClr+';margin-top:9px;line-height:1.5">'+msg+'</div>'+
+      (badgeHTML?'<div style="display:flex;flex-wrap:wrap;gap:7px;margin-top:11px">'+badgeHTML+'</div>':"")+
+    '</div>';
 }
 // TrainingPeaks-style compliance: match a planned session to completed
 // activities on the same day + sport family and grade by duration ratio.
@@ -1646,7 +1937,7 @@ function renderPlanArray(arr,wk){
         '<div class="chev"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M6 4l4 4-4 4" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>'+
       '</div>'+
       '<div class="day-body"><div class="day-inner">'+
-        (isStrength?'<button class="ex-btn" onclick="openExerciseOverlay('+idx+')" style="width:100%;justify-content:center;margin-bottom:12px">▶ Exercises &amp; Videos</button>':"")+
+        '<button class="ex-btn" onclick="openExerciseOverlay('+idx+')" style="width:100%;justify-content:center;margin-bottom:12px">'+(isStrength?'▶ Exercises, Stretches &amp; Videos':'▶ Warm-up &amp; Stretches')+'</button>'+
         (s.focus?'<div style="font-size:13px;color:var(--t2);margin-bottom:10px">'+s.focus+'</div>':"")+
         (stepsHTML||noteHTML?stepsHTML+noteHTML:(isOutline?'<div style="font-size:12px;color:var(--t3)">Session detail firms up when this week becomes active.</div>':""))+
       '</div></div>';
@@ -1670,9 +1961,12 @@ function renderStep(step,sport,col){
     tgt=step.target_low+"–"+step.target_high+" W";
   else if(step.target_type==="heart_rate"&&step.target_low)
     tgt=step.target_low+"–"+step.target_high+" bpm";
+  var durHTML=step.duration_secs
+    ?'<span class="step-dur" style="cursor:pointer;color:var(--brand)" role="button" title="Open timer" onclick="openTimer('+step.duration_secs+',\''+label+'\')">'+dur+' ⏱</span>'
+    :'<span class="step-dur">'+dur+'</span>';
   return '<div class="step" style="--sc:'+col+'">'+
     '<div class="step-h"><span class="step-dot" style="background:'+dotColor+'"></span>'+
-      '<span class="step-t">'+label+'</span><span class="step-dur">'+dur+'</span></div>'+
+      '<span class="step-t">'+label+'</span>'+durHTML+'</div>'+
     (tgt?'<div class="step-tgt">'+tgt+'</div>':"")+
     (step.description?'<div class="step-desc">'+step.description+'</div>':"")+
   '</div>';
@@ -2125,7 +2419,9 @@ async function sendCoachMessage(){
     "WHEN ADJUSTING THE PLAN: call edit_plan with the FULL updated plan for the week you're changing, keeping unchanged sessions intact. Explain the reasoning briefly in your reply so he learns. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\n"+
     "EDITING A SPECIFIC WEEK: edit_plan changes ONE week per call. To change a FUTURE week, pass that week's Monday date as week_of (see WEEKLY BLOCK below) — omitting week_of only edits the current active week. If Diego asks to restructure several weeks (e.g. \"weeks of July 6 and July 13\"), make a SEPARATE edit_plan call for each week — several calls in one reply are fine, and each is saved and confirmed individually.\n\n"+
     "RESPECT HIS SCHEDULE: Diego sets which days he can train, for how long, and how many sessions per week he wants on the Schedule tab (shown below). NEVER schedule or move a session onto a day he has marked unavailable, keep each day within its available hours, and honour his max-sessions preference. Edits that violate this are automatically rejected with the reason — fix and retry. When he tells you his availability or preferences CHANGED, call set_availability to persist it.\n\n"+
-    "WORKOUT DESIGN: Build every session like you're handing it to a serious athlete. Warmup and cooldown are non-negotiable. For any session with structured intensity (fartlek, intervals, tempo, sweet-spot, threshold, VO2) ALWAYS use repeat blocks so the Garmin shows each step individually. Every step needs a specific description with zone label + target number — never write 'work' or 'effort'. A world-class coach writes '6×3min threshold @ 5:05/km (Z4), 90s easy jog between' — not 'main set 18min'.\n\n"+
+    "WORKOUT DESIGN: Build every session like you're handing it to a serious athlete. Warmup and cooldown are non-negotiable. For any session with structured intensity (fartlek, intervals, tempo, sweet-spot, threshold, VO2) ALWAYS use repeat blocks so the Garmin shows each step individually. Every step needs a specific description with zone label + target number — never write 'work' or 'effort'. A world-class coach writes '6×3min threshold @ 5:05/km (Z4), 90s easy jog between' — not 'main set 18min'. Give every session top-level warmup_exercises and cooldown_stretches arrays (each entry {name}) naming the dynamic drills before and static stretches after — the app shows videos for them.\n\n"+
+    "HOME EQUIPMENT — HARD RESTRICTION: Diego trains strength AT HOME with ONLY dumbbells ("+dumbbellList()+" kg), a TRX, resistance bands and bodyweight. NEVER prescribe gym equipment — no barbells, kettlebells, machines, cables, bench, pull-up bar, boxes or medicine balls. Substitute the closest dumbbell/TRX/band/bodyweight equivalent, and only use dumbbell weights he actually owns. Plan edits containing gym equipment are automatically rejected.\n\n"+
+    "SCIENCE-BASED ONLY: every plan and recommendation must be defensible from established exercise science (ACSM/NSCA guidelines, the endurance literature of Seiler/Coggan/Laursen). Progressive overload ≤10%/week, ~80/20 easy/hard distribution, 48h between sessions loading the same muscles, strength work at RIR 2-3 with compound movements that transfer to endurance sport, and no fad or gimmick exercises. If it wouldn't hold up in the literature, it doesn't go in the plan.\n\n"+
     "═══ DIEGO'S CURRENT PICTURE ═══\n"+
     goalLine+"\n"+
     availLine+"\n"+
@@ -2247,6 +2543,24 @@ function repairCoachHistory(){
   }
 }
 
+// Hard guard: home equipment only — Diego has no gym. Any strength session
+// naming gym kit is rejected regardless of what the model says.
+var BANNED_EQUIPMENT=["barbell","kettlebell","cable","smith","machine","leg press","pulldown","pull-up","pull up","pullup","chin-up","chin up","bench press","box jump","medicine ball","slam ball","battle rope","sled","squat rack","weight plate","ez bar","trap bar","gym"];
+function dumbbellList(){return ((profile.strength&&profile.strength.dumbbell_weights_kg)||[4,6,11,16,20]).join("/");}
+function validateEquipment(fixed){
+  var problems=[];
+  fixed.forEach(function(s){
+    if(s.sport!=="strength")return;
+    var texts=[s.name||"",s.focus||"",s.notes||""];
+    (s.exercises||[]).concat(s.warmup_exercises||[],s.cooldown_stretches||[]).forEach(function(e){texts.push(e.name||"");});
+    (function walk(steps){(steps||[]).forEach(function(st){texts.push(st.description||"");walk(st.steps);});})(s.steps);
+    var blob=texts.join(" ").toLowerCase();
+    BANNED_EQUIPMENT.forEach(function(term){
+      if(blob.indexOf(term)>-1)problems.push(s.day+" '"+(s.name||"?")+"' uses gym equipment ('"+term+"')");
+    });
+  });
+  return problems.length?problems.join("; ")+" — Diego trains at home with ONLY dumbbells ("+dumbbellList()+" kg), TRX, resistance bands and bodyweight. Substitute home equivalents.":null;
+}
 // Hard guard: the plan must fit Diego's schedule regardless of what the model says.
 function validatePlanAgainstSchedule(fixed){
   var problems=[];
@@ -2281,10 +2595,12 @@ async function commitPlanEdit(newPlan,summary,weekOf,opts){
     function normDay(d){if(!d)return "";return d.charAt(0).toUpperCase()+d.slice(1).toLowerCase();}
     var fixed=newPlan.filter(function(s){return normDay(s.day)&&wd[normDay(s.day)];}).map(function(s){var c=Object.assign({},s);c.day=normDay(c.day);c.date=wd[c.day];return c;});
 
-    // Hard schedule guard (skipped for undo, which restores a previous state)
+    // Hard schedule + equipment guards (skipped for undo, which restores a previous state)
     if(!opts.force){
       var violation=validatePlanAgainstSchedule(fixed);
       if(violation)return {ok:false,reason:violation};
+      var eqViolation=validateEquipment(fixed);
+      if(eqViolation)return {ok:false,reason:eqViolation};
     }
 
     // Patch the target week in plan_block.json (source for every week's display).
@@ -2613,7 +2929,7 @@ async function init(){
   renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
   renderPlanPreamble();renderBlockOverview();loadChatHistory();
   if(workouts.length)renderHome();
-  else if(goals)renderGoalBanner(0,0);
+  else{renderGamify();if(goals)renderGoalBanner(0,0);}
   var hasKeys=getToken()&&localStorage.getItem("anthropic_key");
   if(!hasKeys){setTimeout(toggleSetup,600);}
   else if(!goals){

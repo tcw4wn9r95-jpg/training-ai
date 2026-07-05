@@ -5,6 +5,11 @@ Your personal AI running and cycling coach. Automatic training plans, performanc
 ## Features
 
 - **Automatic Training Plans** — Claude generates weekly plans based on your Garmin data and availability
+- **Science-Based Only** — every plan follows established exercise science (progressive overload ≤10%/week, 80/20 polarised intensity, NSCA strength principles); no fads
+- **Home Equipment Hard Restriction** — strength sessions only ever use what's at home (dumbbells 4/6/11/16/20 kg, TRX, bands, bodyweight); plans naming gym equipment are rejected and regenerated
+- **Warm-up & Stretch Guides** — every session card opens a video/how-to section with dynamic warm-up drills and post-session static stretches
+- **Built-in Activity Timer** — tap any step duration or timed stretch to get a pop-up countdown preset to the right time, with a beep and vibration when done
+- **Streaks & Badges** — weekly training streak, milestone badges and habit nudges on the Home tab
 - **Auto-Detecting Fitness** — FTP and LTHR update automatically as you get stronger
 - **Garmin Integration** — Workouts push directly to your Fenix with step-by-step guidance
 - **Coach Claudio** — In-app AI coach for daily training questions
