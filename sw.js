@@ -1,4 +1,4 @@
-var SW_VERSION = '20260702-1';
+var SW_VERSION = '20260705-3';
 var SHELL_CACHE = 'shell-' + SW_VERSION;
 var CDN_CACHE = 'cdn-v1';
 var SHELL = ['./', './dashboard.html', './manifest.json', './apple-touch-icon.png', './icon-192.png', './icon-512.png'];
@@ -31,8 +31,12 @@ self.addEventListener('fetch', function(event) {
   var req = event.request;
   if (req.method !== 'GET') return;
   if (req.mode === 'navigate' || req.url.indexOf('dashboard.html') > -1) {
+    // cache: 'reload' forces this fetch to bypass the browser's own HTTP cache
+    // and revalidate with the server — otherwise a "network-first" fetch can
+    // still be silently satisfied from local HTTP cache on a Cache-Control
+    // header from GitHub Pages, leaving home-screen PWAs stuck on stale builds.
     event.respondWith(
-      fetch(req).then(function(res) {
+      fetch(req, { cache: 'reload' }).then(function(res) {
         var copy = res.clone();
         caches.open(SHELL_CACHE).then(function(c) { c.put(req, copy); });
         return res;
