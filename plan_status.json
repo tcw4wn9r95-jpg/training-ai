@@ -1,7 +1,7 @@
 {
-  "status": "pushed",
-  "uploaded": 14,
-  "total": 14,
-  "pushed": true,
-  "pushed_at": "2026-07-04"
+  "status": "draft",
+  "generated": "2026-07-05",
+  "week_of": "2026-07-06",
+  "sessions": 4,
+  "pushed": false
 }

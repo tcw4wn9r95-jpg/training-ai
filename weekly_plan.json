@@ -1,91 +1,330 @@
 [
   {
-    "day": "Sunday",
-    "date": "2026-07-05",
+    "day": "Monday",
+    "date": "2026-07-06",
     "sport": "cycling_indoor",
-    "name": "Active Recovery Spin",
+    "name": "Aerobic Base Ride",
     "total_duration_secs": 1800,
-    "planned_tss": 6,
-    "focus": "Flush legs, parasympathetic recovery — deliberately easy",
-    "steps": [
+    "planned_tss": 18,
+    "focus": "Aerobic base development \u2014 sustained Z2 power to build mitochondrial density and fat oxidation capacity",
+    "warmup_exercises": [
       {
-        "type": "warmup",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 60,
-        "target_high": 80,
-        "description": "Free spin, easy cadence, no pressure"
+        "name": "Hip Circles"
       },
       {
-        "type": "interval",
-        "duration_secs": 1200,
-        "target_type": "power",
-        "target_low": 88,
-        "target_high": 105,
-        "description": "Z1 upper / Z2 floor, cadence 88-95 rpm, HR <150 bpm. Drop to 70-88W if HR won't settle below 150."
+        "name": "Ankle Circles"
       },
       {
-        "type": "cooldown",
-        "duration_secs": 300,
-        "target_type": "power",
-        "target_low": 55,
-        "target_high": 75,
-        "description": "Easy spin, cadence falls to ~70 rpm"
+        "name": "Seated Hip Flexor March"
       }
-    ]
-  },
-  {
-    "day": "Sunday",
-    "date": "2026-07-05",
-    "sport": "strength",
-    "name": "Upper Body + Anti-Rotation Core (Shoulder-Safe)",
-    "total_duration_secs": 1800,
-    "planned_tss": 6,
-    "focus": "Back and core strength, light shoulder activation, knee-sparing — no heavy leg work",
-    "notes": "2 rounds: 8x dumbbell bent-over row 11kg per side, 10x TRX inverted row, 12x dumbbell farmer's carry 8kg per hand (20m), 10x Pallof press per side (light band), 20x dead bug (slow, controlled). 60-90s rest between rounds. Shoulder work light and pain-free only. No spinal flexion under load.",
-    "exercises": [
+    ],
+    "cooldown_stretches": [
       {
-        "name": "Dumbbell Bent-Over Row"
+        "name": "Hip Flexor Stretch"
       },
       {
-        "name": "TRX Inverted Row"
+        "name": "Seated Figure Four Stretch"
       },
       {
-        "name": "Farmer's Carry"
-      },
-      {
-        "name": "Pallof Press"
-      },
-      {
-        "name": "Dead Bug"
+        "name": "Standing Calf Stretch"
       }
     ],
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 300,
-        "description": "Arm circles forward/back, band pull-aparts (light), 10x bodyweight scapular push-ups, cat-cow stretches"
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 90,
+        "description": "Z1 easy spin, 80\u201385 rpm, let legs wake up \u2014 keep power relaxed below 90W"
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "power",
+        "target_low": 106,
+        "target_high": 130,
+        "description": "Z2 steady aerobic \u2014 106\u2013130W, cadence 85\u201390 rpm, HR 146\u2013158 bpm, conversational effort throughout"
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 88,
+        "description": "Z1 easy spin-down, reduce cadence gradually to 70 rpm, breathe and relax"
+      }
+    ]
+  },
+  {
+    "day": "Wednesday",
+    "date": "2026-07-08",
+    "sport": "strength",
+    "name": "Posterior Chain & Anti-Rotation Core",
+    "total_duration_secs": 1800,
+    "planned_tss": 12,
+    "focus": "Build glute and hamstring strength to offload anterior knee stress, plus anti-rotation core stability \u2014 zero spinal flexion under load, zero patellar-loading movements",
+    "notes": "3 rounds of: Romanian Deadlift 2x11kg x10 reps (hip hinge, soft knee only); TRX Glute Bridge x15 reps (bodyweight, shoulders on floor); Single-Leg Hip Hinge 1x6kg x8/side; Pallof Press light band x10/side (hold 2s at extension); Dead Bug bodyweight x8/side (slow, back flat); Farmer Carry 2x11kg x20m. 60s rest between rounds. RIR 2-3 throughout. Shoulder: no overhead or pressing movements.",
+    "exercises": [
+      {
+        "name": "Romanian Deadlift"
+      },
+      {
+        "name": "Trx Glute Bridge"
+      },
+      {
+        "name": "Single Leg Hip Hinge"
+      },
+      {
+        "name": "Pallof Press"
+      },
+      {
+        "name": "Dead Bug"
+      },
+      {
+        "name": "Farmer Carry"
+      }
+    ],
+    "warmup_exercises": [
+      {
+        "name": "Hip Circles"
+      },
+      {
+        "name": "Glute Bridge"
+      },
+      {
+        "name": "Standing Band Clamshell"
+      },
+      {
+        "name": "Bodyweight Squat Sit"
+      }
+    ],
+    "cooldown_stretches": [
+      {
+        "name": "Kneeling Hip Flexor Stretch"
+      },
+      {
+        "name": "Lying Figure Four Glute Stretch"
+      },
+      {
+        "name": "Supine Hamstring Stretch"
+      },
+      {
+        "name": "Seated Thoracic Rotation"
+      }
+    ],
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 180,
+        "description": "Hip circles x10 each direction, bodyweight glute bridge x15 slow, band clamshells x15/side, shallow bodyweight squat sit x10 \u2014 heels elevated if knees uncomfortable"
       },
       {
         "type": "repeat",
-        "repeat_count": 2,
+        "repeat_count": 3,
         "steps": [
           {
             "type": "interval",
-            "duration_secs": 480,
-            "description": "8x dumbbell bent-over row 11kg per side → 10x TRX inverted row → 12x dumbbell farmer's carry 8kg per hand (20m) → 10x Pallof press per side → 20x dead bug (slow, controlled)"
+            "duration_secs": 50,
+            "description": "Romanian Deadlift \u2014 2x11 kg, 10 reps. Push hips back, soft knee, hinge not squat. Z2 effort."
           },
           {
             "type": "recovery",
-            "duration_secs": 75,
-            "description": "Rest between rounds — walk around, breathe, check posture"
+            "duration_secs": 15,
+            "description": "Transition \u2014 set down weights, move to floor"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 40,
+            "description": "TRX Glute Bridge \u2014 bodyweight, 15 reps. Shoulders on floor, drive hips to full extension and squeeze."
+          },
+          {
+            "type": "recovery",
+            "duration_secs": 15,
+            "description": "Transition \u2014 stand up, pick up 6 kg"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 60,
+            "description": "Single-Leg Hip Hinge \u2014 1x6 kg, 8 reps/side. Balance and control over load. Touch wall if unstable."
+          },
+          {
+            "type": "recovery",
+            "duration_secs": 15,
+            "description": "Transition \u2014 anchor band at door handle height"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 50,
+            "description": "Pallof Press \u2014 light band, 10 reps/side. Press out, hold 2s at full extension. No rotation."
+          },
+          {
+            "type": "recovery",
+            "duration_secs": 15,
+            "description": "Transition \u2014 move to floor mat"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 55,
+            "description": "Dead Bug \u2014 bodyweight, 8 reps/side. Lower back flat on floor throughout. Slow and controlled."
+          },
+          {
+            "type": "recovery",
+            "duration_secs": 15,
+            "description": "Transition \u2014 pick up 2x11 kg"
+          },
+          {
+            "type": "interval",
+            "duration_secs": 40,
+            "description": "Farmer Carry \u2014 2x11 kg, walk 20m. Core braced, shoulders down and back, tall posture."
+          },
+          {
+            "type": "recovery",
+            "duration_secs": 60,
+            "description": "Rest between rounds \u2014 walk slowly, shake out hands and legs"
           }
         ]
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
-        "description": "Chest opener stretch (doorway or arms behind back), shoulder rolls, child's pose — hold each 30-45s"
+        "description": "Kneeling hip flexor stretch 30s/side, lying figure-four glute stretch 30s/side, supine hamstring stretch 30s/side, seated thoracic rotation 10 reps/side"
+      }
+    ]
+  },
+  {
+    "day": "Friday",
+    "date": "2026-07-10",
+    "sport": "running",
+    "name": "Easy Aerobic Run",
+    "total_duration_secs": 1800,
+    "planned_tss": 14,
+    "focus": "Maintain neuromuscular running patterns and aerobic stimulus at Z1\u2013Z2 \u2014 zero knee aggravation priority, flat terrain only",
+    "warmup_exercises": [
+      {
+        "name": "Leg Swings"
+      },
+      {
+        "name": "Lateral Leg Swings"
+      },
+      {
+        "name": "Ankle Circles"
+      },
+      {
+        "name": "Hip Circles"
+      }
+    ],
+    "cooldown_stretches": [
+      {
+        "name": "Standing Quad Stretch"
+      },
+      {
+        "name": "Standing Calf Stretch"
+      },
+      {
+        "name": "Kneeling Hip Flexor Stretch"
+      }
+    ],
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 480,
+        "target_high": 420,
+        "description": "3 min walk then 2 min very easy jog >7:00/km \u2014 Z1, HR under 145 bpm. Dynamic drills: leg swings, ankle circles. Keep it gentle \u2014 no bounding."
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "pace",
+        "target_low": 420,
+        "target_high": 375,
+        "description": "Z1\u2013Z2 easy continuous run \u2014 6:15\u20137:00/km, HR 145\u2013162 bpm. Flat terrain only. Conversational pace. Walk immediately if any knee pain."
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 300,
+        "target_type": "pace",
+        "target_low": 540,
+        "target_high": 480,
+        "description": "Easy walk cool-down >8:00/km \u2014 let HR drop below 130 bpm before stopping"
+      }
+    ]
+  },
+  {
+    "day": "Sunday",
+    "date": "2026-07-12",
+    "sport": "cycling_indoor",
+    "name": "Aerobic Long Ride",
+    "total_duration_secs": 3300,
+    "planned_tss": 28,
+    "focus": "Extended aerobic volume \u2014 primary weekly calorie-expenditure session and mitochondrial adaptation at low-moderate intensity, progressive within Z2",
+    "warmup_exercises": [
+      {
+        "name": "Hip Circles"
+      },
+      {
+        "name": "Ankle Circles"
+      },
+      {
+        "name": "Bodyweight Squat Sit"
+      }
+    ],
+    "cooldown_stretches": [
+      {
+        "name": "Hip Flexor Stretch"
+      },
+      {
+        "name": "Seated Figure Four Stretch"
+      },
+      {
+        "name": "Standing Calf Stretch"
+      },
+      {
+        "name": "Supine Hamstring Stretch"
+      }
+    ],
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 420,
+        "target_type": "power",
+        "target_low": 70,
+        "target_high": 90,
+        "description": "Z1 spin-up \u2014 7 min easy, 80\u201385 rpm, HR below 145 bpm. Increase cadence to 88 rpm in final 2 min."
+      },
+      {
+        "type": "interval",
+        "duration_secs": 900,
+        "target_type": "power",
+        "target_low": 95,
+        "target_high": 115,
+        "description": "Low Z1\u2013Z2 \u2014 95\u2013115W, cadence 85\u201388 rpm, HR 145\u2013154 bpm. Let HR stabilise before progressing."
+      },
+      {
+        "type": "interval",
+        "duration_secs": 900,
+        "target_type": "power",
+        "target_low": 110,
+        "target_high": 130,
+        "description": "Mid Z2 \u2014 110\u2013130W, cadence 85\u201390 rpm, HR 152\u2013160 bpm. Steady aerobic \u2014 still conversational."
+      },
+      {
+        "type": "interval",
+        "duration_secs": 600,
+        "target_type": "power",
+        "target_low": 106,
+        "target_high": 122,
+        "description": "Hold steady Z2 \u2014 106\u2013122W, back off if HR climbs above 162 bpm. Finish strong but controlled."
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 480,
+        "target_type": "power",
+        "target_low": 60,
+        "target_high": 85,
+        "description": "Z1 easy spin-down \u2014 reduce wattage and cadence gradually over 8 min. HR below 130 bpm before stopping."
       }
     ]
   }

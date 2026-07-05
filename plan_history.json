@@ -501,5 +501,45 @@
         "focus": "Aerobic volume, fat oxidation, steady-state base \u2014 longest session of the week"
       }
     ]
+  },
+  {
+    "week_of": "2026-07-06",
+    "generated": "2026-07-05",
+    "phase": "base",
+    "planned_tss": 72,
+    "last_7d_actual_tss": 24,
+    "last_28d_actual_tss": 24,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Base Ride",
+        "planned_tss": 18,
+        "focus": "Aerobic base development \u2014 sustained Z2 power to build mitochondrial density and fat oxidation capacity"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "strength",
+        "name": "Posterior Chain & Anti-Rotation Core",
+        "planned_tss": 12,
+        "focus": "Build glute and hamstring strength to offload anterior knee stress, plus anti-rotation core stability \u2014 zero spinal flexion under load, zero patellar-loading movements"
+      },
+      {
+        "day": "Friday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 14,
+        "focus": "Maintain neuromuscular running patterns and aerobic stimulus at Z1\u2013Z2 \u2014 zero knee aggravation priority, flat terrain only"
+      },
+      {
+        "day": "Sunday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Long Ride",
+        "planned_tss": 28,
+        "focus": "Extended aerobic volume \u2014 primary weekly calorie-expenditure session and mitochondrial adaptation at low-moderate intensity, progressive within Z2"
+      }
+    ]
   }
 ]
