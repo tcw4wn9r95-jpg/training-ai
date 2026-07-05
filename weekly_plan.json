@@ -38,33 +38,33 @@
     "day": "Sunday",
     "date": "2026-07-05",
     "sport": "strength",
-    "name": "Lower Body + Anti-Rotation Core",
+    "name": "Upper Body + Anti-Rotation Core (Shoulder-Safe)",
     "total_duration_secs": 1800,
-    "planned_tss": 8,
-    "focus": "Posterior chain, hip stability, spine-safe anti-rotation core — no spinal flexion under load",
-    "notes": "2 rounds: 10x goblet squat 11kg, 8x TRX split squat per leg, 15x banded glute bridge (pause 1s at top), 2x20m farmer's carry 2x6kg, 10x Pallof press per side (light band, hold 2s). 60-90s rest between rounds. No spinal flexion under load. Posture over load throughout.",
+    "planned_tss": 6,
+    "focus": "Back and core strength, light shoulder activation, knee-sparing — no heavy leg work",
+    "notes": "2 rounds: 8x dumbbell bent-over row 11kg per side, 10x TRX inverted row, 12x dumbbell farmer's carry 8kg per hand (20m), 10x Pallof press per side (light band), 20x dead bug (slow, controlled). 60-90s rest between rounds. Shoulder work light and pain-free only. No spinal flexion under load.",
     "exercises": [
       {
-        "name": "Goblet Squat"
+        "name": "Dumbbell Bent-Over Row"
       },
       {
-        "name": "TRX Split Squat"
-      },
-      {
-        "name": "Banded Glute Bridge"
+        "name": "TRX Inverted Row"
       },
       {
         "name": "Farmer's Carry"
       },
       {
         "name": "Pallof Press"
+      },
+      {
+        "name": "Dead Bug"
       }
     ],
     "steps": [
       {
         "type": "warmup",
         "duration_secs": 300,
-        "description": "Leg swings front/back and side, hip circles, 10x bodyweight squat, 10x bodyweight glute bridge"
+        "description": "Arm circles forward/back, band pull-aparts (light), 10x bodyweight scapular push-ups, cat-cow stretches"
       },
       {
         "type": "repeat",
@@ -73,19 +73,19 @@
           {
             "type": "interval",
             "duration_secs": 480,
-            "description": "10x goblet squat 11kg → 8x TRX split squat per leg → 15x banded glute bridge → 2x20m farmer's carry 2x6kg → 10x Pallof press per side"
+            "description": "8x dumbbell bent-over row 11kg per side → 10x TRX inverted row → 12x dumbbell farmer's carry 8kg per hand (20m) → 10x Pallof press per side → 20x dead bug (slow, controlled)"
           },
           {
             "type": "recovery",
             "duration_secs": 75,
-            "description": "Rest between rounds — walk around, breathe, check posture for next round"
+            "description": "Rest between rounds — walk around, breathe, check posture"
           }
         ]
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
-        "description": "Kneeling hip flexor stretch, figure-4 or pigeon pose, seated glute stretch — hold each 30-45s"
+        "description": "Chest opener stretch (doorway or arms behind back), shoulder rolls, child's pose — hold each 30-45s"
       }
     ]
   }
