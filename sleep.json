@@ -97,5 +97,14 @@
     "light_h": 4.25,
     "rem_h": 0.48,
     "awake_h": 1.43
+  },
+  {
+    "date": "2026-07-05",
+    "score": 65,
+    "duration_h": 6.58,
+    "deep_h": 1.48,
+    "light_h": 4.63,
+    "rem_h": 0.47,
+    "awake_h": 1.02
   }
 ]
