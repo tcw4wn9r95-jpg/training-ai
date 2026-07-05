@@ -676,7 +676,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260705-1";
+const BUILD="20260705-2";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1439,6 +1439,47 @@ var EXERCISE_VIDEOS={
   "core circuit":"AngelouMRiJo",
   "hollow body hold":"LlDNef_Ztsc"
 };
+// Warm-up drills & stretches — curated so they embed inline exactly like the
+// strength clips above. NOTE: curated offline; if any clip looks wrong, it can
+// be swapped here — the written how-to cue is always shown beneath the video so
+// the guidance stays correct regardless of the clip.
+Object.assign(EXERCISE_VIDEOS,{
+  // dynamic warm-up drills
+  "leg swings":"K6f0duFdvNc",
+  "hip circles":"kfIU9RA5tGw",
+  "arm circles":"140RTNMciH8",
+  "ankle circles":"gtT2Rlo0kMc",
+  "high knees":"8opcQdC-V-U",
+  "butt kicks":"nfBBt8Iagm4",
+  "bodyweight squat":"C_VtOYc6j5c",
+  "cat cow":"kqnua4rHVVA",
+  "inchworm":"ZgFrr5Rh5AM",
+  "torso twist":"Spg2vHMExjk",
+  "band pull-apart":"Bhbz-JV5Qb0",
+  "glute activation":"4oRkPYWV0B8",
+  "worlds greatest stretch":"bLtF6-hHijU",
+  // static cool-down stretches
+  "quad stretch":"3lB1B_qbY4c",
+  "standing quad stretch":"3lB1B_qbY4c",
+  "hamstring stretch":"FSSDPU8tt3A",
+  "calf stretch":"JCF8pJoLXtc",
+  "hip flexor stretch":"Sf_1lC3nQpk",
+  "figure four stretch":"Nj0-9yQfxBg",
+  "glute stretch":"Nj0-9yQfxBg",
+  "pigeon pose":"0_zPqi2rGSY",
+  "childs pose":"nO0tPtBCk8w",
+  "chest stretch":"SV7khHCG5PU",
+  "shoulder stretch":"X3-gFKf3q0I",
+  "triceps stretch":"Rp2Vh_Xz3aM",
+  "lower back stretch":"0oM4jz2GJvo",
+  "downward dog":"EC7RGJ975iM",
+  "cobra stretch":"JDcdhTuycOI",
+  "butterfly stretch":"YT3XXjSNjWU",
+  "it band stretch":"hVYzIVA9Two",
+  "adductor stretch":"K5Pz2iozvSI",
+  "couch stretch":"Gc0oYxTJErc",
+  "neck stretch":"6Uu6dO5JHJk"
+});
 function resolveVideoId(name){
   var key=name.toLowerCase().trim();
   if(EXERCISE_VIDEOS[key])return EXERCISE_VIDEOS[key];
@@ -1558,7 +1599,9 @@ function exerciseItemHTML(ex){
       '</div>'+
       '<div style="position:relative;padding-bottom:56.25%;border-radius:12px;overflow:hidden;background:var(--bg2)">'+
       '<iframe style="position:absolute;inset:0;width:100%;height:100%;border:0" src="https://www.youtube-nocookie.com/embed/'+esc(ex.youtube_id)+'?rel=0&modestbranding=1" allowfullscreen loading="lazy"></iframe>'+
-      '</div></div>';
+      '</div>'+
+      (guide?'<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:8px">'+esc(guide.cues)+'</div>':"")+
+      '</div>';
   }
   var q=encodeURIComponent("how to "+ex.name+" exercise");
   return '<div style="padding:13px 14px;background:var(--bg2);border-radius:12px;margin-bottom:10px">'+
