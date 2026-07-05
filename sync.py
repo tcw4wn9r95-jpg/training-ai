@@ -562,6 +562,7 @@ TARGET RULES (critical — match these precisely):
   the specific dynamic warm-up drills to do BEFORE the session and static stretches to do AFTER
   (each entry has only "name", title-cased, e.g. {{"name": "Leg Swings"}}, {{"name": "Standing Quad Stretch"}}).
   Pick drills/stretches that match the muscles the session actually uses. The app shows how-to videos for each.
+- STEP GRANULARITY (critical — this makes the workout usable on Garmin): break EVERY session into its real component steps, never a single blob. An interval/threshold/VO2/fartlek session — running OR cycling — must be a distinct warm-up step, then a "repeat" block whose inner steps are the work rep AND its recovery as SEPARATE steps (e.g. 5x [3min @ threshold] + [90s @ easy]), then any second set as its own repeat block, then a cool-down step. A 4x8min bike session has ≥4 top-level entries: warmup, repeat(interval+recovery), (optional 2nd repeat), cooldown — NOT one 40-minute interval. A progression run has a step per pace change. Only truly steady sessions (easy/recovery/long aerobic) may be warmup + one main step + cooldown. Give each work and recovery step its own specific description with zone label + target number — never "work" or "effort".
 - Use "repeat" blocks for intervals (e.g. 4x8min). Never flatten intervals.
 
 ```json
@@ -570,10 +571,10 @@ TARGET RULES (critical — match these precisely):
     "day": "Monday",
     "date": "{week_dates['Monday']}",
     "sport": "running",
-    "name": "Easy aerobic run",
-    "total_duration_secs": 2700,
-    "planned_tss": 35,
-    "focus": "Aerobic base, conversational",
+    "name": "Threshold 5x3min",
+    "total_duration_secs": 3300,
+    "planned_tss": 55,
+    "focus": "Lift running threshold with cruise intervals at LT pace",
     "warmup_exercises": [
       {{"name": "Leg Swings"}},
       {{"name": "Walking Lunge"}},
@@ -585,9 +586,12 @@ TARGET RULES (critical — match these precisely):
       {{"name": "Calf Stretch"}}
     ],
     "steps": [
-      {{"type": "warmup", "duration_secs": 600, "target_type": "pace", "target_low": 450, "target_high": 405, "description": "Z1 easy, <145 bpm"}},
-      {{"type": "interval", "duration_secs": 1500, "target_type": "pace", "target_low": 405, "target_high": 375, "description": "Z2 aerobic 146-162 bpm"}},
-      {{"type": "cooldown", "duration_secs": 600, "target_type": "pace", "target_low": 480, "target_high": 420, "description": "Z1 easy"}}
+      {{"type": "warmup", "duration_secs": 720, "target_type": "pace", "target_low": 450, "target_high": 405, "description": "Z1-Z2 easy, build to 155 bpm, finish with 3x20s strides"}},
+      {{"type": "repeat", "repeat_count": 5, "steps": [
+        {{"type": "interval", "duration_secs": 180, "target_type": "pace", "target_low": 320, "target_high": 300, "description": "Z4 threshold 5:20-5:00/km, 173-181 bpm, controlled"}},
+        {{"type": "recovery", "duration_secs": 90, "target_type": "pace", "target_low": 480, "target_high": 420, "description": "Z1 easy jog, let HR drop under 150"}}
+      ]}},
+      {{"type": "cooldown", "duration_secs": 480, "target_type": "pace", "target_low": 480, "target_high": 420, "description": "Z1 easy jog down"}}
     ]
   }},
   {{
