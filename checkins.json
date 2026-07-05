@@ -10,5 +10,11 @@
     "note": "Sharp lower back pain on forward bending — diagnosed as muscular strain from repetitive diaper-changing posture. Physio cleared for training. Plan adjusted: no spinal flexion under load, prioritise anti-rotation core work, loaded carries, and functional arm strength. Starting light (6–11kg) after 6-month training gap. Will focus on squat/lunge posture during daily activities.",
     "severity": "important",
     "affects_area": ""
+  },
+  {
+    "date": "2026-07-05",
+    "note": "Bilateral anterior knee pain (front of both knees). Aggravated by rising from low seating and during today's goblet squats. Sharp or dull/aching? Worsens with load. Monitor closely — may indicate patellar tracking, quad dominance, or hip stability deficit. Avoid heavy leg work until pain settles and form improves. Cross-train with cycling (lower shear forces) if pain allows. Recommend physio assessment if persists >1 week or worsens.\", \"severity\": \"caution\", \"affects_area\": \"both knees (anterior)\"}\n</invoke>",
+    "severity": "info",
+    "affects_area": ""
   }
 ]
