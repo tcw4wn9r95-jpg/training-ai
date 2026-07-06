@@ -676,7 +676,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-1";
+const BUILD="20260706-2";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1365,7 +1365,7 @@ function loadChatHistory(){
     coachHistory=JSON.parse(h);
     coachHistory=safeSliceHistory(coachHistory,20);
     coachHistory.forEach(function(msg){
-      if(msg.role==="user"&&typeof msg.content==="string")addCoachMessage(msg.content,true);
+      if(msg.role==="user"&&typeof msg.content==="string")addCoachMessage(msg.content.replace(/^\[Sent [^\]]*\]\s*/,""),true);
       else if(msg.role==="assistant"){
         var parts=Array.isArray(msg.content)?msg.content:[{type:"text",text:String(msg.content||"")}];
         var txt=parts.filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("");
@@ -2578,7 +2578,19 @@ async function sendCoachMessage(){
   })();
 
   var sys="You are Coach Claudio, Diego's personal endurance coach — the calibre of coach who works with high-performing age-group and elite athletes. You combine deep exercise-physiology knowledge with the warmth and directness of a great human coach. You are friendly and encouraging but you never sugar-coat the science: every recommendation is grounded in training principles (progressive overload, polarised 80/20 intensity, specificity, periodisation, supercompensation, and adequate recovery).\n\n"+
-    "TODAY'S DATE: "+new Date().toISOString().split("T")[0]+" ("+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})+")\n\n"+
+    (function(){
+      // Local dates only — toISOString() is UTC and reports yesterday's date
+      // until 2am Luxembourg time, which fed the model a self-contradicting
+      // "today" and shifted his date math back a day.
+      function fmt(d){return d.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})+" = "+localDateStr(d);}
+      var now=new Date(),tom=new Date(now),yest=new Date(now);
+      tom.setDate(now.getDate()+1);yest.setDate(now.getDate()-1);
+      return "CURRENT DATE — AUTHORITATIVE:\n"+
+        "• TODAY: "+fmt(now)+"\n"+
+        "• TOMORROW: "+fmt(tom)+"\n"+
+        "• YESTERDAY: "+fmt(yest)+"\n"+
+        "Resolve 'today', 'tomorrow', 'yesterday', 'this Saturday' etc. in Diego's LATEST message against these dates and the WEEK CALENDAR — NEVER against dates mentioned earlier in the conversation. Older messages carry a [Sent <date>] stamp: relative day words inside a stamped message refer to ITS send date, which may not be today. Earlier turns often come from previous days — the dates above always win.\n\n";
+    })()+
     "HOW YOU COMMUNICATE: Natural and conversational, like texting a coach who knows you well. Concise by default (2-4 sentences) but go deeper when Diego wants the 'why'. Reference his actual data and sessions, not generic advice. Ask a clarifying question when his input is ambiguous rather than assuming.\n\n"+
     "TAKE HIS INPUT SERIOUSLY — this is the core of good coaching:\n"+
     "• If Diego reports PAIN: distinguish soreness (normal, dull, symmetrical, eases with warm-up) from injury pain (sharp, localised, worsens with load, alters form). For anything beyond normal soreness, reduce or remove load on the affected area, suggest cross-training that avoids it, and recommend he see a physio if it persists >1 week or is sharp/worsening. NEVER tell him to push through real pain. Adjust the plan with edit_plan accordingly.\n"+
@@ -2622,7 +2634,12 @@ async function sendCoachMessage(){
     calendarLine+"\n"+
     blockLine+"\n"+
     "Current active-week plan JSON: "+JSON.stringify(planJson);
-  coachHistory.push({role:"user",content:msg});
+  // Stamp every stored user message with its send date. History persists across
+  // days, so without stamps the model resolved "today/tomorrow" against
+  // YESTERDAY'S turns (the freshest date anchors in the conversation) instead
+  // of the actual current date — the classic "moves the wrong day's workout" bug.
+  var _sendStamp="[Sent "+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})+", "+localDateStr(new Date())+"] ";
+  coachHistory.push({role:"user",content:_sendStamp+msg});
   repairCoachHistory();
   try{
     // Agentic loop: keep going while the coach calls tools, so multi-week
