@@ -676,7 +676,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260705-3";
+const BUILD="20260706-1";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -2420,8 +2420,16 @@ async function putAvailability(){
   DAYS.forEach(d=>payload.days[d]={available:avState[d].available,hours:avState[d].hours});
   try{
     var g=await(await fetch(API+"/availability.json",{headers:{Authorization:"Bearer "+token}})).json();
+    var newContent=JSON.stringify(payload,null,2);
+    // Skip the write when nothing changed — repeated identical saves (e.g. the
+    // coach's agentic loop calling set_availability twice) were creating
+    // duplicate no-op commits and wasted rounds.
+    try{
+      var cur=decodeURIComponent(escape(atob((g.content||"").replace(/\n/g,''))));
+      if(cur===newContent)return true;
+    }catch(e2){}
     var r=await fetch(API+"/availability.json",{method:"PUT",headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},
-      body:JSON.stringify({message:"Availability update",content:btoa(unescape(encodeURIComponent(JSON.stringify(payload,null,2)))),sha:g.sha})});
+      body:JSON.stringify({message:"Availability update",content:btoa(unescape(encodeURIComponent(newContent))),sha:g.sha})});
     return r.ok;
   }catch(e){return false;}
 }
@@ -2457,12 +2465,13 @@ var LOG_CHECKIN_TOOL={
 };
 var EDIT_PLAN_TOOL={
   name:"edit_plan",
-  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. Return the COMPLETE updated plan — every session for the week, not just the changed one.\n\nWHICH WEEK — IMPORTANT: Each edit_plan call changes exactly ONE week. Pass week_of = the Monday date (YYYY-MM-DD) of the week you are editing; the available weeks are listed under 'WEEKLY BLOCK' in your context. Omit week_of only to edit the current active week. To restructure several weeks, make one edit_plan call PER week — multiple edit_plan calls in the same reply are fine and each will be saved. A rest day just means no session on that day.\n\nVALIDATION: Edits that put a session on an unavailable day, exceed a day's available hours, or exceed the athlete's max sessions per week are REJECTED — you'll get the reason back; fix the plan and call edit_plan again.\n\nDAY RULES: MULTIPLE SESSIONS PER DAY: use day:'Monday' for both entries — NEVER 'Monday Morning', 'Monday Evening', 'Monday AM'. Valid day values ONLY: Monday Tuesday Wednesday Thursday Friday Saturday Sunday.\n\nREQUIRED SESSION FIELDS: day, date (YYYY-MM-DD — copy the existing date; NEVER invent a new one), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, steps array.\n\nWORKOUT STRUCTURE — MANDATORY FOR ALL RUNNING AND CYCLING SESSIONS:\nEvery session must have: warmup step → main block → cooldown step. A single monolithic 'work' block is NEVER acceptable — Diego sees each step on his Garmin and needs to know exactly what to do.\n\nTARGET TYPES (required on every running/cycling step):\n• running → target_type:'pace', target_low/target_high in SECONDS PER KM (low=slower number, high=faster number; easy=390-360, threshold=315-300, Z4=285-270, Z5=270-250)\n• cycling_indoor → target_type:'power', target_low/target_high in watts\n• cycling_outdoor → target_type:'heart_rate', target_low/target_high in bpm\n• strength → description only; top-level notes field with full circuit\n\nStep types available: 'warmup' | 'interval' | 'recovery' | 'cooldown' | 'rest'\n\nSTEP DESCRIPTIONS must be specific — include effort label + zone + target. Examples: 'Surge @ 4:30/km (Z4-5)', 'Float recovery @ 6:30/km (Z1)', 'Threshold @ 175W (Z4)', 'Easy Z2 @ 130W'. NEVER write 'work', 'effort', or 'main set'.\n\nINTERVAL/FARTLEK/TEMPO/SWEET-SPOT/THRESHOLD: ALWAYS use repeat blocks {type:'repeat',repeat_count:N,steps:[workStep,recoveryStep]}. Inside a repeat: one interval step (the hard effort) + one recovery step. Never flatten intervals into a single step.\n\nEXAMPLE — Fartlek run 35 min (8×1min surges):\n[{type:'warmup',duration_secs:600,target_type:'pace',target_low:420,target_high:390,description:'Easy warm-up jog @ 6:30/km, leg swings, skips'},\n {type:'repeat',repeat_count:8,steps:[\n  {type:'interval',duration_secs:60,target_type:'pace',target_low:275,target_high:260,description:'Surge @ 4:20/km (Z4-5) — controlled and fast'},\n  {type:'recovery',duration_secs:90,target_type:'pace',target_low:400,target_high:380,description:'Float @ 6:20/km (Z1-2) — easy jog, recover fully'}\n ]},\n {type:'cooldown',duration_secs:450,target_type:'pace',target_low:430,target_high:400,description:'Easy cool-down @ 6:40/km, quad and calf stretches'}]\n\nEXAMPLE — Threshold run 45 min (3×8min):\n[{type:'warmup',duration_secs:900,...},\n {type:'repeat',repeat_count:3,steps:[\n  {type:'interval',duration_secs:480,target_type:'pace',target_low:315,target_high:300,description:'Threshold @ 5:00-5:15/km (Z4) — comfortably hard, controlled breathing'},\n  {type:'recovery',duration_secs:120,target_type:'pace',target_low:420,target_high:390,description:'Easy jog recovery @ 6:30/km (Z1)'}\n ]},\n {type:'cooldown',duration_secs:600,...}]\n\nEXAMPLE — Sweet-spot cycling 60 min (2×20min):\n[{type:'warmup',duration_secs:600,target_type:'power',target_low:80,target_high:130,description:'Gradual build, 90rpm'},\n {type:'repeat',repeat_count:2,steps:[\n  {type:'interval',duration_secs:1200,target_type:'power',target_low:158,target_high:175,description:'Sweet-spot 88% FTP @ 158-175W (Z3-4) — steady, controlled effort'},\n  {type:'recovery',duration_secs:300,target_type:'power',target_low:80,target_high:110,description:'Easy spin @ 80-110W (Z1), recover HR below 140'}\n ]},\n {type:'cooldown',duration_secs:600,target_type:'power',target_low:60,target_high:100,description:'Easy cool-down spin @ 60-100W'}]\n\nEasy/Z2 sessions: warmup + one steady interval step + cooldown is acceptable (no repeat block needed for continuous efforts).",
+  description:"Edit Diego's weekly training plan. Use this whenever Diego asks to add, remove, change, move, or adjust any workout. Return the COMPLETE updated plan — every session for the week, not just the changed one.\n\nWHICH WEEK — IMPORTANT: Each edit_plan call changes exactly ONE week. Pass week_of = the Monday date (YYYY-MM-DD) of the week you are editing; the available weeks are listed under 'WEEKLY BLOCK' in your context. Omit week_of only to edit the current active week. To restructure several weeks, make one edit_plan call PER week — multiple edit_plan calls in the same reply are fine and each will be saved. A rest day just means no session on that day.\n\nVALIDATION: Edits that put a session on an unavailable day, exceed a day's available hours, or exceed the athlete's max sessions per week are REJECTED — you'll get the reason back; fix the plan and call edit_plan again. EXCEPTION — one-off moves: when Diego EXPLICITLY asks to train on a day his schedule marks unavailable (e.g. 'move Saturday's session to Sunday'), pass override_unavailable_days:['Sunday'] in the SAME call. That grants a one-off exemption for those days THIS week only and must NOT be combined with set_availability — his standing weekly schedule stays untouched. Only use it for days Diego literally named; never to sneak sessions onto off-days yourself.\n\nDAY↔DATE: sessions are placed by DAY NAME (the date field is derived from it). Before every call, resolve any date Diego mentions to its day name using the WEEK CALENDAR in your context — never guess (misnaming the day places the session on the wrong date).\n\nDAY RULES: MULTIPLE SESSIONS PER DAY: use day:'Monday' for both entries — NEVER 'Monday Morning', 'Monday Evening', 'Monday AM'. Valid day values ONLY: Monday Tuesday Wednesday Thursday Friday Saturday Sunday.\n\nREQUIRED SESSION FIELDS: day, date (YYYY-MM-DD — copy the existing date; NEVER invent a new one), sport (running/cycling_indoor/cycling_outdoor/strength), name, total_duration_secs, planned_tss, focus, steps array.\n\nWORKOUT STRUCTURE — MANDATORY FOR ALL RUNNING AND CYCLING SESSIONS:\nEvery session must have: warmup step → main block → cooldown step. A single monolithic 'work' block is NEVER acceptable — Diego sees each step on his Garmin and needs to know exactly what to do.\n\nTARGET TYPES (required on every running/cycling step):\n• running → target_type:'pace', target_low/target_high in SECONDS PER KM (low=slower number, high=faster number; easy=390-360, threshold=315-300, Z4=285-270, Z5=270-250)\n• cycling_indoor → target_type:'power', target_low/target_high in watts\n• cycling_outdoor → target_type:'heart_rate', target_low/target_high in bpm\n• strength → description only; top-level notes field with full circuit\n\nStep types available: 'warmup' | 'interval' | 'recovery' | 'cooldown' | 'rest'\n\nSTEP DESCRIPTIONS must be specific — include effort label + zone + target. Examples: 'Surge @ 4:30/km (Z4-5)', 'Float recovery @ 6:30/km (Z1)', 'Threshold @ 175W (Z4)', 'Easy Z2 @ 130W'. NEVER write 'work', 'effort', or 'main set'.\n\nINTERVAL/FARTLEK/TEMPO/SWEET-SPOT/THRESHOLD: ALWAYS use repeat blocks {type:'repeat',repeat_count:N,steps:[workStep,recoveryStep]}. Inside a repeat: one interval step (the hard effort) + one recovery step. Never flatten intervals into a single step.\n\nEXAMPLE — Fartlek run 35 min (8×1min surges):\n[{type:'warmup',duration_secs:600,target_type:'pace',target_low:420,target_high:390,description:'Easy warm-up jog @ 6:30/km, leg swings, skips'},\n {type:'repeat',repeat_count:8,steps:[\n  {type:'interval',duration_secs:60,target_type:'pace',target_low:275,target_high:260,description:'Surge @ 4:20/km (Z4-5) — controlled and fast'},\n  {type:'recovery',duration_secs:90,target_type:'pace',target_low:400,target_high:380,description:'Float @ 6:20/km (Z1-2) — easy jog, recover fully'}\n ]},\n {type:'cooldown',duration_secs:450,target_type:'pace',target_low:430,target_high:400,description:'Easy cool-down @ 6:40/km, quad and calf stretches'}]\n\nEXAMPLE — Threshold run 45 min (3×8min):\n[{type:'warmup',duration_secs:900,...},\n {type:'repeat',repeat_count:3,steps:[\n  {type:'interval',duration_secs:480,target_type:'pace',target_low:315,target_high:300,description:'Threshold @ 5:00-5:15/km (Z4) — comfortably hard, controlled breathing'},\n  {type:'recovery',duration_secs:120,target_type:'pace',target_low:420,target_high:390,description:'Easy jog recovery @ 6:30/km (Z1)'}\n ]},\n {type:'cooldown',duration_secs:600,...}]\n\nEXAMPLE — Sweet-spot cycling 60 min (2×20min):\n[{type:'warmup',duration_secs:600,target_type:'power',target_low:80,target_high:130,description:'Gradual build, 90rpm'},\n {type:'repeat',repeat_count:2,steps:[\n  {type:'interval',duration_secs:1200,target_type:'power',target_low:158,target_high:175,description:'Sweet-spot 88% FTP @ 158-175W (Z3-4) — steady, controlled effort'},\n  {type:'recovery',duration_secs:300,target_type:'power',target_low:80,target_high:110,description:'Easy spin @ 80-110W (Z1), recover HR below 140'}\n ]},\n {type:'cooldown',duration_secs:600,target_type:'power',target_low:60,target_high:100,description:'Easy cool-down spin @ 60-100W'}]\n\nEasy/Z2 sessions: warmup + one steady interval step + cooldown is acceptable (no repeat block needed for continuous efforts).",
   input_schema:{
     type:"object",
     properties:{
       week_of:{type:"string",description:"Monday date (YYYY-MM-DD) of the week being edited. Must match one of the weeks listed under WEEKLY BLOCK in your context. Omit to edit the current active week."},
       summary:{type:"string",description:"One short sentence describing what you changed, shown to Diego."},
+      override_unavailable_days:{type:"array",items:{type:"string"},description:"Day names (e.g. ['Sunday']) that are OFF-days on Diego's standing schedule but that he EXPLICITLY asked to train on this specific week. One-off exemption — does not change his weekly schedule. Only days Diego literally named in his request."},
       plan:{type:"array",description:"The complete updated weekly plan array for the target week.",items:{
         type:"object",
         properties:{
@@ -2549,6 +2558,24 @@ async function sendCoachMessage(){
     }).join("\n");
     return "WEEKLY BLOCK (pass a week's week_of to edit_plan to change THAT week; one edit_plan call = one week):\n"+rows;
   })();
+  // Authoritative day↔date calendar. The model repeatedly mislabelled days
+  // ("Thursday 4 July" when 4 July was a Saturday) and, since sessions are
+  // placed by day NAME, that put workouts on the wrong dates and forced Diego
+  // through several correction rounds. Spell the mapping out per week instead.
+  var calendarLine=(function(){
+    var seen={},mons=[];
+    var activeMon=getPlanJsonMon()||localDateStr(mondayOf(0));
+    [activeMon].concat((planBlock||[]).map(function(w){return w.week_of;})).forEach(function(m){
+      if(m&&/^\d{4}-\d{2}-\d{2}$/.test(m)&&!seen[m]){seen[m]=1;mons.push(m);}
+    });
+    mons.sort();
+    var todayIso=localDateStr(new Date());
+    var rows=mons.slice(0,5).map(function(m){
+      var wd=weekDatesFrom(m);
+      return "• week_of "+m+": "+DAYS.map(function(n){return n.slice(0,3)+"="+wd[n]+(wd[n]===todayIso?" (TODAY)":"");}).join(", ");
+    });
+    return "WEEK CALENDAR (authoritative day↔date map — sessions are placed by DAY NAME, so ALWAYS translate any date Diego mentions into its day name using this table; never compute it yourself):\n"+rows.join("\n");
+  })();
 
   var sys="You are Coach Claudio, Diego's personal endurance coach — the calibre of coach who works with high-performing age-group and elite athletes. You combine deep exercise-physiology knowledge with the warmth and directness of a great human coach. You are friendly and encouraging but you never sugar-coat the science: every recommendation is grounded in training principles (progressive overload, polarised 80/20 intensity, specificity, periodisation, supercompensation, and adequate recovery).\n\n"+
     "TODAY'S DATE: "+new Date().toISOString().split("T")[0]+" ("+new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long",year:"numeric"})+")\n\n"+
@@ -2560,7 +2587,12 @@ async function sendCoachMessage(){
     "• Always weigh his subjective feedback ALONGSIDE the objective data below. When they conflict, the body wins.\n\n"+
     "WHEN ADJUSTING THE PLAN: call edit_plan with the FULL updated plan for the week you're changing, keeping unchanged sessions intact. Explain the reasoning briefly in your reply so he learns. Respect his zones: running easy ~6:30/km, threshold ~5:00/km; FTP "+(profile.cycling?profile.cycling.ftp_watts:FTP)+"W; LTHR "+(profile.running?profile.running.threshold_hr:LTHR)+" bpm.\n\n"+
     "EDITING A SPECIFIC WEEK: edit_plan changes ONE week per call. To change a FUTURE week, pass that week's Monday date as week_of (see WEEKLY BLOCK below) — omitting week_of only edits the current active week. If Diego asks to restructure several weeks (e.g. \"weeks of July 6 and July 13\"), make a SEPARATE edit_plan call for each week — several calls in one reply are fine, and each is saved and confirmed individually.\n\n"+
-    "RESPECT HIS SCHEDULE: Diego sets which days he can train, for how long, and how many sessions per week he wants on the Schedule tab (shown below). NEVER schedule or move a session onto a day he has marked unavailable, keep each day within its available hours, and honour his max-sessions preference. Edits that violate this are automatically rejected with the reason — fix and retry. When he tells you his availability or preferences CHANGED, call set_availability to persist it.\n\n"+
+    "RESPECT HIS SCHEDULE: Diego sets which days he can train, for how long, and how many sessions per week he wants on the Schedule tab (shown below). NEVER schedule or move a session onto an unavailable day on your own initiative, keep each day within its available hours, and honour his max-sessions preference. Violating edits are auto-rejected with the reason — fix and retry within the same turn.\n\n"+
+    "ONE-OFF vs PERMANENT schedule changes — the single most common request is 'move my session to <day>', so get this flow right FIRST TIME:\n"+
+    "• ONE-OFF (this week only, e.g. 'move Saturday's sessions to Sunday'): call edit_plan directly with override_unavailable_days:['Sunday'] if the target day is normally off. Do NOT call set_availability — his standing weekly schedule must survive one-off moves untouched.\n"+
+    "• PERMANENT ('I can't do Wednesdays anymore', 'Sundays work for me now'): call set_availability once, then edit_plan if this week's plan needs to follow. Never call set_availability twice with the same values in one turn.\n"+
+    "• Before EVERY edit_plan call, resolve the target day against the WEEK CALENDAR below — day names decide placement, and a mislabelled day puts the session on the wrong date. Double-check the day/date pair in your reply to Diego too.\n"+
+    "• If an edit is rejected, recover in the SAME turn using the guidance in the rejection message; never leave Diego hanging on a silent failure.\n\n"+
     "WORKOUT DESIGN: Build every session like you're handing it to a serious athlete. Warmup and cooldown are non-negotiable. For any session with structured intensity (fartlek, intervals, tempo, sweet-spot, threshold, VO2) ALWAYS use repeat blocks so the Garmin shows each step individually. Every step needs a specific description with zone label + target number — never write 'work' or 'effort'. A world-class coach writes '6×3min threshold @ 5:05/km (Z4), 90s easy jog between' — not 'main set 18min'. Give every session top-level warmup_exercises and cooldown_stretches arrays (each entry {name}) naming the dynamic drills before and static stretches after — the app shows videos for them.\n\n"+
     "HOME EQUIPMENT — HARD RESTRICTION: Diego trains strength AT HOME with ONLY dumbbells ("+dumbbellList()+" kg), a TRX, resistance bands and bodyweight. NEVER prescribe gym equipment — no barbells, kettlebells, machines, cables, bench, pull-up bar, boxes or medicine balls. Substitute the closest dumbbell/TRX/band/bodyweight equivalent, and only use dumbbell weights he actually owns. Plan edits containing gym equipment are automatically rejected.\n\n"+
     "SCIENCE-BASED ONLY: every plan and recommendation must be defensible from established exercise science (ACSM/NSCA guidelines, the endurance literature of Seiler/Coggan/Laursen). Progressive overload ≤10%/week, ~80/20 easy/hard distribution, 48h between sessions loading the same muscles, strength work at RIR 2-3 with compound movements that transfer to endurance sport, and no fad or gimmick exercises. If it wouldn't hold up in the literature, it doesn't go in the plan.\n\n"+
@@ -2587,6 +2619,7 @@ async function sendCoachMessage(){
       if(planMon===thisMon)return "Plan covers THIS week ("+planMon+").\n";
       return "Plan covers week of "+planMon+" (starts in the future). Current week ("+thisMon+") has no sessions. Use generate_plan tool with start_week=0 if Diego wants to start training this week.\n";
     })()+
+    calendarLine+"\n"+
     blockLine+"\n"+
     "Current active-week plan JSON: "+JSON.stringify(planJson);
   coachHistory.push({role:"user",content:msg});
@@ -2630,7 +2663,7 @@ async function sendCoachMessage(){
           if(okA)addCoachMessage("🗓 Schedule updated — you can review it anytime on the Schedule tab.",false);
         }else if(b.name==="edit_plan"){
           var summary=b.input.summary||"Plan updated";
-          var result=await commitPlanEdit(b.input.plan,summary,b.input.week_of);
+          var result=await commitPlanEdit(b.input.plan,summary,b.input.week_of,{overrideDays:b.input.override_unavailable_days});
           if(result&&result.ok){
             toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Plan saved successfully for week of "+result.targetMon+"."});
             if(result.isActive)planJson=result.fixed;
@@ -2644,7 +2677,7 @@ async function sendCoachMessage(){
             appendUndoChip();
           }else{
             var reason=(result&&result.reason)?result.reason:"Save failed — Diego must add a GitHub token.";
-            toolResults.push({type:"tool_result",tool_use_id:b.id,content:"EDIT REJECTED: "+reason+(result&&result.reason?" Adjust the plan to fit his schedule and call edit_plan again.":"")});
+            toolResults.push({type:"tool_result",tool_use_id:b.id,content:"EDIT REJECTED: "+reason+(result&&result.reason?" HOW TO RECOVER (pick one, then retry edit_plan in THIS turn): (a) if Diego EXPLICITLY asked to train on the rejected day, call edit_plan again with override_unavailable_days:[\"<Day>\"] — a one-off that does NOT touch his standing schedule; (b) if he asked for a PERMANENT schedule change, call set_availability first, then edit_plan; (c) otherwise adjust the plan to fit his schedule. Verify day names against the WEEK CALENDAR. Never end your reply on a failed edit without telling Diego what happened and why.":"")});
           }
         }else{
           toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Unknown tool."});
@@ -2704,11 +2737,21 @@ function validateEquipment(fixed){
   return problems.length?problems.join("; ")+" — Diego trains at home with ONLY dumbbells ("+dumbbellList()+" kg), TRX, resistance bands and bodyweight. Substitute home equivalents.":null;
 }
 // Hard guard: the plan must fit Diego's schedule regardless of what the model says.
-function validatePlanAgainstSchedule(fixed){
+// overrideDays: days Diego EXPLICITLY asked to train on this specific week even
+// though they're off-days on his standing schedule — a one-off consent that
+// skips the availability/hours check for those days without rewriting the
+// schedule itself (that Sunday incident: "no Sundays" got permanently flipped
+// just to move one session).
+function validatePlanAgainstSchedule(fixed,overrideDays){
+  var ov={};
+  (overrideDays||[]).forEach(function(d){
+    if(typeof d==="string"&&d)ov[d.charAt(0).toUpperCase()+d.slice(1).toLowerCase()]=1;
+  });
   var problems=[];
   var byDay={};
   fixed.forEach(function(s){byDay[s.day]=(byDay[s.day]||0)+(s.total_duration_secs||0);});
   Object.keys(byDay).forEach(function(d){
+    if(ov[d])return;
     var av=avState[d];
     if(!av||!av.available){problems.push(d+" is marked unavailable (rest day) on his schedule");return;}
     var cap=Math.round((av.hours||0)*3600);
@@ -2739,7 +2782,7 @@ async function commitPlanEdit(newPlan,summary,weekOf,opts){
 
     // Hard schedule + equipment guards (skipped for undo, which restores a previous state)
     if(!opts.force){
-      var violation=validatePlanAgainstSchedule(fixed);
+      var violation=validatePlanAgainstSchedule(fixed,opts.overrideDays);
       if(violation)return {ok:false,reason:violation};
       var eqViolation=validateEquipment(fixed);
       if(eqViolation)return {ok:false,reason:eqViolation};
