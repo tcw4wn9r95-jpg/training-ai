@@ -297,6 +297,13 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .bubble{max-width:85%;padding:12px 14px;border-radius:15px;font-size:14px;line-height:1.5;word-break:break-word;white-space:pre-wrap}
 .bubble.me{align-self:flex-end;background:var(--blue);color:#fff;border-bottom-right-radius:5px}
 .bubble.ai{align-self:flex-start;background:var(--bg3);color:var(--t1);border-bottom-left-radius:5px}
+.bubble.md{white-space:normal}
+.bubble.md strong{font-weight:700}
+.bubble.md em{font-style:italic}
+.bubble.md ul,.bubble.md ol{margin:5px 0 5px 20px;padding:0}
+.bubble.md li{margin:2px 0}
+.bubble.md code{background:rgba(255,255,255,.09);padding:1px 5px;border-radius:5px;font-family:var(--mono);font-size:.88em}
+.bubble.md a{color:var(--brand);text-decoration:underline}
 .coach-input-row{display:flex;gap:9px;align-items:flex-end}
 .coach-input-row textarea{margin:0;min-height:46px;max-height:120px}
 .coach-send{width:46px;height:46px;min-width:46px;border-radius:12px;border:none;
@@ -676,7 +683,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-2";
+const BUILD="20260706-3";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -2444,9 +2451,58 @@ async function saveAvail(){
 function showStatus(m,t){var el=document.getElementById("av-status");el.textContent=m;el.className="status "+(t||"");}
 
 // ── COACH CLAUDIO ─────────────────────────────────────────────
+// Lightweight, safe Markdown → HTML for coach replies. The model writes
+// **bold**, bullet lists, etc.; rendered as text they showed as literal
+// asterisks. HTML is escaped FIRST, so nothing the model emits can inject
+// markup — only our own tags are introduced afterwards.
+function mdEscape(s){return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+function mdInline(s){
+  // Links first, before other passes touch the URL: [text](https://…)
+  s=s.replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g,function(m,t,u){
+    return '<a href="'+u.replace(/"/g,"&quot;")+'" target="_blank" rel="noopener">'+t+'</a>';});
+  s=s.replace(/\*\*([^*]+?)\*\*/g,"<strong>$1</strong>");   // **bold**
+  s=s.replace(/__([^_]+?)__/g,"<strong>$1</strong>");        // __bold__
+  // *italic* / _italic_ — conservative: no space just inside the markers, so
+  // stray asterisks ("2 * 3") and mid-word underscores don't misfire.
+  s=s.replace(/\*([^*\s](?:[^*\n]*[^*\s])?)\*/g,"<em>$1</em>");
+  s=s.replace(/(^|[\s(])_([^_\s](?:[^_\n]*[^_\s])?)_(?=$|[\s.,!?)])/g,"$1<em>$2</em>");
+  s=s.replace(/`([^`]+)`/g,"<code>$1</code>");               // `code`
+  return s;
+}
+function renderCoachMarkdown(text){
+  var lines=mdEscape(text).split(/\r?\n/);
+  var html="",list=null;
+  function closeList(){if(list){html+="</"+list+">";list=null;}}
+  for(var i=0;i<lines.length;i++){
+    var line=lines[i];
+    var bullet=line.match(/^\s*[-*]\s+(.*)$/);
+    var num=line.match(/^\s*\d+\.\s+(.*)$/);
+    var head=line.match(/^\s*#{1,6}\s+(.*)$/);
+    if(bullet){
+      if(list!=="ul"){closeList();html+="<ul>";list="ul";}
+      html+="<li>"+mdInline(bullet[1])+"</li>";
+    }else if(num){
+      if(list!=="ol"){closeList();html+="<ol>";list="ol";}
+      html+="<li>"+mdInline(num[1])+"</li>";
+    }else if(head){
+      closeList();html+="<strong>"+mdInline(head[1])+"</strong><br>";
+    }else if(line.trim()===""){
+      closeList();html+="<br>";
+    }else{
+      closeList();html+=mdInline(line)+"<br>";
+    }
+  }
+  closeList();
+  return html.replace(/(<br>\s*)+$/,"");
+}
 function addCoachMessage(text,isUser){
   var c=document.getElementById("coach-msgs");
-  var b=document.createElement("div");b.className="bubble "+(isUser?"me":"ai");b.textContent=text;
+  var b=document.createElement("div");
+  if(isUser){
+    b.className="bubble me";b.textContent=text; // user text stays literal
+  }else{
+    b.className="bubble ai md";b.innerHTML=renderCoachMarkdown(text);
+  }
   c.appendChild(b);var s=document.getElementById("scroll");setTimeout(function(){s.scrollTop=s.scrollHeight;},50);
 }
 function askQuick(q){document.getElementById("coach-input").value=q;sendCoachMessage();}
@@ -2932,7 +2988,9 @@ var SAVE_GOALS_TOOL={
 
 function obMsg(text,isUser){
   var c=document.getElementById("ob-msgs");
-  var b=document.createElement("div");b.className="bubble "+(isUser?"me":"ai");b.textContent=text;
+  var b=document.createElement("div");
+  if(isUser){b.className="bubble me";b.textContent=text;}
+  else{b.className="bubble ai md";b.innerHTML=renderCoachMarkdown(text);}
   c.appendChild(b);c.scrollTop=c.scrollHeight;
 }
 function startOnboarding(){
