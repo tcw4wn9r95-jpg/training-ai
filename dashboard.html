@@ -683,7 +683,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-4";
+const BUILD="20260706-5";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -2608,6 +2608,11 @@ async function sendCoachMessage(){
   _tb.innerHTML='<span class="label">Coach Claudio is thinking</span><span class="dots"><span></span><span></span><span></span></span>';
   document.getElementById("coach-msgs").appendChild(_tb);
   setTimeout(function(){var s=document.getElementById("scroll");s.scrollTop=s.scrollHeight;},50);
+  // Pull the latest Garmin activities so the coach sees sessions synced AFTER
+  // the app was opened — e.g. today's just-completed workout. The app loads
+  // workouts once at startup, so without this a session that synced mid-session
+  // is invisible and the coach says "I can't see it". Best-effort.
+  try{var _freshW=await fetchJSON("workouts.json");if(Array.isArray(_freshW)&&_freshW.length)workouts=_freshW;}catch(e){}
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
   var recentW=workouts.filter(w=>new Date(w.date)>=cutoff);
   var tss=recentW.reduce((s,w)=>s+getTSS(w),0), km=recentW.reduce((s,w)=>s+(w.distance_km||0),0);
@@ -2619,8 +2624,18 @@ async function sendCoachMessage(){
   var cut14c=new Date();cut14c.setDate(cut14c.getDate()-14);
   var tss14c=workouts.filter(function(w){return new Date(w.date)>=cut14c;}).reduce(function(s,w){return s+getTSS(w);},0);
   var formState=tss14c<30?"DETRAINED — no meaningful training in 2+ weeks, so TSB is not meaningful right now (fitness decaying, fatigue zero). Treat him as restarting: rebuild gradually, don't prescribe off his TSB":tsb<-30?"very fatigued (injury/illness risk)":tsb<-10?"fatigued (productive training stress)":tsb<10?"neutral — maintaining":tsb<25?"race fresh (peaked/tapered)":"transition zone (very fresh — detraining if it persists)";
-  // Recent sessions detail so Coach can reference actual workouts
-  var last5=workouts.slice(-5).map(function(w){return (w.date||"")+": "+(w.type||w.sport||"session")+" "+(w.distance_km?w.distance_km.toFixed(1)+"km ":"")+(getTSS(w)?Math.round(getTSS(w))+"TSS":"");}).join(" | ");
+  // Recent sessions detail so Coach can reference actual workouts.
+  // workouts.json is stored MOST-RECENT-FIRST, so sort ascending by date before
+  // taking the tail — slice(-5) on the raw array returned the 5 OLDEST sessions
+  // and never today's, which is why the coach couldn't see recent activity.
+  var byDateAsc=workouts.slice().sort(function(a,b){return String(a.date||"")<String(b.date||"")?-1:String(a.date||"")>String(b.date||"")?1:0;});
+  var last5=byDateAsc.slice(-5).map(function(w){return (w.date||"")+": "+(w.type||w.sport||"session")+" "+(w.duration_min?Math.round(w.duration_min)+"min ":"")+(w.distance_km?w.distance_km.toFixed(1)+"km ":"")+(getTSS(w)?Math.round(getTSS(w))+"TSS":"");}).join(" | ");
+  // Explicit "what did Diego do TODAY" so "how was today's session?" is answerable.
+  var _todayStr=localDateStr(new Date());
+  var _todayActs=workouts.filter(function(w){return w.date===_todayStr;});
+  var todayLine=_todayActs.length
+    ? "TODAY ("+_todayStr+") — ALREADY COMPLETED & synced from Garmin: "+_todayActs.map(function(w){return (w.sport||"session")+(w.duration_min?" "+Math.round(w.duration_min)+"min":"")+(w.distance_km?" "+w.distance_km.toFixed(1)+"km":"")+(w.avg_hr?" avg HR "+w.avg_hr:"")+(w.avg_power_watts?" "+w.avg_power_watts+"W":"")+(getTSS(w)?" ~"+Math.round(getTSS(w))+" TSS":"");}).join(" | ")+". When Diego asks about \"today's session/workout/run/ride\", THIS is what he actually did — reference it directly, never say you can't see it."
+    : "TODAY ("+_todayStr+"): no completed activity has synced from Garmin yet.";
   var goalLine=goals?("Primary goal: "+(goals.primary_goal||"—")+(goals.target_event?("; event: "+goals.target_event+(goals.target_date?" on "+goals.target_date:"")):"")+"; sport priority: "+(goals.sport_priority||"balanced")+(goals.injuries&&goals.injuries!=="none"?"; known injuries: "+goals.injuries:"")):"No goals set yet.";
   // Availability — set by Diego on the Schedule tab. The coach MUST respect this when editing/generating plans.
   var availLine=(function(){
@@ -2701,7 +2716,8 @@ async function sendCoachMessage(){
     "Fitness (CTL): "+Math.round(ctl)+" — 28-day trend "+(rampRate>=0?"+":"")+rampRate+" ("+(rampRate>1?"building":rampRate<-1?"detraining":"holding steady")+")\n"+
     "Fatigue (ATL): "+Math.round(atl)+"\n"+
     "Form (TSB): "+Math.round(tsb)+" — "+formState+"\n"+
-    "Last sessions: "+(last5||"none logged")+"\n"+
+    todayLine+"\n"+
+    "Recent completed sessions (from Garmin, oldest→newest): "+(last5||"none logged")+"\n"+
     (function(){
       var rs=sleep.slice(-7),scored=rs.filter(function(d){return d.score;});
       if(!scored.length)return "";
