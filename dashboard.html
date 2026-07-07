@@ -683,7 +683,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-5";
+const BUILD="20260706-6";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -2572,6 +2572,16 @@ var EDIT_PLAN_TOOL={
     required:["summary","plan"]
   }
 };
+var SYNC_GARMIN_TOOL={
+  name:"sync_garmin",
+  description:"Pull Diego's latest COMPLETED activities from Garmin into the app. His watch syncing to Garmin Connect does NOT put a workout into the app — that only happens when activities are pulled in (this tool, same as the Activity-tab Sync button). Use this whenever: he says he just finished / just synced a session and wants you to see it; he asks about 'today's session/run/ride' but the context shows no completed activity today; or the data looks out of date. It runs in the background (~60s) and refreshes automatically. Do NOT just tell him to wait — pull it. Tell him you're pulling his latest activities and to give it a moment.",
+  input_schema:{
+    type:"object",
+    properties:{
+      message:{type:"string",description:"Short line to show Diego, e.g. 'Pulling your latest Garmin activities now — give it a minute.'"}
+    }
+  }
+};
 var GENERATE_PLAN_TOOL={
   name:"generate_plan",
   description:"Trigger generation of a new training plan. Call this when Diego asks to generate a plan, start training, or wants to know when his plan begins. Use start_week=0 when he wants to start THIS week, start_week=1 for NEXT week (default). Always confirm the choice with a short message.",
@@ -2598,6 +2608,44 @@ var SET_AVAILABILITY_TOOL={
   }
 };
 
+// Coach-initiated Garmin pull. "Synced with Garmin" from Diego means his watch
+// reached Garmin Connect — the app still has to pull those activities into
+// workouts.json (same job as the Sync button). This dispatches that workflow
+// and polls in the background; when new data lands, workouts refreshes and the
+// coach posts a follow-up so Diego can ask again.
+var _coachSyncing=false;
+async function coachTriggerGarminSync(){
+  var token=getToken();
+  if(!token)return {ok:false,reason:"no GitHub token"};
+  if(_coachSyncing)return {ok:true,already:true};
+  _coachSyncing=true;
+  try{
+    var r=await fetch("https://api.github.com/repos/"+REPO+"/actions/workflows/sync_activities.yml/dispatches",
+      {method:"POST",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},body:JSON.stringify({ref:"main"})});
+    if(r.status!==204){_coachSyncing=false;return {ok:false,reason:"dispatch failed ("+r.status+") — token may lack 'workflow' scope"};}
+  }catch(e){_coachSyncing=false;return {ok:false,reason:e.message};}
+  var oldSha=null;
+  try{var meta=await(await fetch(API+"/workouts.json",{headers:{Authorization:"Bearer "+token}})).json();oldSha=meta.sha;}catch(e){}
+  var tries=0;
+  var poll=setInterval(async function(){
+    tries++;
+    if(tries>24){clearInterval(poll);_coachSyncing=false;return;}
+    try{
+      var meta=await(await fetch(API+"/workouts.json",{headers:{Authorization:"Bearer "+token}})).json();
+      if(meta.sha&&meta.sha!==oldSha){
+        clearInterval(poll);_coachSyncing=false;
+        workouts=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
+        renderLog();if(workouts.length)renderHome();
+        var _t=localDateStr(new Date());
+        var todayNow=workouts.filter(function(w){return w.date===_t;});
+        addCoachMessage(todayNow.length
+          ? "✅ Synced — I can now see today's session ("+todayNow.map(function(w){return (w.sport||"session")+(w.distance_km?" "+w.distance_km.toFixed(1)+"km":"")+(w.duration_min?" "+Math.round(w.duration_min)+"min":"");}).join(", ")+"). Ask me anything about it."
+          : "✅ Synced with Garmin — latest activities are loaded. (Nothing dated today came through yet; if you just finished, give Garmin Connect a minute and tap Sync again.)",false);
+      }
+    }catch(e){}
+  },5000);
+  return {ok:true};
+}
 async function sendCoachMessage(){
   var input=document.getElementById("coach-input"), send=document.getElementById("coach-send");
   var msg=input.value.trim();if(!msg||!send)return;
@@ -2609,10 +2657,14 @@ async function sendCoachMessage(){
   document.getElementById("coach-msgs").appendChild(_tb);
   setTimeout(function(){var s=document.getElementById("scroll");s.scrollTop=s.scrollHeight;},50);
   // Pull the latest Garmin activities so the coach sees sessions synced AFTER
-  // the app was opened — e.g. today's just-completed workout. The app loads
-  // workouts once at startup, so without this a session that synced mid-session
-  // is invisible and the coach says "I can't see it". Best-effort.
-  try{var _freshW=await fetchJSON("workouts.json");if(Array.isArray(_freshW)&&_freshW.length)workouts=_freshW;}catch(e){}
+  // the app was opened. IMPORTANT: read via the authenticated GitHub API, not
+  // raw.githubusercontent.com — the raw CDN caches for minutes, so a just-synced
+  // workouts.json would still come back stale and overwrite fresh in-memory data.
+  try{
+    var _cft=getToken();
+    var _freshW=_cft?await apiGetJSON("workouts.json",_cft):await fetchJSON("workouts.json");
+    if(Array.isArray(_freshW)&&_freshW.length)workouts=_freshW;
+  }catch(e){}
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
   var recentW=workouts.filter(w=>new Date(w.date)>=cutoff);
   var tss=recentW.reduce((s,w)=>s+getTSS(w),0), km=recentW.reduce((s,w)=>s+(w.distance_km||0),0);
@@ -2635,7 +2687,7 @@ async function sendCoachMessage(){
   var _todayActs=workouts.filter(function(w){return w.date===_todayStr;});
   var todayLine=_todayActs.length
     ? "TODAY ("+_todayStr+") — ALREADY COMPLETED & synced from Garmin: "+_todayActs.map(function(w){return (w.sport||"session")+(w.duration_min?" "+Math.round(w.duration_min)+"min":"")+(w.distance_km?" "+w.distance_km.toFixed(1)+"km":"")+(w.avg_hr?" avg HR "+w.avg_hr:"")+(w.avg_power_watts?" "+w.avg_power_watts+"W":"")+(getTSS(w)?" ~"+Math.round(getTSS(w))+" TSS":"");}).join(" | ")+". When Diego asks about \"today's session/workout/run/ride\", THIS is what he actually did — reference it directly, never say you can't see it."
-    : "TODAY ("+_todayStr+"): no completed activity has synced from Garmin yet.";
+    : "TODAY ("+_todayStr+"): no completed activity is in the app yet. NOTE: Diego's watch syncing to Garmin Connect does NOT auto-load it here — the app must pull it. If he asks about today's session or says he just trained/synced, CALL the sync_garmin tool to pull it (do NOT just tell him to wait). Only after a sync returns nothing should you suggest checking Garmin Connect.";
   var goalLine=goals?("Primary goal: "+(goals.primary_goal||"—")+(goals.target_event?("; event: "+goals.target_event+(goals.target_date?" on "+goals.target_date:"")):"")+"; sport priority: "+(goals.sport_priority||"balanced")+(goals.injuries&&goals.injuries!=="none"?"; known injuries: "+goals.injuries:"")):"No goals set yet.";
   // Availability — set by Diego on the Schedule tab. The coach MUST respect this when editing/generating plans.
   var availLine=(function(){
@@ -2751,7 +2803,7 @@ async function sendCoachMessage(){
       rounds++;
       var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
         headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL,GENERATE_PLAN_TOOL,SET_AVAILABILITY_TOOL],messages:coachHistory})});
+        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL,GENERATE_PLAN_TOOL,SET_AVAILABILITY_TOOL,SYNC_GARMIN_TOOL],messages:coachHistory})});
       var data=await res.json();
       var _th=document.getElementById("coach-thinking");if(_th)_th.remove();
       if(data.error){addCoachMessage("Error: "+data.error.message,false);break;}
@@ -2780,6 +2832,14 @@ async function sendCoachMessage(){
           var okA=await commitAvailability(b.input);
           toolResults.push({type:"tool_result",tool_use_id:b.id,content:okA?"Schedule updated and saved.":"Couldn't save the schedule (no GitHub token)."});
           if(okA)addCoachMessage("🗓 Schedule updated — you can review it anytime on the Schedule tab.",false);
+        }else if(b.name==="sync_garmin"){
+          var sres=await coachTriggerGarminSync();
+          if(sres.ok){
+            addCoachMessage(sres.already?"A Garmin sync is already running — hang tight, I'll refresh as soon as it lands.":(b.input&&b.input.message?b.input.message:"Pulling your latest Garmin activities now — give it about a minute, then ask me again."),false);
+            toolResults.push({type:"tool_result",tool_use_id:b.id,content:sres.already?"A Garmin sync is already in progress; it will refresh the data shortly.":"Garmin sync started; activities refresh automatically in ~60s. Do not claim you can see the session yet — tell Diego to give it a moment and ask again."});
+          }else{
+            toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Couldn't start sync: "+(sres.reason||"unknown")+". Ask Diego to tap Sync on the Activity tab."});
+          }
         }else if(b.name==="edit_plan"){
           var summary=b.input.summary||"Plan updated";
           var result=await commitPlanEdit(b.input.plan,summary,b.input.week_of,{overrideDays:b.input.override_unavailable_days});
