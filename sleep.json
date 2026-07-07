@@ -1,14 +1,5 @@
 [
   {
-    "date": "2026-06-22",
-    "score": 49,
-    "duration_h": 5.08,
-    "deep_h": 0.98,
-    "light_h": 4.02,
-    "rem_h": 0.08,
-    "awake_h": 1.23
-  },
-  {
     "date": "2026-06-25",
     "score": 40,
     "duration_h": 5.18,
@@ -106,5 +97,23 @@
     "light_h": 4.63,
     "rem_h": 0.47,
     "awake_h": 1.02
+  },
+  {
+    "date": "2026-07-06",
+    "score": 43,
+    "duration_h": 3.8,
+    "deep_h": 0.65,
+    "light_h": 2.92,
+    "rem_h": 0.23,
+    "awake_h": 1.48
+  },
+  {
+    "date": "2026-07-07",
+    "score": 67,
+    "duration_h": 6.35,
+    "deep_h": 1.67,
+    "light_h": 4.08,
+    "rem_h": 0.6,
+    "awake_h": 1.15
   }
 ]
