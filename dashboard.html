@@ -683,7 +683,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-3";
+const BUILD="20260706-4";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1612,6 +1612,37 @@ function videoFixHTML(){
     '<div class="vidfix-msg" style="font-size:11.5px;margin-top:6px"></div>'+
   '</div>';
 }
+// Video facade: a tappable thumbnail, NOT a live iframe. Loading 5-11 iframes
+// at once when the overlay opens made YouTube's anti-bot flag the burst
+// ("Sign in to confirm you're not a bot"), worsened by iOS home-screen PWAs
+// blocking the YouTube cookies that identify a signed-in human. So we show the
+// thumbnail and only load ONE player on tap (playVideo), plus an "Open in
+// YouTube" link that launches the signed-in app where the gate never appears.
+function videoFacadeHTML(id){
+  var thumb="https://i.ytimg.com/vi/"+id+"/hqdefault.jpg";
+  return '<div style="position:relative;padding-bottom:56.25%;border-radius:12px;overflow:hidden;background:#000">'+
+    '<button type="button" onclick="playVideo(this,\''+id+'\')" aria-label="Play video" style="position:absolute;inset:0;width:100%;height:100%;border:0;padding:0;margin:0;cursor:pointer;background:#000">'+
+      '<img src="'+thumb+'" alt="" loading="lazy" onerror="this.style.display=\'none\'" style="position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.8">'+
+      '<span style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center">'+
+        '<span style="width:56px;height:56px;border-radius:50%;background:rgba(0,0,0,.55);display:flex;align-items:center;justify-content:center">'+
+          '<svg width="26" height="26" viewBox="0 0 24 24" fill="#fff"><path d="M8 5v14l11-7z"/></svg>'+
+        '</span>'+
+      '</span>'+
+    '</button>'+
+  '</div>';
+}
+function playVideo(btn,id){
+  // Swap the facade for a real player, autoplaying since this is a user gesture.
+  // Regular youtube.com (not -nocookie) so YouTube session cookies can flow and
+  // the anti-bot check passes; playsinline keeps it in-page on iOS.
+  var wrap=btn.parentElement;
+  wrap.innerHTML='<iframe style="position:absolute;inset:0;width:100%;height:100%;border:0" '+
+    'src="https://www.youtube.com/embed/'+id+'?autoplay=1&playsinline=1&rel=0&modestbranding=1" '+
+    'allow="autoplay; encrypted-media; picture-in-picture; fullscreen" allowfullscreen></iframe>';
+}
+function openInYouTubeHTML(id){
+  return '<a href="https://www.youtube.com/watch?v='+id+'" target="_blank" rel="noopener" style="font-size:11.5px;font-weight:600;color:var(--brand);text-decoration:none">Open in YouTube ↗</a>';
+}
 function exerciseItemHTML(ex){
   var guide=resolveGuide(ex.name);
   var dose=guide?(guide.secs?(guide.secs+"s"+(guide.side?" per side":" hold")):guide.reps):"";
@@ -1622,10 +1653,9 @@ function exerciseItemHTML(ex){
       (dose?'<span style="font-size:12px;color:var(--t3)">'+esc(dose)+'</span>':"")+
       (guide&&guide.secs?'<button onclick="openTimer('+guide.secs+',\''+esc(ex.name).replace(/'/g,"")+'\')" style="margin-left:auto;background:var(--brand-dim);color:var(--brand);border:none;border-radius:9px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">⏱ '+guide.secs+'s</button>':"")+
       '</div>'+
-      '<div style="position:relative;padding-bottom:56.25%;border-radius:12px;overflow:hidden;background:var(--bg2)">'+
-      '<iframe style="position:absolute;inset:0;width:100%;height:100%;border:0" src="https://www.youtube-nocookie.com/embed/'+esc(ex.youtube_id)+'?rel=0&modestbranding=1" allowfullscreen loading="lazy"></iframe>'+
-      '</div>'+
+      videoFacadeHTML(ex.youtube_id)+
       (guide?'<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:8px">'+esc(guide.cues)+'</div>':"")+
+      '<div style="display:flex;align-items:center;gap:14px;margin-top:8px">'+openInYouTubeHTML(ex.youtube_id)+'<span style="flex:1"></span></div>'+
       videoFixHTML()+
       '</div>';
   }
