@@ -3,60 +3,6 @@
     "week_of": "2026-06-01",
     "generated": "2026-05-31",
     "phase": "base",
-    "planned_tss": 151,
-    "last_7d_actual_tss": 0,
-    "last_28d_actual_tss": 0,
-    "ftp": 177,
-    "lthr": 173,
-    "sessions": [
-      {
-        "day": "Monday",
-        "sport": "cycling_indoor",
-        "name": "Easy Aerobic Spin",
-        "planned_tss": 22,
-        "focus": "Aerobic base activation, establish Z2 feel on the bike"
-      },
-      {
-        "day": "Tuesday",
-        "sport": "strength",
-        "name": "Lower Body & Core \u2014 Shoulder-Safe",
-        "planned_tss": 18,
-        "focus": "Establish lower body movement patterns and core stability without shoulder loading"
-      },
-      {
-        "day": "Wednesday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Spin + Cadence Focus",
-        "planned_tss": 22,
-        "focus": "Aerobic continuity and neuromuscular efficiency through structured cadence variation"
-      },
-      {
-        "day": "Thursday",
-        "sport": "running",
-        "name": "Easy Z2 Run",
-        "planned_tss": 25,
-        "focus": "Introduce weekly running stimulus, aerobic base, HR compliance over pace"
-      },
-      {
-        "day": "Friday",
-        "sport": "cycling_indoor",
-        "name": "Active Recovery Spin",
-        "planned_tss": 12,
-        "focus": "Flush Thursday run, promote recovery, maintain aerobic habit without adding load"
-      },
-      {
-        "day": "Saturday",
-        "sport": "cycling_indoor",
-        "name": "Base Endurance Ride",
-        "planned_tss": 52,
-        "focus": "Key aerobic base session \u2014 sustained Z2 to drive mitochondrial adaptation and fat oxidation"
-      }
-    ]
-  },
-  {
-    "week_of": "2026-06-01",
-    "generated": "2026-05-31",
-    "phase": "base",
     "planned_tss": 138,
     "last_7d_actual_tss": 27,
     "last_28d_actual_tss": 27,
@@ -539,6 +485,46 @@
         "name": "Aerobic Long Ride",
         "planned_tss": 28,
         "focus": "Extended aerobic volume \u2014 primary weekly calorie-expenditure session and mitochondrial adaptation at low-moderate intensity, progressive within Z2"
+      }
+    ]
+  },
+  {
+    "week_of": "2026-07-13",
+    "generated": "2026-07-12",
+    "phase": "build",
+    "planned_tss": 74,
+    "last_7d_actual_tss": 42,
+    "last_28d_actual_tss": 42,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Ride",
+        "planned_tss": 14,
+        "focus": "Aerobic base development at Z2 \u2014 mitochondrial density, fat oxidation, cardiovascular efficiency with zero tissue stress on recovering knees"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet-Spot Introduction 2x8min",
+        "planned_tss": 22,
+        "focus": "First controlled Z3 sweet-spot exposure to begin raising lactate threshold \u2014 tests physiological response before committing to longer threshold blocks"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Posterior Chain and Anti-Rotation Core",
+        "planned_tss": 10,
+        "focus": "Posterior chain activation (glutes, hamstrings) and anti-rotation core stability \u2014 addresses hip stability deficit contributing to anterior knee pain; zero deep knee flexion, zero spinal flexion under load"
+      },
+      {
+        "day": "Sunday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Endurance Ride",
+        "planned_tss": 28,
+        "focus": "Longest aerobic session of the block \u2014 extends Z2 time to build cardiac stroke volume, fat oxidation capacity, and peripheral vascular adaptation supporting the primary weight-loss goal"
       }
     ]
   }
