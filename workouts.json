@@ -58,17 +58,5 @@
     "avg_power_watts": 110.0,
     "calories": 252.0,
     "tss": 19.8
-  },
-  {
-    "date": "2026-05-31",
-    "sport": "paddelball",
-    "duration_min": 83.0,
-    "distance_km": 0.24,
-    "avg_hr": 110.0,
-    "max_hr": 129.0,
-    "avg_pace_min_km": null,
-    "avg_power_watts": 0,
-    "calories": 408.0,
-    "tss": 27.1
   }
 ]
