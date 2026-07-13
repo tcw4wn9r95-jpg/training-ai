@@ -656,7 +656,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <span id="timer-time" style="font-family:var(--mono);font-size:40px;font-weight:800;color:var(--t1)">0:00</span>
       </div>
     </div>
-    <button onclick="timerGetReady()" style="width:100%;margin-top:18px;background:var(--bg3);border:1px solid var(--brand);border-radius:12px;padding:11px;font-size:14px;font-weight:700;color:var(--brand);cursor:pointer">Get ready · +3s then start ⏳</button>
+    <button id="timer-ready-btn" onclick="timerGetReady()" style="width:100%;margin-top:18px;background:var(--bg3);border:1px solid var(--brand);border-radius:12px;padding:11px;font-size:14px;font-weight:700;color:var(--brand);cursor:pointer">Get ready · 3 · 2 · 1 · GO 🏁</button>
     <div style="display:flex;gap:8px;justify-content:center;margin-top:10px">
       <button onclick="timerAdjust(-15)" style="background:var(--bg3);border:1px solid var(--line);border-radius:12px;padding:10px 12px;font-size:13px;font-weight:700;color:var(--t2);cursor:pointer">−15s</button>
       <button id="timer-btn" onclick="timerToggle()" style="background:var(--brand);border:none;border-radius:12px;padding:10px 26px;font-size:15px;font-weight:800;color:#04231b;cursor:pointer;min-width:110px">Start</button>
@@ -684,7 +684,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-8";
+const BUILD="20260706-9";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1809,6 +1809,20 @@ function unlockAudio(){
     src.buffer=b;src.connect(_audioCtx.destination);src.start(0);
   }catch(e){}
 }
+function playTone(freq,dur,vol){
+  try{
+    if(!_audioCtx)_audioCtx=new (window.AudioContext||window.webkitAudioContext)();
+    if(_audioCtx.state==="suspended")_audioCtx.resume();
+    var ctx=_audioCtx,now=ctx.currentTime;
+    var o=ctx.createOscillator(),g=ctx.createGain();
+    o.type="sine";o.frequency.value=freq;
+    o.connect(g);g.connect(ctx.destination);
+    g.gain.setValueAtTime(0.0001,now);
+    g.gain.exponentialRampToValueAtTime(vol||0.4,now+0.02);
+    g.gain.exponentialRampToValueAtTime(0.0001,now+dur);
+    o.start(now);o.stop(now+dur+0.03);
+  }catch(e){}
+}
 function playDing(){
   try{
     if(!_audioCtx)_audioCtx=new (window.AudioContext||window.webkitAudioContext)();
@@ -1826,8 +1840,12 @@ function playDing(){
     });
   }catch(e){}
 }
+// Race-start cues: a short low beep per second (3·2·1), then a longer higher GO.
+function playCountBeep(){playTone(660,0.18,0.35);if(navigator.vibrate)try{navigator.vibrate(60);}catch(e){}}
+function playGoChime(){playTone(1046,0.55,0.5);if(navigator.vibrate)try{navigator.vibrate(220);}catch(e){}}
 function openTimer(secs,label){
   secs=Math.max(5,Math.round(secs||30));
+  cancelPrep();
   clearInterval(_timer.int);
   unlockAudio(); // opened via a tap — unlock audio now so the ding fires later
   _timer.total=secs;_timer.left=secs;_timer.running=false;
@@ -1842,22 +1860,42 @@ function timerRender(){
   var pct=_timer.total?Math.max(0,Math.min(100,_timer.left/_timer.total*100)):0;
   document.getElementById("timer-ring").style.background="conic-gradient(var(--brand) "+pct+"%,var(--bg3) 0)";
 }
+// 3·2·1·GO race-start countdown. These 3 seconds are a SEPARATE prep phase —
+// they do NOT come out of the hold time. A beep fires each second, a longer GO
+// tone kicks off the hold, which then starts from its full duration.
+var _prep=null;
+function cancelPrep(){
+  if(_prep){clearInterval(_prep.int);_prep=null;}
+  var rb=document.getElementById("timer-ready-btn");if(rb)rb.disabled=false;
+}
 function timerGetReady(){
-  // A 3-second buffer to set the phone down and get into the stretch position,
-  // then the countdown runs straight into the hold. Extends if already running.
   unlockAudio();
-  if(_timer.running){
-    _timer.endAt+=3000;
-    _timer.left=Math.max(0,(_timer.endAt-Date.now())/1000);
-    _timer.total+=3;
-    timerRender();
-  }else{
-    _timer.left=_timer.total+3;
-    _timer.total=_timer.total+3;
-    timerToggle(); // start counting down immediately
-  }
+  if(_timer.running||_prep)return;      // ignore while running or already prepping
+  clearInterval(_timer.int);
+  _timer.left=_timer.total;              // hold starts fresh AFTER the countdown
+  var rb=document.getElementById("timer-ready-btn");if(rb)rb.disabled=true;
+  var n=3;
+  showPrep(n);playCountBeep();           // "3"
+  _prep={int:null};
+  _prep.int=setInterval(function(){
+    n--;
+    if(n>=1){showPrep(n);playCountBeep();}   // "2", "1"
+    else{
+      clearInterval(_prep.int);_prep=null;
+      if(rb)rb.disabled=false;
+      playGoChime();                          // GO → start the hold
+      timerToggle();
+    }
+  },1000);
+}
+function showPrep(n){
+  document.getElementById("timer-label").textContent="Get ready";
+  document.getElementById("timer-time").textContent=String(n);
+  var pct=Math.max(0,Math.min(100,(n/3)*100));
+  document.getElementById("timer-ring").style.background="conic-gradient(var(--amber) "+pct+"%,var(--bg3) 0)";
 }
 function timerToggle(){
+  cancelPrep();  // a manual Start/Resume overrides any running countdown
   unlockAudio(); // Start/Resume is a user gesture — keep audio unlocked
   var btn=document.getElementById("timer-btn");
   if(_timer.running){
@@ -1891,11 +1929,13 @@ function timerAdjust(d){
   timerRender();
 }
 function timerReset(){
+  cancelPrep();
   clearInterval(_timer.int);_timer.running=false;_timer.left=_timer.total;
   document.getElementById("timer-btn").textContent="Start";
   timerRender();
 }
 function closeTimer(){
+  cancelPrep();
   clearInterval(_timer.int);_timer.running=false;
   document.getElementById("timer-overlay").style.display="none";
 }
