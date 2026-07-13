@@ -684,7 +684,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-9";
+const BUILD="20260706-10";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -3411,8 +3411,36 @@ async function init(){
       updateNotifBtn();
     }).catch(function(e){console.warn('SW registration failed:',e);});
   }
+  initWakeLock();
 }
 init();
+
+// ── KEEP SCREEN AWAKE ─────────────────────────────────────────
+// Hold a screen Wake Lock so the phone doesn't auto-lock while following a
+// workout/stretch. The OS releases the lock whenever the app is backgrounded,
+// so we re-acquire on visibilitychange. Some engines only grant it inside a
+// user gesture, so we also retry on the first tap. No-ops where unsupported.
+var _wakeLock=null;
+async function requestWakeLock(){
+  try{
+    if(('wakeLock' in navigator)&&document.visibilityState==="visible"){
+      _wakeLock=await navigator.wakeLock.request("screen");
+      _wakeLock.addEventListener("release",function(){_wakeLock=null;});
+      return true;
+    }
+  }catch(e){/* denied / low battery / unsupported — fine */}
+  return false;
+}
+function initWakeLock(){
+  requestWakeLock();
+  document.addEventListener("visibilitychange",function(){
+    if(document.visibilityState==="visible"&&!_wakeLock)requestWakeLock();
+  });
+  // First user gesture retry (covers engines that require it).
+  var once=function(){requestWakeLock();document.removeEventListener("click",once);document.removeEventListener("touchend",once);};
+  document.addEventListener("click",once);
+  document.addEventListener("touchend",once);
+}
 
 // ── PUSH NOTIFICATIONS ────────────────────────────────────────
 function urlBase64ToUint8Array(b64){
