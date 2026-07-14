@@ -530,6 +530,16 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <div class="card"><div id="log-list"></div></div>
   </div>
 
+  <!-- HEALTH -->
+  <div class="page" id="page-health">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
+      <div style="font-size:17px;font-weight:800;letter-spacing:-.3px">Health &amp; Recovery</div>
+      <button id="health-sync" onclick="syncGarmin()" style="font-size:12px;font-weight:600;background:rgba(0,200,150,.12);color:#00c896;border:1px solid rgba(0,200,150,.3);border-radius:20px;padding:5px 13px;cursor:pointer;white-space:nowrap">↻ Sync</button>
+    </div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:14px">Your recovery, HRV, sleep and stress from Garmin.</div>
+    <div id="health-body"></div>
+  </div>
+
   <!-- AVAILABILITY -->
   <div class="page" id="page-avail">
     <div style="font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:4px">Weekly Schedule</div>
@@ -591,6 +601,8 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Plan</button>
   <button onclick="showPage('log',this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M4 18l4-6 4 3 4-7 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Activity</button>
+  <button onclick="showPage('health',this)">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-5 3 10 2.5-7 1.5 2h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Health</button>
   <button onclick="showPage('avail',this)">
     <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Schedule</button>
   <button onclick="showPage('coach',this)">
@@ -684,7 +696,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-10";
+const BUILD="20260706-11";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -696,7 +708,7 @@ const DAYS=["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunda
 let workouts=[], planText="", planJson=[], profile={cycling:{ftp_watts:177},running:{max_hr:196,resting_hr:60,threshold_hr:173}};
 let FTP=177, LTHR=173, REST_HR=60, MAX_HR=196;
 let avState={}, weekOffset=0, logFilter="all", coachHistory=[];
-let planBlock=[], pmcDays=90, sleep=[];
+let planBlock=[], pmcDays=90, sleep=[], health=[];
 let goals=null, obHistory=[];
 DAYS.forEach(d=>avState[d]={available:false,hours:(d==="Saturday"||d==="Sunday")?2:1});
 
@@ -1946,6 +1958,200 @@ function timerDone(){
   document.getElementById("timer-time").textContent="Done";
 }
 
+// ── HEALTH & RECOVERY (Whoop-style, personal-baseline) ────────
+// See HEALTH_METRICS.md for the full benchmark & methodology. Each metric is
+// scored against the athlete's own trailing baseline, then blended into a 0-100
+// recovery score with evidence-weighted weights.
+var HEALTH_WEIGHTS={hrv:0.35,sleep:0.25,rhr:0.20,bb:0.10,stress:0.07,resp:0.03};
+function _num(x){return (typeof x==="number"&&!isNaN(x))?x:null;}
+function _stats(arr){
+  var xs=arr.filter(function(v){return typeof v==="number"&&!isNaN(v);});
+  if(!xs.length)return null;
+  var mean=xs.reduce(function(a,b){return a+b;},0)/xs.length;
+  var variance=xs.reduce(function(a,b){return a+(b-mean)*(b-mean);},0)/xs.length;
+  return {mean:mean,sd:Math.sqrt(variance),n:xs.length};
+}
+function clamp(v,lo,hi){return Math.max(lo,Math.min(hi,v));}
+// Map a z-score to a 0-100 component: baseline≈65, +1σ≈90, −1σ≈40.
+function zToScore(z){return clamp(65+25*z,0,100);}
+// Build the recovery reading for the LATEST health day, using prior days as baseline.
+function computeRecovery(){
+  if(!health||!health.length)return null;
+  var sorted=health.slice().sort(function(a,b){return String(a.date)<String(b.date)?-1:1;});
+  var today=sorted[sorted.length-1];
+  var prior=sorted.slice(0,-1).slice(-30); // up to 30 prior days as baseline
+  function baseline(key){return _stats(prior.map(function(d){return _num(d[key]);}));}
+  var comps={},reasons=[];
+  // HRV — higher better, personal baseline
+  var hrv=_num(today.hrv_ms), hb=baseline("hrv_ms");
+  if(hrv!=null){
+    if(hb&&hb.n>=4&&hb.sd>1){var z=(hrv-hb.mean)/hb.sd;comps.hrv=zToScore(z);
+      var pct=Math.round((hrv-hb.mean)/hb.mean*100);
+      reasons.push({k:"HRV",good:z>=-0.3,txt:hrv+"ms "+(pct>=0?"+":"")+pct+"% vs "+Math.round(hb.mean)+"ms baseline"});
+    }else{comps.hrv=clamp(50+(hrv-55)*1.2,10,95);reasons.push({k:"HRV",good:hrv>=50,txt:hrv+"ms (building baseline)"});}
+  }
+  // RHR — lower better
+  var rhr=_num(today.rhr), rb=baseline("rhr");
+  if(rhr!=null){
+    if(rb&&rb.n>=4&&rb.sd>0.5){var z2=(rb.mean-rhr)/rb.sd;comps.rhr=zToScore(z2);
+      reasons.push({k:"Resting HR",good:rhr<=rb.mean+1,txt:rhr+"bpm vs "+Math.round(rb.mean)+"bpm baseline"});
+    }else{comps.rhr=clamp(90-(rhr-50)*2,10,95);reasons.push({k:"Resting HR",good:rhr<=58,txt:rhr+"bpm"});}
+  }
+  // Sleep — Garmin score directly
+  var slp=_num(today.sleep_score);
+  if(slp!=null){comps.sleep=slp;reasons.push({k:"Sleep",good:slp>=70,txt:slp+"/100"+(today.sleep_h?" ("+today.sleep_h+"h)":"")});}
+  // Body Battery — morning/high directly
+  var bb=_num(today.body_battery_high);
+  if(bb!=null){comps.bb=bb;reasons.push({k:"Body Battery",good:bb>=60,txt:bb+"/100 peak"});}
+  // Stress — inverse
+  var st=_num(today.stress_avg);
+  if(st!=null){comps.stress=clamp(100-st,0,100);reasons.push({k:"Stress",good:st<=40,txt:st+"/100 avg"});}
+  // Respiration — only penalise elevation vs baseline
+  var rp=_num(today.respiration_avg), pb=baseline("respiration_avg");
+  if(rp!=null&&pb&&pb.n>=4&&pb.sd>0.3){var z3=(pb.mean-rp)/pb.sd;comps.resp=clamp(65+15*z3,20,100);}
+  // Weighted blend over available metrics
+  var wsum=0,acc=0;
+  Object.keys(comps).forEach(function(k){var w=HEALTH_WEIGHTS[k]||0;acc+=comps[k]*w;wsum+=w;});
+  if(!wsum)return null;
+  var score=Math.round(acc/wsum);
+  var band=score>=67?{k:"primed",label:"Primed",c:"#22c55e",note:"Recovered — a good day for a hard or quality session."}
+    :score>=34?{k:"moderate",label:"Moderate",c:"#f59e0b",note:"Partially recovered — fine to train, but keep easy days easy and don't force intensity."}
+    :{k:"low",label:"Low",c:"#ef4444",note:"Under-recovered — favour easy or rest today and protect sleep."};
+  return {date:today.date,score:score,band:band,comps:comps,reasons:reasons,today:today,prior:prior,sorted:sorted};
+}
+// 7-day vs baseline trend for a metric.
+function healthTrend(key,higherBetter){
+  var sorted=health.slice().sort(function(a,b){return String(a.date)<String(b.date)?-1:1;});
+  var vals=sorted.map(function(d){return _num(d[key]);}).filter(function(v){return v!=null;});
+  if(vals.length<4)return null;
+  var recent=_stats(vals.slice(-7)),base=_stats(vals.slice(0,-7).length?vals.slice(0,-7):vals);
+  if(!recent||!base)return null;
+  var diff=recent.mean-base.mean;
+  var rising=diff>0, good=higherBetter?rising:!rising;
+  return {recent:recent.mean,base:base.mean,diff:diff,rising:rising,good:good,pct:base.mean?Math.round(diff/base.mean*100):0};
+}
+function healthInsights(rec){
+  var out=[];
+  var hrvT=healthTrend("hrv_ms",true), rhrT=healthTrend("rhr",false);
+  // Illness / under-recovery early warning: HRV down + RHR up together
+  if(hrvT&&rhrT&&hrvT.diff<0&&Math.abs(hrvT.pct)>=5&&rhrT.diff>0){
+    out.push({icon:"⚠️",c:"#ef4444",txt:"HRV is "+Math.abs(hrvT.pct)+"% below your baseline while resting HR is rising — a classic under-recovery / early-illness pattern. Ease off and prioritise sleep; if it persists, rest."});
+  }else{
+    if(hrvT)out.push({icon:hrvT.good?"📈":"📉",c:hrvT.good?"#22c55e":"#f59e0b",txt:"HRV trend: 7-day avg "+Math.round(hrvT.recent)+"ms "+(hrvT.rising?"up":"down")+" vs "+Math.round(hrvT.base)+"ms baseline — "+(hrvT.good?"recovery is trending well, safe to progress.":"recovery is dipping; hold or reduce load.")});
+    if(rhrT)out.push({icon:rhrT.good?"❤️":"💓",c:rhrT.good?"#22c55e":"#f59e0b",txt:"Resting HR: 7-day avg "+Math.round(rhrT.recent)+"bpm "+(rhrT.rising?"up":"down/flat")+" vs "+Math.round(rhrT.base)+"bpm baseline"+(rhrT.good?" — good sign.":" — slightly elevated, watch recovery.")});
+  }
+  // Sleep debt
+  var slpVals=health.map(function(d){return _num(d.sleep_h);}).filter(function(v){return v!=null;}).slice(-7);
+  if(slpVals.length>=3){var avg=slpVals.reduce(function(a,b){return a+b;},0)/slpVals.length;
+    if(avg<7)out.push({icon:"🛏️",c:"#f59e0b",txt:"Averaging "+avg.toFixed(1)+"h sleep over the last week — below the ~8h that best supports adaptation. Extra sleep is the cheapest performance gain available."});
+    else out.push({icon:"🛏️",c:"#22c55e",txt:"Sleep averaging "+avg.toFixed(1)+"h/night — solid foundation for adaptation."});
+  }
+  // Strain vs recovery balance (uses PMC TSB if available)
+  if(rec&&workouts.length){
+    try{var pmc=buildPMC(90),tsb=pmc.T[pmc.T.length-1];
+      if(rec.score<40&&tsb<-10)out.push({icon:"🔋",c:"#ef4444",txt:"Low recovery AND high training fatigue (Form "+Math.round(tsb)+") — your body is asking for a genuine easy/rest day."});
+      else if(rec.score>=67&&tsb>-5)out.push({icon:"🚀",c:"#22c55e",txt:"Recovery is strong and fatigue is low — a great window to hit a key session or nudge the load up."});
+    }catch(e){}
+  }
+  return out;
+}
+function metricTile(label,val,unit,sub,color){
+  return '<div style="flex:1;min-width:88px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px 13px">'+
+    '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:6px">'+label+'</div>'+
+    '<div style="font-size:22px;font-weight:800;color:'+(color||"var(--t1)")+';font-family:var(--mono);line-height:1">'+(val!=null?val:"—")+(val!=null&&unit?'<span style="font-size:12px;font-weight:600;color:var(--t3)"> '+unit+'</span>':"")+'</div>'+
+    (sub?'<div style="font-size:11px;color:var(--t3);margin-top:4px">'+sub+'</div>':"")+
+  '</div>';
+}
+function healthSparkline(key,higherBetter){
+  var sorted=health.slice().sort(function(a,b){return String(a.date)<String(b.date)?-1:1;}).slice(-21);
+  var vals=sorted.map(function(d){return _num(d[key]);});
+  var present=vals.filter(function(v){return v!=null;});
+  if(present.length<3)return "";
+  var lo=Math.min.apply(null,present),hi=Math.max.apply(null,present),rng=(hi-lo)||1;
+  var w=100,h=28,step=vals.length>1?w/(vals.length-1):w;
+  var pts=[];vals.forEach(function(v,i){if(v==null)return;var x=i*step,y=h-((v-lo)/rng)*h;pts.push(x.toFixed(1)+","+y.toFixed(1));});
+  return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="width:100%;height:28px;margin-top:8px"><polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--brand)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+function renderHealth(){
+  var el=document.getElementById("health-body");if(!el)return;
+  if(!health||!health.length){
+    el.innerHTML='<div class="card" style="text-align:center;color:var(--t3);padding:32px 20px;font-size:14px;line-height:1.6">No health data yet.<br><br>Tap <b>↻ Sync</b> above to pull your HRV, resting HR, sleep, stress and Body Battery from Garmin.<br><br><span style="font-size:12px">Needs a Garmin device that records these overnight (most Fenix / Forerunner / Venu do).</span></div>';
+    return;
+  }
+  var rec=computeRecovery();
+  var html="";
+  // ── Recovery gauge ──
+  if(rec){
+    var b=rec.band;
+    html+='<div class="card" style="text-align:center;padding:22px 18px">'+
+      '<div style="width:150px;height:150px;border-radius:50%;margin:0 auto 14px;background:conic-gradient('+b.c+' '+rec.score+'%,var(--bg3) 0);display:flex;align-items:center;justify-content:center">'+
+        '<div style="width:126px;height:126px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+          '<div style="font-size:40px;font-weight:800;color:'+b.c+';line-height:1;font-family:var(--mono)">'+rec.score+'</div>'+
+          '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin-top:2px">Recovery</div>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:18px;font-weight:800;color:'+b.c+'">'+b.label+'</div>'+
+      '<div style="font-size:13px;color:var(--t2);line-height:1.55;margin-top:6px;max-width:300px;margin-left:auto;margin-right:auto">'+b.note+'</div>'+
+      (rec.today.training_readiness!=null?'<div style="font-size:11px;color:var(--t3);margin-top:8px">Garmin Training Readiness: '+rec.today.training_readiness+(rec.today.training_readiness_level?" ("+esc(rec.today.training_readiness_level)+")":"")+'</div>':"")+
+    '</div>';
+  }
+  // ── Metric tiles ──
+  var t=rec?rec.today:health[health.length-1];
+  var hrvT=healthTrend("hrv_ms",true),rhrT=healthTrend("rhr",false);
+  html+='<div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:14px">'+
+    metricTile("HRV",_num(t.hrv_ms),"ms",hrvT?(hrvT.rising?"▲":"▼")+" "+Math.abs(hrvT.pct)+"% vs base":(t.hrv_status||""),hrvT?(hrvT.good?"#22c55e":"#f59e0b"):"var(--t1)")+
+    metricTile("Resting HR",_num(t.rhr),"bpm",rhrT?(rhrT.rising?"▲":"▼")+" vs base":"",rhrT?(rhrT.good?"#22c55e":"#f59e0b"):"var(--t1)")+
+    metricTile("Sleep",_num(t.sleep_score),"/100",t.sleep_h?t.sleep_h+"h":"","var(--blue)")+
+    metricTile("Body Battery",_num(t.body_battery_high),"peak",_num(t.body_battery_low)!=null?"low "+t.body_battery_low:"","var(--green)")+
+    metricTile("Stress",_num(t.stress_avg),"/100","avg today",_num(t.stress_avg)!=null?(t.stress_avg<=40?"#22c55e":t.stress_avg<=60?"#f59e0b":"#ef4444"):"var(--t1)")+
+    metricTile("SpO₂",_num(t.spo2_avg),"%","","var(--t1)")+
+  '</div>';
+  // ── Trends (sparklines) ──
+  var sparks=[["HRV (ms)","hrv_ms"],["Resting HR (bpm)","rhr"],["Sleep score","sleep_score"],["Stress","stress_avg"]];
+  var sparkHTML=sparks.map(function(s){
+    var sl=healthSparkline(s[1]);if(!sl)return "";
+    return '<div style="flex:1;min-width:140px"><div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px">'+s[0]+'</div>'+sl+'</div>';
+  }).filter(Boolean).join("");
+  if(sparkHTML)html+='<div class="card"><div class="card-h" style="margin-bottom:6px">21-day trends</div><div style="display:flex;flex-wrap:wrap;gap:16px">'+sparkHTML+'</div></div>';
+  // ── Insights ──
+  var ins=healthInsights(rec);
+  if(ins.length){
+    html+='<div class="card"><div class="card-h" style="margin-bottom:10px">Insights</div>'+
+      ins.map(function(i){return '<div style="display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)">'+
+        '<span style="font-size:16px;flex-shrink:0">'+i.icon+'</span>'+
+        '<span style="font-size:13px;color:var(--t2);line-height:1.55">'+i.txt+'</span></div>';}).join("")+
+    '</div>';
+  }
+  // ── What drove today's score ──
+  if(rec&&rec.reasons.length){
+    html+='<div class="card"><div class="card-h" style="margin-bottom:10px">What shaped today\'s recovery</div>'+
+      rec.reasons.map(function(r){return '<div style="display:flex;align-items:center;gap:8px;padding:7px 0;border-top:1px solid var(--line)">'+
+        '<span style="width:8px;height:8px;border-radius:50%;background:'+(r.good?"#22c55e":"#f59e0b")+';flex-shrink:0"></span>'+
+        '<span style="font-size:13px;color:var(--t1);font-weight:600;min-width:96px">'+r.k+'</span>'+
+        '<span style="font-size:12px;color:var(--t3)">'+r.txt+'</span></div>';}).join("")+
+      '<div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.5">Scored against your own rolling baseline, Whoop-style. Not a medical device — training guidance only.</div>'+
+    '</div>';
+  }
+  el.innerHTML=html;
+}
+// Compact recovery summary for the coach's context (one line, or null).
+function recoveryContextLine(){
+  var rec=computeRecovery();
+  if(!rec)return null;
+  var t=rec.today,bits=[];
+  bits.push("recovery "+rec.score+"/100 ("+rec.band.label+")");
+  if(_num(t.hrv_ms)!=null)bits.push("HRV "+t.hrv_ms+"ms"+(t.hrv_status?"/"+t.hrv_status:""));
+  if(_num(t.rhr)!=null)bits.push("resting HR "+t.rhr+"bpm");
+  if(_num(t.sleep_score)!=null)bits.push("sleep "+t.sleep_score+"/100"+(t.sleep_h?"("+t.sleep_h+"h)":""));
+  if(_num(t.body_battery_high)!=null)bits.push("Body Battery peak "+t.body_battery_high);
+  if(_num(t.stress_avg)!=null)bits.push("stress "+t.stress_avg+"/100");
+  if(_num(t.training_readiness)!=null)bits.push("Garmin readiness "+t.training_readiness);
+  var hrvT=healthTrend("hrv_ms",true);
+  var trend=hrvT?(" HRV 7-day trend "+(hrvT.rising?"up":"down")+" "+Math.abs(hrvT.pct)+"% vs baseline ("+(hrvT.good?"recovering":"suppressed")+")."):"";
+  return "TODAY'S RECOVERY (from Garmin, "+rec.date+"): "+bits.join(", ")+"."+trend+
+    " Weigh this HEAVILY: low recovery/suppressed HRV → pull intensity, keep it easy; strong recovery → safe to push. When reviewing a completed session, use it to explain how it likely felt.";
+}
+
 // ── GAMIFICATION: streaks & badges ────────────────────────────
 // A week keeps the streak alive with 2+ completed sessions. Completed weeks are
 // folded into localStorage so the streak survives beyond the 6-week Garmin window.
@@ -2757,6 +2963,7 @@ async function sendCoachMessage(){
     var _cft=getToken();
     var _freshW=_cft?await apiGetJSON("workouts.json",_cft):await fetchJSON("workouts.json");
     if(Array.isArray(_freshW)&&_freshW.length)workouts=_freshW;
+    var _freshH=await fetchJSON("health.json");if(Array.isArray(_freshH))health=_freshH;
   }catch(e){}
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
   var recentW=workouts.filter(w=>new Date(w.date)>=cutoff);
@@ -2871,6 +3078,7 @@ async function sendCoachMessage(){
       var poor=rs.filter(function(d){return d.score&&d.score<65;}).map(function(d){return d.date;});
       return "Sleep (7-day avg): "+avgSc+"/100. Last night: "+(last.score||"?")+" score, "+last.duration_h+"h total, "+last.deep_h+"h deep."+(poor.length?" Poor nights: "+poor.join(", ")+".":" No poor nights.")+"\n";
     })()+
+    (function(){var rl=recoveryContextLine();return rl?rl+"\n":"";})()+
     (function(){
       var planMon=getPlanJsonMon();
       var thisMon=localDateStr(mondayOf(0));
@@ -3312,7 +3520,9 @@ async function syncGarmin(){
       if(meta.sha&&meta.sha!==oldSha){
         clearInterval(poll);
         workouts=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
-        renderLog();renderHome();
+        var _fh=await fetchJSON("health.json");if(Array.isArray(_fh))health=_fh;
+        var _fs=await fetchJSON("sleep.json");if(Array.isArray(_fs))sleep=_fs;
+        renderLog();renderHome();renderHealth();
         btn.textContent="↻ Sync Garmin";btn.disabled=false;
         document.getElementById("sync-status").textContent="Synced — "+workouts.length+" activities loaded.";
       }
@@ -3378,7 +3588,7 @@ async function doRestart(){
 async function init(){
   var stamp=document.getElementById("build-stamp");if(stamp)stamp.textContent=BUILD;
   var _t=getToken();
-  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),apiGetJSON("weekly_plan.json",_t),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json"),apiGetJSON("plan_block.json",_t),fetchJSON("sleep.json"),fetchJSON("video_library.json")]);
+  var r=await Promise.all([fetchJSON("workouts.json"),fetchText("weekly_plan.md"),apiGetJSON("weekly_plan.json",_t),fetchJSON("availability.json"),fetchJSON("profile.json"),fetchJSON("plan_status.json"),fetchJSON("goals.json"),apiGetJSON("plan_block.json",_t),fetchJSON("sleep.json"),fetchJSON("video_library.json"),fetchJSON("health.json")]);
   workouts=r[0]||[];planText=r[1]||"";
   // Fall back to raw CDN if apiGetJSON failed (expired token)
   planJson=r[2]||(await fetchJSON("weekly_plan.json"))||[];
@@ -3386,6 +3596,7 @@ async function init(){
   goals=(r[6]&&r[6].primary_goal)?r[6]:null;
   planBlock=Array.isArray(r[7])?r[7]:(await fetchJSON("plan_block.json"))||[];
   sleep=Array.isArray(r[8])?r[8]:[];
+  health=Array.isArray(r[10])?r[10]:[];
   // Community-corrected video links persisted by athletes via "Fix it" in the
   // exercise overlay. Merge over the built-in library so corrections always win.
   videoLibrary=(r[9]&&typeof r[9]==="object")?r[9]:{};
@@ -3396,7 +3607,7 @@ async function init(){
   renderPrefs();
   weekOffset=planStartOffset();updateWeekLabel();
   renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
-  renderPlanPreamble();renderBlockOverview();loadChatHistory();
+  renderPlanPreamble();renderBlockOverview();loadChatHistory();renderHealth();
   if(workouts.length)renderHome();
   else{renderGamify();if(goals)renderGoalBanner(0,0);}
   var hasKeys=getToken()&&localStorage.getItem("anthropic_key");

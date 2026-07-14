@@ -10,6 +10,7 @@ Your personal AI running and cycling coach. Automatic training plans, performanc
 - **Warm-up & Stretch Guides** — every session card opens a video/how-to section with dynamic warm-up drills and post-session static stretches
 - **Built-in Activity Timer** — tap any step duration or timed stretch to get a pop-up countdown preset to the right time, with a beep and vibration when done
 - **Streaks & Badges** — weekly training streak, milestone badges and habit nudges on the Home tab
+- **Health & Recovery** — a Whoop-style Health tab: a personal-baseline recovery score (0–100) from HRV, resting HR, sleep, Body Battery and stress, with trends and plain-language insights (see `HEALTH_METRICS.md`); Coach Claudio reads it when planning and when reviewing your sessions
 - **Auto-Detecting Fitness** — FTP and LTHR update automatically as you get stronger
 - **Garmin Integration** — Workouts push directly to your Fenix with step-by-step guidance
 - **Coach Claudio** — In-app AI coach for daily training questions

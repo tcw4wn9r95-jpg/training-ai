@@ -280,6 +280,117 @@ with open("sleep.json", "w") as f:
     json.dump(sleep_data, f, indent=2)
 print(f"Sleep data saved ({len(sleep_data)} days).")
 
+# ── Fetch broader health metrics (HRV, RHR, stress, Body Battery, etc.) ────────
+# Each metric is best-effort and independent: Garmin devices/plans expose
+# different fields, and the API omits some on any given day. A missing metric
+# becomes None — never crash the whole sync over one field. We keep ~35 days so
+# the dashboard/coach can build a personal baseline (see HEALTH_METRICS.md).
+_sleep_by_date = {d["date"]: d for d in sleep_data}
+
+def _safe(fn, *a, **k):
+    try:
+        return fn(*a, **k)
+    except Exception as e:
+        return None
+
+def _hrv_for(d):
+    raw = _safe(getattr(client, "get_hrv_data", lambda *_: None), d)
+    if not isinstance(raw, dict):
+        return None, None
+    summ = raw.get("hrvSummary") or {}
+    return summ.get("lastNightAvg"), summ.get("status")
+
+def _rhr_for(d):
+    raw = _safe(getattr(client, "get_rhr_day", lambda *_: None), d)
+    if isinstance(raw, dict):
+        # Shape varies; dig for the resting HR value defensively.
+        mm = (((raw.get("allMetrics") or {}).get("metricsMap")) or {})
+        arr = mm.get("WELLNESS_RESTING_HEART_RATE") or []
+        if arr and isinstance(arr, list) and isinstance(arr[0], dict) and arr[0].get("value"):
+            return arr[0]["value"]
+        for k in ("restingHeartRate", "value"):
+            if raw.get(k):
+                return raw[k]
+    return None
+
+def _stress_for(d):
+    raw = _safe(getattr(client, "get_stress_data", lambda *_: None), d)
+    if isinstance(raw, dict):
+        v = raw.get("avgStressLevel")
+        return v if (isinstance(v, (int, float)) and v >= 0) else None
+    return None
+
+def _bodybattery_for(d):
+    raw = _safe(getattr(client, "get_body_battery", lambda *_a, **_k: None), d, d)
+    hi = lo = None
+    try:
+        rows = raw if isinstance(raw, list) else []
+        for row in rows:
+            vals = row.get("bodyBatteryValuesArray") or []
+            levels = [v[-1] for v in vals if isinstance(v, list) and v and isinstance(v[-1], (int, float))]
+            if levels:
+                hi = max(levels) if hi is None else max(hi, max(levels))
+                lo = min(levels) if lo is None else min(lo, min(levels))
+    except Exception:
+        pass
+    return hi, lo
+
+def _respiration_for(d):
+    raw = _safe(getattr(client, "get_respiration_data", lambda *_: None), d)
+    if isinstance(raw, dict):
+        for k in ("avgSleepRespirationValue", "avgWakingRespirationValue", "avgTomorrowSleepRespirationValue"):
+            if isinstance(raw.get(k), (int, float)) and raw[k] > 0:
+                return round(raw[k], 1)
+    return None
+
+def _spo2_for(d):
+    raw = _safe(getattr(client, "get_spo2_data", lambda *_: None), d)
+    if isinstance(raw, dict):
+        v = raw.get("averageSpO2") or raw.get("avgSpO2")
+        return v if isinstance(v, (int, float)) else None
+    return None
+
+def _readiness_for(d):
+    raw = _safe(getattr(client, "get_training_readiness", lambda *_: None), d)
+    try:
+        if isinstance(raw, list) and raw and isinstance(raw[0], dict):
+            return raw[0].get("score"), raw[0].get("level")
+        if isinstance(raw, dict):
+            return raw.get("score"), raw.get("level")
+    except Exception:
+        pass
+    return None, None
+
+health_data = []
+for offset in range(35):
+    d = (date.today() - timedelta(days=offset)).isoformat()
+    hrv, hrv_status = _hrv_for(d)
+    bb_hi, bb_lo = _bodybattery_for(d)
+    tr_score, tr_level = _readiness_for(d)
+    slp = _sleep_by_date.get(d, {})
+    row = {
+        "date": d,
+        "hrv_ms": hrv,
+        "hrv_status": hrv_status,
+        "rhr": _rhr_for(d),
+        "stress_avg": _stress_for(d),
+        "body_battery_high": bb_hi,
+        "body_battery_low": bb_lo,
+        "respiration_avg": _respiration_for(d),
+        "spo2_avg": _spo2_for(d),
+        "sleep_score": slp.get("score"),
+        "sleep_h": slp.get("duration_h"),
+        "training_readiness": tr_score,
+        "training_readiness_level": tr_level,
+    }
+    # Only keep days that have at least one meaningful metric.
+    if any(row[k] is not None for k in ("hrv_ms", "rhr", "stress_avg", "body_battery_high", "sleep_score", "training_readiness")):
+        health_data.append(row)
+health_data.sort(key=lambda x: x["date"])
+with open("health.json", "w") as f:
+    json.dump(health_data, f, indent=2)
+print(f"Health metrics saved ({len(health_data)} days).")
+
 # ── Auto-detect FTP & LTHR ────────────────────────────────────────────────────
 print("\n--- Checking FTP (Cycling) ---")
 ftp_result, _ = estimate_ftp_from_efforts(workouts, ftp_current=FTP)
@@ -411,6 +522,48 @@ if _sleep_now:
 else:
     sleep_block = "No sleep data available yet."
 
+# ── Health/recovery summary for the plan prompt ───────────────────────────────
+# Personal-baseline HRV/RHR trends + latest recovery signals so the plan bends
+# to how the body is actually recovering (see HEALTH_METRICS.md).
+def _mean(xs):
+    xs = [x for x in xs if isinstance(x, (int, float))]
+    return round(sum(xs) / len(xs), 1) if xs else None
+
+health_block = "No HRV/recovery data available yet."
+_health_now = []
+if os.path.exists("health.json"):
+    try:
+        with open("health.json") as _hf:
+            _health_now = json.load(_hf)
+    except Exception:
+        _health_now = []
+if _health_now:
+    _hrv_all = [h.get("hrv_ms") for h in _health_now if h.get("hrv_ms")]
+    _rhr_all = [h.get("rhr") for h in _health_now if h.get("rhr")]
+    _hrv_base = _mean(_hrv_all[:-7]) if len(_hrv_all) > 7 else _mean(_hrv_all)
+    _hrv_7 = _mean(_hrv_all[-7:])
+    _rhr_base = _mean(_rhr_all[:-7]) if len(_rhr_all) > 7 else _mean(_rhr_all)
+    _rhr_7 = _mean(_rhr_all[-7:])
+    _last = _health_now[-1]
+    _parts = []
+    if _hrv_7 and _hrv_base:
+        _dir = "above" if _hrv_7 >= _hrv_base else "below"
+        _pct = round(abs(_hrv_7 - _hrv_base) / _hrv_base * 100)
+        _parts.append(f"HRV 7-day avg {_hrv_7}ms ({_pct}% {_dir} the ~{_hrv_base}ms baseline; status {_last.get('hrv_status') or 'n/a'})")
+    if _rhr_7 and _rhr_base:
+        _dir = "up" if _rhr_7 > _rhr_base else "down/flat"
+        _parts.append(f"resting HR 7-day avg {_rhr_7}bpm ({_dir} vs ~{_rhr_base}bpm baseline)")
+    if _last.get("body_battery_high") is not None:
+        _parts.append(f"latest Body Battery high {_last['body_battery_high']}")
+    if _last.get("stress_avg") is not None:
+        _parts.append(f"latest daily stress {_last['stress_avg']}/100")
+    if _last.get("training_readiness") is not None:
+        _parts.append(f"Garmin Training Readiness {_last['training_readiness']} ({_last.get('training_readiness_level') or ''})".strip())
+    if _parts:
+        health_block = ("; ".join(_parts) + ". Rule: suppressed HRV (well below baseline) or rising resting HR = "
+                        "under-recovery — pull intensity/volume and prioritise easy work; strong/ rising HRV with "
+                        "steady RHR = recovered, safe to progress. The body's recovery signals override the calendar.")
+
 # ── Build the prompt ──────────────────────────────────────────────────────────
 print("Calling Claude for training plan...")
 claude = anthropic.Anthropic(api_key=os.environ["ANTHROPIC_API_KEY"])
@@ -500,6 +653,9 @@ Last 7 days: ~{last_wk_tss} TSS | Last 28 days: ~{last_4wk_tss} TSS
 
 ## SLEEP & RECOVERY (from Garmin — factor this into session intensity and weekly structure)
 {sleep_block}
+
+## HRV & RECOVERY STATUS (from Garmin — treat as a primary readiness signal, weigh heavily)
+{health_block}
 
 ## MULTI-WEEK HISTORY (this is week {current_week_index + 1} of the athlete's journey)
 You have planned the following weeks already. The plan must CONTINUE this arc — never restart from scratch:
