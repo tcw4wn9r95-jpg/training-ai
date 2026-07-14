@@ -31,6 +31,8 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+          cache: 'pip'
+          cache-dependency-path: requirements.txt
       - name: Install dependencies
         run: pip install -r requirements.txt
       - name: Generate plan (no Garmin push)
@@ -45,7 +47,7 @@ jobs:
         run: |
           git config user.name "Coach Claudio"
           git config user.email "bot@coachclaudio.local"
-          git add workouts.json weekly_plan.md weekly_plan.json profile.json plan_status.json plan_history.json plan_block.json journey_start.json sleep.json
+          git add workouts.json weekly_plan.md weekly_plan.json profile.json plan_status.json plan_history.json plan_block.json journey_start.json sleep.json health.json
           git diff --staged --quiet && echo "No changes to commit" && exit 0
           git commit -m "Draft plan $(date +%Y-%m-%d)"
           for i in 1 2 3; do
