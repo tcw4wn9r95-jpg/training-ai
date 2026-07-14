@@ -683,6 +683,15 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   </div>
 </div>
 
+<!-- Metric detail overlay (tap a Health metric) -->
+<div id="metric-overlay" style="display:none;position:fixed;inset:0;z-index:230;background:var(--bg);flex-direction:column">
+  <div style="padding:calc(14px + env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);flex-shrink:0">
+    <button onclick="closeMetricDetail()" style="background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--t1);cursor:pointer">← Back</button>
+    <span id="metric-title" style="font-size:16px;font-weight:700;color:var(--t1)">Metric</span>
+  </div>
+  <div id="metric-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(30px + env(safe-area-inset-bottom))"></div>
+</div>
+
 <!-- Onboarding overlay -->
 <div id="onboarding" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column">
   <div style="padding:calc(18px + env(safe-area-inset-top)) 18px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px">
@@ -698,7 +707,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-12";
+const BUILD="20260706-13";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -2071,9 +2080,11 @@ function healthInsights(rec){
   }
   return out;
 }
-function metricTile(label,val,unit,sub,color){
-  return '<div style="flex:1;min-width:88px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px 13px">'+
-    '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:6px">'+label+'</div>'+
+function metricTile(key,label,val,unit,sub,color){
+  var clickable=!!key;
+  return '<div'+(clickable?' onclick="openMetricDetail(\''+key+'\')" role="button" aria-label="'+label+' detail"':'')+
+      ' style="flex:1;min-width:88px;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:12px 13px'+(clickable?';cursor:pointer':'')+'">'+
+    '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:6px;display:flex;align-items:center;justify-content:space-between">'+label+(clickable?'<span style="font-weight:400;font-size:14px;color:var(--t3)">›</span>':"")+'</div>'+
     '<div style="font-size:22px;font-weight:800;color:'+(color||"var(--t1)")+';font-family:var(--mono);line-height:1">'+(val!=null?val:"—")+(val!=null&&unit?'<span style="font-size:12px;font-weight:600;color:var(--t3)"> '+unit+'</span>':"")+'</div>'+
     (sub?'<div style="font-size:11px;color:var(--t3);margin-top:4px">'+sub+'</div>':"")+
   '</div>';
@@ -2087,6 +2098,163 @@ function healthSparkline(key,higherBetter){
   var w=100,h=28,step=vals.length>1?w/(vals.length-1):w;
   var pts=[];vals.forEach(function(v,i){if(v==null)return;var x=i*step,y=h-((v-lo)/rng)*h;pts.push(x.toFixed(1)+","+y.toFixed(1));});
   return '<svg viewBox="0 0 '+w+' '+h+'" preserveAspectRatio="none" style="width:100%;height:28px;margin-top:8px"><polyline points="'+pts.join(" ")+'" fill="none" stroke="var(--brand)" stroke-width="1.6" stroke-linejoin="round" stroke-linecap="round"/></svg>';
+}
+
+// ── METRIC DETAIL (tap a Health tile) ─────────────────────────
+// Each metric: what it is, how it drives training, and a dynamic "so what".
+var METRIC_INFO={
+  hrv_ms:{label:"HRV",unit:"ms",higherBetter:true,color:"#8b5cf6",statusKey:"hrv_status",
+    what:"Heart-rate variability (overnight RMSSD) is the tiny beat-to-beat variation in your heart rate. More variation means your parasympathetic ('rest & digest') system is in charge — the single clearest daily marker of how recovered you are.",
+    training:"Stable or rising HRV vs your baseline means you're absorbing training well. A meaningful drop signals accumulated fatigue, poor sleep, stress, under-fuelling or oncoming illness."},
+  rhr:{label:"Resting HR",unit:"bpm",higherBetter:false,color:"#ef4444",
+    what:"Your lowest heart rate at rest overnight — the flip side of HRV. A fit, recovered body sits low and steady.",
+    training:"An elevated resting HR versus your baseline is a classic flag for incomplete recovery, dehydration, stress or fighting something off."},
+  sleep_score:{label:"Sleep",unit:"/100",higherBetter:true,color:"#3b82f6",secondary:"sleep_h",
+    what:"Garmin's blend of sleep duration, deep/REM stages and restfulness (0–100).",
+    training:"Sleep is when adaptation actually happens — the workout only creates the stimulus. Chronic short sleep blunts fitness gains and raises injury and illness risk far more than one missed session."},
+  body_battery_high:{label:"Body Battery",unit:"",higherBetter:true,color:"#22c55e",
+    what:"Garmin's energy-reserve estimate (0–100) built from HRV, stress and activity. The overnight peak shows how fully you recharged.",
+    training:"A high morning peak = topped up for a hard session. A low peak = limited reserves; favour easy work, fuel and recover."},
+  stress_avg:{label:"Stress",unit:"/100",higherBetter:false,color:"#f59e0b",
+    what:"Garmin's all-day stress score, derived from HRV. Higher means more sympathetic ('fight or flight') load.",
+    training:"Life stress and training stress draw on the same recovery bank. When daily stress is high, the training that adapts you best is a little less of it, done easier."},
+  spo2_avg:{label:"SpO₂",unit:"%",higherBetter:true,color:"#94a3b8",
+    what:"Blood-oxygen saturation, normally 95–100%. Dips can reflect altitude or disrupted breathing during sleep.",
+    training:"Consistently low overnight SpO₂ alongside poor sleep can quietly undermine recovery — worth noting if it persists."},
+  respiration_avg:{label:"Respiration",unit:"br/min",higherBetter:false,color:"#06b6d4",
+    what:"Breaths per minute at rest. Usually very stable; a rise above your norm is an early strain or illness flag.",
+    training:"An unexplained jump in resting respiratory rate often precedes feeling unwell by a day — a cue to hold intensity back."}
+};
+function _healthAsc(){return health.slice().sort(function(a,b){return String(a.date)<String(b.date)?-1:1;});}
+function bigMetricChart(key,color){
+  var pts=_healthAsc().slice(-14).map(function(d){return {date:d.date,v:_num(d[key])};}).filter(function(x){return x.v!=null;});
+  if(pts.length<2)return '<div style="color:var(--t3);font-size:13px;padding:10px 0">Not enough data yet for a chart — keep syncing.</div>';
+  var vals=pts.map(function(p){return p.v;});
+  var lo=Math.min.apply(null,vals),hi=Math.max.apply(null,vals),rng=(hi-lo)||1;
+  var mean=vals.reduce(function(a,b){return a+b;},0)/vals.length;
+  var W=320,H=130,pad=10,n=pts.length;
+  function X(i){return pad+i*(W-2*pad)/(n-1);}
+  function Y(v){return pad+(1-(v-lo)/rng)*(H-2*pad);}
+  var linePts=pts.map(function(p,i){return X(i).toFixed(1)+","+Y(p.v).toFixed(1);}).join(" ");
+  var areaPts="M "+X(0).toFixed(1)+" "+H+" L "+pts.map(function(p,i){return X(i).toFixed(1)+" "+Y(p.v).toFixed(1);}).join(" L ")+" L "+X(n-1).toFixed(1)+" "+H+" Z";
+  var baseY=Y(mean).toFixed(1);
+  var dots=pts.map(function(p,i){return '<circle cx="'+X(i).toFixed(1)+'" cy="'+Y(p.v).toFixed(1)+'" r="2.6" fill="'+color+'"/>';}).join("");
+  var lastX=X(n-1).toFixed(1),lastY=Y(pts[n-1].v).toFixed(1);
+  var gid="g"+key;
+  return '<svg viewBox="0 0 '+W+' '+(H+16)+'" style="width:100%;height:auto">'+
+    '<defs><linearGradient id="'+gid+'" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="'+color+'" stop-opacity="0.28"/><stop offset="1" stop-color="'+color+'" stop-opacity="0"/></linearGradient></defs>'+
+    '<path d="'+areaPts+'" fill="url(#'+gid+')"/>'+
+    '<line x1="'+pad+'" y1="'+baseY+'" x2="'+(W-pad)+'" y2="'+baseY+'" stroke="var(--t3)" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>'+
+    '<text x="'+(W-pad)+'" y="'+(+baseY-4)+'" text-anchor="end" font-size="9" fill="var(--t3)">baseline '+(Math.round(mean*10)/10)+'</text>'+
+    '<polyline points="'+linePts+'" fill="none" stroke="'+color+'" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>'+
+    dots+
+    '<circle cx="'+lastX+'" cy="'+lastY+'" r="4" fill="'+color+'"/>'+
+    '<text x="'+pad+'" y="'+(H+12)+'" font-size="9" fill="var(--t3)">'+pts[0].date.slice(5)+'</text>'+
+    '<text x="'+(W-pad)+'" y="'+(H+12)+'" text-anchor="end" font-size="9" fill="var(--t3)">'+pts[n-1].date.slice(5)+'</text>'+
+  '</svg>';
+}
+// Dynamic "so what for your training" per metric, from the last-7d-vs-baseline trend.
+function metricSoWhat(key,info){
+  var t=healthTrend(key,info.higherBetter);
+  var asc=_healthAsc(),cur=null;
+  for(var i=asc.length-1;i>=0;i--){if(_num(asc[i][key])!=null){cur=_num(asc[i][key]);break;}}
+  var out={verdict:"Building baseline",vc:"var(--t3)",bullets:[]};
+  if(!t){
+    out.bullets.push("Not enough history yet to compare against your personal normal. Keep syncing for a week or two and this sharpens up.");
+    return out;
+  }
+  var pct=Math.abs(t.pct),good=t.good;
+  if(pct<3)out.verdict="Stable vs baseline",out.vc="#22c55e";
+  else if(good)out.verdict=(info.higherBetter?"Trending up":"Trending down")+" — good",out.vc="#22c55e";
+  else out.verdict=(info.higherBetter?"Below baseline":"Above baseline")+" — caution",out.vc="#f59e0b";
+  var rec=computeRecovery();
+  var band=rec?rec.band.label:null;
+  // Metric-specific so-what
+  if(key==="hrv_ms"){
+    if(good||pct<3)out.bullets.push("Your HRV is holding around baseline — the body is absorbing load. This is the green light to progress: it's a safe week to add a quality session or nudge volume up.");
+    else{out.bullets.push("HRV is ~"+pct+"% below your baseline — a sign you're not fully recovered. Keep today easy or rest; a hard session now digs the hole deeper for little fitness gain.");
+      out.bullets.push("Re-check tomorrow. If it rebounds, resume as planned; if it stays low for 3+ days, cut this week's load ~20–30% and protect sleep.");}
+    var rhrT=healthTrend("rhr",false);
+    if(rhrT&&!good&&!rhrT.good)out.bullets.push("⚠️ Resting HR is rising at the same time — the combination is a classic early-illness / overreaching signal. Back right off and watch for symptoms.");
+  }else if(key==="rhr"){
+    if(good||pct<3)out.bullets.push("Resting HR is low and steady versus your baseline — a good marker that you're recovered and clear to train as planned.");
+    else out.bullets.push("Resting HR is elevated on your baseline, which usually means incomplete recovery, dehydration, stress or fighting something off. Favour easy days, hydrate and sleep until it settles.");
+  }else if(key==="sleep_score"){
+    var slp7=_healthAsc().map(function(d){return _num(d.sleep_h);}).filter(function(v){return v!=null;}).slice(-7);
+    var avg=slp7.length?slp7.reduce(function(a,b){return a+b;},0)/slp7.length:null;
+    if(avg!=null&&avg<7)out.bullets.push("You're averaging "+avg.toFixed(1)+"h/night this week — below the ~8h that best drives adaptation. Extra sleep is the single cheapest performance and recovery gain available; aim for one earlier night before your next hard session.");
+    else out.bullets.push("Sleep is supporting you well"+(avg!=null?" (~"+avg.toFixed(1)+"h/night)":"")+" — keep it consistent, especially the night before and after quality sessions when adaptation is highest.");
+  }else if(key==="body_battery_high"){
+    if(good||pct<3)out.bullets.push("You're recharging well overnight — reserves are there for a harder effort when the plan calls for it.");
+    else out.bullets.push("Overnight recharge is running low, so you're starting days with less in the tank. Treat hard sessions with caution and make sure you're fuelling enough around training.");
+  }else if(key==="stress_avg"){
+    if(good||pct<3)out.bullets.push("Daytime stress load is in a healthy range — recovery isn't being eaten into, so training can do its job.");
+    else out.bullets.push("Daytime stress is running high, competing with training for the same recovery resources. On high-stress stretches, hold intensity down and lean on easy aerobic work — it still builds fitness without adding to the load.");
+  }else if(key==="spo2_avg"){
+    out.bullets.push(cur!=null&&cur<93?"Overnight SpO₂ is on the low side. If it's not altitude and it persists with poor sleep, it can quietly blunt recovery — worth mentioning to a doctor if it continues.":"SpO₂ looks normal — no recovery concern from oxygenation.");
+  }else if(key==="respiration_avg"){
+    out.bullets.push(!good&&pct>=5?"Resting respiratory rate is up on your norm, which can precede feeling unwell by a day. Keep intensity easy and watch how you feel.":"Resting respiratory rate is around your normal — nothing flagged here.");
+  }
+  if(band&&(key==="hrv_ms"||key==="rhr"))out.bullets.push("Today's overall recovery reads "+band+" — this metric is a big part of why.");
+  return out;
+}
+function openMetricDetail(key){
+  var info=METRIC_INFO[key];if(!info)return;
+  var asc=_healthAsc();
+  var last7=asc.slice(-7);
+  var cur=null;for(var i=asc.length-1;i>=0;i--){if(_num(asc[i][key])!=null){cur=_num(asc[i][key]);break;}}
+  var t=healthTrend(key,info.higherBetter);
+  var an=metricSoWhat(key,info);
+  document.getElementById("metric-title").textContent=info.label;
+  var html="";
+  // Hero value + verdict
+  html+='<div class="card" style="text-align:center;padding:20px 16px">'+
+    '<div style="font-size:42px;font-weight:800;color:'+info.color+';font-family:var(--mono);line-height:1">'+(cur!=null?cur:"—")+(cur!=null&&info.unit?'<span style="font-size:15px;color:var(--t3);font-weight:600"> '+info.unit+'</span>':"")+'</div>'+
+    (t?'<div style="font-size:13px;color:'+an.vc+';font-weight:700;margin-top:8px">'+an.verdict+' · 7-day avg '+(Math.round(t.recent*10)/10)+' vs '+(Math.round(t.base*10)/10)+' baseline</div>':'<div style="font-size:13px;color:var(--t3);margin-top:8px">'+an.verdict+'</div>')+
+  '</div>';
+  // Chart
+  html+='<div class="card"><div class="card-h" style="margin-bottom:8px">Last 14 days</div>'+bigMetricChart(key,info.color)+'</div>';
+  // 7-day values
+  var rows=last7.map(function(d){
+    var v=_num(d[key]);
+    var delta=(t&&v!=null)?(v-t.base):null;
+    var dstr=(delta!=null)?(delta>=0?"+":"")+(Math.round(delta*10)/10):"";
+    var dgood=(delta!=null)?(info.higherBetter?delta>=0:delta<=0):true;
+    var dt=new Date(d.date+"T00:00:00");
+    return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)">'+
+      '<span style="font-size:12px;color:var(--t3);min-width:64px">'+dt.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"short"})+'</span>'+
+      '<span style="font-size:14px;font-weight:700;color:var(--t1);font-family:var(--mono);min-width:56px">'+(v!=null?v:"—")+'</span>'+
+      (dstr?'<span style="font-size:12px;color:'+(dgood?"#22c55e":"#f59e0b")+';margin-left:auto">'+dstr+' vs base</span>':"")+
+    '</div>';
+  }).join("");
+  html+='<div class="card"><div class="card-h" style="margin-bottom:4px">Daily values</div>'+rows+'</div>';
+  // What it is
+  html+='<div class="card"><div class="card-h" style="margin-bottom:8px">What this is</div><div style="font-size:13px;color:var(--t2);line-height:1.6">'+esc(info.what)+'</div></div>';
+  // So what for training
+  html+='<div class="card" style="border-color:rgba(0,200,150,.18);background:linear-gradient(160deg,#111114,#141418)">'+
+    '<div class="card-h" style="color:var(--brand);margin-bottom:10px">So what for your training</div>'+
+    an.bullets.map(function(b){return '<div style="display:flex;gap:9px;align-items:flex-start;padding:7px 0"><span style="color:var(--brand);flex-shrink:0">•</span><span style="font-size:13px;color:var(--t1);line-height:1.6">'+esc(b)+'</span></div>';}).join("")+
+    '<div style="font-size:12px;color:var(--t3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">'+esc(info.training)+'</div>'+
+  '</div>';
+  // Ask coach deep-dive
+  html+='<button onclick="askCoachAbout(\''+key+'\')" class="btn" style="background:var(--bg3);color:var(--t1);margin-top:4px">Ask Coach Claudio about this</button>';
+  document.getElementById("metric-body").innerHTML=html;
+  document.getElementById("metric-body").scrollTop=0;
+  document.getElementById("metric-overlay").style.display="flex";
+  document.body.style.overflow="hidden";
+}
+function closeMetricDetail(){
+  document.getElementById("metric-overlay").style.display="none";
+  document.body.style.overflow="";
+}
+function askCoachAbout(key){
+  var info=METRIC_INFO[key];if(!info)return;
+  closeMetricDetail();
+  var navBtns=document.querySelectorAll(".nav button");
+  showPage("coach",navBtns[navBtns.length-1]);
+  var inp=document.getElementById("coach-input");
+  if(inp){inp.value="Look at my "+info.label+" over the last week and tell me what it means for my training right now — the 'so what'. Be specific about whether to push or hold back.";}
+  sendCoachMessage();
 }
 function renderHealth(){
   var el=document.getElementById("health-body");if(!el)return;
@@ -2115,12 +2283,12 @@ function renderHealth(){
   var t=rec?rec.today:health[health.length-1];
   var hrvT=healthTrend("hrv_ms",true),rhrT=healthTrend("rhr",false);
   html+='<div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:14px">'+
-    metricTile("HRV",_num(t.hrv_ms),"ms",hrvT?(hrvT.rising?"▲":"▼")+" "+Math.abs(hrvT.pct)+"% vs base":(t.hrv_status||""),hrvT?(hrvT.good?"#22c55e":"#f59e0b"):"var(--t1)")+
-    metricTile("Resting HR",_num(t.rhr),"bpm",rhrT?(rhrT.rising?"▲":"▼")+" vs base":"",rhrT?(rhrT.good?"#22c55e":"#f59e0b"):"var(--t1)")+
-    metricTile("Sleep",_num(t.sleep_score),"/100",t.sleep_h?t.sleep_h+"h":"","var(--blue)")+
-    metricTile("Body Battery",_num(t.body_battery_high),"peak",_num(t.body_battery_low)!=null?"low "+t.body_battery_low:"","var(--green)")+
-    metricTile("Stress",_num(t.stress_avg),"/100","avg today",_num(t.stress_avg)!=null?(t.stress_avg<=40?"#22c55e":t.stress_avg<=60?"#f59e0b":"#ef4444"):"var(--t1)")+
-    metricTile("SpO₂",_num(t.spo2_avg),"%","","var(--t1)")+
+    metricTile("hrv_ms","HRV",_num(t.hrv_ms),"ms",hrvT?(hrvT.rising?"▲":"▼")+" "+Math.abs(hrvT.pct)+"% vs base":(t.hrv_status||""),hrvT?(hrvT.good?"#22c55e":"#f59e0b"):"var(--t1)")+
+    metricTile("rhr","Resting HR",_num(t.rhr),"bpm",rhrT?(rhrT.rising?"▲":"▼")+" vs base":"",rhrT?(rhrT.good?"#22c55e":"#f59e0b"):"var(--t1)")+
+    metricTile("sleep_score","Sleep",_num(t.sleep_score),"/100",t.sleep_h?t.sleep_h+"h":"","var(--blue)")+
+    metricTile("body_battery_high","Body Battery",_num(t.body_battery_high),"peak",_num(t.body_battery_low)!=null?"low "+t.body_battery_low:"","var(--green)")+
+    metricTile("stress_avg","Stress",_num(t.stress_avg),"/100","avg today",_num(t.stress_avg)!=null?(t.stress_avg<=40?"#22c55e":t.stress_avg<=60?"#f59e0b":"#ef4444"):"var(--t1)")+
+    metricTile("spo2_avg","SpO₂",_num(t.spo2_avg),"%","","var(--t1)")+
   '</div>';
   // ── Trends (sparklines) ──
   var sparks=[["HRV (ms)","hrv_ms"],["Resting HR (bpm)","rhr"],["Sleep score","sleep_score"],["Stress","stress_avg"]];
