@@ -482,14 +482,6 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="chart-sm"><canvas id="loadChart"></canvas></div>
     </div>
 
-    <div class="card" id="sleep-card">
-      <div class="card-h" style="display:flex;align-items:center;justify-content:space-between;margin-bottom:12px">
-        <span>Sleep Score · 7 days</span>
-        <span id="sleep-avg" style="font-size:12px;color:var(--t3)"></span>
-      </div>
-      <div class="chart-sm"><canvas id="sleepChart"></canvas></div>
-      <div id="sleep-detail" style="font-size:11px;color:var(--t3);margin-top:6px;text-align:center"></div>
-    </div>
   </div>
 
   <!-- PLAN -->
@@ -536,38 +528,9 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div style="font-size:17px;font-weight:800;letter-spacing:-.3px">Health &amp; Recovery</div>
       <button id="health-sync" onclick="syncGarmin()" style="font-size:12px;font-weight:600;background:rgba(0,200,150,.12);color:#00c896;border:1px solid rgba(0,200,150,.3);border-radius:20px;padding:5px 13px;cursor:pointer;white-space:nowrap">↻ Sync</button>
     </div>
-    <div style="font-size:13px;color:var(--t2);margin-bottom:14px">Your recovery, HRV, sleep and stress from Garmin.</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:6px">Your recovery, HRV, sleep and stress from Garmin.</div>
+    <div id="health-sync-status" style="font-size:12px;color:var(--t3);min-height:18px;margin-bottom:10px"></div>
     <div id="health-body"></div>
-  </div>
-
-  <!-- AVAILABILITY -->
-  <div class="page" id="page-avail">
-    <div style="font-size:17px;font-weight:800;letter-spacing:-.3px;margin-bottom:4px">Weekly Schedule</div>
-    <div style="font-size:13px;color:var(--t2);margin-bottom:16px">Set which days you can train and for how long.</div>
-    <div class="av-grid" id="av-grid"></div>
-    <div style="background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px">
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
-        <div>
-          <div style="font-size:14px;font-weight:700">Sessions per week</div>
-          <div style="font-size:12px;color:var(--t3);margin-top:2px">Caps the plan even when more days are free</div>
-        </div>
-        <div style="display:flex;align-items:center;gap:10px">
-          <button onclick="adjMaxSessions(-1)" aria-label="Fewer sessions" style="width:40px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t1);font-size:18px;cursor:pointer">−</button>
-          <span id="max-sess-val" style="font-family:var(--mono);font-weight:700;font-size:15px;min-width:36px;text-align:center">Any</span>
-          <button onclick="adjMaxSessions(1)" aria-label="More sessions" style="width:40px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t1);font-size:18px;cursor:pointer">+</button>
-        </div>
-      </div>
-      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
-        <div>
-          <div style="font-size:14px;font-weight:700">Rest between sessions</div>
-          <div style="font-size:12px;color:var(--t3);margin-top:2px">Prefer rest days between training days</div>
-        </div>
-        <button id="spread-btn" onclick="toggleSpread()" style="min-width:64px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t2);font-size:14px;font-weight:700;cursor:pointer">Off</button>
-      </div>
-    </div>
-    <textarea id="av-notes" placeholder="Notes for Coach Claudio (e.g. travelling Thu, long ride Sat with friends)…"></textarea>
-    <button class="btn" onclick="saveAvail()">Save to Coach Claudio</button>
-    <div class="status" id="av-status"></div>
   </div>
 
   <!-- COACH -->
@@ -603,8 +566,6 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <svg viewBox="0 0 24 24" fill="none"><path d="M4 18l4-6 4 3 4-7 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Activity</button>
   <button onclick="showPage('health',this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-5 3 10 2.5-7 1.5 2h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Health</button>
-  <button onclick="showPage('avail',this)">
-    <svg viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="currentColor" stroke-width="1.8"/><path d="M12 7v5l3 2" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Schedule</button>
   <button onclick="showPage('coach',this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M20 11.5a7.5 7.5 0 01-10.5 6.9L4 20l1.6-5A7.5 7.5 0 1120 11.5z" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></svg>Coach</button>
 </div>
@@ -622,6 +583,12 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <input id="in-anth" type="password" placeholder="sk-ant-…">
   </div>
   <button class="btn" onclick="saveKeys()">Save</button>
+
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+    <label style="font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px">Weekly schedule</label>
+    <div style="font-size:13px;color:var(--t3);margin-bottom:10px">Which days you can train, session cap and rest preferences.</div>
+    <button class="btn" style="background:var(--bg3);color:var(--t1)" onclick="openSchedule()">Open schedule</button>
+  </div>
 
   <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
     <label style="font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px">Daily notification</label>
@@ -681,6 +648,41 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   </div>
 </div>
 
+<!-- Schedule overlay (opened from Settings) -->
+<div id="schedule-overlay" style="display:none;position:fixed;inset:0;z-index:210;background:var(--bg);flex-direction:column">
+  <div style="padding:calc(14px + env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;gap:12px;border-bottom:1px solid var(--line);flex-shrink:0">
+    <button onclick="closeSchedule()" style="background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:7px 14px;font-size:13px;font-weight:600;color:var(--t1);cursor:pointer">← Back</button>
+    <span style="font-size:16px;font-weight:700;color:var(--t1)">Weekly Schedule</span>
+  </div>
+  <div style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:18px 16px calc(30px + env(safe-area-inset-bottom))">
+    <div style="font-size:13px;color:var(--t2);margin-bottom:16px">Set which days you can train and for how long.</div>
+    <div class="av-grid" id="av-grid"></div>
+    <div style="background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:16px;margin-top:14px">
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px">
+        <div>
+          <div style="font-size:14px;font-weight:700">Sessions per week</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:2px">Caps the plan even when more days are free</div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px">
+          <button onclick="adjMaxSessions(-1)" aria-label="Fewer sessions" style="width:40px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t1);font-size:18px;cursor:pointer">−</button>
+          <span id="max-sess-val" style="font-family:var(--mono);font-weight:700;font-size:15px;min-width:36px;text-align:center">Any</span>
+          <button onclick="adjMaxSessions(1)" aria-label="More sessions" style="width:40px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t1);font-size:18px;cursor:pointer">+</button>
+        </div>
+      </div>
+      <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:14px;padding-top:14px;border-top:1px solid var(--line)">
+        <div>
+          <div style="font-size:14px;font-weight:700">Rest between sessions</div>
+          <div style="font-size:12px;color:var(--t3);margin-top:2px">Prefer rest days between training days</div>
+        </div>
+        <button id="spread-btn" onclick="toggleSpread()" style="min-width:64px;height:40px;border-radius:11px;background:var(--bg3);border:1px solid var(--line);color:var(--t2);font-size:14px;font-weight:700;cursor:pointer">Off</button>
+      </div>
+    </div>
+    <textarea id="av-notes" placeholder="Notes for Coach Claudio (e.g. travelling Thu, long ride Sat with friends)…" style="margin-top:14px"></textarea>
+    <button class="btn" onclick="saveAvail()">Save to Coach Claudio</button>
+    <div class="status" id="av-status"></div>
+  </div>
+</div>
+
 <!-- Onboarding overlay -->
 <div id="onboarding" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column">
   <div style="padding:calc(18px + env(safe-area-inset-top)) 18px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px">
@@ -696,7 +698,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-11";
+const BUILD="20260706-12";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -715,6 +717,18 @@ DAYS.forEach(d=>avState[d]={available:false,hours:(d==="Saturday"||d==="Sunday")
 // ── HELPERS ───────────────────────────────────────────────────
 function getToken(){return localStorage.getItem("gh_token")||"";}
 function toggleSetup(){document.getElementById("drawer").classList.toggle("open");document.getElementById("drawer-bg").classList.toggle("open");}
+function openSchedule(){
+  // Close the settings drawer, then show the schedule as a full-screen overlay.
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("drawer-bg").classList.remove("open");
+  renderAvail();renderPrefs();
+  document.getElementById("schedule-overlay").style.display="flex";
+  document.body.style.overflow="hidden";
+}
+function closeSchedule(){
+  document.getElementById("schedule-overlay").style.display="none";
+  document.body.style.overflow="";
+}
 function saveKeys(){
   var gh=document.getElementById("in-gh").value.trim(), an=document.getElementById("in-anth").value.trim();
   if(gh)localStorage.setItem("gh_token",gh);
@@ -1183,6 +1197,8 @@ function drawLoad(){
   mk("loadChart",{type:"bar",data:{labels:keys.map(k=>new Date(k).toLocaleDateString("en-GB",{day:"numeric",month:"short"})),datasets:[{data:keys.map(k=>Math.round(W[k])),backgroundColor:"rgba(59,130,246,.55)",borderRadius:5}]},options:CD});
 }
 function drawSleep(sleepData){
+  // Sleep now lives on the Health tab; no-op if the Home card isn't present.
+  if(!document.getElementById("sleepChart"))return;
   var card=document.getElementById("sleep-card");
   var avgEl=document.getElementById("sleep-avg"),detEl=document.getElementById("sleep-detail");
   var cutoff=new Date();cutoff.setDate(cutoff.getDate()-7);
@@ -2459,12 +2475,8 @@ async function generatePlan(){
   var avail=await fetchJSON("availability.json");
   var anyDays=avail&&avail.days&&Object.values(avail.days).some(function(d){return d&&d.available;});
   if(!anyDays){
-    var go=confirm("You haven't set your availability for next week. Set it in the Schedule tab first?\n\nTap OK to go to Schedule, or Cancel to generate anyway.");
-    if(go){
-      var avBtn=document.querySelector(".nav button[onclick*=\"'avail'\"]");
-      if(avBtn)showPage("avail",avBtn);
-      return;
-    }
+    var go=confirm("You haven't set your availability for next week. Set it in your Schedule first?\n\nTap OK to open Schedule, or Cancel to generate anyway.");
+    if(go){openSchedule();return;}
   }
   btn.disabled=true;btn.classList.add("spinning");label.textContent="Triggering…";
   var ok=await triggerGenerate();
@@ -2759,7 +2771,7 @@ async function saveAvail(){
   if(!token){showStatus("Add your GitHub token first (gear icon).","err");return;}
   showStatus("Saving…","");
   var ok=await putAvailability();
-  if(ok){var ds=DAYS.filter(d=>avState[d].available);showStatus("Saved · "+ds.join(", ")+". Mid-week changes? Ask Coach below.","ok");}
+  if(ok){var ds=DAYS.filter(d=>avState[d].available);showStatus("Saved · "+ds.join(", ")+". Mid-week changes? Ask Coach anytime.","ok");setTimeout(closeSchedule,900);}
   else showStatus("Error: save failed — check your token.","err");
 }
 function showStatus(m,t){var el=document.getElementById("av-status");el.textContent=m;el.className="status "+(t||"");}
@@ -3491,42 +3503,52 @@ async function triggerGenerate(opts){
     return r.status===204;
   }catch(e){return false;}
 }
+// Shared sync UI — updates the status + button on BOTH the Activity and Health
+// tabs, so feedback shows wherever the user tapped Sync (before, tapping Sync on
+// the Health tab updated only the hidden Activity elements → looked frozen).
+var _syncing=false;
+function _mmss(s){var m=Math.floor(s/60),x=Math.round(s%60);return m+":"+(x<10?"0":"")+x;}
+function setSyncUI(text,busy){
+  ["sync-status","health-sync-status"].forEach(function(id){var el=document.getElementById(id);if(el)el.textContent=text||"";});
+  ["sync-btn","health-sync"].forEach(function(id){var b=document.getElementById(id);if(b){b.disabled=!!busy;b.style.opacity=busy?"0.6":"1";b.textContent=busy?"⟳ Syncing…":"↻ Sync";}});
+}
 async function syncGarmin(){
+  if(_syncing)return;
   var token=getToken();
-  if(!token){document.getElementById("sync-status").textContent="Add your GitHub token first (gear icon).";return;}
-  var btn=document.getElementById("sync-btn");
-  btn.textContent="Syncing…";btn.disabled=true;
-  document.getElementById("sync-status").textContent="Triggering Garmin sync…";
+  if(!token){setSyncUI("Add your GitHub token first (gear icon).",false);return;}
+  _syncing=true;setSyncUI("Starting Garmin sync…",true);
   try{
     var r=await fetch("https://api.github.com/repos/"+REPO+"/actions/workflows/sync_activities.yml/dispatches",
       {method:"POST",headers:{Authorization:"Bearer "+token,Accept:"application/vnd.github+json","Content-Type":"application/json"},
        body:JSON.stringify({ref:"main"})});
-    if(r.status!==204){document.getElementById("sync-status").textContent="Failed to trigger sync ("+r.status+").";btn.textContent="↻ Sync Garmin";btn.disabled=false;return;}
-  }catch(e){document.getElementById("sync-status").textContent="Network error: "+e.message;btn.textContent="↻ Sync Garmin";btn.disabled=false;return;}
-  document.getElementById("sync-status").textContent="Syncing with Garmin — usually takes ~60s…";
+    if(r.status!==204){_syncing=false;setSyncUI("Couldn't start sync ("+r.status+"). Check your token has 'workflow' scope.",false);return;}
+  }catch(e){_syncing=false;setSyncUI("Network error: "+e.message,false);return;}
   var oldSha=null;
-  try{var meta=await(await fetch(API+"/workouts.json",{headers:{Authorization:"Bearer "+token}})).json();oldSha=meta.sha;}catch(e){}
-  var tries=0;
+  try{var meta0=await(await fetch(API+"/workouts.json",{headers:{Authorization:"Bearer "+token}})).json();oldSha=meta0.sha;}catch(e){}
+  var t0=Date.now();
+  // Live elapsed counter so it's obviously working (and shows how long it's taken).
+  var tick=setInterval(function(){setSyncUI("Syncing with Garmin… "+_mmss((Date.now()-t0)/1000)+" — pulling activities & recovery (usually 40–90s)",true);},1000);
+  var tries=0,MAX=48; // poll every 5s for up to ~4 minutes
   var poll=setInterval(async function(){
     tries++;
-    if(tries>18){
-      clearInterval(poll);
-      btn.textContent="↻ Sync Garmin";btn.disabled=false;
-      document.getElementById("sync-status").textContent="Sync timed out — check GitHub Actions for details.";
-      return;
-    }
+    var done=false;
     try{
       var meta=await(await fetch(API+"/workouts.json",{headers:{Authorization:"Bearer "+token}})).json();
-      if(meta.sha&&meta.sha!==oldSha){
-        clearInterval(poll);
+      if(meta&&meta.sha&&meta.sha!==oldSha){
+        done=true;
         workouts=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
         var _fh=await fetchJSON("health.json");if(Array.isArray(_fh))health=_fh;
         var _fs=await fetchJSON("sleep.json");if(Array.isArray(_fs))sleep=_fs;
         renderLog();renderHome();renderHealth();
-        btn.textContent="↻ Sync Garmin";btn.disabled=false;
-        document.getElementById("sync-status").textContent="Synced — "+workouts.length+" activities loaded.";
+        clearInterval(tick);clearInterval(poll);_syncing=false;
+        setSyncUI("✓ Synced in "+_mmss((Date.now()-t0)/1000)+" — "+workouts.length+" activities, recovery updated.",false);
       }
     }catch(e){}
+    if(done)return;
+    if(tries>=MAX){
+      clearInterval(tick);clearInterval(poll);_syncing=false;
+      setSyncUI("Still running on Garmin's side — it can take a few minutes on a slow run. Tap Sync again shortly to pick up the result.",false);
+    }
   },5000);
 }
 function updateGenLabel(){
