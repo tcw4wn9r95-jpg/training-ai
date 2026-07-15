@@ -454,7 +454,7 @@
     "hrv_ms": 45,
     "hrv_status": "BALANCED",
     "rhr": 57.0,
-    "stress_avg": 13,
+    "stress_avg": 30,
     "body_battery_high": 81,
     "body_battery_low": 5,
     "respiration_avg": 14.0,
