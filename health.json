@@ -1,20 +1,5 @@
 [
   {
-    "date": "2026-06-10",
-    "hrv_ms": 57,
-    "hrv_status": "BALANCED",
-    "rhr": 57.0,
-    "stress_avg": 20,
-    "body_battery_high": 90,
-    "body_battery_low": 5,
-    "respiration_avg": 13.0,
-    "spo2_avg": null,
-    "sleep_score": null,
-    "sleep_h": null,
-    "training_readiness": null,
-    "training_readiness_level": null
-  },
-  {
     "date": "2026-06-11",
     "hrv_ms": 64,
     "hrv_status": "BALANCED",
@@ -264,8 +249,8 @@
     "body_battery_low": 5,
     "respiration_avg": 14.0,
     "spo2_avg": null,
-    "sleep_score": 40,
-    "sleep_h": 3.98,
+    "sleep_score": null,
+    "sleep_h": null,
     "training_readiness": null,
     "training_readiness_level": null
   },
@@ -454,13 +439,28 @@
     "hrv_ms": 37,
     "hrv_status": "BALANCED",
     "rhr": 61.0,
-    "stress_avg": 40,
+    "stress_avg": 41,
     "body_battery_high": 44,
     "body_battery_low": 5,
     "respiration_avg": 14.0,
     "spo2_avg": null,
     "sleep_score": 65,
     "sleep_h": 6.25,
+    "training_readiness": null,
+    "training_readiness_level": null
+  },
+  {
+    "date": "2026-07-15",
+    "hrv_ms": 45,
+    "hrv_status": "BALANCED",
+    "rhr": 57.0,
+    "stress_avg": 13,
+    "body_battery_high": 81,
+    "body_battery_low": 5,
+    "respiration_avg": 14.0,
+    "spo2_avg": null,
+    "sleep_score": 72,
+    "sleep_h": 6.92,
     "training_readiness": null,
     "training_readiness_level": null
   }
