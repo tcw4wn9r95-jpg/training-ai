@@ -707,7 +707,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-13";
+const BUILD="20260706-14";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -3162,6 +3162,25 @@ async function sendCoachMessage(){
   // and never today's, which is why the coach couldn't see recent activity.
   var byDateAsc=workouts.slice().sort(function(a,b){return String(a.date||"")<String(b.date||"")?-1:String(a.date||"")>String(b.date||"")?1:0;});
   var last5=byDateAsc.slice(-5).map(function(w){return (w.date||"")+": "+(w.type||w.sport||"session")+" "+(w.duration_min?Math.round(w.duration_min)+"min ":"")+(w.distance_km?w.distance_km.toFixed(1)+"km ":"")+(getTSS(w)?Math.round(getTSS(w))+"TSS":"");}).join(" | ");
+  // Per-lap splits so the coach can review a session SEGMENT BY SEGMENT rather
+  // than off the whole-session average (which warmup/cooldown skews). Include
+  // the most recent 2 sessions that carry lap data.
+  var segmentBlock=(function(){
+    var withLaps=byDateAsc.filter(function(w){return w.laps&&w.laps.length>=2;}).slice(-2);
+    if(!withLaps.length)return "";
+    function fmtLap(l,i){
+      var parts=[];
+      if(l.avg_power)parts.push(l.avg_power+"W");
+      if(l.avg_pace_min_km)parts.push(fmtPace(l.avg_pace_min_km*60)+"/km");
+      if(l.avg_hr)parts.push(l.avg_hr+"bpm");
+      var dur=l.dur_s?Math.floor(l.dur_s/60)+":"+("0"+(l.dur_s%60)).slice(-2):"";
+      return "    Lap "+(i+1)+": "+dur+(l.dist_km?" "+l.dist_km+"km":"")+(parts.length?" — "+parts.join(", "):"");
+    }
+    var blocks=withLaps.reverse().map(function(w){
+      return "  "+w.date+" "+(w.sport||"session")+" ("+(w.duration_min||"?")+"min, session avg "+(w.avg_power_watts?w.avg_power_watts+"W":(w.avg_pace_min_km?fmtPace(w.avg_pace_min_km*60)+"/km":(w.avg_hr+"bpm")))+"):\n"+w.laps.map(fmtLap).join("\n");
+    });
+    return "PER-SEGMENT SPLITS (each lap is one segment of the session; the easy laps are warmup/cooldown/recovery, the hard laps are the work reps):\n"+blocks.join("\n")+"\n";
+  })();
   // Explicit "what did Diego do TODAY" so "how was today's session?" is answerable.
   var _todayStr=localDateStr(new Date());
   var _todayActs=workouts.filter(function(w){return w.date===_todayStr;});
@@ -3239,6 +3258,7 @@ async function sendCoachMessage(){
     "• Before EVERY edit_plan call, resolve the target day against the WEEK CALENDAR below — day names decide placement, and a mislabelled day puts the session on the wrong date. Double-check the day/date pair in your reply to Diego too.\n"+
     "• If an edit is rejected, recover in the SAME turn using the guidance in the rejection message; never leave Diego hanging on a silent failure.\n\n"+
     "WORKOUT DESIGN: Build every session like you're handing it to a serious athlete. Warmup and cooldown are non-negotiable. For any session with structured intensity (fartlek, intervals, tempo, sweet-spot, threshold, VO2) ALWAYS use repeat blocks so the Garmin shows each step individually. Every step needs a specific description with zone label + target number — never write 'work' or 'effort'. A world-class coach writes '6×3min threshold @ 5:05/km (Z4), 90s easy jog between' — not 'main set 18min'. Give every session top-level warmup_exercises and cooldown_stretches arrays (each entry {name}) naming the dynamic drills before and static stretches after — the app shows videos for them.\n\n"+
+    "EVALUATING A COMPLETED SESSION — SEGMENT BY SEGMENT (critical): NEVER judge power, pace or HR off the WHOLE-SESSION AVERAGE. Warmup and cooldown drag the average down, so a strong workout looks weak and an easy day can look hard — the average is meaningless for interval sessions. Instead use the PER-SEGMENT SPLITS below: identify the WORK segments (the hard laps — exclude warmup, cooldown and the easy recovery laps) and compare THOSE laps to the planned step targets in the active-week plan JSON. Review rep by rep, e.g. 'your 4×8min threshold reps held 182/185/183/178W against the 169-195W target — first three bang-on, small fade on the last, so pacing was slightly ambitious'. Comment on: did he hit the target zone on the work reps; consistency across reps (fading = went out too hot or under-recovered); and whether the easy/recovery segments were genuinely easy. Factor today's recovery/HRV into how to read it (a fade at low recovery is expected, not a fitness problem). ONLY fall back to the session average when no lap splits exist — and say so explicitly.\n\n"+
     "HOME EQUIPMENT — HARD RESTRICTION: Diego trains strength AT HOME with ONLY dumbbells ("+dumbbellList()+" kg), a TRX, resistance bands and bodyweight. NEVER prescribe gym equipment — no barbells, kettlebells, machines, cables, bench, pull-up bar, boxes or medicine balls. Substitute the closest dumbbell/TRX/band/bodyweight equivalent, and only use dumbbell weights he actually owns. Plan edits containing gym equipment are automatically rejected.\n\n"+
     "SCIENCE-BASED ONLY: every plan and recommendation must be defensible from established exercise science (ACSM/NSCA guidelines, the endurance literature of Seiler/Coggan/Laursen). Progressive overload ≤10%/week, ~80/20 easy/hard distribution, 48h between sessions loading the same muscles, strength work at RIR 2-3 with compound movements that transfer to endurance sport, and no fad or gimmick exercises. If it wouldn't hold up in the literature, it doesn't go in the plan.\n\n"+
     "═══ DIEGO'S CURRENT PICTURE ═══\n"+
@@ -3267,6 +3287,7 @@ async function sendCoachMessage(){
       return "Plan covers week of "+planMon+" (starts in the future). Current week ("+thisMon+") has no sessions. Use generate_plan tool with start_week=0 if Diego wants to start training this week.\n";
     })()+
     calendarLine+"\n"+
+    (segmentBlock?segmentBlock:"")+
     blockLine+"\n"+
     "Current active-week plan JSON: "+JSON.stringify(planJson);
   // Stamp every stored user message with its send date. History persists across

@@ -227,6 +227,44 @@ SPORT_MAP = {
     "boxing_or_mma": "boxing",
 }
 
+# Per-lap splits let the coach review a session SEGMENT BY SEGMENT (comparing the
+# work reps to their targets) instead of judging off the whole-session average,
+# which warmup/cooldown skews. Best-effort; only for recent run/cycle sessions to
+# limit extra Garmin API calls. A missing/failed fetch just omits "laps".
+_laps_cutoff_iso = (date.today() - timedelta(days=14)).isoformat()
+
+def _fetch_laps(activity):
+    aid = activity.get("activityId")
+    if not aid:
+        return None
+    fn = getattr(client, "get_activity_splits", None)
+    if not callable(fn):
+        return None
+    try:
+        raw = fn(aid)
+    except Exception:
+        return None
+    laps = []
+    for lap in (raw or {}).get("lapDTOs", []) or []:
+        dur = lap.get("duration") or 0
+        dist = lap.get("distance") or 0
+        spd = lap.get("averageSpeed") or 0  # m/s
+        pw = lap.get("averagePower")
+        hr = lap.get("averageHR")
+        pace = round((1000.0 / spd) / 60, 2) if (spd and dist and dist > 0) else None
+        laps.append({
+            "dur_s": round(dur),
+            "dist_km": round(dist / 1000, 2) if dist else 0,
+            "avg_hr": int(hr) if hr else None,
+            "max_hr": int(lap.get("maxHR")) if lap.get("maxHR") else None,
+            "avg_power": round(pw) if pw else None,
+            "avg_pace_min_km": pace,
+        })
+    # Skip trivial single-lap efforts (no segmentation to review) and cap size.
+    if len(laps) < 2:
+        return None
+    return laps[:40]
+
 workouts = []
 for a in activities:
     sport_raw = a.get("activityType", {}).get("typeKey", "unknown")
@@ -236,18 +274,24 @@ for a in activities:
     avg_hr = a.get("averageHR", 0)
     avg_power = a.get("avgPower", 0) or 0
     avg_pace = round(duration_min / distance_km, 2) if sport == "running" and distance_km > 0 else None
+    w_date = a.get("startTimeLocal", "")[:10]
 
     if avg_power > 20 and "cycl" in sport:
         tss = power_tss(duration_min, avg_power)
     else:
         tss = hr_tss(duration_min, avg_hr)
 
-    workouts.append({
-        "date": a.get("startTimeLocal", "")[:10],
+    w = {
+        "date": w_date,
         "sport": sport, "duration_min": duration_min, "distance_km": distance_km,
         "avg_hr": avg_hr, "max_hr": a.get("maxHR", 0), "avg_pace_min_km": avg_pace,
         "avg_power_watts": avg_power, "calories": a.get("calories", 0), "tss": tss,
-    })
+    }
+    if (sport == "running" or "cycl" in sport) and w_date >= _laps_cutoff_iso:
+        laps = _fetch_laps(a)
+        if laps:
+            w["laps"] = laps
+    workouts.append(w)
 
 with open("workouts.json", "w") as f:
     json.dump(workouts, f, indent=2)
