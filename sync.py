@@ -756,7 +756,10 @@ TARGET RULES (critical — match these precisely):
 - cycling_indoor: target_type="power", target_low/target_high in WATTS.
 - cycling_outdoor: target_type="heart_rate", target_low/target_high in BPM.
 - strength: no targets; put exercises in step "description" and a full list in top-level "notes".
-  Also add an "exercises" array at the top level: each entry has only "name" (exercise name, title-cased).
+  Also add an "exercises" array at the top level: each entry has "name" (title-cased) AND, where relevant,
+  "reps" (integer per set), "weight_kg" (number, a dumbbell Diego owns), "hold_s" (for timed holds like planks),
+  and "side": true if the reps are per side/leg/arm. The app shows these next to each exercise video so Diego
+  knows exactly how many reps and what weight without reading the notes. e.g. {{"name":"Goblet Squat","reps":12,"weight_kg":16}}.
   Do NOT include youtube_id — the app handles video lookup from a curated library.
 - EVERY session (all sports) must ALSO have top-level "warmup_exercises" and "cooldown_stretches" arrays:
   the specific dynamic warm-up drills to do BEFORE the session and static stretches to do AFTER
@@ -830,11 +833,11 @@ TARGET RULES (critical — match these precisely):
     "focus": "Strength endurance for legs and core",
     "notes": "3 rounds: 12x goblet squat 20kg, 10x RDL 20kg, 15x TRX split squat/leg, 20x band glute bridge, 45s plank. 60s rest between rounds.",
     "exercises": [
-      {{"name": "Goblet Squat"}},
-      {{"name": "Romanian Deadlift"}},
-      {{"name": "TRX Split Squat"}},
-      {{"name": "Banded Glute Bridge"}},
-      {{"name": "Plank"}}
+      {{"name": "Goblet Squat", "reps": 12, "weight_kg": 20}},
+      {{"name": "Romanian Deadlift", "reps": 10, "weight_kg": 20}},
+      {{"name": "TRX Split Squat", "reps": 15, "side": true}},
+      {{"name": "Banded Glute Bridge", "reps": 20}},
+      {{"name": "Plank", "hold_s": 45}}
     ],
     "warmup_exercises": [
       {{"name": "Leg Swings"}},

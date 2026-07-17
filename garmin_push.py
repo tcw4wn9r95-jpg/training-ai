@@ -9,13 +9,17 @@ releases and caused "ExecutableStep() takes no arguments" on the runner.
 
 from datetime import date, timedelta
 
-# Garmin sport type IDs
+# Garmin WORKOUT sportType IDs (these are the workout-service IDs, NOT the
+# activity typeKeys). Getting these wrong mislabels the workout on the watch —
+# strength was uploaded as sportTypeId 4, which Garmin treats as SWIMMING, so
+# strength sessions showed up as swims. Strength training is sportTypeId 5
+# with key "strength_training".
 SPORT_IDS = {
     "running": (1, "running"),
     "cycling": (2, "cycling"),
     "cycling_indoor": (2, "cycling"),
     "cycling_outdoor": (2, "cycling"),
-    "strength": (4, "fitness_equipment"),
+    "strength": (5, "strength_training"),
 }
 
 # Step type IDs

@@ -707,7 +707,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-14";
+const BUILD="20260706-15";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1538,10 +1538,43 @@ function resolveVideoId(name){
   }
   return null;
 }
+// Parse the per-exercise dose (reps / weight / hold time) out of a strength
+// session's free-text notes, e.g. "3 rounds: 12x goblet squat 20kg, 10x RDL
+// 20kg, 15x TRX split squat/leg, 45s plank." so each video can show how many
+// reps and what weight to use.
+function parseNoteDoses(notes){
+  if(!notes)return {rounds:null,items:[]};
+  var rounds=null;var rm=notes.match(/(\d+)\s*rounds?/i);if(rm)rounds=+rm[1];
+  var body=notes.replace(/^[\s\S]*?rounds?:\s*/i,"");                 // drop "3 rounds:" prefix
+  body=body.replace(/\.\s*\d[\d\s\-–]*s(?:ec)?\s*rest[\s\S]*$/i,"")   // drop "60s rest between rounds"
+           .replace(/\brest between[\s\S]*$/i,"");
+  var segs=body.split(/,|→|;/).map(function(x){return x.trim();}).filter(Boolean);
+  var items=segs.map(function(seg){
+    var reps=null,weight=null,time=null,side=null;
+    var rmatch=seg.match(/(\d+)\s*x\b/i);if(rmatch)reps=+rmatch[1];
+    var wmatch=seg.match(/(\d+(?:\.\d+)?)\s*kg/i);if(wmatch)weight=wmatch[1];
+    var tmatch=seg.match(/(\d+)\s*s(?:ec|econds)?\b/i);if(tmatch&&!rmatch)time=+tmatch[1];
+    var smatch=seg.match(/(?:per\s+|\/)(leg|side|arm)/i);if(smatch)side=smatch[1].toLowerCase();
+    var name=seg.replace(/\d+\s*x\b/i,"").replace(/\d+(?:\.\d+)?\s*kg/i,"")
+                .replace(/(?:per\s+|\/)(leg|side|arm)s?/i,"").replace(/\d+\s*s(?:ec)?\b/i,"")
+                .replace(/[()].*$/,"").replace(/\s+/g," ").trim();
+    return {name:name,reps:reps,weight:weight,time:time,side:side};
+  }).filter(function(it){return it.reps!=null||it.time!=null||it.weight!=null;});
+  return {rounds:rounds,items:items};
+}
+function doseString(rounds,it){
+  if(!it)return "";
+  var sideStr=it.side?(it.side===true?"/side":"/"+it.side):"";
+  var parts=[];
+  if(it.reps!=null)parts.push((rounds?rounds+"×":"")+it.reps+" rep"+(it.reps===1?"":"s")+sideStr);
+  else if(it.time!=null)parts.push((rounds?rounds+"× ":"")+it.time+"s hold"+sideStr);
+  if(it.weight!=null)parts.push(it.weight+"kg");
+  return parts.join(" · ");
+}
 function parseExerciseList(s){
   var base=[];
   if(s.exercises&&s.exercises.length){
-    base=s.exercises;
+    base=s.exercises.map(function(e){return {name:e.name,youtube_id:e.youtube_id,reps:e.reps,weight_kg:e.weight_kg,hold_s:e.hold_s,side:e.side};});
   } else {
     var raw=s.notes||"",seen={};
     (raw.match(/\d+x\s+[^,\.0-9]+/g)||[]).forEach(function(m){
@@ -1554,12 +1587,35 @@ function parseExerciseList(s){
       if(name.length>2&&!seen[name]){seen[name]=1;base.push({name:name});}
     });
   }
-  // Enrich with verified video IDs from static lookup
-  return base.map(function(ex){
-    if(ex.youtube_id)return ex;
-    var vid=resolveVideoId(ex.name);
-    return vid?{name:ex.name,youtube_id:vid}:ex;
+  // Enrich with verified video IDs from the static lookup.
+  var enriched=base.map(function(ex){
+    if(!ex.youtube_id){var vid=resolveVideoId(ex.name);if(vid)ex.youtube_id=vid;}
+    return ex;
   });
+  // Prefer structured reps/weight if the plan provided them per exercise.
+  var parsed=parseNoteDoses(s.notes||"");
+  enriched.forEach(function(ex){
+    if(ex.reps!=null||ex.weight_kg!=null||ex.hold_s!=null){
+      var d=doseString(parsed.rounds,{reps:ex.reps,weight:ex.weight_kg,time:ex.hold_s,side:ex.side});
+      if(d)ex.dose=d;
+    }
+  });
+  // Otherwise attach reps/weight parsed from the notes. When the counts line up
+  // we match by position (the plan lists exercises in the same order as the
+  // notes); otherwise fall back to a fuzzy name match.
+  if(parsed.items.length){
+    if(parsed.items.length===enriched.length){
+      enriched.forEach(function(ex,i){if(ex.dose)return;var d=doseString(parsed.rounds,parsed.items[i]);if(d)ex.dose=d;});
+    }else{
+      enriched.forEach(function(ex){
+        if(ex.dose)return;
+        var exl=(ex.name||"").toLowerCase();
+        var it=parsed.items.find(function(p){var pl=(p.name||"").toLowerCase();return pl&&(exl.indexOf(pl)>-1||pl.indexOf(exl)>-1);});
+        if(it){var d=doseString(parsed.rounds,it);if(d)ex.dose=d;}
+      });
+    }
+  }
+  return enriched;
 }
 // How-to guides for warm-up drills and cool-down stretches. secs>0 = timed hold
 // (per side when side=true), reps otherwise. Shown when no verified video exists.
@@ -1683,12 +1739,17 @@ function openInYouTubeHTML(id){
 }
 function exerciseItemHTML(ex){
   var guide=resolveGuide(ex.name);
-  var dose=guide?(guide.secs?(guide.secs+"s"+(guide.side?" per side":" hold")):guide.reps):"";
+  var dose=ex.dose||(guide?(guide.secs?(guide.secs+"s"+(guide.side?" per side":" hold")):guide.reps):"");
+  // A parsed dose (reps/weight from the plan) is highlighted so it's easy to
+  // glance the video then know exactly how many reps and what weight to use.
+  var doseHTML=dose?(ex.dose
+    ? '<span style="font-size:12px;font-weight:700;color:var(--brand);background:var(--brand-dim);border-radius:7px;padding:2px 8px;white-space:nowrap">'+esc(dose)+'</span>'
+    : '<span style="font-size:12px;color:var(--t3)">'+esc(dose)+'</span>'):"";
   var nameAttr=' data-exname="'+escAttr(ex.name)+'"';
   if(ex.youtube_id){
     return '<div class="ex-item" style="margin-bottom:22px"'+nameAttr+'>'+
-      '<div style="display:flex;align-items:baseline;gap:8px;margin-bottom:8px"><span style="font-size:14px;font-weight:600;color:var(--t1)">'+esc(ex.name)+'</span>'+
-      (dose?'<span style="font-size:12px;color:var(--t3)">'+esc(dose)+'</span>':"")+
+      '<div style="display:flex;align-items:center;gap:8px;margin-bottom:8px;flex-wrap:wrap"><span style="font-size:14px;font-weight:600;color:var(--t1)">'+esc(ex.name)+'</span>'+
+      doseHTML+
       (guide&&guide.secs?'<button onclick="openTimer('+guide.secs+',\''+esc(ex.name).replace(/'/g,"")+'\')" style="margin-left:auto;background:var(--brand-dim);color:var(--brand);border:none;border-radius:9px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">⏱ '+guide.secs+'s</button>':"")+
       '</div>'+
       videoFacadeHTML(ex.youtube_id)+
@@ -1699,9 +1760,9 @@ function exerciseItemHTML(ex){
   }
   var q=encodeURIComponent("how to "+ex.name+" exercise");
   return '<div class="ex-item" style="padding:13px 14px;background:var(--bg2);border-radius:12px;margin-bottom:10px"'+nameAttr+'>'+
-    '<div style="display:flex;align-items:center;gap:8px">'+
+    '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">'+
       '<span style="font-size:14px;font-weight:600;color:var(--t1)">'+esc(ex.name)+'</span>'+
-      (dose?'<span style="font-size:12px;color:var(--t3)">'+esc(dose)+'</span>':"")+
+      doseHTML+
       '<span style="margin-left:auto;display:flex;gap:8px;align-items:center">'+
       (guide&&guide.secs?'<button onclick="openTimer('+guide.secs+',\''+esc(ex.name).replace(/'/g,"")+'\')" style="background:var(--brand-dim);color:var(--brand);border:none;border-radius:9px;padding:4px 10px;font-size:12px;font-weight:700;cursor:pointer">⏱ '+guide.secs+'s</button>':"")+
       '<a href="https://www.youtube.com/results?search_query='+q+'" target="_blank" rel="noopener" style="font-size:12px;font-weight:600;color:var(--brand);text-decoration:none">▶ Watch</a>'+
@@ -1885,6 +1946,7 @@ function openTimer(secs,label){
   cancelPrep();
   clearInterval(_timer.int);
   unlockAudio(); // opened via a tap — unlock audio now so the ding fires later
+  keepAwake();   // hold the screen on so the countdown & alarm actually run
   _timer.total=secs;_timer.left=secs;_timer.running=false;
   document.getElementById("timer-label").textContent=label||"Timer";
   document.getElementById("timer-btn").textContent="Start";
@@ -1906,7 +1968,7 @@ function cancelPrep(){
   var rb=document.getElementById("timer-ready-btn");if(rb)rb.disabled=false;
 }
 function timerGetReady(){
-  unlockAudio();
+  unlockAudio();keepAwake();
   if(_timer.running||_prep)return;      // ignore while running or already prepping
   clearInterval(_timer.int);
   _timer.left=_timer.total;              // hold starts fresh AFTER the countdown
@@ -1934,6 +1996,7 @@ function showPrep(n){
 function timerToggle(){
   cancelPrep();  // a manual Start/Resume overrides any running countdown
   unlockAudio(); // Start/Resume is a user gesture — keep audio unlocked
+  keepAwake();   // keep the screen on for the duration of the countdown
   var btn=document.getElementById("timer-btn");
   if(_timer.running){
     _timer.left=Math.max(0,(_timer.endAt-Date.now())/1000);
@@ -3838,10 +3901,12 @@ async function init(){
 init();
 
 // ── KEEP SCREEN AWAKE ─────────────────────────────────────────
-// Hold a screen Wake Lock so the phone doesn't auto-lock while following a
-// workout/stretch. The OS releases the lock whenever the app is backgrounded,
-// so we re-acquire on visibilitychange. Some engines only grant it inside a
-// user gesture, so we also retry on the first tap. No-ops where unsupported.
+// Two mechanisms, because the Screen Wake Lock API does NOT work in iOS
+// home-screen (standalone) PWAs — which is how Diego runs the app — so the
+// phone locks mid-timer and the alarm never fires. (1) Wake Lock API for
+// browsers that support it; (2) a NoSleep-style hidden looping video, which is
+// the reliable way to keep an iOS screen awake. Both are (re)engaged on every
+// user gesture and, belt-and-suspenders, when a timer starts.
 var _wakeLock=null;
 async function requestWakeLock(){
   try{
@@ -3853,15 +3918,41 @@ async function requestWakeLock(){
   }catch(e){/* denied / low battery / unsupported — fine */}
   return false;
 }
+var _noSleepVideo=null,_noSleepInt=null;
+function enableNoSleep(){
+  try{
+    if(!_noSleepVideo){
+      var canvas=document.createElement("canvas");canvas.width=2;canvas.height=2;
+      var ctx=canvas.getContext("2d");
+      var v=document.createElement("video");
+      v.setAttribute("playsinline","");v.setAttribute("muted","");v.muted=true;v.loop=true;
+      v.style.cssText="position:fixed;bottom:0;left:0;width:1px;height:1px;opacity:0.008;pointer-events:none;z-index:-1";
+      if(canvas.captureStream){
+        try{v.srcObject=canvas.captureStream(2);}catch(e){}
+        // Keep producing frames so the video counts as actively playing media.
+        _noSleepInt=setInterval(function(){ctx.fillStyle=(Date.now()/500|0)%2?"#000":"#010101";ctx.fillRect(0,0,2,2);},500);
+      }
+      document.body.appendChild(v);
+      _noSleepVideo=v;
+    }
+    var p=_noSleepVideo.play();if(p&&p.catch)p.catch(function(){});
+  }catch(e){}
+}
+// Call from any user gesture to (re)assert both keep-awake mechanisms.
+function keepAwake(){requestWakeLock();enableNoSleep();}
 function initWakeLock(){
   requestWakeLock();
   document.addEventListener("visibilitychange",function(){
-    if(document.visibilityState==="visible"&&!_wakeLock)requestWakeLock();
+    if(document.visibilityState==="visible"){
+      if(!_wakeLock)requestWakeLock();
+      if(_noSleepVideo){var p=_noSleepVideo.play();if(p&&p.catch)p.catch(function(){});}
+    }
   });
-  // First user gesture retry (covers engines that require it).
-  var once=function(){requestWakeLock();document.removeEventListener("click",once);document.removeEventListener("touchend",once);};
-  document.addEventListener("click",once);
-  document.addEventListener("touchend",once);
+  // Engage the video fallback on the first gesture (iOS requires a gesture to
+  // start media), and keep re-asserting the wake lock on subsequent taps.
+  var firstGesture=function(){enableNoSleep();requestWakeLock();document.removeEventListener("touchend",firstGesture);document.removeEventListener("click",firstGesture);};
+  document.addEventListener("touchend",firstGesture);
+  document.addEventListener("click",firstGesture);
 }
 
 // ── PUSH NOTIFICATIONS ────────────────────────────────────────
