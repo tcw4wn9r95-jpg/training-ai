@@ -1,59 +1,5 @@
 [
   {
-    "week_of": "2026-06-01",
-    "generated": "2026-05-31",
-    "phase": "base",
-    "planned_tss": 138,
-    "last_7d_actual_tss": 27,
-    "last_28d_actual_tss": 27,
-    "ftp": 177,
-    "lthr": 173,
-    "sessions": [
-      {
-        "day": "Monday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Foundation Spin",
-        "planned_tss": 22,
-        "focus": "Re-establish Z2 feel on the bike, aerobic base activation"
-      },
-      {
-        "day": "Tuesday",
-        "sport": "running",
-        "name": "Easy Aerobic Run",
-        "planned_tss": 20,
-        "focus": "Single weekly run \u2014 easy aerobic, movement pattern, Z1/Z2"
-      },
-      {
-        "day": "Wednesday",
-        "sport": "cycling_indoor",
-        "name": "Active Recovery Spin",
-        "planned_tss": 14,
-        "focus": "Flush Monday and Tuesday load, active recovery, stay below Z2"
-      },
-      {
-        "day": "Thursday",
-        "sport": "strength",
-        "name": "Lower Body & Core Strength",
-        "planned_tss": 18,
-        "focus": "Leg and core strength foundation \u2014 shoulder protected throughout"
-      },
-      {
-        "day": "Friday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Spin with Cadence Focus",
-        "planned_tss": 22,
-        "focus": "Aerobic base plus neuromuscular cadence drill, end-of-week activation"
-      },
-      {
-        "day": "Saturday",
-        "sport": "cycling_indoor",
-        "name": "Longer Aerobic Endurance Ride",
-        "planned_tss": 42,
-        "focus": "Weekly long aerobic ride \u2014 extend Z2 duration, fat oxidation, aerobic ceiling"
-      }
-    ]
-  },
-  {
     "week_of": "2026-06-08",
     "generated": "2026-06-03",
     "phase": "base",
@@ -525,6 +471,46 @@
         "name": "Aerobic Endurance Ride",
         "planned_tss": 28,
         "focus": "Longest aerobic session of the block \u2014 extends Z2 time to build cardiac stroke volume, fat oxidation capacity, and peripheral vascular adaptation supporting the primary weight-loss goal"
+      }
+    ]
+  },
+  {
+    "week_of": "2026-07-20",
+    "generated": "2026-07-19",
+    "phase": "peak",
+    "planned_tss": 78,
+    "last_7d_actual_tss": 47,
+    "last_28d_actual_tss": 89,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Spin",
+        "planned_tss": 18,
+        "focus": "Aerobic base maintenance \u2014 mitochondrial density and fat oxidation at low metabolic cost"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet-Spot 2\u00d78min",
+        "planned_tss": 28,
+        "focus": "Sweet-spot training at 88-93% FTP \u2014 raises lactate threshold and aerobic capacity simultaneously; highest quality stimulus per minute available at this training age"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Posterior Chain & Anti-Rotation Core",
+        "planned_tss": 14,
+        "focus": "Posterior chain loading (glutes, hamstrings, single-leg stability) and anti-extension/anti-rotation core \u2014 addresses quad dominance contributing to anterior knee pain; no spinal flexion under load, no deep knee flexion"
+      },
+      {
+        "day": "Sunday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Spin \u2014 Week Closer",
+        "planned_tss": 18,
+        "focus": "Active recovery and aerobic consolidation \u2014 promotes recovery from Wednesday's quality session, sustains weekly aerobic volume, reinforces fat-oxidation without adding fatigue ahead of recovery week"
       }
     ]
   }

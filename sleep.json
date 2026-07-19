@@ -1,23 +1,5 @@
 [
   {
-    "date": "2026-07-04",
-    "score": 63,
-    "duration_h": 5.85,
-    "deep_h": 1.12,
-    "light_h": 4.25,
-    "rem_h": 0.48,
-    "awake_h": 1.43
-  },
-  {
-    "date": "2026-07-05",
-    "score": 65,
-    "duration_h": 6.58,
-    "deep_h": 1.48,
-    "light_h": 4.63,
-    "rem_h": 0.47,
-    "awake_h": 1.02
-  },
-  {
     "date": "2026-07-06",
     "score": 43,
     "duration_h": 3.8,
@@ -124,5 +106,23 @@
     "light_h": 4.88,
     "rem_h": 0.82,
     "awake_h": 0.75
+  },
+  {
+    "date": "2026-07-18",
+    "score": 50,
+    "duration_h": 5.38,
+    "deep_h": 1.32,
+    "light_h": 4.07,
+    "rem_h": 0.0,
+    "awake_h": 0.75
+  },
+  {
+    "date": "2026-07-19",
+    "score": 76,
+    "duration_h": 7.6,
+    "deep_h": 1.42,
+    "light_h": 5.13,
+    "rem_h": 1.05,
+    "awake_h": 0.67
   }
 ]
