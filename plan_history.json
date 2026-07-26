@@ -1,59 +1,5 @@
 [
   {
-    "week_of": "2026-06-08",
-    "generated": "2026-06-03",
-    "phase": "base",
-    "planned_tss": 138,
-    "last_7d_actual_tss": 79,
-    "last_28d_actual_tss": 79,
-    "ftp": 177,
-    "lthr": 173,
-    "sessions": [
-      {
-        "day": "Monday",
-        "sport": "cycling_indoor",
-        "name": "Short Aerobic Spin",
-        "planned_tss": 22,
-        "focus": "Aerobic base maintenance, easy Z2 habit session"
-      },
-      {
-        "day": "Tuesday",
-        "sport": "cycling_indoor",
-        "name": "Easy Recovery Spin",
-        "planned_tss": 14,
-        "focus": "Active recovery, blood flow, aerobic system at minimal cost"
-      },
-      {
-        "day": "Wednesday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Spin with Cadence Work",
-        "planned_tss": 24,
-        "focus": "Aerobic base development with neuromuscular cadence stimulus"
-      },
-      {
-        "day": "Thursday",
-        "sport": "running",
-        "name": "Easy Run \u2014 First Run of the Block",
-        "planned_tss": 18,
-        "focus": "Re-introduce running, pure Z1-Z2 aerobic, no pace pressure"
-      },
-      {
-        "day": "Friday",
-        "sport": "strength",
-        "name": "Lower Body & Core \u2014 Shoulder-Modified",
-        "planned_tss": 15,
-        "focus": "Lower body strength endurance and core stability, zero shoulder load"
-      },
-      {
-        "day": "Saturday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Foundation Ride",
-        "planned_tss": 45,
-        "focus": "Longest aerobic stimulus of the week \u2014 sustained Z2 base building"
-      }
-    ]
-  },
-  {
     "week_of": "2026-06-01",
     "generated": "2026-06-03",
     "phase": "base",
@@ -511,6 +457,46 @@
         "name": "Easy Aerobic Spin \u2014 Week Closer",
         "planned_tss": 18,
         "focus": "Active recovery and aerobic consolidation \u2014 promotes recovery from Wednesday's quality session, sustains weekly aerobic volume, reinforces fat-oxidation without adding fatigue ahead of recovery week"
+      }
+    ]
+  },
+  {
+    "week_of": "2026-07-27",
+    "generated": "2026-07-26",
+    "phase": "recovery",
+    "planned_tss": 44,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 89,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Easy Aerobic Spin",
+        "planned_tss": 11,
+        "focus": "Active recovery \u2014 Z1-Z2 aerobic maintenance without accumulating fatigue; blood flow to accelerate tissue repair"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "running",
+        "name": "Easy Run",
+        "planned_tss": 12,
+        "focus": "Maintain running neuromuscular pattern and aerobic base; Z1-Z2 easy pace with zero musculoskeletal stress"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Posterior Chain & Core",
+        "planned_tss": 10,
+        "focus": "Posterior chain (glutes, hamstrings) and core anti-extension \u2014 build muscular support for cycling/running and protect knee by strengthening hip stabilisers; RIR 2-3"
+      },
+      {
+        "day": "Sunday",
+        "sport": "cycling_indoor",
+        "name": "Week-Closing Easy Spin",
+        "planned_tss": 11,
+        "focus": "Closing active recovery \u2014 aerobic maintenance and parasympathetic restoration before new base block begins; note RPE vs Monday as adaptation signal"
       }
     ]
   }

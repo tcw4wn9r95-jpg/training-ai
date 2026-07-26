@@ -1,78 +1,21 @@
 [
   {
     "day": "Monday",
-    "date": "2026-07-20",
+    "date": "2026-07-27",
     "sport": "cycling_indoor",
     "name": "Easy Aerobic Spin",
     "total_duration_secs": 1800,
-    "planned_tss": 18,
-    "focus": "Aerobic base maintenance \u2014 mitochondrial density and fat oxidation at low metabolic cost",
+    "planned_tss": 11,
+    "focus": "Active recovery \u2014 Z1-Z2 aerobic maintenance without accumulating fatigue; blood flow to accelerate tissue repair",
     "warmup_exercises": [
       {
         "name": "Hip Circles"
-      },
-      {
-        "name": "Ankle Rolls"
       },
       {
         "name": "Seated Leg Swings"
-      }
-    ],
-    "cooldown_stretches": [
-      {
-        "name": "Hip Flexor Stretch"
-      },
-      {
-        "name": "Standing Quad Stretch"
-      },
-      {
-        "name": "Seated Glute Stretch"
-      }
-    ],
-    "steps": [
-      {
-        "type": "warmup",
-        "duration_secs": 240,
-        "target_type": "power",
-        "target_low": 70,
-        "target_high": 105,
-        "description": "Z1 easy spin, cadence 80-85 rpm, legs loosening \u2014 no pressure"
-      },
-      {
-        "type": "interval",
-        "duration_secs": 1320,
-        "target_type": "power",
-        "target_low": 106,
-        "target_high": 130,
-        "description": "Z2 steady aerobic \u2014 146-155 bpm, cadence 85-90 rpm. If HR exceeds 158 bpm, reduce watts."
-      },
-      {
-        "type": "cooldown",
-        "duration_secs": 240,
-        "target_type": "power",
-        "target_low": 60,
-        "target_high": 99,
-        "description": "Z1 easy wind-down, let HR drop under 130 bpm before stopping"
-      }
-    ]
-  },
-  {
-    "day": "Wednesday",
-    "date": "2026-07-22",
-    "sport": "cycling_indoor",
-    "name": "Sweet-Spot 2\u00d78min",
-    "total_duration_secs": 1800,
-    "planned_tss": 28,
-    "focus": "Sweet-spot training at 88-93% FTP \u2014 raises lactate threshold and aerobic capacity simultaneously; highest quality stimulus per minute available at this training age",
-    "warmup_exercises": [
-      {
-        "name": "Hip Circles"
       },
       {
         "name": "Bodyweight Squat"
-      },
-      {
-        "name": "Leg Swings"
       }
     ],
     "cooldown_stretches": [
@@ -83,110 +26,166 @@
         "name": "Figure Four Stretch"
       },
       {
-        "name": "Lower Back Cat-Cow"
+        "name": "Lower Back Rotation Stretch"
       }
     ],
     "steps": [
       {
         "type": "warmup",
-        "duration_secs": 300,
+        "duration_secs": 240,
         "target_type": "power",
-        "target_low": 70,
-        "target_high": 140,
-        "description": "Progressive spin: 2 min Z1 (under 106W), then 3 min building to Z2 top-end 130-140W. Cadence 85-90 rpm."
+        "target_low": 60,
+        "target_high": 88,
+        "description": "Z1 easy spin, 60-70 rpm, <88W. Let legs loosen gradually, no surges."
       },
       {
-        "type": "repeat",
-        "repeat_count": 2,
-        "steps": [
-          {
-            "type": "interval",
-            "duration_secs": 480,
-            "target_type": "power",
-            "target_low": 155,
-            "target_high": 165,
-            "description": "Sweet-spot effort \u2014 88-93% FTP, Z3 upper/Z4 lower, target HR 163-175 bpm. Cadence 88-92 rpm. Controlled discomfort \u2014 short sentences still possible."
-          },
-          {
-            "type": "recovery",
-            "duration_secs": 180,
-            "target_type": "power",
-            "target_low": 70,
-            "target_high": 100,
-            "description": "Easy spin recovery \u2014 let HR drop to 145 bpm or below before starting next rep. Z1."
-          }
-        ]
+        "type": "interval",
+        "duration_secs": 1320,
+        "target_type": "power",
+        "target_low": 106,
+        "target_high": 130,
+        "description": "Z2 steady aerobic ride, 80-90 rpm, HR 146-155 bpm. Conversational effort, RPE 4/10. If HR exceeds 158, reduce power."
       },
       {
         "type": "cooldown",
-        "duration_secs": 360,
+        "duration_secs": 240,
         "target_type": "power",
-        "target_low": 60,
-        "target_high": 99,
-        "description": "Z1 progressive wind-down, cadence free, HR back under 130 bpm"
+        "target_low": 50,
+        "target_high": 80,
+        "description": "Easy spin, power dropping to <80W. Let HR fall below 140 before stopping."
+      }
+    ]
+  },
+  {
+    "day": "Wednesday",
+    "date": "2026-07-29",
+    "sport": "running",
+    "name": "Easy Run",
+    "total_duration_secs": 1680,
+    "planned_tss": 12,
+    "focus": "Maintain running neuromuscular pattern and aerobic base; Z1-Z2 easy pace with zero musculoskeletal stress",
+    "warmup_exercises": [
+      {
+        "name": "Leg Swings"
+      },
+      {
+        "name": "Hip Circles"
+      },
+      {
+        "name": "Ankle Circles"
+      },
+      {
+        "name": "Walking Lunge"
+      }
+    ],
+    "cooldown_stretches": [
+      {
+        "name": "Standing Quad Stretch"
+      },
+      {
+        "name": "Hamstring Stretch"
+      },
+      {
+        "name": "Calf Stretch"
+      },
+      {
+        "name": "Hip Flexor Stretch"
+      }
+    ],
+    "steps": [
+      {
+        "type": "warmup",
+        "duration_secs": 240,
+        "target_type": "pace",
+        "target_low": 540,
+        "target_high": 480,
+        "description": "Z1 walk-to-jog, HR below 145 bpm. Gradual transition, legs loose."
+      },
+      {
+        "type": "interval",
+        "duration_secs": 1200,
+        "target_type": "pace",
+        "target_low": 420,
+        "target_high": 375,
+        "description": "Z1-Z2 easy run 6:15-7:00/km, HR 145-160 bpm. Conversational pace. If anterior knee pain occurs, back off to walk-jog immediately."
+      },
+      {
+        "type": "cooldown",
+        "duration_secs": 240,
+        "target_type": "pace",
+        "target_low": 600,
+        "target_high": 540,
+        "description": "Z1 easy walk. Let HR drop below 130 before stopping."
       }
     ]
   },
   {
     "day": "Friday",
-    "date": "2026-07-24",
+    "date": "2026-07-31",
     "sport": "strength",
-    "name": "Posterior Chain & Anti-Rotation Core",
+    "name": "Posterior Chain & Core",
     "total_duration_secs": 1800,
-    "planned_tss": 14,
-    "focus": "Posterior chain loading (glutes, hamstrings, single-leg stability) and anti-extension/anti-rotation core \u2014 addresses quad dominance contributing to anterior knee pain; no spinal flexion under load, no deep knee flexion",
-    "notes": "3 rounds: 10x Single-Leg Romanian Deadlift per leg (11kg), 10x TRX Split Squat per leg (bodyweight, high rear foot \u2014 stop before any knee pain), 15x Dumbbell Glute Bridge (16kg on hips, 2-sec hold at top), 20m Farmer Carry (11kg each hand), 8x Dead Bug per side (bodyweight). 60s rest between rounds. No goblet squats. Stop any exercise immediately if anterior knee pain appears.",
+    "planned_tss": 10,
+    "focus": "Posterior chain (glutes, hamstrings) and core anti-extension \u2014 build muscular support for cycling/running and protect knee by strengthening hip stabilisers; RIR 2-3",
+    "notes": "2 rounds. 60-75s rest between exercises. No loaded knee flexion >60-70\u00b0. RDL 2x10 @ 20kg, Banded Glute Bridge 2x20, Single-Leg RDL 2x8/side (bodyweight or light dumbbell for counterbalance), Dumbbell Floor Press 2x10 @ 11kg each, TRX Row 2x10, Dead Bug 2x8/side, Side Plank from knee 2x25s/side. Skip or reduce Floor Press and TRX Row if shoulder reports discomfort.",
     "exercises": [
       {
+        "name": "Romanian Deadlift",
+        "reps": 10,
+        "weight_kg": 20
+      },
+      {
+        "name": "Banded Glute Bridge",
+        "reps": 20
+      },
+      {
         "name": "Single-Leg Romanian Deadlift",
-        "reps": 10,
-        "weight_kg": 11,
+        "reps": 8,
         "side": true
       },
       {
-        "name": "TRX Split Squat",
+        "name": "Dumbbell Floor Press",
         "reps": 10,
-        "side": true
-      },
-      {
-        "name": "Dumbbell Glute Bridge",
-        "reps": 15,
-        "weight_kg": 16
-      },
-      {
-        "name": "Farmer Carry",
-        "reps": 20,
         "weight_kg": 11
+      },
+      {
+        "name": "TRX Row",
+        "reps": 10
       },
       {
         "name": "Dead Bug",
         "reps": 8,
         "side": true
+      },
+      {
+        "name": "Side Plank From Knee",
+        "hold_s": 25,
+        "side": true
       }
     ],
     "warmup_exercises": [
       {
-        "name": "Bodyweight Glute Bridge"
-      },
-      {
         "name": "Leg Swings"
       },
       {
-        "name": "Lateral Band Walk"
+        "name": "Hip Circles"
       },
       {
-        "name": "Hip Circles"
+        "name": "Bodyweight Glute Bridge"
+      },
+      {
+        "name": "Band Clamshell"
       }
     ],
     "cooldown_stretches": [
       {
-        "name": "Standing Hip Flexor Stretch"
+        "name": "Hip Flexor Stretch"
       },
       {
-        "name": "Figure Four Glute Stretch"
+        "name": "Lying Glute Stretch"
       },
       {
-        "name": "Standing Hamstring Stretch"
+        "name": "Hamstring Stretch"
       },
       {
         "name": "Child's Pose"
@@ -195,38 +194,38 @@
     "steps": [
       {
         "type": "warmup",
-        "duration_secs": 240,
-        "description": "Bodyweight glute bridges 15 reps, leg swings front-to-back 10 each leg, lateral band walks 15 steps each direction, hip circles 10 each direction. Activates glutes and primes hip stability before loading."
+        "duration_secs": 300,
+        "description": "Leg swings 10 each direction/leg, hip circles 10 each way, bodyweight glute bridges 15 reps slow, band clamshells 15 each side. Activate glutes and open hips before loading."
       },
       {
         "type": "interval",
-        "duration_secs": 1260,
-        "description": "3 rounds of circuit: 10x Single-Leg RDL/leg (11kg) \u2192 10x TRX Split Squat/leg (BW, high rear foot) \u2192 15x Dumbbell Glute Bridge (16kg) \u2192 20m Farmer Carry (11kg each) \u2192 8x Dead Bug/side (BW). 60s rest between rounds."
+        "duration_secs": 1200,
+        "description": "2 rounds: Romanian Deadlift 10x20kg \u2192 Banded Glute Bridge 20 reps \u2192 Single-Leg RDL 8 each side \u2192 Dumbbell Floor Press 10x11kg \u2192 TRX Row 10 reps \u2192 Dead Bug 8 each side \u2192 Side Plank from knee 25s each side. 60-75s rest between exercises."
       },
       {
         "type": "cooldown",
         "duration_secs": 300,
-        "description": "Static stretching: hip flexor stretch 60s/side, figure-four glute stretch 60s/side, standing hamstring stretch 45s/side, child's pose 45s. No aggressive forward spinal flexion."
+        "description": "Hip flexor stretch 30s each, lying glute/piriformis stretch 30s each, hamstring stretch 30s each, child's pose 30s. Breathe slow."
       }
     ]
   },
   {
     "day": "Sunday",
-    "date": "2026-07-26",
+    "date": "2026-08-02",
     "sport": "cycling_indoor",
-    "name": "Easy Aerobic Spin \u2014 Week Closer",
+    "name": "Week-Closing Easy Spin",
     "total_duration_secs": 1800,
-    "planned_tss": 18,
-    "focus": "Active recovery and aerobic consolidation \u2014 promotes recovery from Wednesday's quality session, sustains weekly aerobic volume, reinforces fat-oxidation without adding fatigue ahead of recovery week",
+    "planned_tss": 11,
+    "focus": "Closing active recovery \u2014 aerobic maintenance and parasympathetic restoration before new base block begins; note RPE vs Monday as adaptation signal",
     "warmup_exercises": [
       {
         "name": "Hip Circles"
       },
       {
-        "name": "Ankle Rolls"
+        "name": "Seated Leg Swings"
       },
       {
-        "name": "Seated Leg Swings"
+        "name": "Ankle Rolls"
       }
     ],
     "cooldown_stretches": [
@@ -234,10 +233,10 @@
         "name": "Hip Flexor Stretch"
       },
       {
-        "name": "Standing Quad Stretch"
+        "name": "Figure Four Stretch"
       },
       {
-        "name": "Lower Back Cat-Cow"
+        "name": "Seated Forward Fold"
       }
     ],
     "steps": [
@@ -246,24 +245,24 @@
         "duration_secs": 240,
         "target_type": "power",
         "target_low": 60,
-        "target_high": 105,
-        "description": "Z1 easy spin, 80-85 rpm \u2014 no effort, just waking the legs"
+        "target_high": 88,
+        "description": "Z1 easy spin, 60-70 rpm, <88W. Gradual build, no urgency."
       },
       {
         "type": "interval",
         "duration_secs": 1320,
         "target_type": "power",
         "target_low": 106,
-        "target_high": 125,
-        "description": "Z2 easy aerobic \u2014 146-155 bpm, cadence 85-90 rpm. Lower end of Z2 today \u2014 this is recovery-promoting, not a push. If feeling flat, drop to 100-110W."
+        "target_high": 130,
+        "description": "Z2 steady aerobic ride, 80-90 rpm, HR 146-155 bpm. Same prescription as Monday \u2014 note if RPE feels lower at the same power. That's your adaptation signal."
       },
       {
         "type": "cooldown",
         "duration_secs": 240,
         "target_type": "power",
-        "target_low": 60,
-        "target_high": 95,
-        "description": "Z1 wind-down, HR under 125 bpm before stopping"
+        "target_low": 50,
+        "target_high": 80,
+        "description": "Easy spin, power <80W, HR dropping below 135 before you stop."
       }
     ]
   }

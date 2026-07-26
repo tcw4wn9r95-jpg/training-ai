@@ -137,41 +137,7 @@
     "avg_pace_min_km": null,
     "avg_power_watts": 106.0,
     "calories": 238.0,
-    "tss": 17.9,
-    "laps": [
-      {
-        "dur_s": 300,
-        "dist_km": 1.45,
-        "avg_hr": 116,
-        "max_hr": 124,
-        "avg_power": 81,
-        "avg_pace_min_km": 3.46
-      },
-      {
-        "dur_s": 1200,
-        "dist_km": 6.31,
-        "avg_hr": 140,
-        "max_hr": 153,
-        "avg_power": 117,
-        "avg_pace_min_km": 3.17
-      },
-      {
-        "dur_s": 300,
-        "dist_km": 1.52,
-        "avg_hr": 136,
-        "max_hr": 148,
-        "avg_power": 86,
-        "avg_pace_min_km": 3.28
-      },
-      {
-        "dur_s": 2,
-        "dist_km": 0.02,
-        "avg_hr": 134,
-        "max_hr": 134,
-        "avg_power": 89,
-        "avg_pace_min_km": 1.69
-      }
-    ]
+    "tss": 17.9
   },
   {
     "date": "2026-07-05",
@@ -195,48 +161,6 @@
     "avg_pace_min_km": null,
     "avg_power_watts": 91.0,
     "calories": 137.0,
-    "tss": 20.1,
-    "laps": [
-      {
-        "dur_s": 300,
-        "dist_km": 1.41,
-        "avg_hr": 119,
-        "max_hr": 132,
-        "avg_power": 78,
-        "avg_pace_min_km": 3.54
-      },
-      {
-        "dur_s": 1563,
-        "dist_km": 0.05,
-        "avg_hr": 128,
-        "max_hr": 137,
-        "avg_power": 92,
-        "avg_pace_min_km": 555.56
-      },
-      {
-        "dur_s": 300,
-        "dist_km": 1.52,
-        "avg_hr": 107,
-        "max_hr": 122,
-        "avg_power": 95,
-        "avg_pace_min_km": 3.28
-      },
-      {
-        "dur_s": 574,
-        "dist_km": 3.22,
-        "avg_hr": 133,
-        "max_hr": 140,
-        "avg_power": 96,
-        "avg_pace_min_km": 2.97
-      },
-      {
-        "dur_s": 1,
-        "dist_km": 0,
-        "avg_hr": 134,
-        "max_hr": 134,
-        "avg_power": null,
-        "avg_pace_min_km": null
-      }
-    ]
+    "tss": 20.1
   }
 ]
