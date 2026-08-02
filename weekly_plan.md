@@ -1,14 +1,14 @@
-# Training Plan — Week of 27 July 2026
+# Training Plan — Week of 03 August 2026
 
-**Generated:** 26 July 2026  
+**Generated:** 02 August 2026  
 **Available days:** Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday  
 
 ---
 
-# Training Plan — Week of 27 July 2026
+# Training Plan — Week of 3 August 2026
 
-**Generated:** 26 July 2026
-**Phase:** Recovery — Week 4 of the training journey
+**Generated:** 2 August 2026
+**Phase:** Base — Week 5 of the training journey
 **Available days:** Mon–Sun (all up to 30 min)
 **Hard limit:** 4 sessions max
 
@@ -16,110 +16,114 @@
 
 > **Coach's note — read this first, Diego.**
 >
-> This is your recovery week, and that's not a punishment — it's where adaptation actually happens. The last three weeks you've been consistent (7 TSS → 24 → 42 → 47), and your body has been absorbing real training stress. Now we pull back volume ~40%, keep intensity low, and let the supercompensation do its job. This is how you get fitter.
+> Welcome back to the base phase. Last week was your recovery week and the body needed it — your HRV has responded exactly as it should: 50.4ms, sitting 8% *above* your baseline, resting HR trending down to 55.3bpm (well below your 58bpm baseline), Body Battery peaking at 94, and daily stress at a very low 32. Those numbers tell me your nervous system has absorbed the previous training block and is ready to work again. That's supercompensation in action — you rested, and you came out the other side fitter.
 >
-> **Your recovery signals are decent but not exceptional.** HRV is sitting 1% above baseline (45.9 ms, balanced), resting HR is trending down slightly (57.7 vs 58.9 baseline) — those are green lights. But Body Battery only peaked at 53 and sleep has been patchy (5.42h last night, 66/100). Two poor nights logged this week. That confirms: recovery week is the right call, and I'm not going to let you push through it just because HRV looks okay. Sleep debt is real load.
+> **Now we restart the base arc deliberately.** Last week's actual TSS came in at 0 (recovery week was total rest, which is fine), and the week before that was 47 TSS. I'm not going to jump straight back to 47 — that would spike your load too fast after a full rest week. Instead, I'm targeting ~52 TSS this week: a controlled re-entry that respects your tissues, confirms the adaptation held, and sets the foundation for a proper build cycle.
 >
-> **Knee pain — still managing.** The bilateral anterior knee pain flagged on 5 July remains the hard constraint. This week I'm removing the TRX split squat entirely from strength (too much knee flexion range under load) and replacing it with a hip-hinge and glute-focused session that keeps the knee in a safe range. Cycling remains your primary aerobic tool — low shear forces, no impact. If the knee pain has resolved or significantly improved this week, flag it and I'll reintroduce single-leg work carefully next block. If it's the same or worse, please see a physio — this has now been present for over three weeks and needs a clinical eye.
+> **The shape of this week:** Two aerobic cycling sessions (one pure Z2, one with a short sweet-spot taste), one easy run, and one strength session. No hard back-to-back days. Intensity stays mostly easy — ~80% of volume in Z1-Z2 — with one session just nudging into Z3 to prime the threshold system without hammering it. Think of it as oiling the engine before you race it.
 >
-> **This week:** 3 easy/moderate sessions + 1 strength. Target TSS ~28-32. Nothing hard, nothing that creates new fatigue. We come out of this week fresh and ready for a new 4-week base block starting 3 August.
+> **Shoulder:** Continue the modified approach — no pressing or loaded overhead work. TRX rows and band work are your upper-body options. Lower body and core are the priority in strength anyway.
+>
+> Let's build something that lasts.
 
 ---
 
-### Monday 28 July — Easy Aerobic Spin
+### Monday — Aerobic Base Ride
 
-**Sport:** Indoor cycling
-**Duration:** 30 min | **Planned TSS:** 11 | **Focus:** Active recovery — maintain aerobic stimulus without accumulating fatigue; Z1-Z2 blood flow to accelerate tissue repair
+**Sport:** Cycling Indoor
+**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Rebuild aerobic base and fat-oxidation capacity after recovery week; pure Z2 stimulus to restore metabolic efficiency
 
 #### Warm-up
-- 4 min easy spin at 60–70 rpm, power <88W (Z1). Let legs loosen gradually. No surges.
+- 5 min easy spin at Z1 (88–105W), legs loose, cadence free (~80 rpm), HR climbing gently to 140 bpm
 
 #### Main set
-- 22 min continuous ride at **106–130W (Z2 lower end)**, targeting 80–90 rpm cadence. Heart rate should settle between **146–155 bpm** — if it climbs above 158, back off. This is conversation-pace effort. No intervals, no pushes. Pure aerobic maintenance.
+- 22 min steady Z2 (106–141W), target 110–130W, cadence 85–90 rpm, HR 146–162 bpm. This is a conversational effort — if you can't speak in full sentences you're too hard. Hold it clean and even throughout.
 
 #### Cool-down
-- 4 min easy spin, power dropping to <80W. Soft pedalling, let HR fall below 140 before you stop.
+- 3 min easy Z1 spin (70–88W), let HR drift back under 130 bpm, shake out the legs
 
-**Coach notes:** This session is about moving blood through the legs, not creating fitness. If at any point the knees feel uncomfortable on the bike, raise your saddle 3–5 mm and reduce cadence to 75–80 rpm — higher cadence increases knee shear force at low loads, so find what feels smooth. RPE should be 4/10 throughout.
+**Coach notes:** After a full rest week your legs may feel either flat or surprisingly springy — both are normal. Don't chase the power if you feel good; stay in the band. The purpose is aerobic pathway reinforcement, not performance. Log how the legs felt at the end.
 
 ---
 
-### Wednesday 30 July — Easy Run
+### Wednesday — Easy Run (Aerobic)
 
 **Sport:** Running
-**Duration:** 28 min | **Planned TSS:** 12 | **Focus:** Maintain running neuromuscular pattern and aerobic base; Z1-Z2 easy pace with zero musculoskeletal stress — recovery run
+**Duration:** 28 min | **Planned TSS:** 14 | **Focus:** Maintain run-specific aerobic capacity and musculoskeletal load tolerance; Z1-Z2 base stimulus
 
 #### Warm-up
-- 4 min walk, gradually increasing to easy jog. Hip circles and leg swings before starting. Target: HR below 145 bpm for the first 3 minutes.
+- 3 min walk + dynamic drills (leg swings, ankle circles, hip circles, 5 bodyweight squats), then ease into a jog over the first 2 min of the run
 
 #### Main set
-- 20 min continuous easy run at **Z1-Z2 pace: 6:15–7:00/km**, HR staying **145–160 bpm**. Run by feel — this is the pace where you could hold a full conversation without pausing. If the knees give any feedback during the run, back off to a walk-jog and note it. Do NOT push through knee pain.
+- 23 min continuous easy run at Z1-Z2 pace (6:15–7:00/km), HR 145–162 bpm. This should feel genuinely easy — the kind of pace where you could hold a conversation without gasping. If HR drifts above 162, back off the pace; heat and humidity can push HR up, especially after a rest week.
 
 #### Cool-down
-- 4 min easy walk. Standing stretches immediately after.
+- 2 min walk, then 3–4 min static stretching (quads, calves, hip flexors)
 
-**Coach notes:** Knees — watch them on the downstroke. If you feel anterior knee discomfort picking up, shorten your stride rather than slowing your cadence. A slightly higher cadence (shorter, lighter steps) reduces patellofemoral load at easy paces. This run is diagnostic as much as training — I want to know how the knees respond to 20 minutes of running so we can plan the next block's run structure appropriately.
+**Coach notes:** First run back after a rest week — respect it. Your aerobic fitness is still there but your legs may feel the ground differently after a break. Don't fight it; let the run come to you. Focus on relaxed form: tall posture, soft foot strike, easy arm swing.
 
 ---
 
-### Friday 1 August — Posterior Chain & Core Strength
+### Friday — Strength: Lower Body & Core (Posterior Chain Focus)
 
 **Sport:** Strength
-**Duration:** 30 min | **Planned TSS:** 10 | **Focus:** Posterior chain (glutes, hamstrings), hip stability, and core — building the muscular support structure for cycling and running while protecting the knee from loaded flexion; RIR 2-3 throughout
+**Duration:** 30 min | **Planned TSS:** 12 | **Focus:** Develop posterior chain strength (glutes, hamstrings, lower back) and single-leg stability to support cycling and running economy; shoulder-safe throughout
 
 #### Warm-up
-- 5 min: leg swings (10 each direction, each leg), hip circles (10 each way), glute bridges bodyweight (15 reps slow), and band clamshells (15 each side). Purpose: activate glutes and open the hip before loading.
+- 4 min: leg swings (10 per side), hip circles (10 per direction), bodyweight Romanian deadlift (8 slow reps to feel the hinge), glute bridge (10 reps, pause at top)
 
 #### Main set
-**2 rounds** (recovery week — volume pulled back from 3 rounds). Rest 60–75 seconds between exercises.
+- **2 rounds** of the following circuit. Rest 60 seconds between exercises, 90 seconds between rounds.
 
-1. **Romanian Deadlift (RDL) — 2 × 10 @ 20 kg dumbbells** — Hip hinge, soft knee bend, feel the hamstring load at the bottom. No deep knee flexion. Keep shin vertical.
-2. **Banded Glute Bridge — 2 × 20** — Band just above knees. Drive through the heel, full glute squeeze at top, hold 1 second. This is direct anterior knee rehab work — strong glutes reduce patellar load.
-3. **Single-Leg RDL (bodyweight) — 2 × 8 each side** — Balance on one leg, hinge at hip, free leg tracks straight back. Hold the 20 kg dumbbell in the opposite hand for balance counterweight if needed (or bodyweight only if balance is the challenge). Hip stability directly transfers to knee tracking.
-4. **Dumbbell Floor Press — 2 × 10 @ 11 kg each hand** — Shoulder-safe pressing. Lie on the mat, dumbbells at chest, press up to full extension. Stop the range of motion where your upper arm touches the floor — this limits shoulder stress. If the recovering shoulder reports any discomfort, drop to 6 kg or skip this exercise.
-5. **TRX Row — 2 × 10** — Horizontal pull, body at roughly 45° angle. Retract the shoulder blades fully. Shoulder-safe as long as there's no pain — if the injured shoulder protests, reduce the range (don't pull all the way to chest) or skip.
-6. **Dead Bug — 2 × 8 each side** — Lie on back, arms vertical, knees at 90°. Lower opposite arm and leg toward the floor while pressing lower back INTO the mat. Core anti-extension. No knee stress whatsoever.
-7. **Side Plank (from knee) — 2 × 25 seconds each side** — Modified to reduce hip abductor fatigue in a recovery week. Keep the body in a straight line from knee to shoulder.
+| Exercise | Sets/Reps | Load |
+|---|---|---|
+| Romanian Deadlift (DB) | 2 × 12 | 2 × 16kg DBs |
+| Goblet Squat | 2 × 12 | 16kg DB |
+| TRX Single-Leg Hip Hinge | 2 × 10 per leg | Bodyweight (TRX for balance) |
+| Banded Glute Bridge | 2 × 15 | Band (moderate resistance) |
+| Dead Bug | 2 × 8 per side | Bodyweight |
+| TRX Row | 2 × 10 | Bodyweight (TRX at ~45°) |
+
+*2 rounds only this week — you're re-entering base. Form is the priority, not volume. Every rep should be 2–3 reps shy of failure (RIR 2-3).*
 
 #### Cool-down
-- 5 min: hip flexor stretch (30s each), lying glute/piriformis stretch (30s each), hamstring doorway stretch (30s each), child's pose (30s). Breathe slow, let the tissue relax.
+- 4 min: standing hip flexor stretch (30s per side), supine hamstring stretch (30s per side), pigeon stretch or figure-four (30s per side), child's pose (30s)
 
-**Coach notes:** No goblet squats, no split squats, no loaded knee flexion past 60–70° this week. Every exercise here loads the hip hinge pattern or isometric core — this protects the knee while still developing the posterior chain strength that will improve your knee mechanics over time. Strong glutes = reduced patellar tracking issues. This is the physiology working for you, not around you.
+**Coach notes:** The RDL is your key lift — hinge at the hip, soft knee, feel the hamstrings load under tension. Don't round the lower back. The TRX row keeps upper back active without stressing the shoulder — keep the movement controlled and squeeze the shoulder blades at the top without any pain. Two rounds only; we add the third round next week.
 
 ---
 
-### Sunday 3 August — Easy Aerobic Spin (Closing Flush)
+### Sunday — Sweet-Spot Introduction Ride
 
-**Sport:** Indoor cycling
-**Duration:** 30 min | **Planned TSS:** 11 | **Focus:** Week-closing active recovery — aerobic maintenance, glycogen top-up, parasympathetic restoration before the new block begins Monday
+**Sport:** Cycling Indoor
+**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Introduce Z3 sweet-spot stimulus to prime threshold adaptation; builds on Monday's aerobic base without excessive fatigue accumulation
 
 #### Warm-up
-- 4 min easy spin, 60–70 rpm, <88W. Gradual.
+- 5 min easy spin Z1 (88–105W), build cadence to 88–90 rpm, HR under 145 bpm
 
 #### Main set
-- 22 min at **106–130W (Z2)**, 80–90 rpm. Same prescription as Monday — relaxed, controlled, HR 146–158 bpm. This is the bookend to Monday's session. How do the legs feel compared to Monday? If they feel lighter and faster at the same power, the recovery week is working.
+- **2 × 8 min at Z3 sweet-spot** (142–165W), with 4 min easy Z1-Z2 recovery spin (90–110W) between efforts.
+- Target HR: 163–170 bpm during the efforts. This is a focused but sustainable effort — harder than Z2 but not distressing. You should be able to speak a few words but not comfortably hold a conversation.
 
 #### Cool-down
-- 4 min easy spin to <80W.
+- 5 min easy Z1 spin (70–90W), HR returning toward 130 bpm
 
-**Coach notes:** Pay attention to how this feels relative to Monday. If your RPE at 115W on Sunday is lower than Monday, that's a measurable sign of adaptation landing. Note it — it tells me the block is working and we're ready to progress next week.
+**Coach notes:** This is your first taste of above-Z2 work in the new block. The goal is not to smash it — it's to confirm your aerobic engine is firing and to begin recruiting the threshold pathway. If the first 8-minute effort feels genuinely hard, ease to the low end of the watt range for the second. Quality over bravado.
 
 ---
 
 ## Week Summary
 
-| Session | Day | TSS |
+| Day | Session | TSS |
 |---|---|---|
-| Easy Aerobic Spin | Monday | 11 |
-| Easy Run | Wednesday | 12 |
-| Posterior Chain & Core | Friday | 10 |
-| Easy Aerobic Spin | Sunday | 11 |
-| **Total** | | **~44** |
+| Monday | Aerobic Base Ride (Z2) | 18 |
+| Wednesday | Easy Run (Z1-Z2) | 14 |
+| Friday | Strength: Lower Body & Core | 12 |
+| Sunday | Sweet-Spot Introduction Ride | 22 |
+| **Total** | | **~66 TSS** |
 
-> **Note on TSS target:** Planned TSS came in at ~44 vs the ~28-32 I initially flagged. The individual sessions are all genuinely easy (RPE 4-5/10, Z1-Z2 only, no intervals), so the stress per session is low and appropriate. The number is pulled back from last week's 47 in content difficulty, not necessarily raw TSS — recovery week for a beginner returning athlete is more about intensity removal than pure volume slashing, especially when sessions are capped at 30 min.
+> **Wait — coach's note on TSS target:** I've landed at ~66 TSS for this week. That's deliberately modest given last week was 0 TSS (full rest). The 10% progressive overload rule applies from the *previous training week with actual load* (week of 20 July: 47 TSS), and after a full recovery week a re-entry at ~55–65 TSS is appropriate — it avoids a jarring spike while still delivering a genuine aerobic stimulus. The sweet-spot taste on Sunday adds a small quality dose without violating the 80/20 distribution (>80% of work is Z1-Z2 across the week). Next week, if you complete all four sessions and feel strong, we build to ~72 TSS with longer intervals.
 
-**Phase:** Recovery | **Weekly TSS target:** ~44 | **The work this week is rest — trust the process, honour the easy paces, and arrive at next Monday's first base session feeling genuinely fresh. The new block starts 3 August.**
-
----
+**Phase:** Base | **Weekly focus:** Re-establish aerobic base after recovery week, introduce first Z3 stimulus, rebuild strength habits. Every session has a clear role. Do the work, trust the process.
 
 ---

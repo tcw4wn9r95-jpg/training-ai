@@ -21,65 +21,7 @@
     "avg_pace_min_km": null,
     "avg_power_watts": 117.0,
     "calories": 285.0,
-    "tss": 24.1,
-    "laps": [
-      {
-        "dur_s": 300,
-        "dist_km": 1.36,
-        "avg_hr": 124,
-        "max_hr": 130,
-        "avg_power": 88,
-        "avg_pace_min_km": 3.67
-      },
-      {
-        "dur_s": 480,
-        "dist_km": 2.35,
-        "avg_hr": 152,
-        "max_hr": 160,
-        "avg_power": 147,
-        "avg_pace_min_km": 3.4
-      },
-      {
-        "dur_s": 240,
-        "dist_km": 1.16,
-        "avg_hr": 146,
-        "max_hr": 162,
-        "avg_power": 94,
-        "avg_pace_min_km": 3.45
-      },
-      {
-        "dur_s": 480,
-        "dist_km": 2.28,
-        "avg_hr": 158,
-        "max_hr": 166,
-        "avg_power": 147,
-        "avg_pace_min_km": 3.51
-      },
-      {
-        "dur_s": 240,
-        "dist_km": 1.18,
-        "avg_hr": 152,
-        "max_hr": 162,
-        "avg_power": 94,
-        "avg_pace_min_km": 3.38
-      },
-      {
-        "dur_s": 240,
-        "dist_km": 1.17,
-        "avg_hr": 146,
-        "max_hr": 151,
-        "avg_power": 83,
-        "avg_pace_min_km": 3.41
-      },
-      {
-        "dur_s": 5,
-        "dist_km": 0.02,
-        "avg_hr": 143,
-        "max_hr": 144,
-        "avg_power": 64,
-        "avg_pace_min_km": 4.57
-      }
-    ]
+    "tss": 24.1
   },
   {
     "date": "2026-07-13",
@@ -91,41 +33,7 @@
     "avg_pace_min_km": null,
     "avg_power_watts": 100.0,
     "calories": 227.0,
-    "tss": 16.0,
-    "laps": [
-      {
-        "dur_s": 240,
-        "dist_km": 1.23,
-        "avg_hr": 120,
-        "max_hr": 126,
-        "avg_power": 87,
-        "avg_pace_min_km": 3.26
-      },
-      {
-        "dur_s": 1320,
-        "dist_km": 7.04,
-        "avg_hr": 139,
-        "max_hr": 157,
-        "avg_power": 106,
-        "avg_pace_min_km": 3.13
-      },
-      {
-        "dur_s": 240,
-        "dist_km": 1.11,
-        "avg_hr": 136,
-        "max_hr": 147,
-        "avg_power": 77,
-        "avg_pace_min_km": 3.6
-      },
-      {
-        "dur_s": 5,
-        "dist_km": 0.02,
-        "avg_hr": 128,
-        "max_hr": 128,
-        "avg_power": 72,
-        "avg_pace_min_km": 4.25
-      }
-    ]
+    "tss": 16.0
   },
   {
     "date": "2026-07-07",

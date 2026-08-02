@@ -1,59 +1,5 @@
 [
   {
-    "week_of": "2026-06-01",
-    "generated": "2026-06-03",
-    "phase": "base",
-    "planned_tss": 150,
-    "last_7d_actual_tss": 79,
-    "last_28d_actual_tss": 79,
-    "ftp": 177,
-    "lthr": 173,
-    "sessions": [
-      {
-        "day": "Monday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Spin with Cadence Focus",
-        "planned_tss": 22,
-        "focus": "Z2 aerobic base, cadence efficiency at 90+ rpm"
-      },
-      {
-        "day": "Tuesday",
-        "sport": "cycling_indoor",
-        "name": "Active Recovery Spin",
-        "planned_tss": 10,
-        "focus": "Active recovery, flush legs, no aerobic loading"
-      },
-      {
-        "day": "Wednesday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Pyramid Ride",
-        "planned_tss": 26,
-        "focus": "Progressive Z2 aerobic load, introduce upper Z2 stimulus"
-      },
-      {
-        "day": "Thursday",
-        "sport": "running",
-        "name": "First Z2 Run",
-        "planned_tss": 22,
-        "focus": "Introduce running stimulus, aerobic Z2 effort"
-      },
-      {
-        "day": "Friday",
-        "sport": "strength",
-        "name": "Lower Body & Core \u2014 Shoulder Free",
-        "planned_tss": 18,
-        "focus": "Lower body strength and core stability, zero shoulder load"
-      },
-      {
-        "day": "Saturday",
-        "sport": "cycling_indoor",
-        "name": "First Long Aerobic Ride",
-        "planned_tss": 52,
-        "focus": "Sustained aerobic base \u2014 longest ride in current block"
-      }
-    ]
-  },
-  {
     "week_of": "2026-06-08",
     "generated": "2026-06-04",
     "phase": "base",
@@ -497,6 +443,46 @@
         "name": "Week-Closing Easy Spin",
         "planned_tss": 11,
         "focus": "Closing active recovery \u2014 aerobic maintenance and parasympathetic restoration before new base block begins; note RPE vs Monday as adaptation signal"
+      }
+    ]
+  },
+  {
+    "week_of": "2026-08-03",
+    "generated": "2026-08-02",
+    "phase": "base",
+    "planned_tss": 66,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 89,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Base Ride",
+        "planned_tss": 18,
+        "focus": "Rebuild aerobic base and fat-oxidation capacity after recovery week via sustained Z2 stimulus"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 14,
+        "focus": "Maintain run-specific aerobic capacity and musculoskeletal load tolerance with Z1-Z2 base stimulus"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Posterior Chain",
+        "planned_tss": 12,
+        "focus": "Develop posterior chain strength and single-leg stability to support cycling and running economy; shoulder-safe throughout"
+      },
+      {
+        "day": "Sunday",
+        "sport": "cycling_indoor",
+        "name": "Sweet-Spot Introduction 2\u00d78",
+        "planned_tss": 22,
+        "focus": "Introduce Z3 sweet-spot stimulus to prime threshold adaptation and begin developing aerobic power above Z2"
       }
     ]
   }
