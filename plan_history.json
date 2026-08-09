@@ -1,46 +1,6 @@
 [
   {
     "week_of": "2026-06-08",
-    "generated": "2026-06-04",
-    "phase": "base",
-    "planned_tss": 90,
-    "last_7d_actual_tss": 79,
-    "last_28d_actual_tss": 79,
-    "ftp": 177,
-    "lthr": 173,
-    "sessions": [
-      {
-        "day": "Monday",
-        "sport": "cycling_indoor",
-        "name": "Easy Spin \u2014 Reconnect",
-        "planned_tss": 18,
-        "focus": "Reactivate aerobic system after family pause, zero pressure"
-      },
-      {
-        "day": "Wednesday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Ride \u2014 Gentle Extension",
-        "planned_tss": 22,
-        "focus": "Extend aerobic stimulus, steady Z2, rebuild consistency"
-      },
-      {
-        "day": "Friday",
-        "sport": "strength",
-        "name": "Full-Body Strength \u2014 Shoulder-Safe Return",
-        "planned_tss": 18,
-        "focus": "Reactivate legs and core with zero shoulder load \u2014 healing shoulder fully protected"
-      },
-      {
-        "day": "Saturday",
-        "sport": "cycling_indoor",
-        "name": "Longer Aerobic Ride \u2014 Return Anchor",
-        "planned_tss": 32,
-        "focus": "Rebuild weekly long ride habit, progressive Z2 aerobic base"
-      }
-    ]
-  },
-  {
-    "week_of": "2026-06-08",
     "generated": "2026-06-07",
     "phase": "base",
     "planned_tss": 94,
@@ -483,6 +443,46 @@
         "name": "Sweet-Spot Introduction 2\u00d78",
         "planned_tss": 22,
         "focus": "Introduce Z3 sweet-spot stimulus to prime threshold adaptation and begin developing aerobic power above Z2"
+      }
+    ]
+  },
+  {
+    "week_of": "2026-08-10",
+    "generated": "2026-08-09",
+    "phase": "build",
+    "planned_tss": 60,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 47,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Base Ride",
+        "planned_tss": 18,
+        "focus": "Aerobic base development \u2014 Z2 time to drive mitochondrial density and fat oxidation without CNS cost"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet-Spot Intervals 3x5min",
+        "planned_tss": 24,
+        "focus": "Aerobic power development \u2014 sweet-spot at 88\u201393% FTP drives threshold adaptation with manageable recovery cost"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Shoulder Safe",
+        "planned_tss": 7,
+        "focus": "Posterior chain and single-leg stability \u2014 hip extension power and knee stability transferable to cycling and running, no shoulder loading"
+      },
+      {
+        "day": "Sunday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 11,
+        "focus": "Running pattern maintenance and aerobic conditioning \u2014 Z1\u2013Z2 easy effort preserves run fitness and reinforces aerobic base without adding fatigue"
       }
     ]
   }
