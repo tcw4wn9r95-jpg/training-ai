@@ -1,45 +1,5 @@
 [
   {
-    "week_of": "2026-06-08",
-    "generated": "2026-06-07",
-    "phase": "base",
-    "planned_tss": 94,
-    "last_7d_actual_tss": 79,
-    "last_28d_actual_tss": 79,
-    "ftp": 177,
-    "lthr": 173,
-    "sessions": [
-      {
-        "day": "Monday",
-        "sport": "cycling_indoor",
-        "name": "Easy Spin: Re-ignition",
-        "planned_tss": 18,
-        "focus": "Restart aerobic engine at low cost, pure Z2 stimulus"
-      },
-      {
-        "day": "Wednesday",
-        "sport": "strength",
-        "name": "Lower Body & Core (Shoulder-Safe)",
-        "planned_tss": 20,
-        "focus": "Re-engage legs, glutes, and core without loading the shoulder"
-      },
-      {
-        "day": "Thursday",
-        "sport": "cycling_indoor",
-        "name": "Easy Spin: Aerobic Flush",
-        "planned_tss": 18,
-        "focus": "Low-intensity aerobic stimulus, flush Wednesday leg fatigue"
-      },
-      {
-        "day": "Saturday",
-        "sport": "cycling_indoor",
-        "name": "Aerobic Builder: Z2 Endurance Ride",
-        "planned_tss": 38,
-        "focus": "Longest aerobic session of the week \u2014 base durability and fat oxidation"
-      }
-    ]
-  },
-  {
     "week_of": "2026-06-15",
     "generated": "2026-06-14",
     "phase": "build",
@@ -483,6 +443,46 @@
         "name": "Easy Aerobic Run",
         "planned_tss": 11,
         "focus": "Running pattern maintenance and aerobic conditioning \u2014 Z1\u2013Z2 easy effort preserves run fitness and reinforces aerobic base without adding fatigue"
+      }
+    ]
+  },
+  {
+    "week_of": "2026-08-17",
+    "generated": "2026-08-16",
+    "phase": "peak",
+    "planned_tss": 56,
+    "last_7d_actual_tss": 0,
+    "last_28d_actual_tss": 0,
+    "ftp": 177,
+    "lthr": 173,
+    "sessions": [
+      {
+        "day": "Monday",
+        "sport": "cycling_indoor",
+        "name": "Aerobic Base Ride",
+        "planned_tss": 17,
+        "focus": "Re-establish aerobic base and fat-oxidation stimulus at Z2 after deload period; mitochondrial density without tissue overload"
+      },
+      {
+        "day": "Wednesday",
+        "sport": "cycling_indoor",
+        "name": "Sweet-Spot 3\u00d75min",
+        "planned_tss": 22,
+        "focus": "Sweet-spot training at 88\u201395% FTP drives high-end aerobic adaptation and FTP development; highest-quality stimulus achievable in 30 min after layoff"
+      },
+      {
+        "day": "Friday",
+        "sport": "strength",
+        "name": "Lower Body & Core \u2014 Re-Entry",
+        "planned_tss": 5,
+        "focus": "Posterior chain and single-leg strength to support cycling mechanics and metabolic health; conservative 2-round re-entry after deload, shoulder-modified throughout"
+      },
+      {
+        "day": "Sunday",
+        "sport": "running",
+        "name": "Easy Aerobic Run",
+        "planned_tss": 12,
+        "focus": "Tissue loading and aerobic continuity via Z1\u2013Z2 easy running; re-introduces impact and eccentric leg loading gradually after deload, supports fat oxidation"
       }
     ]
   }

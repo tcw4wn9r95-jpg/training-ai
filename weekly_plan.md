@@ -1,14 +1,14 @@
-# Training Plan — Week of 10 August 2026
+# Training Plan — Week of 17 August 2026
 
-**Generated:** 09 August 2026  
+**Generated:** 16 August 2026  
 **Available days:** Monday, Tuesday, Wednesday, Thursday, Friday, Saturday, Sunday  
 
 ---
 
-# Training Plan — Week of 10 August 2026
+# Training Plan — Week of 17 August 2026
 
-**Generated:** 9 August 2026
-**Phase:** Build — Week 6 of the training journey
+**Generated:** 16 August 2026
+**Phase:** Peak — Week 7 of the training journey
 **Available days:** Mon–Sun (all up to 30 min)
 **Hard limit:** 4 sessions max
 
@@ -16,120 +16,115 @@
 
 > **Coach's note — read this first, Diego.**
 >
-> Your recovery markers are excellent right now. HRV sitting 10% above baseline at 52ms, resting HR down to 54.4bpm (well below your 57.3bpm baseline), Body Battery peaking at 98, and daily stress at just 36/100. That's a well-rested nervous system signalling readiness — the kind of readiness we want to meet with a deliberate build stimulus, not waste on another easy week.
+> Let's be honest about where we are. Three consecutive weeks of near-zero actual training (weeks 5, 6, and now 7 planned vs. actual). That's not a training slump — that's life getting in the way, and it happens. What matters is what we do now.
 >
-> The honest picture on load: last week's planned TSS was 66, actual came in at 0. The week before was also 0. That's two consecutive zero weeks since your peak block in late July. I'm not going to pretend that didn't happen — but I'm also not going to overreact by spiking load to compensate. What the data tells me is your fitness base hasn't deteriorated badly (your physiological markers are actually strong), and your tissues are fresh. We'll use that freshness productively.
+> Here's the physiological reality: your recovery markers are genuinely impressive. HRV at 52.6ms, sitting 11% above your personal baseline. Resting HR down to 55bpm against a 56.8bpm baseline. Body Battery peaking at 96. Daily stress just 27/100. You are not overtrained. You are not broken. You are fresh — possibly the freshest you've been since we started this block. Your nervous system is waving a green flag.
 >
-> **This week's target: ~52 TSS.** That's a controlled, honest re-entry into the build phase. It's lower than what you've managed before, but it's the right number given two weeks of near-zero volume. We'll introduce one genuine quality session on the bike (sweet-spot intervals — aerobic power development, the heart of the build phase), one easy aerobic ride to accumulate volume without stress, one short run to maintain the movement pattern, and one strength session to protect the tissues that support all of this. Four sessions, well-spaced, no back-to-back hard days.
+> The honest constraint is your tissues. Three weeks of near-zero means your tendons, muscles and connective tissue have had minimal mechanical loading. We cannot treat your freshness as a blank cheque to spike load. The 10% weekly volume rule isn't a suggestion — it's a guardrail against the injury that would end the whole programme.
 >
-> **On your shoulder:** strength work this week continues the modified approach — no pressing overhead, nothing that loads the shoulder joint under compression. We're using TRX rows, band work, and dumbbell movements in positions that keep the shoulder comfortable. If anything aggravates it, stop and note it for me.
+> **This week's target: ~48 TSS.** Formally this is the Peak week in our 4-week arc, but given the actual load history, I'm treating it as a controlled re-entry peak: we introduce one genuinely quality session on the bike (sweet-spot, not full VO2max), keep the run easy to protect tissues, and include one strength session. Four sessions, well-spaced, no back-to-back hard days. Next week is recovery — so this is the week to put in the quality work and then let adaptation land.
 >
-> Let's build something solid this week.
+> Show up for these four sessions and we have something real to build on.
 
 ---
 
-### Monday 10 Aug — Aerobic Base Ride
+### Monday 17 August — Aerobic Base Ride
 
-**Sport:** Indoor Cycling
-**Duration:** 30 min | **Planned TSS:** 18 | **Focus:** Aerobic base development — accumulate Z2 time to drive mitochondrial density and fat oxidation without CNS cost
+**Sport:** Cycling Indoor
+**Duration:** 30 min | **Planned TSS:** 17 | **Focus:** Re-establish aerobic base stimulus and fat-oxidation pathway after the deload period; Z2 work at 106–141W builds mitochondrial density without stressing recovering tissues
 
 #### Warm-up
-- 5 min easy spin at Z1 (88–105W), building cadence gradually to 85–90 rpm. Let legs wake up, HR climbing gently toward 140 bpm. No rushing.
+- 5 min easy spin at Z1 (70–100W), legs only, no pressure — wake the legs up gradually, cadence 80–90 rpm
 
 #### Main set
-- 22 min continuous Z2 ride at 106–141W, targeting 85–90 rpm. HR should settle between 146–162 bpm within the first 5 minutes and stay there. This is a conversational effort — you can speak in full sentences. If HR creeps above 162, back off the watts. Focus on smooth pedal stroke, relaxed upper body.
+- 20 min continuous at Z2: 106–141W, target cadence 85–95 rpm
+- Keep effort conversational — if HR drifts above 162 bpm, ease off the watts
+- This is aerobic base work, not a test; smooth and controlled throughout
 
 #### Cool-down
-- 3 min easy spin at <90W, letting HR drift back toward 120 bpm. Slow cadence, minimal resistance.
+- 5 min easy spin at Z1 (< 100W), let HR fall below 130 bpm before stopping
 
-**Coach notes:** This is an aerobic primer for the week — keep it genuinely easy. The purpose is aerobic signal without fatigue, so when Wednesday's quality session arrives, you're fresh and primed. If you feel good, resist the urge to push harder; the adaptation comes from consistency at the right intensity, not heroic efforts on easy days.
+**Coach notes:** After three weeks off the bike, this is about reconnecting with the effort levels and confirming your Z2 still feels like Z2. Don't be tempted to push — the quality session comes Wednesday and you need to arrive there fresh.
 
 ---
 
-### Wednesday 12 Aug — Sweet-Spot Intervals
+### Wednesday 19 August — Sweet-Spot Intervals
 
-**Sport:** Indoor Cycling
-**Duration:** 30 min | **Planned TSS:** 24 | **Focus:** Aerobic power development — sweet-spot work (88–93% FTP) drives threshold adaptations with lower recovery cost than full Z4, ideal for re-introducing quality after a break
+**Sport:** Cycling Indoor
+**Duration:** 30 min | **Planned TSS:** 22 | **Focus:** Sweet-spot training at 88–95% FTP (156–168W) targets high-end aerobic development and FTP advancement; the most calorie-dense and adaptation-rich zone achievable in a 30-min window
 
 #### Warm-up
-- 5 min progressive spin: first 3 min at Z1 (88–105W), last 2 min building to low Z2 (110–120W). Cadence 85–90 rpm. HR targeting ~145 bpm by the end.
+- 6 min progressive build: 2 min Z1 (70–100W) → 2 min Z2 (110–130W) → 2 min Z3 (142–155W), cadence 85–90 rpm throughout
 
 #### Main set
-- **3 × 5 min sweet-spot @ 155–165W (88–93% FTP), 90 rpm**
-- Rest between intervals: 2 min easy spin at 70–90W (Z1 recovery)
-- Sweet-spot sits just below threshold — the sensation is "comfortably hard." You should feel genuine effort but be able to maintain smooth breathing and consistent power. HR will likely climb to 160–172 bpm by the end of each rep; that's normal and expected. Hold the wattage, don't let it drift.
+- **3 × 5 min** at sweet-spot Z3–Z4 boundary: **156–168W** (88–95% FTP), 90+ rpm
+- Recovery between reps: **2 min easy spin at Z1**, 70–90W — let HR drop back toward 145 bpm before the next rep
+- This is the quality block of the week — keep cadence high and watts steady; avoid surging
 
 #### Cool-down
-- 3 min easy spin at <90W. Let HR drop below 130 bpm before stopping. Slow cadence, low resistance.
+- 5 min easy spin at Z1 (< 100W), drop HR below 130 bpm, pedal lightly
 
-**Coach notes:** Three reps of 5 minutes is deliberately conservative for your first proper quality session back — the goal is to finish feeling like you could have done a 4th rep, not that you barely survived the 3rd. Smooth, consistent power through each interval; avoid the common mistake of surging at the start and fading at the end. Next week we'll add a 4th rep.
+**Coach notes:** Three reps at sweet-spot is exactly the right dose after your layoff — enough to drive a strong stimulus, not enough to dig a hole you can't climb out of before recovery week. Focus on keeping watts even across all three reps; if rep 3 drops more than 10W below target, note that for next week's progression.
 
 ---
 
-### Friday 14 Aug — Lower Body & Core Strength
+### Friday 21 August — Lower Body Strength & Core
 
 **Sport:** Strength
-**Duration:** 30 min | **Planned TSS:** 7 | **Focus:** Posterior chain and single-leg strength — build the hip extension power and knee stability that transfers directly to cycling and running economy, with shoulder-safe modifications throughout
+**Duration:** 30 min | **Planned TSS:** 5 | **Focus:** Posterior chain and single-leg strength to support cycling mechanics and metabolic health; compound multi-joint loading per NSCA principles, shoulder-modified throughout (zero overhead, zero pressing load on the shoulder)
 
 #### Warm-up
-- 4 min: Leg swings (front/back and lateral, 10 each side), hip circles (10 each direction), bodyweight squats ×10 slow and controlled with full range. Get the hips, glutes, and hamstrings firing before loading.
+- 5 min: Leg swings (10 each side, front-back and lateral), hip circles (10 each direction), bodyweight squat × 15 slow reps with 2-second pause at bottom
 
 #### Main set
-**2 rounds of the following circuit, 60 sec rest between rounds:**
+**2 rounds** of the following circuit. Rest 60 seconds between exercises, 90 seconds between rounds.
 
-1. **Goblet Squat — 12 reps @ 16kg**
-   Hold the dumbbell at chest height (both hands under the top end), feet shoulder-width, toes slightly out. Full depth, knees tracking over toes, chest up. Controlled 3-second descent, strong drive through the floor on the way up.
-
-2. **Romanian Deadlift (RDL) — 10 reps @ 16kg (one dumbbell each hand)**
-   Hinge from the hips, soft knee, dumbbells tracking close to the shins. Feel the hamstring load at the bottom, drive hips forward to stand. No rounding in the lower back — if you lose the hinge, the weight is too heavy.
-
-3. **TRX Split Squat — 10 reps per leg**
-   Rear foot in TRX straps, front foot forward. Lower the back knee toward the floor under control, front knee tracking over toes. Use the TRX for balance, not to pull yourself up. Switch legs after completing all reps on one side.
-
-4. **Glute Bridge with Band — 15 reps**
-   Band just above knees. Lie on your back, feet flat, drive hips to ceiling, squeeze glutes hard at the top for 1 second. Push knees slightly out against the band throughout — activates the glute medius, key for knee stability in cycling and running.
-
-5. **Dead Bug — 8 reps per side**
-   On your back, arms to ceiling, knees at 90° tabletop. Slowly lower opposite arm and leg toward the floor — lower back stays pressed into the mat the whole time. Return, switch sides. This is core anti-extension work without any shoulder loading.
+1. **Goblet Squat** — 12 reps @ 16 kg | Dumbbell held at chest (no shoulder strain), full depth, 2s down / 1s pause / drive up. RIR 2–3.
+2. **Romanian Deadlift (RDL)** — 10 reps @ 16 kg (one dumbbell each hand) | Hip hinge, soft knees, feel the hamstring load, controlled 3s lowering. RIR 2–3.
+3. **TRX Split Squat (Bulgarian-style)** — 10 reps per leg | Rear foot in TRX handles, front foot forward, lower until front thigh is parallel to floor. Bodyweight only — no added load yet. RIR 2–3.
+4. **Banded Glute Bridge** — 15 reps | Band just above knees, drive hips to full extension, 2s squeeze at top. Shoulder fully supported on floor.
+5. **Plank (forearms)** — 40s hold | Neutral spine, no sagging hips, breathe steadily. Forearm plank avoids any shoulder impingement.
 
 #### Cool-down
-- 4 min static stretching: hip flexor stretch (kneeling, 30s each side), hamstring stretch (seated, 30s each side), figure-four glute stretch (on back, 30s each side).
+- 5 min static stretch: Hip flexor stretch (30s per side), supine hamstring stretch (30s per side), figure-four glute stretch (30s per side), child's pose (45s)
 
-**Coach notes:** Two rounds rather than three — this is your first strength session in several weeks, and DOMS (delayed onset muscle soreness) from too much too soon will compromise Friday's run. RIR (reps in reserve) target is 2–3 on every set — you should feel the work but never be grinding through the last rep. If the goblet squat at 16kg feels genuinely easy, note it for next week; we may step to 20kg on that movement.
+**Coach notes:** Two rounds, not three — you are re-introducing strength loading after a gap and your connective tissue needs the conservative entry point. If both rounds feel genuinely easy and RIR was 4+ throughout, we add a third round next week. Prioritise full range of motion over load; the 16 kg dumbbells are the right starting point here.
 
 ---
 
-### Sunday 16 Aug — Easy Run
+### Sunday 23 August — Easy Run
 
 **Sport:** Running
-**Duration:** 30 min | **Planned TSS:** 11 | **Focus:** Running movement pattern maintenance and aerobic conditioning — Z1–Z2 easy run to preserve run fitness and reinforce the aerobic base built on the bike
+**Duration:** 25–30 min | **Planned TSS:** 12 | **Focus:** Tissue loading and aerobic maintenance via Z1–Z2 easy running; re-introduces impact and eccentric leg loading gradually after the deload, supports fat oxidation and weekly volume continuity
 
 #### Warm-up
-- 3 min walk, then 2 min very easy jog building into Z1 pace (>7:00/km). Leg swings and high knees dynamically before you start. HR should be <140 bpm at this stage.
+- 3 min brisk walk → 2 min very easy jog building to Z1 pace (keep HR below 145 bpm)
+- Include: leg swings × 10 each direction per side, ankle circles × 10 each, high knees × 20 slow steps
 
 #### Main set
-- 22 min easy continuous run at Z1–Z2 pace: **6:15–7:00/km, HR 145–162 bpm**
-- This is a genuinely easy effort — the "could hold a full conversation" test applies. If pace puts HR above 162, slow down. Pace is a guide; HR is the governor. Focus on relaxed shoulders (especially with the recovering shoulder — no tension in the neck and trap area), easy arm swing, landing under your hips.
+- 20–25 min continuous easy run at **Z1–Z2: > 6:45/km, HR below 162 bpm**
+- If HR climbs toward 162 bpm, slow down — even walk briefly. This is a true easy run, not a test run.
+- Flat or gentle terrain; no hills today
 
 #### Cool-down
-- 3 min easy walk to bring HR below 120 bpm. Then static stretching: standing quad stretch (30s each side), calf stretch against a wall (30s each side), hip flexor stretch (30s each side).
+- 3 min walk to bring HR below 120 bpm
+- Static stretch: standing quad stretch (30s per side), calf stretch against wall (30s per side), hamstring stretch seated (30s per side)
 
-**Coach notes:** Sunday's run comes 48 hours after strength, which respects the tissue recovery window. This run is about movement quality and aerobic signal, not pace. Don't be tempted to push on fresh legs — the easy running is doing exactly what it's supposed to do. If your legs feel heavy from the strength session, that's fine; just keep HR in Z2 and the session is a success regardless of pace.
+**Coach notes:** The pace here will feel embarrassingly slow — that is correct. After weeks of detraining, the tendons and connective tissue need gentle reintroduction to impact forces. Ego check: this session's job is tissue conditioning and aerobic maintenance, not fitness testing. HR is your guide, not pace.
 
 ---
 
 ## Week Summary
 
-| Session | Day | Sport | TSS |
-|---|---|---|---|
-| Aerobic Base Ride | Monday | Indoor Cycling | 18 |
-| Sweet-Spot Intervals | Wednesday | Indoor Cycling | 24 |
-| Lower Body & Core | Friday | Strength | 7 |
-| Easy Run | Sunday | Running | 11 |
-| **Total** | | | **~60 TSS** |
+| Day | Session | TSS |
+|---|---|---|
+| Monday | Easy Aerobic Ride (Z2, 30 min) | 17 |
+| Wednesday | Sweet-Spot Intervals 3×5min | 22 |
+| Friday | Lower Body Strength & Core | 5 |
+| Sunday | Easy Run Z1–Z2 (25–30 min) | 12 |
+| **Total** | | **~56 TSS** |
 
-**Phase:** Build | **Weekly Focus:** Re-introduce quality aerobic stimulus (sweet-spot) on a foundation of easy aerobic volume, with one strength session to build the tissue resilience that sustains the training arc.
-
-> This week is about re-establishing the training habit with precision — not heroics. Three reps of sweet-spot today become four next week; 16kg in the squat today becomes 20kg when you're ready. Every session this week has a clear purpose and a clear ceiling. Hit the targets, respect the zones, and let the adaptation come to you.
+**Phase:** Peak (week 7 of training journey)
+**Weekly focus:** This is the stimulus week of the current 4-week block — one quality cycling session anchors the week, surrounded by aerobic maintenance and tissue-conditioning work; next week drops to recovery, so arrive at Sunday feeling tired but not broken.
 
 ---
