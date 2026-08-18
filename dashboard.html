@@ -585,6 +585,12 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <button class="btn" onclick="saveKeys()">Save</button>
 
   <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+    <label style="font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px">Weekly plan creation</label>
+    <div style="font-size:13px;color:var(--t3);margin-bottom:10px">Pause Coach Claudio's automatic weekly plan generation. While paused, no new plans or Garmin activities are created.</div>
+    <button class="btn" id="pause-plan-btn" style="background:var(--bg3);color:var(--t1)" onclick="togglePlanPaused()">Pause plan creation</button>
+  </div>
+
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
     <label style="font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px">Weekly schedule</label>
     <div style="font-size:13px;color:var(--t3);margin-bottom:10px">Which days you can train, session cap and rest preferences.</div>
     <button class="btn" style="background:var(--bg3);color:var(--t1)" onclick="openSchedule()">Open schedule</button>
@@ -2963,6 +2969,23 @@ function adjH(n,d){avState[n].hours=Math.max(0.5,Math.min(4,+(avState[n].hours+d
 // Training pattern preferences — persisted in availability.json, honoured by
 // the plan generator, the coach prompt, and the edit_plan hard guard.
 var avPrefs={max_sessions:0,spread:false};
+// Weekly plan creation pause — persisted in availability.json, checked by
+// sync.py before it generates (and pushes) a new plan each week.
+var planPaused=false;
+async function togglePlanPaused(){
+  var token=getToken();
+  if(!token){alert('Add your GitHub token first (gear icon).');return;}
+  var prev=planPaused;
+  planPaused=!planPaused;renderPausedBtn();
+  var ok=await putAvailability();
+  if(!ok){planPaused=prev;renderPausedBtn();alert('Error: could not save — check your token.');}
+}
+function renderPausedBtn(){
+  var b=document.getElementById("pause-plan-btn");
+  if(!b)return;
+  if(planPaused){b.textContent="Plan creation paused — tap to resume";b.style.background="rgba(239,68,68,.12)";b.style.color="var(--red)";b.style.border="1px solid rgba(239,68,68,.3)";}
+  else{b.textContent="Pause plan creation";b.style.background="var(--bg3)";b.style.color="var(--t1)";b.style.border="";}
+}
 function adjMaxSessions(d){
   var v=avPrefs.max_sessions;
   if(d>0)v=v===0?3:Math.min(7,v+1);
@@ -2980,7 +3003,7 @@ async function putAvailability(){
   var token=getToken();
   if(!token)return false;
   var payload={days:{},notes:document.getElementById("av-notes").value.trim(),
-    max_sessions_per_week:avPrefs.max_sessions||0,prefer_rest_between:!!avPrefs.spread};
+    max_sessions_per_week:avPrefs.max_sessions||0,prefer_rest_between:!!avPrefs.spread,paused:!!planPaused};
   DAYS.forEach(d=>payload.days[d]={available:avState[d].available,hours:avState[d].hours});
   try{
     var g=await(await fetch(API+"/availability.json",{headers:{Authorization:"Bearer "+token}})).json();
@@ -3877,8 +3900,8 @@ async function init(){
   Object.assign(EXERCISE_VIDEOS,videoLibrary);
   if(prof){profile=prof;FTP=prof.cycling?.ftp_watts||FTP;LTHR=prof.running?.threshold_hr||LTHR;REST_HR=prof.running?.resting_hr||REST_HR;MAX_HR=prof.running?.max_hr||MAX_HR;}
   if(avail&&avail.days){DAYS.forEach(d=>{if(avail.days[d])avState[d]=avail.days[d];});if(avail.notes)document.getElementById("av-notes").value=avail.notes;}
-  if(avail){avPrefs.max_sessions=avail.max_sessions_per_week||0;avPrefs.spread=!!avail.prefer_rest_between;}
-  renderPrefs();
+  if(avail){avPrefs.max_sessions=avail.max_sessions_per_week||0;avPrefs.spread=!!avail.prefer_rest_between;planPaused=!!avail.paused;}
+  renderPrefs();renderPausedBtn();
   weekOffset=planStartOffset();updateWeekLabel();
   renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
   renderPlanPreamble();renderBlockOverview();loadChatHistory();renderHealth();

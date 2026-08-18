@@ -473,6 +473,12 @@ if os.environ.get("ACTIVITIES_ONLY", "").strip().lower() in ("1", "true"):
     print("ACTIVITIES_ONLY=true — skipping plan generation.")
     raise SystemExit(0)
 
+# Weekly plan creation paused from the dashboard's Settings toggle. No new
+# plan is generated, so nothing new gets pushed to Garmin either.
+if availability.get("paused"):
+    print("Plan creation paused in Settings — skipping plan generation.")
+    raise SystemExit(0)
+
 # ── Build target-week date map ───────────────────────────────────────────────
 today = date.today()
 # START_WEEK_OFFSET=0 → this week's Monday; 1 (default) → next Monday
