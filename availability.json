@@ -31,5 +31,6 @@
   },
   "notes": "",
   "max_sessions_per_week": 4,
-  "prefer_rest_between": true
+  "prefer_rest_between": true,
+  "paused": false
 }
