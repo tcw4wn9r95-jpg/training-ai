@@ -1,59 +1,5 @@
 [
   {
-    "date": "2026-08-17",
-    "score": 66,
-    "duration_h": 5.88,
-    "deep_h": 0.92,
-    "light_h": 3.9,
-    "rem_h": 1.07,
-    "awake_h": 1.05
-  },
-  {
-    "date": "2026-08-18",
-    "score": 77,
-    "duration_h": 6.2,
-    "deep_h": 1.23,
-    "light_h": 3.72,
-    "rem_h": 1.25,
-    "awake_h": 0.05
-  },
-  {
-    "date": "2026-08-19",
-    "score": 86,
-    "duration_h": 8.65,
-    "deep_h": 1.68,
-    "light_h": 5.32,
-    "rem_h": 1.65,
-    "awake_h": 0.2
-  },
-  {
-    "date": "2026-08-20",
-    "score": 82,
-    "duration_h": 6.52,
-    "deep_h": 1.55,
-    "light_h": 3.27,
-    "rem_h": 1.7,
-    "awake_h": 0.35
-  },
-  {
-    "date": "2026-08-21",
-    "score": 93,
-    "duration_h": 8.05,
-    "deep_h": 1.38,
-    "light_h": 4.82,
-    "rem_h": 1.85,
-    "awake_h": 0.3
-  },
-  {
-    "date": "2026-08-22",
-    "score": 86,
-    "duration_h": 6.97,
-    "deep_h": 1.68,
-    "light_h": 3.92,
-    "rem_h": 1.37,
-    "awake_h": 0.0
-  },
-  {
     "date": "2026-08-24",
     "score": 40,
     "duration_h": 6.87,
