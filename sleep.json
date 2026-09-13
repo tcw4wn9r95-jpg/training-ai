@@ -1,47 +1,110 @@
 [
   {
-    "date": "2026-08-24",
-    "score": 40,
-    "duration_h": 6.87,
-    "deep_h": 0.68,
-    "light_h": 5.98,
-    "rem_h": 0.2,
-    "awake_h": 1.28
-  },
-  {
-    "date": "2026-08-25",
-    "score": 42,
-    "duration_h": 6.17,
-    "deep_h": 1.63,
-    "light_h": 4.0,
-    "rem_h": 0.53,
-    "awake_h": 1.88
-  },
-  {
-    "date": "2026-08-26",
-    "score": 39,
-    "duration_h": 6.7,
-    "deep_h": 1.07,
-    "light_h": 5.38,
-    "rem_h": 0.25,
-    "awake_h": 1.6
-  },
-  {
-    "date": "2026-08-27",
-    "score": 48,
-    "duration_h": 6.78,
-    "deep_h": 1.32,
-    "light_h": 4.58,
-    "rem_h": 0.88,
+    "date": "2026-08-31",
+    "score": 62,
+    "duration_h": 6.57,
+    "deep_h": 0.93,
+    "light_h": 5.28,
+    "rem_h": 0.35,
     "awake_h": 0.67
   },
   {
-    "date": "2026-08-28",
-    "score": 49,
-    "duration_h": 7.25,
-    "deep_h": 1.57,
-    "light_h": 4.87,
-    "rem_h": 0.82,
-    "awake_h": 0.4
+    "date": "2026-09-01",
+    "score": 46,
+    "duration_h": 8.28,
+    "deep_h": 1.08,
+    "light_h": 6.53,
+    "rem_h": 0.67,
+    "awake_h": 0.87
+  },
+  {
+    "date": "2026-09-02",
+    "score": 43,
+    "duration_h": 6.33,
+    "deep_h": 1.12,
+    "light_h": 4.82,
+    "rem_h": 0.4,
+    "awake_h": 1.05
+  },
+  {
+    "date": "2026-09-04",
+    "score": 21,
+    "duration_h": 3.6,
+    "deep_h": 0.0,
+    "light_h": 3.6,
+    "rem_h": 0.0,
+    "awake_h": 1.7
+  },
+  {
+    "date": "2026-09-05",
+    "score": 87,
+    "duration_h": 9.02,
+    "deep_h": 2.0,
+    "light_h": 5.07,
+    "rem_h": 1.95,
+    "awake_h": 0.12
+  },
+  {
+    "date": "2026-09-06",
+    "score": 55,
+    "duration_h": 5.35,
+    "deep_h": 1.35,
+    "light_h": 4.0,
+    "rem_h": 0.0,
+    "awake_h": 0.02
+  },
+  {
+    "date": "2026-09-07",
+    "score": 63,
+    "duration_h": 6.53,
+    "deep_h": 0.67,
+    "light_h": 5.52,
+    "rem_h": 0.35,
+    "awake_h": 0.58
+  },
+  {
+    "date": "2026-09-08",
+    "score": 59,
+    "duration_h": 5.98,
+    "deep_h": 1.3,
+    "light_h": 4.42,
+    "rem_h": 0.27,
+    "awake_h": 0.88
+  },
+  {
+    "date": "2026-09-09",
+    "score": 80,
+    "duration_h": 7.83,
+    "deep_h": 1.13,
+    "light_h": 5.63,
+    "rem_h": 1.07,
+    "awake_h": 0.43
+  },
+  {
+    "date": "2026-09-11",
+    "score": 74,
+    "duration_h": 6.37,
+    "deep_h": 1.78,
+    "light_h": 3.87,
+    "rem_h": 0.72,
+    "awake_h": 0.43
+  },
+  {
+    "date": "2026-09-12",
+    "score": 67,
+    "duration_h": 6.8,
+    "deep_h": 0.87,
+    "light_h": 4.95,
+    "rem_h": 0.98,
+    "awake_h": 1.08
+  },
+  {
+    "date": "2026-09-13",
+    "score": 73,
+    "duration_h": 7.97,
+    "deep_h": 1.82,
+    "light_h": 5.43,
+    "rem_h": 0.72,
+    "awake_h": 0.58
   }
 ]
