@@ -1,19 +1,36 @@
-# AthleteIQ — Free AI Training System
+# AthleteIQ — Free AI Health Coach
 
-Your personal AI running and cycling coach. Automatic training plans, performance tracking, and real-time coaching — powered by your Garmin Fenix and Claude AI.
+Your personal AI health coach: training, food and recovery in one app. Automatic
+training plans, food-plan tracking against what your doctor prescribed,
+hydration, and reports that read all of it together — powered by your Garmin
+Fenix and Claude AI.
+
+The app has five tabs: **Home** (the day and the trends), **Training** (plan and
+completed activity), **Food** (macros, meals and water), **Health** (recovery and
+the full nutrition report) and **Coach**.
 
 ## Features
 
+### Food & nutrition
+- **Your doctor's plan, in the app** — photograph the sheet your doctor or dietitian gave you, or paste its text; Claude reads out the calorie and macro targets, the meal structure, and the prescribed and restricted foods (Settings → Nutrition plan)
+- **Only reputable sources fill the gaps** — anything your plan doesn't state comes from published standards (Mifflin-St Jeor, ACSM/AND/DC, IOM/NASEM DRI, EFSA, WHO), is labelled as an estimate everywhere it appears, and can be overwritten; your clinician's numbers are never overridden (see `NUTRITION.md`)
+- **Fuel that follows your training** — on a training day the targets are topped up for the session (carbs first, protein on strength days, extra fluid); on a rest day, or with the plan paused and nothing trained, the baseline is left exactly as prescribed
+- **Three ways to log a meal** — type the ingredients in, photograph the nutrition label and say how much you ate, or photograph the plate and have Coach Claudio estimate it; every route ends in an editable list you check before saving, and photo estimates carry a confidence flag
+- **Water tracking** — daily target including the training top-up, with one-tap logging
+- **Compliance you can trust** — a day in progress shows pace, not a score; the score lands when the day is done
+- **Cross-domain insights** — how protein, hydration, meal timing and fuelling line up with your HRV, resting HR, sleep and training load, computed from your own days with the sample size stated
+
+### Training
 - **Automatic Training Plans** — Claude generates weekly plans based on your Garmin data and availability
 - **Science-Based Only** — every plan follows established exercise science (progressive overload ≤10%/week, 80/20 polarised intensity, NSCA strength principles); no fads
 - **Home Equipment Hard Restriction** — strength sessions only ever use what's at home (dumbbells 4/6/11/16/20 kg, TRX, bands, bodyweight); plans naming gym equipment are rejected and regenerated
 - **Warm-up & Stretch Guides** — every session card opens a video/how-to section with dynamic warm-up drills and post-session static stretches
 - **Built-in Activity Timer** — tap any step duration or timed stretch to get a pop-up countdown preset to the right time, with a beep and vibration when done
 - **Streaks & Badges** — weekly training streak, milestone badges and habit nudges on the Home tab
-- **Health & Recovery** — a Whoop-style Health tab: a personal-baseline recovery score (0–100) from HRV, resting HR, sleep, Body Battery and stress, with trends and plain-language insights (see `HEALTH_METRICS.md`); Coach Claudio reads it when planning and when reviewing your sessions
+- **Health Report** — a Whoop-style Health tab: a personal-baseline recovery score (0–100) from HRV, resting HR, sleep, Body Battery and stress, with trends and plain-language insights (see `HEALTH_METRICS.md`), plus the full nutrition report alongside it; Coach Claudio reads all of it when planning and when reviewing your sessions
 - **Auto-Detecting Fitness** — FTP and LTHR update automatically as you get stronger
 - **Garmin Integration** — Workouts push directly to your Fenix with step-by-step guidance
-- **Coach Claudio** — In-app AI coach for daily training questions
+- **Coach Claudio** — In-app AI coach for daily training and fuelling questions; tell it what you ate and it logs it for you
 - **Performance Dashboard** — PMC (Performance Management Chart), TSS, compliance tracking
 - **Mobile-First** — Works perfectly on iPhone; add to home screen as an app
 

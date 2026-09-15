@@ -350,6 +350,91 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 #coach-thinking .dots span{display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--t2);margin:0 2px;animation:tdot 1s ease-in-out infinite}
 #coach-thinking .dots span:nth-child(2){animation-delay:.15s}
 #coach-thinking .dots span:nth-child(3){animation-delay:.3s}
+
+/* ── Segmented control (Training tab: Plan / Activity) ──────── */
+.seg{display:flex;gap:4px;background:var(--bg2);border:1px solid var(--line);
+  border-radius:12px;padding:4px;margin-bottom:12px;position:sticky;top:0;z-index:11}
+.seg button{flex:1;background:none;border:none;color:var(--t3);font-family:var(--font);
+  font-size:13px;font-weight:700;padding:9px 6px;border-radius:9px;cursor:pointer;transition:.18s}
+.seg button.active{background:var(--bg3);color:var(--t1)}
+
+/* The week navigator sits under the Plan/Activity switcher, not behind it */
+#page-plan .week-nav{top:46px}
+
+/* ── Day navigator (Food tab) ───────────────────────────────── */
+.day-nav{display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:10;background:var(--bg);padding:10px 0 8px;margin-top:-4px}
+.day-nav button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);
+  background:var(--bg2);color:var(--t2);font-size:18px;cursor:pointer}
+.day-nav button:disabled{opacity:.3;cursor:default}
+.day-nav .lbl{text-align:center}
+.day-nav .lbl .w{font-size:15px;font-weight:700}
+.day-nav .lbl .d{font-size:11px;color:var(--t3);margin-top:1px}
+
+/* ── Macro bars ─────────────────────────────────────────────── */
+.macro-row{display:flex;align-items:center;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.macro-row:first-child{border-top:none}
+.macro-name{font-size:13px;font-weight:700;width:62px;flex-shrink:0}
+.macro-bar{flex:1;height:8px;border-radius:5px;background:var(--bg3);overflow:hidden;position:relative}
+.macro-fill{height:100%;border-radius:5px;transition:width .45s ease}
+.macro-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:rgba(255,255,255,.45);border-radius:2px}
+.macro-val{font-family:var(--mono);font-size:12px;color:var(--t2);width:92px;text-align:right;flex-shrink:0}
+
+/* ── Meal cards ─────────────────────────────────────────────── */
+.meal-slot{background:var(--bg2);border:1px solid var(--line);border-radius:var(--r);
+  padding:14px 15px;margin-bottom:11px}
+.meal-head{display:flex;align-items:center;justify-content:space-between;gap:10px}
+.meal-title{font-size:14px;font-weight:800;letter-spacing:-.2px}
+.meal-kcal{font-family:var(--mono);font-size:12px;color:var(--t3)}
+.meal-add{background:var(--brand-dim);color:var(--brand);border:1px solid rgba(0,200,150,.28);
+  border-radius:20px;padding:5px 13px;font-size:12px;font-weight:700;cursor:pointer;
+  font-family:var(--font);white-space:nowrap}
+.meal-entry{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-top:1px solid var(--line);margin-top:9px}
+.meal-entry:first-of-type{margin-top:10px}
+.meal-x{background:none;border:none;color:var(--t3);font-size:15px;cursor:pointer;padding:0 2px;line-height:1}
+.src-pill{font-size:9.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;
+  border-radius:5px;padding:2px 5px;flex-shrink:0}
+
+/* ── Water ──────────────────────────────────────────────────── */
+.water-quick{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+.water-quick button{flex:1;min-width:66px;background:rgba(59,130,246,.12);color:#60a5fa;
+  border:1px solid rgba(59,130,246,.3);border-radius:11px;padding:11px 8px;font-size:13px;
+  font-weight:700;cursor:pointer;font-family:var(--font)}
+.water-quick button.ghost{background:var(--bg3);color:var(--t2);border-color:var(--line);flex:0 0 46px;min-width:46px}
+
+/* ── Modal (meal entry / nutrition plan) ────────────────────── */
+.modal{display:none;position:fixed;inset:0;z-index:220;background:var(--bg);flex-direction:column}
+.modal.open{display:flex}
+.modal-top{padding:calc(14px + env(safe-area-inset-top)) 16px 14px;display:flex;align-items:center;
+  gap:12px;border-bottom:1px solid var(--line);flex-shrink:0}
+.modal-top button.back{background:var(--bg2);border:1px solid var(--line);border-radius:10px;
+  padding:7px 14px;font-size:13px;font-weight:600;color:var(--t1);cursor:pointer;font-family:var(--font)}
+.modal-top .ttl{font-size:16px;font-weight:700;color:var(--t1)}
+.modal-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
+  padding:16px 16px calc(30px + env(safe-area-inset-bottom))}
+.tabs{display:flex;gap:6px;margin-bottom:16px}
+.tabs button{flex:1;background:var(--bg2);border:1px solid var(--line);color:var(--t3);
+  border-radius:11px;padding:10px 4px;font-size:11.5px;font-weight:700;cursor:pointer;
+  font-family:var(--font);line-height:1.3}
+.tabs button.active{background:var(--brand-dim);color:var(--brand);border-color:rgba(0,200,150,.3)}
+.fld{margin-bottom:13px}
+.fld label{display:block;font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px;
+  text-transform:uppercase;letter-spacing:.5px}
+.fld input,.fld select,.fld textarea{width:100%;background:var(--bg2);border:1px solid var(--line);
+  border-radius:11px;padding:12px 13px;color:var(--t1);font-size:15px;font-family:var(--font);outline:none}
+.fld input:focus,.fld textarea:focus,.fld select:focus{border-color:rgba(0,200,150,.4)}
+.fld textarea{min-height:92px;resize:vertical;line-height:1.5}
+.fld .hint{font-size:11.5px;color:var(--t3);margin-top:5px;line-height:1.45}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.grid3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px}
+.ing-row{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:12px;margin-bottom:10px}
+.drop{border:1.5px dashed rgba(255,255,255,.14);border-radius:14px;padding:26px 16px;text-align:center;
+  background:var(--bg2);cursor:pointer}
+.drop:active{border-color:rgba(0,200,150,.4)}
+.src-note{font-size:11px;color:var(--t3);line-height:1.5;background:rgba(255,255,255,.03);
+  border-radius:9px;padding:9px 11px;margin-top:10px}
+.pill-tag{display:inline-block;font-size:11px;font-weight:600;border-radius:20px;
+  padding:4px 10px;margin:0 6px 6px 0;background:var(--bg3);color:var(--t2);border:1px solid var(--line)}
 </style>
 </head>
 <body>
@@ -425,6 +510,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div id="today-synopsis" style="display:none;margin-top:12px;padding-top:12px;border-top:1px solid var(--line);font-size:12px;color:var(--t2);line-height:1.55"></div>
     </div>
     <div id="week-progress"></div>
+    <div id="food-home"></div>
     <div id="gamify"></div>
     <div id="block-overview"></div>
 
@@ -484,8 +570,13 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
   </div>
 
-  <!-- PLAN -->
+  <!-- TRAINING (plan + activity, one tab) -->
   <div class="page" id="page-plan">
+    <div class="seg" id="train-seg">
+      <button class="active" id="seg-plan" onclick="showTrainingTab('plan')">Plan</button>
+      <button id="seg-log" onclick="showTrainingTab('log')">Activity</button>
+    </div>
+    <div id="train-plan">
     <div class="week-nav">
       <button id="plan-prev" onclick="shiftWeek(-1)" aria-label="Previous week">‹</button>
       <div class="lbl"><div class="w" id="plan-wlabel">This Week</div><div class="d" id="plan-wdate"></div></div>
@@ -503,10 +594,9 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <button class="btn" id="push-btn" onclick="pushToGarmin()" style="font-size:16px;background:linear-gradient(135deg,#006e53,#00c896)">Let's do this! 🚀</button>
       <div style="font-size:11px;color:var(--t3);text-align:center;margin-top:10px;line-height:1.5">Pushes this plan to your Garmin calendar and replaces what's there. Sync your Fenix afterwards.</div>
     </div>
-  </div>
+    </div>
 
-  <!-- LOG -->
-  <div class="page" id="page-log">
+    <div id="train-log" style="display:none">
     <div id="activity-stats" class="month-stats" style="display:none"></div>
     <div class="chips" style="display:flex;align-items:center;gap:8px">
       <div style="display:flex;gap:8px;flex:1;flex-wrap:wrap">
@@ -520,15 +610,26 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     </div>
     <div id="sync-status" style="font-size:12px;color:var(--t3);padding:4px 0 2px;min-height:18px"></div>
     <div class="card"><div id="log-list"></div></div>
+    </div>
+  </div>
+
+  <!-- FOOD -->
+  <div class="page" id="page-food">
+    <div class="day-nav">
+      <button id="food-prev" onclick="shiftFoodDay(-1)" aria-label="Previous day">‹</button>
+      <div class="lbl"><div class="w" id="food-dlabel">Today</div><div class="d" id="food-ddate"></div></div>
+      <button id="food-next" onclick="shiftFoodDay(1)" aria-label="Next day">›</button>
+    </div>
+    <div id="food-body"></div>
   </div>
 
   <!-- HEALTH -->
   <div class="page" id="page-health">
     <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:4px">
-      <div style="font-size:17px;font-weight:800;letter-spacing:-.3px">Health &amp; Recovery</div>
+      <div style="font-size:17px;font-weight:800;letter-spacing:-.3px">Health Report</div>
       <button id="health-sync" onclick="syncGarmin()" style="font-size:12px;font-weight:600;background:rgba(0,200,150,.12);color:#00c896;border:1px solid rgba(0,200,150,.3);border-radius:20px;padding:5px 13px;cursor:pointer;white-space:nowrap">↻ Sync</button>
     </div>
-    <div style="font-size:13px;color:var(--t2);margin-bottom:6px">Your recovery, HRV, sleep and stress from Garmin.</div>
+    <div style="font-size:13px;color:var(--t2);margin-bottom:6px">Recovery, HRV, sleep and stress from Garmin, and how your food plan runs alongside them.</div>
     <div id="health-sync-status" style="font-size:12px;color:var(--t3);min-height:18px;margin-bottom:10px"></div>
     <div id="health-body"></div>
   </div>
@@ -561,9 +662,9 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <button class="active" onclick="showPage('home',this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M3 11l9-7 9 7M5 10v9a1 1 0 001 1h12a1 1 0 001-1v-9" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Home</button>
   <button onclick="showPage('plan',this)">
-    <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Plan</button>
-  <button onclick="showPage('log',this)">
-    <svg viewBox="0 0 24 24" fill="none"><path d="M4 18l4-6 4 3 4-7 4 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Activity</button>
+    <svg viewBox="0 0 24 24" fill="none"><rect x="3" y="4" width="18" height="17" rx="2" stroke="currentColor" stroke-width="1.8"/><path d="M3 9h18M8 2v4M16 2v4" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/></svg>Training</button>
+  <button onclick="showPage('food',this)">
+    <svg viewBox="0 0 24 24" fill="none"><path d="M6 3v8a2.5 2.5 0 005 0V3M8.5 11v10M17 3c-1.4 1.6-2 3.6-2 5.5 0 1.6.8 2.7 2 3V21" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Food</button>
   <button onclick="showPage('health',this)">
     <svg viewBox="0 0 24 24" fill="none"><path d="M3 12h4l2-5 3 10 2.5-7 1.5 2h5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>Health</button>
   <button onclick="showPage('coach',this)">
@@ -588,6 +689,12 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <label style="font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px">Weekly plan creation</label>
     <div style="font-size:13px;color:var(--t3);margin-bottom:10px">Pause Coach Claudio's automatic weekly plan generation. While paused, no new plans or Garmin activities are created.</div>
     <button class="btn" id="pause-plan-btn" style="background:var(--bg3);color:var(--t1)" onclick="togglePlanPaused()">Pause plan creation</button>
+  </div>
+
+  <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
+    <label style="font-size:12px;font-weight:700;color:var(--t2);display:block;margin-bottom:6px">Nutrition plan</label>
+    <div style="font-size:13px;color:var(--t3);margin-bottom:10px" id="nutri-setting-sub">The plan your doctor or dietitian gave you — calories, macros, meals. Anything it doesn't state is filled from reference nutrition standards.</div>
+    <button class="btn" style="background:var(--bg3);color:var(--t1)" onclick="openNutritionModal()">Open nutrition plan</button>
   </div>
 
   <div style="margin-top:24px;padding-top:20px;border-top:1px solid var(--line)">
@@ -698,6 +805,206 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <div id="metric-body" style="flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;padding:16px 16px calc(30px + env(safe-area-inset-bottom))"></div>
 </div>
 
+
+<!-- ── Nutrition plan (doctor's plan) ──────────────────────────────── -->
+<div class="modal" id="nutrition-modal">
+  <div class="modal-top">
+    <button class="back" onclick="closeNutritionModal()">← Back</button>
+    <span class="ttl">Nutrition plan</span>
+  </div>
+  <div class="modal-body">
+    <div class="tabs">
+      <button id="nt-tab-plan" class="active" onclick="nutriTab('plan')">Doctor's plan</button>
+      <button id="nt-tab-targets" onclick="nutriTab('targets')">Daily targets</button>
+      <button id="nt-tab-about" onclick="nutriTab('about')">About me</button>
+    </div>
+
+    <!-- Doctor's plan: photo or text -->
+    <div id="nt-pane-plan">
+      <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:14px">
+        Give Coach Claudio the plan your doctor or dietitian gave you. Photograph it or paste the text —
+        calories, macros, meal structure, prescribed and restricted foods are read out of it.
+      </div>
+      <div class="drop" onclick="document.getElementById('nt-file').click()">
+        <div style="font-size:26px;margin-bottom:6px">📄</div>
+        <div style="font-size:14px;font-weight:700">Photograph the plan</div>
+        <div style="font-size:12px;color:var(--t3);margin-top:4px">A photo or screenshot of the sheet</div>
+      </div>
+      <input type="file" id="nt-file" accept="image/*" style="display:none" onchange="onPlanFile(this)">
+      <div id="nt-preview" style="display:none;margin-top:12px">
+        <img id="nt-img" style="width:100%;border-radius:13px;border:1px solid var(--line)">
+      </div>
+      <div class="fld" style="margin-top:14px">
+        <label>…or paste the plan text</label>
+        <textarea id="nt-text" placeholder="e.g. 1980 kcal, 150 g protein, 180 g carbs, 70 g fat, 32 g fibre. Breakfast: 2 eggs…"></textarea>
+        <div class="hint">Any language — it gets read and translated.</div>
+      </div>
+      <div class="fld">
+        <label>Who gave you this plan (optional)</label>
+        <input id="nt-provider" placeholder="Dr. Martín / Nutrition clinic">
+      </div>
+      <button class="btn" id="nt-read-btn" onclick="readNutritionPlan()"
+        style="background:linear-gradient(135deg,#006e53,#00c896)">Read my plan</button>
+      <div id="nt-read-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
+      <div id="nt-parsed" style="margin-top:14px"></div>
+    </div>
+
+    <!-- Daily targets -->
+    <div id="nt-pane-targets" style="display:none">
+      <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:14px">
+        Your baseline day — what you should eat when you're not training. Anything your plan didn't
+        specify is filled from reference nutrition standards and marked as such; you can overwrite any value.
+      </div>
+      <div class="grid2">
+        <div class="fld"><label>Calories (kcal)</label><input id="tg-kcal" type="number" inputmode="numeric" placeholder="—"></div>
+        <div class="fld"><label>Protein (g)</label><input id="tg-protein" type="number" inputmode="numeric" placeholder="—"></div>
+        <div class="fld"><label>Carbs (g)</label><input id="tg-carbs" type="number" inputmode="numeric" placeholder="—"></div>
+        <div class="fld"><label>Fat (g)</label><input id="tg-fat" type="number" inputmode="numeric" placeholder="—"></div>
+        <div class="fld"><label>Fibre (g)</label><input id="tg-fiber" type="number" inputmode="numeric" placeholder="—"></div>
+        <div class="fld"><label>Water (ml)</label><input id="tg-water" type="number" inputmode="numeric" placeholder="—"></div>
+      </div>
+      <div id="tg-sources" class="src-note"></div>
+      <div style="display:flex;gap:9px;margin-top:14px">
+        <button class="btn" onclick="fillTargetsFromReference()" style="background:var(--bg3);color:var(--t1)">Fill gaps from reference</button>
+        <button class="btn" onclick="saveNutritionTargets()" style="background:linear-gradient(135deg,#006e53,#00c896)">Save targets</button>
+      </div>
+      <div id="tg-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px"></div>
+      <div id="nt-plan-summary" style="margin-top:18px"></div>
+    </div>
+
+    <!-- About me -->
+    <div id="nt-pane-about" style="display:none">
+      <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:14px">
+        Used to size anything your plan left out, and to scale training fuel to your body.
+        Stored with your plan, never sent anywhere except to Claude when you ask it to read a plan or a meal.
+      </div>
+      <div class="grid2">
+        <div class="fld"><label>Weight (kg)</label><input id="bd-weight" type="number" inputmode="decimal" placeholder="—"></div>
+        <div class="fld"><label>Height (cm)</label><input id="bd-height" type="number" inputmode="numeric" placeholder="—"></div>
+        <div class="fld"><label>Age</label><input id="bd-age" type="number" inputmode="numeric" placeholder="—"></div>
+        <div class="fld"><label>Sex</label><select id="bd-sex"><option value="male">Male</option><option value="female">Female</option></select></div>
+      </div>
+      <div class="fld">
+        <label>Daily activity outside training</label>
+        <select id="bd-activity">
+          <option value="1.2">Sedentary — desk job, little walking</option>
+          <option value="1.375" selected>Lightly active — some walking most days</option>
+          <option value="1.55">Moderately active — on your feet a lot</option>
+          <option value="1.725">Very active — physical job</option>
+        </select>
+        <div class="hint">Training sessions are added on top of this, per session — don't count them here.</div>
+      </div>
+      <div class="fld">
+        <label>Goal direction</label>
+        <select id="bd-goal">
+          <option value="loss">Lose weight (moderate deficit)</option>
+          <option value="maintain" selected>Maintain</option>
+          <option value="gain">Gain weight</option>
+        </select>
+        <div class="hint">Only used when your plan doesn't state a calorie target.</div>
+      </div>
+      <button class="btn" onclick="saveBodyProfile()" style="background:linear-gradient(135deg,#006e53,#00c896)">Save</button>
+      <div id="bd-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px"></div>
+      <div class="src-note" style="margin-top:16px">
+        <b style="color:var(--t2)">Where the reference numbers come from</b><br>
+        Energy — Mifflin-St Jeor resting energy equation (the predictive equation recommended by the
+        Academy of Nutrition and Dietetics).<br>
+        Protein — 1.2–2.0 g/kg/day for active adults, ACSM / Academy of Nutrition and Dietetics /
+        Dietitians of Canada joint position stand on Nutrition and Athletic Performance (2016);
+        RDA floor 0.8 g/kg (IOM / NASEM Dietary Reference Intakes).<br>
+        Carbohydrate — 3–5 g/kg light days, 5–7 g/kg moderate (~1 h/day), 6–10 g/kg endurance
+        (1–3 h/day), same joint position stand.<br>
+        Fat — 20–35% of energy (IOM / NASEM Acceptable Macronutrient Distribution Range).<br>
+        Fibre — 14 g per 1000 kcal (IOM / NASEM Adequate Intake).<br>
+        Water — EFSA adequate intake for total water, 2.5 L/day men and 2.0 L/day women, of which
+        roughly 20–30% comes from food; plus 0.4–0.8 L per hour of training (ACSM exercise and
+        fluid replacement position stand).<br>
+        These are population reference values, not medical advice. Your doctor's numbers always win.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Meal entry ──────────────────────────────────────────────────── -->
+<div class="modal" id="meal-modal">
+  <div class="modal-top">
+    <button class="back" onclick="closeMealModal()">← Back</button>
+    <span class="ttl" id="meal-modal-title">Add food</span>
+  </div>
+  <div class="modal-body">
+    <div class="fld">
+      <label>Meal</label>
+      <select id="ml-slot"></select>
+    </div>
+    <div class="tabs">
+      <button id="ml-tab-manual" class="active" onclick="mealTab('manual')">✏️ Type it in</button>
+      <button id="ml-tab-label" onclick="mealTab('label')">🏷 Label photo</button>
+      <button id="ml-tab-photo" onclick="mealTab('photo')">📷 Photo of meal</button>
+    </div>
+
+    <!-- Label photo -->
+    <div id="ml-pane-label" style="display:none">
+      <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:12px">
+        Photograph the nutrition table on the packet, then say how much of it you ate.
+      </div>
+      <div class="drop" onclick="document.getElementById('ml-label-file').click()">
+        <div style="font-size:26px;margin-bottom:6px">🏷</div>
+        <div style="font-size:14px;font-weight:700">Photograph the label</div>
+        <div style="font-size:12px;color:var(--t3);margin-top:4px">Include the per-100 g / per-serving column</div>
+      </div>
+      <input type="file" id="ml-label-file" accept="image/*" style="display:none" onchange="onMealFile(this,'label')">
+      <div id="ml-label-preview" style="display:none;margin-top:12px"><img id="ml-label-img" style="width:100%;border-radius:13px;border:1px solid var(--line)"></div>
+      <div class="grid2" style="margin-top:12px">
+        <div class="fld"><label>Food name</label><input id="ml-label-name" placeholder="Greek yogurt"></div>
+        <div class="fld"><label>How much you ate</label><input id="ml-label-portion" placeholder="150 g / 1 pot / 2 slices"></div>
+      </div>
+      <button class="btn" onclick="readNutritionLabel()" style="background:linear-gradient(135deg,#006e53,#00c896)">Read the label</button>
+      <div id="ml-label-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
+    </div>
+
+    <!-- Meal photo -->
+    <div id="ml-pane-photo" style="display:none">
+      <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:12px">
+        Take a picture of the plate and Coach Claudio estimates what's on it. Estimates from a photo
+        are approximate — check them before saving.
+      </div>
+      <div class="drop" onclick="document.getElementById('ml-photo-file').click()">
+        <div style="font-size:26px;margin-bottom:6px">📷</div>
+        <div style="font-size:14px;font-weight:700">Photograph the meal</div>
+        <div style="font-size:12px;color:var(--t3);margin-top:4px">Top-down, with something for scale if you can</div>
+      </div>
+      <input type="file" id="ml-photo-file" accept="image/*" style="display:none" onchange="onMealFile(this,'photo')">
+      <div id="ml-photo-preview" style="display:none;margin-top:12px"><img id="ml-photo-img" style="width:100%;border-radius:13px;border:1px solid var(--line)"></div>
+      <div class="fld" style="margin-top:12px">
+        <label>Anything the photo can't show (optional)</label>
+        <input id="ml-photo-note" placeholder="Cooked in 2 tsp olive oil, 180 g chicken">
+      </div>
+      <button class="btn" onclick="estimateMealPhoto()" style="background:linear-gradient(135deg,#006e53,#00c896)">Estimate this meal</button>
+      <div id="ml-photo-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
+    </div>
+
+    <!-- Manual / review list (all three modes end here) -->
+    <div id="ml-pane-manual">
+      <div id="ml-review-note" style="display:none;font-size:12.5px;line-height:1.55;margin-bottom:12px;
+        padding:11px 13px;border-radius:11px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--t2)"></div>
+      <div id="ml-items"></div>
+      <button onclick="addIngredientRow()" style="width:100%;background:var(--bg2);border:1px dashed rgba(255,255,255,.14);
+        color:var(--t2);border-radius:12px;padding:12px;font-size:13px;font-weight:600;cursor:pointer;font-family:var(--font)">+ Add another ingredient</button>
+      <div style="margin-top:14px;padding:13px 14px;border-radius:13px;background:var(--bg2);border:1px solid var(--line)">
+        <div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:8px">Meal total</div>
+        <div id="ml-total" style="font-family:var(--mono);font-size:13px;color:var(--t1);line-height:1.7">—</div>
+        <div id="ml-vs-target" style="font-size:12px;color:var(--t2);margin-top:8px;line-height:1.5"></div>
+      </div>
+      <div class="fld" style="margin-top:14px">
+        <label>Note (optional)</label>
+        <input id="ml-note" placeholder="Felt heavy afterwards">
+      </div>
+      <button class="btn" onclick="saveMeal()" style="background:linear-gradient(135deg,#006e53,#00c896);margin-top:4px">Save to my day</button>
+      <div id="ml-save-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px"></div>
+    </div>
+  </div>
+</div>
+
 <!-- Onboarding overlay -->
 <div id="onboarding" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column">
   <div style="padding:calc(18px + env(safe-area-inset-top)) 18px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px">
@@ -713,7 +1020,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
 <script>
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260706-15";
+const BUILD="20260915-16";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -758,6 +1065,8 @@ function showPage(id,btn){
   var s=document.getElementById("scroll");
   if(id==="coach") setTimeout(function(){s.scrollTop=s.scrollHeight;},50);
   else s.scrollTop=0;
+  if(id==="food")try{renderFood();}catch(e){}
+  if(id==="health")try{drawNutritionCharts();}catch(e){}
 }
 async function fetchJSON(p){try{var r=await fetch(RAW+"/"+p+"?t="+Date.now());return r.ok?await r.json():null;}catch(e){return null;}}
 async function fetchText(p){try{var r=await fetch(RAW+"/"+p+"?t="+Date.now());return r.ok?await r.text():"";}catch(e){return "";}}
@@ -840,6 +1149,7 @@ function buildPMC(days){
 
 // ── RENDER HOME ───────────────────────────────────────────────
 function renderHome(){
+  try{renderFoodHome();}catch(e){}
   if(!workouts.length){
     document.getElementById("form-state").textContent="No training data";
     document.getElementById("form-desc").textContent="Sync from Garmin in the Log tab to start tracking your fitness.";
@@ -2328,7 +2638,9 @@ function askCoachAbout(key){
 function renderHealth(){
   var el=document.getElementById("health-body");if(!el)return;
   if(!health||!health.length){
-    el.innerHTML='<div class="card" style="text-align:center;color:var(--t3);padding:32px 20px;font-size:14px;line-height:1.6">No health data yet.<br><br>Tap <b>↻ Sync</b> above to pull your HRV, resting HR, sleep, stress and Body Battery from Garmin.<br><br><span style="font-size:12px">Needs a Garmin device that records these overnight (most Fenix / Forerunner / Venu do).</span></div>';
+    el.innerHTML='<div class="card" style="text-align:center;color:var(--t3);padding:32px 20px;font-size:14px;line-height:1.6">No health data yet.<br><br>Tap <b>↻ Sync</b> above to pull your HRV, resting HR, sleep, stress and Body Battery from Garmin.<br><br><span style="font-size:12px">Needs a Garmin device that records these overnight (most Fenix / Forerunner / Venu do).</span></div>'
+      +(function(){try{return nutritionHealthHTML();}catch(e){return "";}})();
+    setTimeout(function(){try{drawNutritionCharts();}catch(e){}},60);
     return;
   }
   var rec=computeRecovery();
@@ -2385,7 +2697,8 @@ function renderHealth(){
       '<div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.5">Scored against your own rolling baseline, Whoop-style. Not a medical device — training guidance only.</div>'+
     '</div>';
   }
-  el.innerHTML=html;
+  el.innerHTML=html+(function(){try{return nutritionHealthHTML();}catch(e){return "";}})();
+  setTimeout(function(){try{drawNutritionCharts();}catch(e){}},60);
 }
 // Compact recovery summary for the coach's context (one line, or null).
 function recoveryContextLine(){
@@ -2519,7 +2832,7 @@ function renderWeekProgress(){
   var pct=plannedTSS?Math.min(100,Math.round(doneTSS/plannedTSS*100)):Math.round(doneN/arr.length*100);
   var barClr=pct>=100?"#22c55e":"var(--brand)";
   el.innerHTML=
-    '<div style="background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px" onclick="showPage(\'plan\',document.querySelectorAll(\'.nav button\')[1])" role="button" aria-label="Open this week\'s plan">'+
+    '<div style="background:var(--bg2);border:1px solid var(--line);border-radius:16px;padding:14px 16px;margin-bottom:14px" onclick="showPage(\'plan\',document.querySelectorAll(\'.nav button\')[1]);showTrainingTab(\'plan\')" role="button" aria-label="Open this week\'s plan">'+
       '<div style="display:flex;align-items:baseline;justify-content:space-between">'+
         '<span style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3)">This week</span>'+
         '<span style="font-size:12px;color:var(--t2);font-weight:600">'+doneN+' of '+arr.length+' session'+(arr.length===1?"":"s")+(plannedTSS?' · '+doneTSS+'/'+plannedTSS+' TSS':'')+'</span>'+
@@ -2702,7 +3015,7 @@ async function generatePlan(){
     var r=await Promise.all([apiGetJSON("weekly_plan.json",token),apiGetJSON("plan_block.json",token),apiGetJSON("plan_status.json",token),fetchText("weekly_plan.md")]);
     planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
     weekOffset=planStartOffset()||0;
-    showPage("plan",document.querySelector(".nav button[onclick*=\"'plan'\"]"));
+    showPage("plan",document.querySelector(".nav button[onclick*=\"'plan'\"]"));showTrainingTab("plan");
     updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
     btn.disabled=false;btn.classList.remove("spinning");
     label.textContent="✓ Refreshed";
@@ -2736,7 +3049,7 @@ async function generatePlan(){
       // New plan!
       planJson=r[0]||[];planBlock=Array.isArray(r[1])?r[1]:[];planStatus=r[2];planText=r[3]||"";
       weekOffset=planStartOffset()||0;
-      showPage("plan",document.querySelector(".nav button[onclick*=\"'plan'\"]"));
+      showPage("plan",document.querySelector(".nav button[onclick*=\"'plan'\"]"));showTrainingTab("plan");
       updateWeekLabel();renderPlan();renderPlanPreamble();renderBlockOverview();renderHome();renderPushZone();updateGenLabel();
       btn.disabled=false;btn.classList.remove("spinning");label.textContent="✓ New plan ready";
       setTimeout(function(){updateGenLabel();},3500);
@@ -3372,6 +3685,7 @@ async function sendCoachMessage(){
       if(planMon===thisMon)return "Plan covers THIS week ("+planMon+").\n";
       return "Plan covers week of "+planMon+" (starts in the future). Current week ("+thisMon+") has no sessions. Use generate_plan tool with start_week=0 if Diego wants to start training this week.\n";
     })()+
+    foodCoachContext()+
     calendarLine+"\n"+
     (segmentBlock?segmentBlock:"")+
     blockLine+"\n"+
@@ -3391,7 +3705,7 @@ async function sendCoachMessage(){
       rounds++;
       var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
         headers:{"Content-Type":"application/json","x-api-key":apiKey,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true"},
-        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL,GENERATE_PLAN_TOOL,SET_AVAILABILITY_TOOL,SYNC_GARMIN_TOOL],messages:coachHistory})});
+        body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:4000,system:sys,tools:[EDIT_PLAN_TOOL,LOG_CHECKIN_TOOL,GENERATE_PLAN_TOOL,SET_AVAILABILITY_TOOL,SYNC_GARMIN_TOOL,LOG_MEAL_TOOL,LOG_WATER_TOOL],messages:coachHistory})});
       var data=await res.json();
       var _th=document.getElementById("coach-thinking");if(_th)_th.remove();
       if(data.error){addCoachMessage("Error: "+data.error.message,false);break;}
@@ -3432,7 +3746,7 @@ async function sendCoachMessage(){
             addCoachMessage("A Garmin pull is already running — I'll update automatically as soon as it lands.",false);
             toolResults.push({type:"tool_result",tool_use_id:b.id,content:"A sync is already in progress; it will refresh automatically."});
           }else{
-            toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Couldn't start sync: "+(sres.reason||"unknown")+". Ask Diego to tap Sync on the Activity tab."});
+            toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Couldn't start sync: "+(sres.reason||"unknown")+". Ask Diego to tap Sync under Training → Activity."});
           }
         }else if(b.name==="edit_plan"){
           var summary=b.input.summary||"Plan updated";
@@ -3452,6 +3766,13 @@ async function sendCoachMessage(){
             var reason=(result&&result.reason)?result.reason:"Save failed — Diego must add a GitHub token.";
             toolResults.push({type:"tool_result",tool_use_id:b.id,content:"EDIT REJECTED: "+reason+(result&&result.reason?" HOW TO RECOVER (pick one, then retry edit_plan in THIS turn): (a) if Diego EXPLICITLY asked to train on the rejected day, call edit_plan again with override_unavailable_days:[\"<Day>\"] — a one-off that does NOT touch his standing schedule; (b) if he asked for a PERMANENT schedule change, call set_availability first, then edit_plan; (c) otherwise adjust the plan to fit his schedule. Verify day names against the WEEK CALENDAR. Never end your reply on a failed edit without telling Diego what happened and why.":"")});
           }
+        }else if(b.name==="log_meal"){
+          var rMeal=coachLogMeal(b.input||{});
+          toolResults.push({type:"tool_result",tool_use_id:b.id,content:rMeal});
+          addCoachMessage("\ud83c\udf7d Logged to your food diary — check it on the Food tab.",false);
+        }else if(b.name==="log_water"){
+          var rWater=coachLogWater(b.input||{});
+          toolResults.push({type:"tool_result",tool_use_id:b.id,content:rWater});
         }else{
           toolResults.push({type:"tool_result",tool_use_id:b.id,content:"Unknown tool."});
         }
@@ -3882,6 +4203,1583 @@ async function doRestart(){
   closeConfirm();
   startOnboarding();
 }
+
+// ══════════════════════════════════════════════════════════════
+// NUTRITION — targets, training fuel, food log, compliance
+// ══════════════════════════════════════════════════════════════
+// The doctor's plan is the source of truth. Anything it doesn't state is
+// filled from published reference standards (cited in the Nutrition plan
+// screen) and flagged as an estimate, never presented as prescribed.
+//
+// On a training day the baseline is topped up to fuel the session; on a rest
+// day, or while the training plan is paused and nothing was actually trained,
+// the baseline is left exactly as the plan wrote it.
+
+let nutritionPlan=null;                 // nutrition_plan.json
+let foodLog={version:1,days:{}};        // food_log.json
+let foodDayOffset=0;                    // 0 = today, -1 = yesterday …
+let _foodSyncTimer=null, _foodSyncing=false;
+
+const MACROS=["kcal","protein_g","carbs_g","fat_g","fiber_g"];
+const MACRO_META={
+  kcal:{label:"Calories",unit:"kcal",color:"#00c896",kind:"band"},
+  protein_g:{label:"Protein",unit:"g",color:"#8b5cf6",kind:"atleast"},
+  carbs_g:{label:"Carbs",unit:"g",color:"#3b82f6",kind:"band"},
+  fat_g:{label:"Fat",unit:"g",color:"#f59e0b",kind:"band"},
+  fiber_g:{label:"Fibre",unit:"g",color:"#22c55e",kind:"atleast"}
+};
+const DEFAULT_SLOTS=[
+  {id:"breakfast",label:"Breakfast",icon:"☀️"},
+  {id:"lunch",label:"Lunch",icon:"🍽"},
+  {id:"pm_snack",label:"Snack",icon:"🥜"},
+  {id:"dinner",label:"Dinner",icon:"🌙"},
+  {id:"extra",label:"Extra",icon:"➕"}
+];
+// Compendium of Physical Activities (Ainsworth et al., 2011) MET values,
+// by sport and by how hard the session is.
+const MET_TABLE={
+  run:{easy:8.3,mod:9.8,hard:11.8},
+  bike:{easy:6.8,mod:8.5,hard:10.8},
+  strength:{easy:3.5,mod:5.0,hard:6.0},
+  swim:{easy:5.8,mod:8.3,hard:10.0},
+  row:{easy:4.8,mod:7.0,hard:8.5},
+  walk:{easy:3.0,mod:3.5,hard:4.3},
+  hike:{easy:5.3,mod:6.0,hard:7.0},
+  yoga:{easy:2.5,mod:3.0,hard:4.0},
+  elliptical:{easy:4.6,mod:5.0,hard:7.0},
+  other:{easy:4.5,mod:6.0,hard:8.0}
+};
+
+function nutriBody(){
+  var b=(nutritionPlan&&nutritionPlan.body)||{};
+  return {
+    weight_kg:_num(b.weight_kg)||75,
+    height_cm:_num(b.height_cm)||175,
+    age:_num(b.age)||40,
+    sex:b.sex==="female"?"female":"male",
+    activity:_num(b.activity)||1.375,
+    goal:b.goal||"maintain",
+    has:_num(b.weight_kg)!=null
+  };
+}
+function bodyKg(){return nutriBody().weight_kg;}
+
+// ── Reference targets ─────────────────────────────────────────
+// Mifflin-St Jeor resting energy + the DRI / joint position stand bands.
+// Everything produced here is marked src:"reference" so the UI can say so.
+function referenceTargets(){
+  var b=nutriBody(), kg=b.weight_kg;
+  var ree=10*kg+6.25*b.height_cm-5*b.age+(b.sex==="female"?-161:5);
+  var maint=ree*b.activity;
+  var kcal=b.goal==="loss"?Math.max(maint*0.85,ree*1.05):b.goal==="gain"?maint*1.10:maint;
+  // Protein: 1.2–2.0 g/kg for active adults; the upper half of the band while
+  // in a deficit, where protein protects lean mass.
+  var protein=kg*(b.goal==="loss"?1.8:1.6);
+  // Fat: 30% of energy, mid-AMDR (20–35%).
+  var fat=kcal*0.30/9;
+  var carbs=(kcal-protein*4-fat*9)/4;
+  // Don't let the carb floor collapse: 3 g/kg is the bottom of the light-day
+  // band. If it does, take the difference out of fat (down to 20% of energy).
+  if(carbs<kg*3){
+    var need=(kg*3-carbs)*4, fatFloor=kcal*0.20/9;
+    fat=Math.max(fatFloor,fat-need/9);
+    carbs=(kcal-protein*4-fat*9)/4;
+  }
+  var fiber=14*kcal/1000;
+  // EFSA total-water adequate intake, minus the ~25% that comes from food.
+  var water=b.sex==="female"?1600:2000;
+  return {
+    kcal:Math.round(kcal/10)*10,
+    protein_g:Math.round(protein),
+    carbs_g:Math.round(carbs),
+    fat_g:Math.round(fat),
+    fiber_g:Math.round(fiber),
+    water_ml:water
+  };
+}
+
+// Baseline (rest-day) targets: the plan's own numbers, gaps filled from
+// reference values. Returns {key:{v,src}} with src "plan" | "reference".
+function baseTargets(){
+  var ref=referenceTargets(), out={}, t=(nutritionPlan&&nutritionPlan.targets)||{};
+  var KNOWN_SRC={plan:1,estimated:1,manual:1,reference:1};
+  ["kcal","protein_g","carbs_g","fat_g","fiber_g","water_ml"].forEach(function(k){
+    var raw=t[k], v=null, src="reference";
+    if(raw&&typeof raw==="object"){v=_num(raw.value);src=raw.src||"plan";}
+    else v=_num(raw);
+    if(v==null||v<=0){v=ref[k];src="reference";}
+    else if(!KNOWN_SRC[src])src="plan";
+    out[k]={v:Math.round(v),src:src};
+  });
+  return out;
+}
+function hasNutritionPlan(){
+  var t=(nutritionPlan&&nutritionPlan.targets)||{};
+  return MACROS.some(function(k){var r=t[k];var v=(r&&typeof r==="object")?r.value:r;return _num(v)>0;});
+}
+
+// ── Training fuel ─────────────────────────────────────────────
+function planSessionsOn(iso){
+  var mon=isoMondayOf(iso), out=[];
+  (planBlock||[]).forEach(function(w){
+    if(w.week_of!==mon)return;
+    (w.sessions||[]).forEach(function(s){
+      var d=s.date||weekDatesFrom(mon)[s.day];
+      if(d===iso)out.push(s);
+    });
+  });
+  if(!out.length){
+    (planJson||[]).forEach(function(s){if(s.date===iso)out.push(s);});
+  }
+  return out;
+}
+function actualsOn(iso){return (workouts||[]).filter(function(w){return w.date===iso;});}
+
+function sessionHours(s){
+  if(_num(s.total_duration_secs))return s.total_duration_secs/3600;
+  if(_num(s.duration_min))return s.duration_min/60;
+  // Strength barely moves TSS, so deriving its length from TSS underestimates
+  // a 45-minute session into nothing. Give it a sensible floor instead.
+  if(sportOf(s)==="strength")return 0.75;
+  var t=_num(s.planned_tss)||_num(s.tss);
+  if(t)return clamp(t/50,0.5,3);
+  return 1;
+}
+function intensityOf(s,hours){
+  var t=_num(s.planned_tss)||_num(s.tss)||0;
+  var per=hours>0?t/hours:0;
+  // TSS understates resistance work; a home circuit at RIR 2-3 is moderate.
+  if(sportOf(s)==="strength"&&!_num(s.avg_hr))return "mod";
+  if(_num(s.avg_hr)&&LTHR){
+    var r=s.avg_hr/LTHR;
+    if(r>=0.98)return "hard";
+    if(r>=0.90)return "mod";
+    if(r>0)return "easy";
+  }
+  if(!per)return "mod";
+  return per<50?"easy":per<78?"mod":"hard";
+}
+// Net (above-resting) energy cost of a session, in kcal.
+function sessionKcal(s,isActual){
+  var kg=bodyKg(), hours=sessionHours(s);
+  if(isActual&&_num(s.calories)>0){
+    // Garmin reports gross calories — take the resting cost of that window out
+    // (1 MET ≈ 1 kcal per kg per hour) to leave the extra the session created.
+    return {kcal:Math.max(0,Math.round(s.calories-kg*hours)),hours:hours,src:"measured"};
+  }
+  var fam=sportOf(s), met=MET_TABLE[fam]||MET_TABLE.other;
+  var v=met[intensityOf(s,hours)]||met.mod;
+  return {kcal:Math.max(0,Math.round((v-1)*kg*hours)),hours:hours,src:"estimated"};
+}
+
+// What today's training does to the baseline.
+// Returns {adjusted, reason, kcal, hours, add:{...}, sessions:[labels], src}
+function fuelFor(iso){
+  var acts=actualsOn(iso), planned=planPaused?[]:planSessionsOn(iso);
+  var use=[], src="", labels=[];
+  if(acts.length){
+    use=acts.map(function(w){return sessionKcal(w,true);});
+    src=use.every(function(u){return u.src==="measured";})?"measured":"estimated";
+    labels=acts.map(function(w){return (w.name||w.sport||"session").replace(/_/g," ");});
+  }else if(planned.length){
+    use=planned.map(function(s){return sessionKcal(s,false);});
+    src="planned";
+    labels=planned.map(function(s){return s.name||(s.sport||"session").replace(/_/g," ");});
+  }
+  if(!use.length){
+    var why=planPaused
+      ? "Training plan is paused and nothing was trained — your plan's baseline day, unchanged."
+      : "Rest day — your plan's baseline day, unchanged.";
+    return {adjusted:false,reason:why,kcal:0,hours:0,add:{},sessions:[],src:"rest"};
+  }
+  var kcal=use.reduce(function(a,u){return a+u.kcal;},0);
+  var hours=use.reduce(function(a,u){return a+u.hours;},0);
+  var kg=bodyKg(), base=baseTargets();
+  var isStrengthOnly=(acts.length?acts:planned).every(function(s){return sportOf(s)==="strength";});
+  // Carbohydrate carries most of the extra, as the fuel the working muscle
+  // actually uses (ACSM/AND/DC: 5–7 g/kg on ~1 h days, 6–10 g/kg on 1–3 h days).
+  var addCarb=Math.round(kcal*0.60/4);
+  var carbCeil=Math.max(0,Math.round(kg*10-base.carbs_g.v));
+  addCarb=Math.min(addCarb,carbCeil);
+  // A little more protein on strength and long days, never past 2.0 g/kg.
+  var addProt=Math.round(Math.min(isStrengthOnly?kg*0.2:kg*0.12,30));
+  addProt=Math.max(0,Math.min(addProt,Math.round(kg*2.0-base.protein_g.v)));
+  var rest=kcal-addCarb*4-addProt*4;
+  var addFat=Math.max(0,Math.min(15,Math.round(rest/9)));
+  // ACSM fluid replacement: 0.4–0.8 L per hour of exercise.
+  var addWater=Math.round(hours*600/50)*50;
+  return {
+    adjusted:true,src:src,kcal:kcal,hours:hours,sessions:labels,
+    add:{kcal:addCarb*4+addProt*4+addFat*9,protein_g:addProt,carbs_g:addCarb,fat_g:addFat,fiber_g:0,water_ml:addWater},
+    reason:(src==="planned"?"Fuelled for today's planned ":src==="measured"?"Fuelled for the ":"Fuelled for the ")+
+      labels.join(" + ")+(src==="planned"?"":" you trained")+" — about "+kcal+" kcal of extra work."
+  };
+}
+
+// Final targets for a day: baseline + fuel. {key:{v,base,add,src}}
+function targetsFor(iso){
+  var base=baseTargets(), fuel=fuelFor(iso), out={};
+  Object.keys(base).forEach(function(k){
+    var add=(fuel.add&&fuel.add[k])||0;
+    out[k]={v:Math.round(base[k].v+add),base:base[k].v,add:Math.round(add),src:base[k].src};
+  });
+  out._fuel=fuel;
+  return out;
+}
+
+// ── Food log ──────────────────────────────────────────────────
+function foodDate(){var d=new Date();d.setDate(d.getDate()+foodDayOffset);return localDateStr(d);}
+function dayEntry(iso,create){
+  var d=foodLog.days[iso];
+  if(!d&&create){d={date:iso,meals:[],water_ml:0,updated:new Date().toISOString()};foodLog.days[iso]=d;}
+  return d||{date:iso,meals:[],water_ml:0};
+}
+function blankTotals(){return {kcal:0,protein_g:0,carbs_g:0,fat_g:0,fiber_g:0};}
+function sumItems(items){
+  var t=blankTotals();
+  (items||[]).forEach(function(i){MACROS.forEach(function(k){t[k]+=_num(i[k])||0;});});
+  MACROS.forEach(function(k){t[k]=Math.round(t[k]*10)/10;});
+  return t;
+}
+function dayTotals(iso){
+  var d=dayEntry(iso), t=blankTotals();
+  (d.meals||[]).forEach(function(m){
+    var mt=m.totals||sumItems(m.items);
+    MACROS.forEach(function(k){t[k]+=_num(mt[k])||0;});
+  });
+  MACROS.forEach(function(k){t[k]=Math.round(t[k]);});
+  t.water_ml=Math.round(_num(d.water_ml)||0);
+  return t;
+}
+function dayLogged(iso){var t=dayTotals(iso);return t.kcal>0||t.water_ml>0;}
+
+function saveFoodLocal(){
+  try{localStorage.setItem("food_log_v1",JSON.stringify(foodLog));}catch(e){}
+}
+function touchDay(iso){
+  var d=dayEntry(iso,true);
+  d.updated=new Date().toISOString();
+  saveFoodLocal();
+  queueFoodSync();
+}
+function queueFoodSync(){
+  if(_foodSyncTimer)clearTimeout(_foodSyncTimer);
+  _foodSyncTimer=setTimeout(function(){pushFoodLog();},1500);
+}
+// Commit the log to GitHub, merging day-by-day against whatever is there so a
+// log written on the phone and one written on the laptop don't clobber.
+async function pushFoodLog(){
+  var token=getToken();
+  if(!token||_foodSyncing)return false;
+  _foodSyncing=true;
+  try{
+    var sha=null, remote={version:1,days:{}};
+    var r=await fetch(API+"/food_log.json",{headers:{Authorization:"Bearer "+token}});
+    if(r.ok){
+      var meta=await r.json();sha=meta.sha;
+      try{
+        var parsed=JSON.parse(decodeURIComponent(escape(atob(meta.content.replace(/\n/g,'')))));
+        if(parsed&&parsed.days)remote=parsed;
+      }catch(e){}
+    }
+    var merged=mergeFoodLogs(remote,foodLog);
+    foodLog=merged;saveFoodLocal();
+    var body={message:"Food log "+foodDate(),content:btoa(unescape(encodeURIComponent(JSON.stringify(merged,null,2))))};
+    if(sha)body.sha=sha;
+    var put=await fetch(API+"/food_log.json",{method:"PUT",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify(body)});
+    _foodSyncing=false;
+    if(!put.ok&&put.status===409){queueFoodSync();return false;}
+    return put.ok;
+  }catch(e){_foodSyncing=false;return false;}
+}
+function mergeFoodLogs(a,b){
+  var out={version:1,days:{}};
+  [a,b].forEach(function(src){
+    if(!src||!src.days)return;
+    Object.keys(src.days).forEach(function(k){
+      var day=src.days[k], cur=out.days[k];
+      if(!cur||String(day.updated||"")>String(cur.updated||""))out.days[k]=day;
+    });
+  });
+  return out;
+}
+
+// ── Compliance ────────────────────────────────────────────────
+function scorePart(actual,target,kind){
+  if(!target||target<=0)return null;
+  var r=actual/target;
+  if(kind==="atleast")return Math.round(clamp(r>=1?100:100-(1-r)*140,0,100));
+  var dev=Math.abs(r-1);
+  if(dev<=0.10)return 100;
+  return Math.round(clamp(100-(dev-0.10)*250,0,100));
+}
+const COMPLIANCE_WEIGHTS={kcal:.30,protein_g:.25,carbs_g:.15,fat_g:.10,fiber_g:.10,water_ml:.10};
+function complianceFor(iso){
+  var t=targetsFor(iso), a=dayTotals(iso);
+  if(!(a.kcal>0||a.water_ml>0))return null;
+  var parts=[], num=0, den=0;
+  MACROS.concat(["water_ml"]).forEach(function(k){
+    var meta=MACRO_META[k]||{label:"Water",unit:"ml",color:"#3b82f6",kind:"atleast"};
+    var sc=scorePart(a[k]||0,t[k].v,meta.kind);
+    if(sc==null)return;
+    var w=COMPLIANCE_WEIGHTS[k]||0;
+    parts.push({key:k,label:meta.label,actual:a[k]||0,target:t[k].v,pct:t[k].v?Math.round((a[k]||0)/t[k].v*100):0,score:sc,color:meta.color});
+    num+=sc*w;den+=w;
+  });
+  return {score:den?Math.round(num/den):0,parts:parts,totals:a,targets:t,complete:dayComplete(iso)};
+}
+// How much of the day's food is supposed to be in by now. Scoring a day at
+// 9am against the whole day's target would brand every morning a failure.
+function mealTimes(){
+  var def={breakfast:"08:30",am_snack:"11:00",lunch:"13:00",pm_snack:"17:00",dinner:"20:30",extra:"21:00"};
+  var share={breakfast:.25,am_snack:.07,lunch:.35,pm_snack:.10,dinner:.28,extra:.05};
+  var planMeals=(nutritionPlan&&nutritionPlan.meals)||[];
+  return mealSlots().filter(function(s){return s.id!=="extra";}).map(function(s){
+    var pm=planMeals.filter(function(m){return m.slot===s.id;})[0];
+    return {id:s.id,time:(pm&&pm.time)||def[s.id]||"13:00",share:share[s.id]!=null?share[s.id]:1/4};
+  }).sort(function(a,b){return a.time<b.time?-1:1;});
+}
+function minutesNow(){var d=new Date();return d.getHours()*60+d.getMinutes();}
+function hhmmToMin(t){var m=String(t).split(":");return (+m[0]||0)*60+(+m[1]||0);}
+function expectedFraction(iso){
+  if(iso<localDateStr(new Date()))return 1;
+  if(iso>localDateStr(new Date()))return 0;
+  var ms=mealTimes(), now=minutesNow(), total=0, got=0;
+  ms.forEach(function(m){
+    total+=m.share;
+    // A meal counts once its slot has passed; it fades in over the half hour around it.
+    var t=hhmmToMin(m.time);
+    if(now>=t+30)got+=m.share;
+    else if(now>=t-15)got+=m.share*((now-(t-15))/45);
+  });
+  return total?clamp(got/total,0,1):1;
+}
+function dayComplete(iso){
+  if(iso<localDateStr(new Date()))return true;
+  if(iso>localDateStr(new Date()))return false;
+  var ms=mealTimes();
+  var last=ms.length?hhmmToMin(ms[ms.length-1].time):1230;
+  return minutesNow()>=last+60;
+}
+// Where he stands right now against where he should be by this hour.
+function dayPace(iso){
+  var frac=expectedFraction(iso), t=targetsFor(iso), a=dayTotals(iso);
+  var expK=t.kcal.v*frac;
+  var ratio=expK>0?a.kcal/expK:(a.kcal>0?1.2:0);
+  var label=frac<=0.05?"Day just starting":ratio>=1.15?"Ahead of pace":ratio>=0.85?"On pace":ratio>=0.5?"Behind pace":"Well behind pace";
+  return {frac:frac,expectedKcal:Math.round(expK),ratio:ratio,label:label,
+    color:frac<=0.05?"var(--t3)":ratio>=1.3?"#f59e0b":ratio>=0.85?"#22c55e":ratio>=0.5?"#f59e0b":"#ef4444",
+    leftKcal:Math.max(0,Math.round(t.kcal.v-a.kcal)),
+    leftProtein:Math.max(0,Math.round(t.protein_g.v-a.protein_g)),
+    leftWater:Math.max(0,Math.round(t.water_ml.v-a.water_ml))};
+}
+function complianceBand(s){
+  if(s>=85)return {label:"On plan",c:"#22c55e"};
+  if(s>=70)return {label:"Close",c:"#00c896"};
+  if(s>=55)return {label:"Drifting",c:"#f59e0b"};
+  return {label:"Off plan",c:"#ef4444"};
+}
+// Compliance over the last n days, most recent last. Only days with something
+// logged, and only days that are actually over — a day still in progress would
+// drag the trend down for no reason.
+function complianceSeries(n){
+  var out=[], d=new Date();
+  for(var i=n;i>=0;i--){
+    var dt=new Date();dt.setDate(d.getDate()-i);
+    var iso=localDateStr(dt);
+    if(!dayComplete(iso))continue;
+    var c=complianceFor(iso);
+    out.push({date:iso,score:c?c.score:null,totals:c?c.totals:null,targets:c?c.targets:null,
+      trained:(actualsOn(iso).length>0)||(!planPaused&&planSessionsOn(iso).length>0)});
+  }
+  return out;
+}
+
+
+// ── FOOD TAB ──────────────────────────────────────────────────
+function mealSlots(){
+  var st=(nutritionPlan&&nutritionPlan.meal_structure)||null;
+  var planMeals=(nutritionPlan&&nutritionPlan.meals)||[];
+  if(!st||!st.length){
+    if(!planMeals.length)return DEFAULT_SLOTS;
+    st=planMeals.map(function(m){return m.slot;});
+  }
+  var known={};DEFAULT_SLOTS.forEach(function(s){known[s.id]=s;});
+  var out=st.map(function(id){
+    // The plan's own wording wins over the app's generic slot names —
+    // "Mid-afternoon" is what his dietitian wrote, so that's what he sees.
+    var pm=planMeals.filter(function(m){return m.slot===id;})[0];
+    var base=known[id]||{id:id,label:String(id).replace(/_/g," ").replace(/\b\w/g,function(c){return c.toUpperCase();}),icon:"🍴"};
+    return {id:id,label:(pm&&pm.label)||base.label,icon:base.icon};
+  });
+  if(!out.some(function(s){return s.id==="extra";}))out.push({id:"extra",label:"Extra",icon:"➕"});
+  return out;
+}
+function slotMeta(id){
+  var f=mealSlots().filter(function(s){return s.id===id;})[0];
+  return f||{id:id,label:String(id).replace(/_/g," "),icon:"🍴"};
+}
+function planMealFor(slotId){
+  var meals=(nutritionPlan&&nutritionPlan.meals)||[];
+  return meals.filter(function(m){return m.slot===slotId;})[0]||null;
+}
+function shiftFoodDay(d){
+  foodDayOffset=Math.min(0,foodDayOffset+d);
+  renderFood();
+}
+function updateFoodDayLabel(){
+  var iso=foodDate(), dt=new Date(iso+"T00:00:00");
+  var lbl=foodDayOffset===0?"Today":foodDayOffset===-1?"Yesterday":dt.toLocaleDateString("en-GB",{weekday:"long"});
+  var w=document.getElementById("food-dlabel"), d=document.getElementById("food-ddate"), nx=document.getElementById("food-next");
+  if(w)w.textContent=lbl;
+  if(d)d.textContent=dt.toLocaleDateString("en-GB",{day:"numeric",month:"long"});
+  if(nx)nx.disabled=(foodDayOffset>=0);
+}
+
+function macroRowHTML(key,actual,tg){
+  var meta=MACRO_META[key]||{label:"Water",unit:"ml",color:"#3b82f6",kind:"atleast"};
+  var pct=tg.v?Math.min(140,Math.round(actual/tg.v*100)):0;
+  var over=tg.v&&actual>tg.v*1.1&&meta.kind==="band";
+  var col=over?"#f59e0b":meta.color;
+  var left=Math.max(0,Math.round(tg.v-actual));
+  return '<div class="macro-row">'+
+    '<div class="macro-name">'+meta.label+'</div>'+
+    '<div class="macro-bar"><div class="macro-fill" style="width:'+Math.min(100,pct)+'%;background:'+col+'"></div>'+
+      (tg.add>0?'<div class="macro-target" style="left:'+Math.min(99,Math.round(tg.base/tg.v*100))+'%" title="plan baseline"></div>':'')+
+    '</div>'+
+    '<div class="macro-val">'+Math.round(actual)+" / "+tg.v+'<span style="color:var(--t3)"> '+meta.unit+'</span></div>'+
+  '</div>'+
+  (tg.add>0?'<div style="font-size:10.5px;color:var(--t3);margin:-4px 0 4px 72px">plan '+tg.base+' + '+tg.add+' to fuel training'+(left>0?" · "+left+" "+meta.unit+" to go":"")+'</div>':'');
+}
+
+function fuelBannerHTML(iso,t){
+  var f=t._fuel;
+  if(!f.adjusted){
+    return '<div class="card" style="border-color:var(--line);padding:13px 15px">'+
+      '<div style="display:flex;gap:10px;align-items:flex-start">'+
+        '<span style="font-size:17px">🛌</span>'+
+        '<div><div style="font-size:13.5px;font-weight:700;margin-bottom:2px">Baseline day</div>'+
+        '<div style="font-size:12.5px;color:var(--t2);line-height:1.5">'+esc(f.reason)+'</div></div>'+
+      '</div></div>';
+  }
+  var tips=[];
+  if(f.hours>=1)tips.push("On a session over an hour, 30–60 g of carbohydrate per hour during it keeps the quality up (ACSM/AND/DC).");
+  if(f.src==="planned")tips.push("Front-load the extra carbs before and around the session, not late at night.");
+  else tips.push("Get protein in within a couple of hours of finishing — around "+Math.round(bodyKg()*0.3)+" g does the repair job.");
+  return '<div class="card" style="border-color:rgba(0,200,150,.2);background:linear-gradient(160deg,#111114,#131618);padding:14px 15px">'+
+    '<div style="display:flex;gap:10px;align-items:flex-start">'+
+      '<span style="font-size:17px">⚡</span>'+
+      '<div style="flex:1">'+
+        '<div style="font-size:13.5px;font-weight:700;margin-bottom:3px;color:var(--brand)">Training day — targets topped up</div>'+
+        '<div style="font-size:12.5px;color:var(--t2);line-height:1.55">'+esc(f.reason)+'</div>'+
+        '<div style="font-size:12px;color:var(--t2);line-height:1.55;margin-top:7px">'+
+          '+'+f.add.carbs_g+' g carbs, +'+f.add.protein_g+' g protein'+(f.add.fat_g?", +"+f.add.fat_g+" g fat":"")+', +'+f.add.water_ml+' ml water.'+
+        '</div>'+
+        '<div style="font-size:11px;color:var(--t3);line-height:1.5;margin-top:7px">'+esc(tips.join(" "))+'</div>'+
+        '<div style="font-size:10.5px;color:var(--t3);margin-top:5px">Session cost '+(f.src==="measured"?"measured by your watch":f.src==="planned"?"estimated from the planned session":"estimated")+'.</div>'+
+      '</div></div></div>';
+}
+
+function waterCardHTML(iso,t){
+  var d=dayEntry(iso), ml=Math.round(_num(d.water_ml)||0), tgt=t.water_ml.v;
+  var pct=tgt?Math.min(100,Math.round(ml/tgt*100)):0;
+  var glasses=Math.round(ml/250);
+  return '<div class="card">'+
+    '<div class="card-h" style="display:flex;justify-content:space-between;align-items:center">'+
+      '<span>Water</span><span style="font-family:var(--mono);color:'+(pct>=100?"#22c55e":"#3b82f6")+';font-size:12px">'+
+      (ml/1000).toFixed(2).replace(/0$/,"")+' / '+(tgt/1000).toFixed(1)+' L</span></div>'+
+    '<div class="macro-bar" style="height:11px"><div class="macro-fill" style="width:'+pct+'%;background:linear-gradient(90deg,#3b82f6,#60a5fa)"></div></div>'+
+    '<div style="font-size:12px;color:var(--t2);margin-top:8px;line-height:1.5">'+
+      (pct>=100?"Hydration target met — "+glasses+" glasses.":(Math.max(0,Math.round((tgt-ml)/250)))+" more glasses to go"+
+        (t.water_ml.add>0?" (includes +"+t.water_ml.add+" ml for training)":"")+".")+'</div>'+
+    '<div class="water-quick">'+
+      '<button onclick="addWater(250)">+250 ml</button>'+
+      '<button onclick="addWater(500)">+500 ml</button>'+
+      '<button onclick="addWater(750)">+750 ml</button>'+
+      '<button class="ghost" onclick="addWater(-250)" aria-label="Remove 250 ml">−</button>'+
+    '</div>'+
+  '</div>';
+}
+function addWater(ml){
+  var iso=foodDate(), d=dayEntry(iso,true);
+  d.water_ml=Math.max(0,Math.round((_num(d.water_ml)||0)+ml));
+  touchDay(iso);renderFood();renderFoodHome();
+}
+
+function mealCardHTML(iso,slot){
+  var d=dayEntry(iso);
+  var meals=(d.meals||[]).filter(function(m){return m.slot===slot.id;});
+  var tot=blankTotals();
+  meals.forEach(function(m){var mt=m.totals||sumItems(m.items);MACROS.forEach(function(k){tot[k]+=_num(mt[k])||0;});});
+  var guide=planMealFor(slot.id);
+  var h='<div class="meal-slot">'+
+    '<div class="meal-head">'+
+      '<div style="display:flex;align-items:center;gap:8px">'+
+        '<span style="font-size:15px">'+slot.icon+'</span>'+
+        '<div><div class="meal-title">'+esc(slot.label)+'</div>'+
+        (guide&&guide.time?'<div class="meal-kcal">'+esc(guide.time)+'</div>':'')+'</div>'+
+      '</div>'+
+      '<div style="display:flex;align-items:center;gap:9px">'+
+        (tot.kcal?'<span class="meal-kcal">'+Math.round(tot.kcal)+' kcal</span>':'')+
+        '<button class="meal-add" onclick="openMealModal(\''+slot.id+'\')">+ Add</button>'+
+      '</div>'+
+    '</div>';
+  if(guide&&guide.components&&guide.components.length){
+    h+='<div style="margin-top:9px;padding:9px 11px;border-radius:10px;background:rgba(255,255,255,.03)">'+
+      '<div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:5px">What your plan says</div>'+
+      guide.components.map(function(c){
+        return '<div style="font-size:11.5px;color:var(--t2);line-height:1.5;margin-bottom:3px"><b style="color:var(--t2)">'+esc(c.category||"")+':</b> '+esc(c.portion||"")+'</div>';
+      }).join("")+'</div>';
+  }
+  meals.forEach(function(m){
+    var mt=m.totals||sumItems(m.items);
+    var sp=m.source==="photo"?{t:"AI photo",c:"#8b5cf6",bg:"rgba(139,92,246,.14)"}:
+           m.source==="label"?{t:"Label",c:"#3b82f6",bg:"rgba(59,130,246,.14)"}:
+           {t:"Manual",c:"#62626e",bg:"rgba(255,255,255,.05)"};
+    h+='<div class="meal-entry">'+
+      '<div style="flex:1;min-width:0">'+
+        '<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">'+
+          '<span style="font-size:13px;font-weight:700">'+esc(m.name||"Meal")+'</span>'+
+          '<span class="src-pill" style="color:'+sp.c+';background:'+sp.bg+'">'+sp.t+'</span>'+
+          (m.confidence&&m.confidence<0.7?'<span class="src-pill" style="color:#f59e0b;background:rgba(245,158,11,.14)">Rough</span>':'')+
+        '</div>'+
+        '<div style="font-family:var(--mono);font-size:11.5px;color:var(--t3);margin-top:3px">'+
+          Math.round(mt.kcal)+' kcal · P '+Math.round(mt.protein_g)+' · C '+Math.round(mt.carbs_g)+' · F '+Math.round(mt.fat_g)+' · fibre '+Math.round(mt.fiber_g)+'</div>'+
+        (m.items&&m.items.length?'<div style="font-size:11px;color:var(--t3);margin-top:3px;line-height:1.45">'+
+          esc(m.items.map(function(i){return (i.qty?i.qty+" ":"")+(i.name||"");}).join(", "))+'</div>':'')+
+        (m.note?'<div style="font-size:11px;color:var(--t3);margin-top:3px;font-style:italic">'+esc(m.note)+'</div>':'')+
+      '</div>'+
+      '<button class="meal-x" onclick="deleteMeal(\''+m.id+'\')" aria-label="Remove">✕</button>'+
+    '</div>';
+  });
+  return h+'</div>';
+}
+
+function dayScoreHTML(iso){
+  var c=complianceFor(iso);
+  if(c&&!c.complete){
+    var p=dayPace(iso), t=targetsFor(iso), a=dayTotals(iso);
+    var pct=t.kcal.v?Math.min(100,Math.round(a.kcal/t.kcal.v*100)):0;
+    return '<div class="card" style="padding:18px 16px">'+
+      '<div style="display:flex;align-items:center;gap:14px">'+
+        '<div style="width:88px;height:88px;border-radius:50%;flex-shrink:0;background:conic-gradient('+p.color+' '+pct+'%,var(--bg3) 0);display:flex;align-items:center;justify-content:center">'+
+          '<div style="width:72px;height:72px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+            '<div style="font-size:21px;font-weight:800;color:'+p.color+';line-height:1;font-family:var(--mono)">'+pct+'%</div>'+
+            '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-top:3px">of day</div>'+
+          '</div></div>'+
+        '<div style="flex:1;min-width:0">'+
+          '<div style="font-size:15px;font-weight:800;color:'+p.color+'">'+p.label+'</div>'+
+          '<div style="font-size:12.5px;color:var(--t2);line-height:1.55;margin-top:4px">'+
+            'By now you’d normally be around '+p.expectedKcal+' kcal. Still to go today: '+p.leftKcal+' kcal, '+
+            p.leftProtein+' g protein'+(p.leftWater?', '+p.leftWater+' ml water':'')+'.</div>'+
+          '<div style="font-size:11px;color:var(--t3);margin-top:6px">Your compliance score for the day is set once the day is done.</div>'+
+        '</div>'+
+      '</div></div>';
+  }
+  if(!c){
+    return '<div class="card" style="text-align:center;padding:22px 18px">'+
+      '<div style="font-size:13px;color:var(--t2);line-height:1.6">Nothing logged for this day yet.<br>Add a meal or a glass of water and your compliance shows up here.</div></div>';
+  }
+  var b=complianceBand(c.score);
+  var worst=c.parts.slice().sort(function(x,y){return x.score-y.score;})[0];
+  var best=c.parts.slice().sort(function(x,y){return y.score-x.score;})[0];
+  var line=c.score>=85?"Bang on your plan today.":
+    worst&&worst.actual<worst.target?"Biggest gap: "+worst.label.toLowerCase()+", "+Math.round(worst.target-worst.actual)+" "+(MACRO_META[worst.key]?MACRO_META[worst.key].unit:"ml")+" short.":
+    worst?"Biggest gap: "+worst.label.toLowerCase()+", "+Math.round(worst.actual-worst.target)+" "+(MACRO_META[worst.key]?MACRO_META[worst.key].unit:"ml")+" over.":"";
+  return '<div class="card" style="text-align:center;padding:20px 18px">'+
+    '<div style="width:112px;height:112px;border-radius:50%;margin:0 auto 12px;background:conic-gradient('+b.c+' '+c.score+'%,var(--bg3) 0);display:flex;align-items:center;justify-content:center">'+
+      '<div style="width:92px;height:92px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+        '<div style="font-size:30px;font-weight:800;color:'+b.c+';line-height:1;font-family:var(--mono)">'+c.score+'</div>'+
+        '<div style="font-size:9.5px;font-weight:700;text-transform:uppercase;letter-spacing:.7px;color:var(--t3);margin-top:2px">Compliance</div>'+
+      '</div></div>'+
+    '<div style="font-size:16px;font-weight:800;color:'+b.c+'">'+b.label+'</div>'+
+    '<div style="font-size:12.5px;color:var(--t2);margin-top:5px;line-height:1.5">'+esc(line)+
+      (best&&best.score>=95?' '+esc(best.label)+' is right where it should be.':'')+'</div>'+
+  '</div>';
+}
+
+function renderFood(){
+  var el=document.getElementById("food-body");if(!el)return;
+  updateFoodDayLabel();
+  var iso=foodDate(), t=targetsFor(iso), a=dayTotals(iso);
+  var html="";
+  if(!hasNutritionPlan()){
+    html+='<div class="card" style="border-color:rgba(245,158,11,.22);background:linear-gradient(160deg,#111114,#16130f)">'+
+      '<div style="display:flex;gap:10px;align-items:flex-start">'+
+        '<span style="font-size:17px">🩺</span>'+
+        '<div style="flex:1"><div style="font-size:13.5px;font-weight:700;margin-bottom:3px">No plan from your doctor yet</div>'+
+        '<div style="font-size:12.5px;color:var(--t2);line-height:1.55">The targets below are reference values for your body and activity, not a prescription. Add your doctor’s plan and they become yours.</div>'+
+        '<button class="meal-add" style="margin-top:10px" onclick="openNutritionModal()">Add my plan</button>'+
+        '</div></div></div>';
+  }else{
+    var estKeys=MACROS.concat(["water_ml"]).filter(function(k){return t[k]&&t[k].src==="estimated";});
+    if(estKeys.length){
+      html+='<div class="card" style="border-color:rgba(59,130,246,.2)">'+
+        '<div style="display:flex;gap:10px;align-items:flex-start">'+
+          '<span style="font-size:16px">\ud83d\udd0e</span>'+
+          '<div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:3px">Targets read off your plan</div>'+
+          '<div style="font-size:12.5px;color:var(--t2);line-height:1.55">Your plan prescribes portions rather than numbers, so '+
+          estKeys.length+' of these targets were worked out from the meals it lists. Worth a look \u2014 and if your doctor gave you exact numbers, enter those.</div>'+
+          '<button class="meal-add" style="margin-top:10px" onclick="openNutritionModal()">Review targets</button>'+
+          '</div></div></div>';
+    }
+  }
+  html+=fuelBannerHTML(iso,t);
+  // Macros
+  html+='<div class="card">'+
+    '<div class="card-h" style="display:flex;justify-content:space-between;align-items:center">'+
+      '<span>Today’s macros</span>'+
+      '<span style="font-size:10px;color:var(--t3);text-transform:none;letter-spacing:0">'+
+      (t.kcal.src==="plan"?"from your plan":t.kcal.src==="estimated"?"read off your plan":t.kcal.src==="manual"?"your numbers":"reference values")+'</span></div>'+
+    MACROS.map(function(k){return macroRowHTML(k,a[k]||0,t[k]);}).join("")+
+  '</div>';
+  html+=waterCardHTML(iso,t);
+  html+=dayScoreHTML(iso);
+  // Meals
+  html+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin:18px 0 10px">Meals</div>';
+  mealSlots().forEach(function(s){html+=mealCardHTML(iso,s);});
+  // Plan reference
+  if(nutritionPlan&&(nutritionPlan.prescribed_foods||nutritionPlan.restricted_foods||nutritionPlan.methodology)){
+    html+='<div class="card">'+
+      '<div class="card-h">Your plan’s rules</div>'+
+      (nutritionPlan.methodology?'<div style="font-size:12.5px;color:var(--t2);line-height:1.55;margin-bottom:10px">'+esc(nutritionPlan.methodology)+'</div>':'')+
+      ((nutritionPlan.prescribed_foods||[]).length?'<div style="font-size:11px;font-weight:700;color:#22c55e;margin:8px 0 6px">Eat</div>'+
+        nutritionPlan.prescribed_foods.map(function(f){return '<span class="pill-tag">'+esc(f)+'</span>';}).join(""):'')+
+      ((nutritionPlan.restricted_foods||[]).length?'<div style="font-size:11px;font-weight:700;color:#ef4444;margin:10px 0 6px">Avoid</div>'+
+        nutritionPlan.restricted_foods.map(function(f){return '<span class="pill-tag">'+esc(f)+'</span>';}).join(""):'')+
+    '</div>';
+  }
+  html+='<div style="font-size:10.5px;color:var(--t3);line-height:1.5;text-align:center;padding:4px 10px 8px">'+
+    'Food tracking is guidance, not medical advice. Targets your doctor didn’t set come from published reference standards — see Settings → Nutrition plan.</div>';
+  el.innerHTML=html;
+}
+
+
+// ── MEAL ENTRY + CLAUDE VISION ────────────────────────────────
+let _mealDraft={slot:"breakfast",name:"",source:"manual",items:[],confidence:null,notes:"",date:null};
+let _mealImages={label:null,photo:null};
+let _planImage=null;
+
+function anthKey(){return localStorage.getItem("anthropic_key")||"";}
+// Shrink before upload — a 12 MP phone photo is pure token cost.
+function fileToJpegB64(file,maxDim){
+  return new Promise(function(res,rej){
+    var fr=new FileReader();
+    fr.onload=function(){
+      var img=new Image();
+      img.onload=function(){
+        var sc=Math.min(1,maxDim/Math.max(img.width,img.height));
+        var c=document.createElement("canvas");
+        c.width=Math.round(img.width*sc);c.height=Math.round(img.height*sc);
+        c.getContext("2d").drawImage(img,0,0,c.width,c.height);
+        var url=c.toDataURL("image/jpeg",0.82);
+        res({b64:url.split(",")[1],url:url});
+      };
+      img.onerror=function(){rej(new Error("Couldn't read that image."));};
+      img.src=fr.result;
+    };
+    fr.onerror=function(){rej(new Error("Couldn't read that file."));};
+    fr.readAsDataURL(file);
+  });
+}
+function parseJSONLoose(txt){
+  if(!txt)return null;
+  var t=String(txt).trim().replace(/^```(?:json)?/i,"").replace(/```$/,"").trim();
+  try{return JSON.parse(t);}catch(e){}
+  var a=t.indexOf("{"), b=t.lastIndexOf("}");
+  if(a>-1&&b>a){try{return JSON.parse(t.slice(a,b+1));}catch(e2){}}
+  return null;
+}
+async function claudeJSON(prompt,b64,maxTokens){
+  var key=anthKey();
+  if(!key)throw new Error("Add your Anthropic API key in Settings first.");
+  var content=[];
+  if(b64)content.push({type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}});
+  content.push({type:"text",text:prompt});
+  var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+    headers:{"x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true","Content-Type":"application/json"},
+    body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:maxTokens||1200,messages:[{role:"user",content:content}]})});
+  if(!res.ok){
+    var e=await res.text();
+    throw new Error(res.status===401?"That API key was rejected.":"Claude error "+res.status+" — "+e.slice(0,120));
+  }
+  var j=await res.json();
+  var txt=(j.content||[]).filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("");
+  var parsed=parseJSONLoose(txt);
+  if(!parsed)throw new Error("Couldn't read a result out of that — try a clearer photo.");
+  return parsed;
+}
+
+// ── Modal plumbing ────────────────────────────────────────────
+function openMealModal(slot){
+  _mealDraft={slot:slot||"breakfast",name:"",source:"manual",items:[],confidence:null,notes:"",date:foodDate()};
+  _mealImages={label:null,photo:null};
+  var sel=document.getElementById("ml-slot");
+  sel.innerHTML=mealSlots().map(function(s){return '<option value="'+s.id+'"'+(s.id===_mealDraft.slot?" selected":"")+'>'+esc(s.label)+'</option>';}).join("");
+  sel.onchange=function(){_mealDraft.slot=sel.value;};
+  ["ml-label-name","ml-label-portion","ml-photo-note","ml-note"].forEach(function(id){var e=document.getElementById(id);if(e)e.value="";});
+  ["ml-label-status","ml-photo-status","ml-save-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
+  ["ml-label-preview","ml-photo-preview"].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display="none";});
+  document.getElementById("ml-review-note").style.display="none";
+  document.getElementById("meal-modal-title").textContent="Add to "+slotMeta(_mealDraft.slot).label.toLowerCase();
+  mealTab("manual");
+  if(!_mealDraft.items.length)addIngredientRow();
+  document.getElementById("meal-modal").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeMealModal(){
+  document.getElementById("meal-modal").classList.remove("open");
+  document.body.style.overflow="";
+}
+function mealTab(t){
+  ["manual","label","photo"].forEach(function(k){
+    var pane=document.getElementById("ml-pane-"+k), tab=document.getElementById("ml-tab-"+k);
+    if(pane)pane.style.display=(k===t)?"":"none";
+    if(tab)tab.classList.toggle("active",k===t);
+  });
+}
+function onMealFile(inp,kind){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  var st=document.getElementById("ml-"+kind+"-status");
+  st.textContent="Preparing image…";
+  fileToJpegB64(f,kind==="label"?1400:1100).then(function(r){
+    _mealImages[kind]=r.b64;
+    var img=document.getElementById("ml-"+kind+"-img");
+    img.src=r.url;
+    document.getElementById("ml-"+kind+"-preview").style.display="";
+    st.textContent="";
+  }).catch(function(e){st.textContent=e.message;});
+}
+
+// ── Ingredient editor ─────────────────────────────────────────
+function blankItem(){return {name:"",qty:"",kcal:"",protein_g:"",carbs_g:"",fat_g:"",fiber_g:""};}
+function addIngredientRow(item){
+  _mealDraft.items.push(Object.assign(blankItem(),item||{}));
+  renderMealItems();
+}
+function removeItem(i){
+  _mealDraft.items.splice(i,1);
+  if(!_mealDraft.items.length)_mealDraft.items.push(blankItem());
+  renderMealItems();
+}
+function updItem(i,k,v){
+  if(!_mealDraft.items[i])return;
+  _mealDraft.items[i][k]=(k==="name"||k==="qty")?v:(v===""?"":+v);
+  recalcMealTotal();
+}
+function renderMealItems(){
+  var box=document.getElementById("ml-items");if(!box)return;
+  box.innerHTML=_mealDraft.items.map(function(it,i){
+    return '<div class="ing-row">'+
+      '<div style="display:flex;gap:8px;align-items:center;margin-bottom:9px">'+
+        '<input placeholder="Ingredient" value="'+escAttr(it.name||"")+'" oninput="updItem('+i+',\'name\',this.value)" '+
+          'style="flex:2;background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:9px 10px;color:var(--t1);font-size:14px;font-family:var(--font);outline:none">'+
+        '<input placeholder="150 g" value="'+escAttr(it.qty||"")+'" oninput="updItem('+i+',\'qty\',this.value)" '+
+          'style="flex:1;min-width:64px;background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:9px 10px;color:var(--t1);font-size:14px;font-family:var(--font);outline:none">'+
+        '<button onclick="lookupItem('+i+',this)" title="Let Coach Claudio estimate the values" '+
+          'style="flex-shrink:0;width:36px;height:36px;border-radius:9px;background:var(--bg3);border:1px solid var(--line);color:var(--brand);font-size:14px;cursor:pointer">✨</button>'+
+        '<button class="meal-x" onclick="removeItem('+i+')" aria-label="Remove">✕</button>'+
+      '</div>'+
+      '<div class="grid3">'+
+        numFld(i,"kcal","kcal",it.kcal)+numFld(i,"protein_g","protein g",it.protein_g)+numFld(i,"carbs_g","carbs g",it.carbs_g)+
+      '</div>'+
+      '<div class="grid2" style="margin-top:8px">'+
+        numFld(i,"fat_g","fat g",it.fat_g)+numFld(i,"fiber_g","fibre g",it.fiber_g)+
+      '</div>'+
+    '</div>';
+  }).join("");
+  recalcMealTotal();
+}
+function numFld(i,k,ph,v){
+  return '<input type="number" inputmode="decimal" placeholder="'+ph+'" value="'+(v===""||v==null?"":v)+'" '+
+    'oninput="updItem('+i+',\''+k+'\',this.value)" '+
+    'style="width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:9px 10px;color:var(--t1);font-size:14px;font-family:var(--mono);outline:none">';
+}
+function recalcMealTotal(){
+  var t=sumItems(_mealDraft.items);
+  var el=document.getElementById("ml-total");
+  if(el)el.innerHTML=Math.round(t.kcal)+' kcal &nbsp;·&nbsp; P '+Math.round(t.protein_g)+' g &nbsp;·&nbsp; C '+Math.round(t.carbs_g)+
+    ' g &nbsp;·&nbsp; F '+Math.round(t.fat_g)+' g &nbsp;·&nbsp; fibre '+Math.round(t.fiber_g)+' g';
+  var vs=document.getElementById("ml-vs-target");
+  if(vs){
+    var iso=_mealDraft.date||foodDate(), tg=targetsFor(iso), a=dayTotals(iso);
+    var after=a.kcal+t.kcal, left=tg.kcal.v-after;
+    vs.textContent=t.kcal?("Puts you at "+Math.round(after)+" of "+tg.kcal.v+" kcal for the day — "+
+      (left>=0?Math.round(left)+" kcal still to go.":Math.round(-left)+" kcal over.")):"";
+  }
+}
+async function lookupItem(i,btn){
+  var it=_mealDraft.items[i];
+  if(!it||!String(it.name||"").trim()){alert("Name the ingredient first.");return;}
+  if(btn){btn.disabled=true;btn.textContent="…";}
+  try{
+    var r=await claudeJSON("Give the nutrition for this food using standard food-composition data (USDA FoodData Central or equivalent national food composition tables).\n\nFood: "+it.name+"\nAmount: "+(it.qty||"1 typical serving")+
+      "\n\nReturn ONLY this JSON, values for the amount given, numbers only:\n"+
+      '{"kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"assumed":"what you assumed about the amount","confidence":0.0}',null,400);
+    ["kcal","protein_g","carbs_g","fat_g","fiber_g"].forEach(function(k){if(_num(r[k])!=null)it[k]=Math.round(_num(r[k])*10)/10;});
+    if(r.assumed&&!it.qty)it.qty=String(r.assumed).slice(0,30);
+    renderMealItems();
+  }catch(e){alert(e.message);}
+  if(btn){btn.disabled=false;btn.textContent="✨";}
+}
+
+// ── Label photo ───────────────────────────────────────────────
+async function readNutritionLabel(){
+  var st=document.getElementById("ml-label-status");
+  if(!_mealImages.label){st.textContent="Photograph the label first.";return;}
+  var portion=(document.getElementById("ml-label-portion").value||"").trim();
+  var name=(document.getElementById("ml-label-name").value||"").trim();
+  if(!portion){st.textContent="Say how much of it you ate — the label alone can't know.";return;}
+  st.textContent="Reading the label…";
+  try{
+    var r=await claudeJSON(
+      "This is a nutrition information table from a food package. Read it exactly as printed — do not estimate anything that is printed.\n\n"+
+      "The person ate: "+portion+(name?"\nFood: "+name:"")+"\n\n"+
+      "Work out the values for THAT amount from the table (watch whether the table is per 100 g, per 100 ml or per serving, and what the serving size is). "+
+      "If the table gives no fibre, return null for fibre rather than guessing. Energy in kcal (convert from kJ by dividing by 4.184 if only kJ is printed).\n\n"+
+      "Return ONLY this JSON:\n"+
+      '{"name":"food name","portion":"the amount eaten","basis":"per 100 g / per serving of X g — what you read","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":null,"confidence":0.0,"notes":"anything unclear in the photo"}',
+      _mealImages.label,800);
+    var item={name:r.name||name||"Packaged food",qty:r.portion||portion};
+    ["kcal","protein_g","carbs_g","fat_g","fiber_g"].forEach(function(k){item[k]=_num(r[k])!=null?Math.round(_num(r[k])*10)/10:"";});
+    _mealDraft.items=[item];
+    _mealDraft.source="label";
+    _mealDraft.name=item.name;
+    _mealDraft.confidence=_num(r.confidence);
+    _mealDraft.notes=r.notes||"";
+    showReviewNote("Read from the label — "+(r.basis||"")+". "+(r.notes||"")+" Check the numbers, then save.");
+    renderMealItems();mealTab("manual");
+    st.textContent="";
+  }catch(e){st.textContent=e.message;}
+}
+
+// ── Meal photo ────────────────────────────────────────────────
+async function estimateMealPhoto(){
+  var st=document.getElementById("ml-photo-status");
+  if(!_mealImages.photo){st.textContent="Take the photo first.";return;}
+  var note=(document.getElementById("ml-photo-note").value||"").trim();
+  st.textContent="Coach Claudio is looking at your plate…";
+  try{
+    var plan=nutritionPlan&&nutritionPlan.methodology?("\nThe person's dietitian plan follows: "+nutritionPlan.methodology):"";
+    var r=await claudeJSON(
+      "You are a sports dietitian estimating what is on this plate. Identify each component, estimate its cooked portion in grams "+
+      "(use the plate, cutlery and hand-sized cues for scale), and give its nutrition from standard food-composition data "+
+      "(USDA FoodData Central or equivalent). Include cooking fat if the food looks fried, roasted or sautéed.\n"+
+      (note?"\nThe person adds: "+note+"\n":"")+plan+"\n\n"+
+      "Be honest about uncertainty: confidence 0.8+ only when portions are obvious, 0.4–0.6 when you are guessing at hidden ingredients or portion size.\n\n"+
+      "Return ONLY this JSON:\n"+
+      '{"meal_name":"short name for the plate","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0}],"confidence":0.0,"notes":"what you could not see and what you assumed"}',
+      _mealImages.photo,1500);
+    var items=(r.items||[]).map(function(i){
+      var o={name:i.name||"item",qty:i.qty||""};
+      ["kcal","protein_g","carbs_g","fat_g","fiber_g"].forEach(function(k){o[k]=_num(i[k])!=null?Math.round(_num(i[k])*10)/10:"";});
+      return o;
+    });
+    if(!items.length)throw new Error("Couldn't make out any food in that photo.");
+    _mealDraft.items=items;
+    _mealDraft.source="photo";
+    _mealDraft.name=r.meal_name||"Meal";
+    _mealDraft.confidence=_num(r.confidence);
+    _mealDraft.notes=r.notes||"";
+    var conf=_num(r.confidence);
+    showReviewNote("Estimated from your photo"+(conf!=null?" — confidence "+Math.round(conf*100)+"%":"")+". "+
+      (r.notes||"")+" A photo can't see oil, sugar or what's underneath, so correct anything you know is off before saving.");
+    renderMealItems();mealTab("manual");
+    st.textContent="";
+  }catch(e){st.textContent=e.message;}
+}
+function showReviewNote(txt){
+  var el=document.getElementById("ml-review-note");
+  if(!el)return;
+  el.textContent=txt;el.style.display="";
+}
+
+// ── Save / delete ─────────────────────────────────────────────
+function saveMeal(){
+  var st=document.getElementById("ml-save-status");
+  var items=_mealDraft.items.filter(function(i){
+    return String(i.name||"").trim()||MACROS.some(function(k){return _num(i[k])>0;});
+  }).map(function(i){
+    var o={name:String(i.name||"Item").trim(),qty:String(i.qty||"").trim()};
+    MACROS.forEach(function(k){o[k]=_num(i[k])||0;});
+    return o;
+  });
+  if(!items.length){st.textContent="Nothing to save yet.";return;}
+  var totals=sumItems(items);
+  if(!totals.kcal){st.textContent="Add at least the calories — tap ✨ if you want them estimated.";return;}
+  var iso=_mealDraft.date||foodDate();
+  var d=dayEntry(iso,true);
+  var name=_mealDraft.name||items[0].name||"Meal";
+  d.meals.push({
+    id:"m"+Date.now()+Math.random().toString(36).slice(2,6),
+    slot:document.getElementById("ml-slot").value||_mealDraft.slot,
+    name:name,
+    time:new Date().toTimeString().slice(0,5),
+    source:_mealDraft.source||"manual",
+    confidence:_mealDraft.confidence,
+    ai_notes:_mealDraft.notes||"",
+    note:(document.getElementById("ml-note").value||"").trim(),
+    items:items,totals:totals
+  });
+  touchDay(iso);
+  closeMealModal();
+  renderFood();renderFoodHome();renderHealth();
+}
+function deleteMeal(id){
+  var iso=foodDate(), d=dayEntry(iso,true);
+  d.meals=(d.meals||[]).filter(function(m){return m.id!==id;});
+  touchDay(iso);renderFood();renderFoodHome();renderHealth();
+}
+
+
+// ── NUTRITION PLAN (settings) ─────────────────────────────────
+let _parsedPlan=null;
+
+function openNutritionModal(){
+  document.getElementById("drawer").classList.remove("open");
+  document.getElementById("drawer-bg").classList.remove("open");
+  fillNutritionForm();
+  document.getElementById("nutrition-modal").classList.add("open");
+  document.body.style.overflow="hidden";
+  nutriTab(hasNutritionPlan()?"targets":"plan");
+}
+function closeNutritionModal(){
+  document.getElementById("nutrition-modal").classList.remove("open");
+  document.body.style.overflow="";
+  renderFood();renderFoodHome();renderHealth();updateNutriSettingSub();
+}
+function nutriTab(t){
+  ["plan","targets","about"].forEach(function(k){
+    var p=document.getElementById("nt-pane-"+k), b=document.getElementById("nt-tab-"+k);
+    if(p)p.style.display=(k===t)?"":"none";
+    if(b)b.classList.toggle("active",k===t);
+  });
+  if(t==="targets")renderTargetSources();
+}
+function fillNutritionForm(){
+  var b=nutriBody(), base=baseTargets();
+  var set=function(id,v){var e=document.getElementById(id);if(e&&v!=null)e.value=v;};
+  set("bd-weight",b.has?b.weight_kg:"");
+  set("bd-height",(nutritionPlan&&nutritionPlan.body&&nutritionPlan.body.height_cm)||"");
+  set("bd-age",(nutritionPlan&&nutritionPlan.body&&nutritionPlan.body.age)||"");
+  set("bd-sex",b.sex);set("bd-activity",String(b.activity));set("bd-goal",b.goal);
+  set("nt-provider",(nutritionPlan&&nutritionPlan.provider)||"");
+  set("tg-kcal",base.kcal.v);set("tg-protein",base.protein_g.v);set("tg-carbs",base.carbs_g.v);
+  set("tg-fat",base.fat_g.v);set("tg-fiber",base.fiber_g.v);set("tg-water",base.water_ml.v);
+  renderTargetSources();renderPlanSummary();
+}
+function renderTargetSources(){
+  var el=document.getElementById("tg-sources");if(!el)return;
+  var base=baseTargets();
+  var fromPlan=[], fromRef=[], fromEst=[], fromMan=[];
+  [["kcal","Calories"],["protein_g","Protein"],["carbs_g","Carbs"],["fat_g","Fat"],["fiber_g","Fibre"],["water_ml","Water"]].forEach(function(p){
+    var src=base[p[0]].src;
+    (src==="plan"?fromPlan:src==="estimated"?fromEst:src==="manual"?fromMan:fromRef).push(p[1]);
+  });
+  el.innerHTML=(fromPlan.length?'<b style="color:#22c55e">Stated in your plan:</b> '+fromPlan.join(", ")+'<br>':"")+
+    (fromEst.length?'<b style="color:var(--blue)">Worked out from your plan\u2019s meals:</b> '+fromEst.join(", ")+
+      ' — your plan lists portions rather than numbers, so these were added up from what it prescribes. Correct any that look wrong.<br>':"")+
+    (fromMan.length?'<b style="color:var(--t2)">Set by you:</b> '+fromMan.join(", ")+'<br>':"")+
+    (fromRef.length?'<b style="color:var(--amber)">Estimated from reference standards:</b> '+fromRef.join(", ")+
+      ' — Mifflin-St Jeor energy, ACSM/AND/DC protein and carbohydrate bands, IOM/NASEM fat and fibre reference intakes, EFSA water. See <span style="color:var(--brand);cursor:pointer" onclick="nutriTab(\'about\')">About me</span> for the full list.':"")+
+    (fromRef.length?'<br><br>Estimates are population reference values, not a prescription. Anything your doctor states overrides them.':"");
+}
+function renderPlanSummary(){
+  var el=document.getElementById("nt-plan-summary");if(!el)return;
+  if(!nutritionPlan||!hasNutritionPlan()){el.innerHTML="";return;}
+  var p=nutritionPlan;
+  el.innerHTML='<div class="card"><div class="card-h">Plan on file</div>'+
+    '<div style="font-size:12.5px;color:var(--t2);line-height:1.6">'+
+      (p.provider?'<b>From:</b> '+esc(p.provider)+'<br>':'')+
+      (p.updated?'<b>Added:</b> '+esc(p.updated)+'<br>':'')+
+      (p.methodology?'<br>'+esc(p.methodology):'')+
+    '</div>'+
+    ((p.meals||[]).length?'<div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin:12px 0 6px">Meals</div>'+
+      p.meals.map(function(m){return '<div style="font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:4px"><b>'+esc(m.label||m.slot)+'</b>'+(m.time?" · "+esc(m.time):"")+'</div>';}).join(""):"")+
+    '<button class="btn" style="background:var(--bg3);color:var(--t1);margin-top:14px" onclick="nutriTab(\'plan\')">Replace with a new plan</button>'+
+  '</div>';
+}
+function updateNutriSettingSub(){
+  var el=document.getElementById("nutri-setting-sub");if(!el)return;
+  if(hasNutritionPlan()){
+    var b=baseTargets();
+    el.textContent="On file: "+b.kcal.v+" kcal, "+b.protein_g.v+" g protein, "+b.carbs_g.v+" g carbs, "+b.fat_g.v+" g fat, "+b.fiber_g.v+" g fibre a day.";
+  }else{
+    el.textContent="No plan yet — the Food tab is running on reference values for your body. Add the plan your doctor gave you.";
+  }
+}
+function onPlanFile(inp){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  var st=document.getElementById("nt-read-status");
+  st.textContent="Preparing image…";
+  fileToJpegB64(f,1600).then(function(r){
+    _planImage=r.b64;
+    document.getElementById("nt-img").src=r.url;
+    document.getElementById("nt-preview").style.display="";
+    st.textContent="";
+  }).catch(function(e){st.textContent=e.message;});
+}
+
+async function readNutritionPlan(){
+  var st=document.getElementById("nt-read-status");
+  var txt=(document.getElementById("nt-text").value||"").trim();
+  if(!_planImage&&!txt){st.textContent="Photograph the plan or paste its text first.";return;}
+  var btn=document.getElementById("nt-read-btn");
+  btn.disabled=true;btn.style.opacity="0.6";
+  st.textContent="Reading your plan…";
+  try{
+    var prompt=
+      "You are reading a nutrition plan written for one person by a doctor or dietitian. Extract ONLY what the document actually says. "+
+      "Never invent a number: if the plan does not state a calorie or macro target, return null for it — the app fills gaps from published reference standards and labels them as estimates. "+
+      "Translate meal and food names into English but keep the original wording alongside where it matters.\n\n"+
+      (txt?"PLAN TEXT:\n"+txt+"\n\n":"")+
+      "Return ONLY this JSON:\n"+
+      '{"language_detected":"es","methodology":"one sentence on the approach the plan follows, or null",'+
+      '"targets":{"kcal":null,"protein_g":null,"carbs_g":null,"fat_g":null,"fiber_g":null,"water_ml":null},'+
+      '"meal_structure":["breakfast","lunch","pm_snack","dinner"],'+
+      '"meals":[{"slot":"breakfast","label":"Breakfast","time":"09:00","components":[{"category":"Protein","portion":"2 eggs or 2 slices smoked salmon"}]}],'+
+      '"prescribed_foods":["..."],"restricted_foods":["..."],'+
+      '"notes":"anything else the plan instructs, e.g. timing or supplements",'+
+      '"confidence":0.0}';
+    var r=await claudeJSON(prompt,_planImage,3000);
+    _parsedPlan=r;
+    renderParsedPlan(r);
+    st.textContent="";
+  }catch(e){st.textContent=e.message;}
+  btn.disabled=false;btn.style.opacity="";
+}
+function renderParsedPlan(r){
+  var el=document.getElementById("nt-parsed");if(!el)return;
+  var t=r.targets||{};
+  var stated=[], missing=[];
+  [["kcal","Calories","kcal"],["protein_g","Protein","g"],["carbs_g","Carbs","g"],["fat_g","Fat","g"],["fiber_g","Fibre","g"],["water_ml","Water","ml"]].forEach(function(p){
+    var v=_num(t[p[0]]);
+    if(v>0)stated.push(p[1]+": <b>"+Math.round(v)+" "+p[2]+"</b>");else missing.push(p[1]);
+  });
+  var ref=referenceTargets();
+  el.innerHTML='<div class="card" style="border-color:rgba(0,200,150,.22)">'+
+    '<div class="card-h" style="color:var(--brand)">What I read</div>'+
+    (r.methodology?'<div style="font-size:12.5px;color:var(--t2);line-height:1.55;margin-bottom:10px">'+esc(r.methodology)+'</div>':'')+
+    (stated.length?'<div style="font-size:12.5px;color:var(--t2);line-height:1.8">'+stated.join("<br>")+'</div>':
+      '<div style="font-size:12.5px;color:var(--t2)">No explicit targets in the document — only the meal structure.</div>')+
+    (missing.length?'<div class="src-note" style="margin-top:12px"><b style="color:var(--amber)">Not stated in your plan:</b> '+missing.join(", ")+
+      '.<br>These will be filled from reference standards for your body — roughly '+ref.kcal+' kcal, '+ref.protein_g+' g protein, '+
+      ref.carbs_g+' g carbs, '+ref.fat_g+' g fat, '+ref.fiber_g+' g fibre, '+ref.water_ml+' ml water — and shown as estimates, not prescription. Fix your body details on the About me tab if those look wrong.</div>':'')+
+    ((r.meals||[]).length?'<div style="font-size:11px;font-weight:700;color:var(--t3);text-transform:uppercase;letter-spacing:.5px;margin:14px 0 6px">Meals ('+r.meals.length+')</div>'+
+      r.meals.map(function(m){return '<div style="font-size:12px;color:var(--t2);line-height:1.5;margin-bottom:5px"><b>'+esc(m.label||m.slot)+'</b>'+(m.time?" · "+esc(m.time):"")+
+        ((m.components||[]).length?'<br><span style="color:var(--t3);font-size:11.5px">'+esc(m.components.map(function(c){return c.category+": "+c.portion;}).join(" · "))+'</span>':"")+'</div>';}).join(""):"")+
+    ((r.prescribed_foods||[]).length?'<div style="font-size:11px;font-weight:700;color:#22c55e;margin:12px 0 6px">Eat</div>'+r.prescribed_foods.map(function(f){return '<span class="pill-tag">'+esc(f)+'</span>';}).join(""):"")+
+    ((r.restricted_foods||[]).length?'<div style="font-size:11px;font-weight:700;color:#ef4444;margin:12px 0 6px">Avoid</div>'+r.restricted_foods.map(function(f){return '<span class="pill-tag">'+esc(f)+'</span>';}).join(""):"")+
+    (_num(r.confidence)!=null?'<div style="font-size:11px;color:var(--t3);margin-top:12px">Read with '+Math.round(_num(r.confidence)*100)+'% confidence. Check the numbers on the Daily targets tab after saving.</div>':'')+
+    '<button class="btn" style="background:linear-gradient(135deg,#006e53,#00c896);margin-top:14px" onclick="saveParsedPlan()">Save this as my plan</button>'+
+  '</div>';
+}
+async function saveParsedPlan(){
+  if(!_parsedPlan)return;
+  var r=_parsedPlan, t=r.targets||{}, targets={};
+  ["kcal","protein_g","carbs_g","fat_g","fiber_g","water_ml"].forEach(function(k){
+    var v=_num(t[k]);
+    if(v>0)targets[k]={value:Math.round(v),src:"plan"};
+  });
+  nutritionPlan=Object.assign({},nutritionPlan||{},{
+    source:_planImage?"doctor_photo":"doctor_text",
+    updated:localDateStr(new Date()),
+    provider:(document.getElementById("nt-provider").value||"").trim()||(nutritionPlan&&nutritionPlan.provider)||"",
+    language_detected:r.language_detected||"",
+    methodology:r.methodology||"",
+    targets:targets,
+    meal_structure:r.meal_structure||[],
+    meals:r.meals||[],
+    prescribed_foods:r.prescribed_foods||[],
+    restricted_foods:r.restricted_foods||[],
+    notes:r.notes||"",
+    confidence:_num(r.confidence),
+    body:(nutritionPlan&&nutritionPlan.body)||{}
+  });
+  var st=document.getElementById("nt-read-status");
+  st.textContent="Saving…";
+  var ok=await commitNutritionPlan("Nutrition plan from doctor");
+  st.textContent=ok?"Saved. Your Food tab is on your plan now.":"Saved on this device — add your GitHub token in Settings to sync it.";
+  _parsedPlan=null;
+  document.getElementById("nt-parsed").innerHTML="";
+  fillNutritionForm();updateNutriSettingSub();
+  nutriTab("targets");
+  renderFood();renderFoodHome();renderHealth();
+}
+function fillTargetsFromReference(){
+  var ref=referenceTargets();
+  [["tg-kcal","kcal"],["tg-protein","protein_g"],["tg-carbs","carbs_g"],["tg-fat","fat_g"],["tg-fiber","fiber_g"],["tg-water","water_ml"]].forEach(function(p){
+    var el=document.getElementById(p[0]);
+    if(el&&!String(el.value||"").trim())el.value=ref[p[1]];
+  });
+  document.getElementById("tg-status").textContent="Filled the blanks from reference standards for your body.";
+}
+async function saveNutritionTargets(){
+  var map=[["tg-kcal","kcal"],["tg-protein","protein_g"],["tg-carbs","carbs_g"],["tg-fat","fat_g"],["tg-fiber","fiber_g"],["tg-water","water_ml"]];
+  var prev=(nutritionPlan&&nutritionPlan.targets)||{}, targets={};
+  var ref=referenceTargets();
+  map.forEach(function(p){
+    var v=_num(document.getElementById(p[0]).value);
+    if(!(v>0))return;
+    var before=prev[p[1]], beforeV=(before&&typeof before==="object")?_num(before.value):_num(before);
+    // Keep "plan" provenance only while the number is untouched or was already
+    // the doctor's; a value the athlete types over a reference default becomes theirs.
+    var src=(beforeV===Math.round(v)&&before&&before.src)?before.src:(Math.round(v)===ref[p[1]]?"reference":"manual");
+    targets[p[1]]={value:Math.round(v),src:src};
+  });
+  nutritionPlan=Object.assign({},nutritionPlan||{},{targets:targets,updated:localDateStr(new Date())});
+  if(!nutritionPlan.source)nutritionPlan.source="manual";
+  var st=document.getElementById("tg-status");
+  st.textContent="Saving…";
+  var ok=await commitNutritionPlan("Nutrition targets updated");
+  st.textContent=ok?"Saved.":"Saved on this device — add your GitHub token in Settings to sync it.";
+  renderTargetSources();updateNutriSettingSub();renderFood();renderFoodHome();
+}
+async function saveBodyProfile(){
+  var body={
+    weight_kg:_num(document.getElementById("bd-weight").value),
+    height_cm:_num(document.getElementById("bd-height").value),
+    age:_num(document.getElementById("bd-age").value),
+    sex:document.getElementById("bd-sex").value,
+    activity:_num(document.getElementById("bd-activity").value),
+    goal:document.getElementById("bd-goal").value
+  };
+  nutritionPlan=Object.assign({},nutritionPlan||{},{body:body,updated:localDateStr(new Date())});
+  if(!nutritionPlan.source)nutritionPlan.source="manual";
+  var st=document.getElementById("bd-status");
+  st.textContent="Saving…";
+  var ok=await commitNutritionPlan("Body details for nutrition targets");
+  st.textContent=ok?"Saved.":"Saved on this device — add your GitHub token in Settings to sync it.";
+  fillNutritionForm();renderFood();renderFoodHome();
+}
+async function commitNutritionPlan(msg){
+  try{localStorage.setItem("nutrition_plan_v1",JSON.stringify(nutritionPlan));}catch(e){}
+  var token=getToken();
+  if(!token)return false;
+  try{
+    var sha=null;
+    var r=await fetch(API+"/nutrition_plan.json",{headers:{Authorization:"Bearer "+token}});
+    if(r.ok){var meta=await r.json();sha=meta.sha;}
+    var body={message:msg,content:btoa(unescape(encodeURIComponent(JSON.stringify(nutritionPlan,null,2))))};
+    if(sha)body.sha=sha;
+    var put=await fetch(API+"/nutrition_plan.json",{method:"PUT",
+      headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify(body)});
+    return put.ok;
+  }catch(e){return false;}
+}
+
+
+// ── NUTRITION REPORTING: home card, health reports, insights ──
+function _avg(a){var v=a.filter(function(x){return _num(x)!=null;});return v.length?v.reduce(function(s,x){return s+x;},0)/v.length:null;}
+function healthOn(iso){return (health||[]).filter(function(h){return h.date===iso;})[0]||null;}
+function sleepOn(iso){return (sleep||[]).filter(function(s){return s.date===iso;})[0]||null;}
+function tssOn(iso){return actualsOn(iso).reduce(function(s,w){return s+getTSS(w);},0);}
+
+// One row per day: what was eaten, what was targeted, what the body did.
+function foodDays(n){
+  var out=[];
+  for(var i=n-1;i>=0;i--){
+    var d=new Date();d.setDate(d.getDate()-i);
+    var iso=localDateStr(d);
+    var totals=dayTotals(iso), t=targetsFor(iso), c=complianceFor(iso);
+    out.push({
+      iso:iso,totals:totals,targets:t,compliance:c?c.score:null,
+      logged:!!c&&dayComplete(iso),partial:!!c&&!dayComplete(iso),fuel:t._fuel,tss:tssOn(iso),
+      trained:actualsOn(iso).length>0||(!planPaused&&planSessionsOn(iso).length>0),
+      health:healthOn(iso),sleep:sleepOn(iso)
+    });
+  }
+  return out;
+}
+function loggedDays(n){return foodDays(n).filter(function(d){return d.logged;});}
+
+// Compare a metric on the day AFTER each food day, split by a food condition.
+function nextDaySplit(days,cond,metric){
+  var hit=[], miss=[];
+  days.forEach(function(d){
+    if(!d.logged)return;
+    var nxt=healthOn(isoAddDays(d.iso,1));
+    var v=nxt?_num(nxt[metric]):null;
+    if(v==null)return;
+    (cond(d)?hit:miss).push(v);
+  });
+  if(hit.length<3||miss.length<3)return null;
+  return {hit:_avg(hit),miss:_avg(miss),nHit:hit.length,nMiss:miss.length};
+}
+
+function nutritionInsights(){
+  var days=foodDays(45), logged=days.filter(function(d){return d.logged;});
+  var ins=[];
+  if(logged.length<3){
+    ins.push({icon:"📝",txt:"Log a few more days and this turns into real analysis — "+logged.length+" day"+(logged.length===1?"":"s")+" tracked so far. Three is enough to start seeing patterns."});
+    return ins;
+  }
+  var kg=bodyKg();
+  // Protein → next-day recovery signals
+  var prot=nextDaySplit(logged,function(d){return d.totals.protein_g>=d.targets.protein_g.v*0.9;},"hrv_ms");
+  if(prot&&Math.abs(prot.hit-prot.miss)>=1.5){
+    ins.push({icon:prot.hit>prot.miss?"💪":"🤔",
+      txt:"On days you hit your protein target your HRV the next morning averaged "+Math.round(prot.hit)+" ms, against "+
+        Math.round(prot.miss)+" ms when you fell short ("+prot.nHit+" vs "+prot.nMiss+" days). "+
+        (prot.hit>prot.miss?"Protein is doing its job on your recovery.":"Not the direction you'd expect — worth watching whether those were also your hardest or worst-slept days.")});
+  }
+  // Hydration → next-day resting HR
+  var wat=nextDaySplit(logged,function(d){return d.totals.water_ml>=d.targets.water_ml.v*0.9;},"rhr");
+  if(wat&&Math.abs(wat.hit-wat.miss)>=0.8){
+    ins.push({icon:"💧",txt:"Well-hydrated days were followed by a resting HR of "+wat.hit.toFixed(1)+" bpm, dry days "+wat.miss.toFixed(1)+
+      " bpm ("+wat.nHit+" vs "+wat.nMiss+" days). "+
+      (wat.hit<wat.miss?"Under-drinking shows up in your heart rate before you feel it — keep the bottle close on training days."
+        :"That's the opposite of the usual pattern, so hydration isn't what's driving your resting HR here — look at training load and sleep on those days first.")});
+  }
+  // Eating late → sleep that night
+  var lateS=[], earlyS=[];
+  logged.forEach(function(d){
+    var day=dayEntry(d.iso), late=(day.meals||[]).some(function(m){return m.time&&m.time>="21:30";});
+    var s=sleepOn(d.iso)||healthOn(d.iso);
+    var sc=s?_num(s.score!=null?s.score:s.sleep_score):null;
+    if(sc==null)return;
+    (late?lateS:earlyS).push(sc);
+  });
+  if(lateS.length>=3&&earlyS.length>=3&&Math.abs(_avg(lateS)-_avg(earlyS))>=3){
+    ins.push({icon:"🌙",txt:"Nights after a meal logged past 21:30 scored "+Math.round(_avg(lateS))+"/100 for sleep, against "+
+      Math.round(_avg(earlyS))+"/100 when you finished earlier ("+lateS.length+" vs "+earlyS.length+" nights). Your dinner timing is showing up in your sleep."});
+  }
+  // Under-fuelling a hard day
+  var under=logged.filter(function(d){return d.trained&&d.tss>=45&&d.totals.kcal>0&&d.totals.kcal<d.targets.kcal.v*0.85;});
+  if(under.length>=2){
+    ins.push({icon:"⚠️",txt:under.length+" training days in the last six weeks came in under 85% of the calories that day needed. "+
+      "Repeatedly training on too little energy is what drives low energy availability — the pattern the IOC RED-S consensus warns about — and it costs you adaptation, not just weight."});
+  }
+  // Training days vs rest days: are you actually eating more when you train?
+  var tr=logged.filter(function(d){return d.trained;}), rest=logged.filter(function(d){return !d.trained;});
+  if(tr.length>=3&&rest.length>=3){
+    var trK=_avg(tr.map(function(d){return d.totals.kcal;})), reK=_avg(rest.map(function(d){return d.totals.kcal;}));
+    var need=_avg(tr.map(function(d){return d.targets.kcal.v;}))-_avg(rest.map(function(d){return d.targets.kcal.v;}));
+    var got=trK-reK;
+    ins.push({icon:got>=need*0.6?"✅":"🔋",
+      txt:"Training days need about "+Math.round(need)+" kcal more than rest days, and you actually eat "+
+        (got>=0?Math.round(got)+" more":Math.round(-got)+" fewer")+" ("+Math.round(trK)+" vs "+Math.round(reK)+" kcal). "+
+        (got>=need*0.6?"Your intake follows your training — that's exactly how it should look.":
+          "You're fuelling a training day much like a rest day. Add the carbs around the session, not spread thin across the day.")});
+  }
+  // Fibre consistency
+  var fib=_avg(logged.map(function(d){return d.totals.fiber_g;})), fibT=baseTargets().fiber_g.v;
+  if(fib!=null){
+    var pct=Math.round(fib/fibT*100);
+    ins.push({icon:pct>=90?"🌾":"🥦",
+      txt:"Fibre is averaging "+Math.round(fib)+" g a day against a "+fibT+" g target ("+pct+"%). "+
+        (pct>=90?"Consistent — good for satiety and for steadier glucose through the day.":
+         "Short. Vegetables, legumes and whole grains at lunch move this fastest, and keep it away from the hour before a hard session.")});
+  }
+  // Protein per kg against the athlete band
+  var pk=_avg(logged.map(function(d){return d.totals.protein_g;}));
+  if(pk!=null&&kg){
+    var gkg=pk/kg;
+    ins.push({icon:gkg>=1.4?"🥩":"📉",
+      txt:"You're averaging "+gkg.toFixed(1)+" g of protein per kg of bodyweight. The ACSM/AND/DC band for active adults is 1.2–2.0 g/kg"+
+        (gkg<1.2?" — you're below it, which is the first thing to fix while you're training and in a deficit.":
+         gkg>2.0?" — you're above it. No harm, but those calories could be doing more work as carbs around training.":" — you're inside it.")});
+  }
+  // Consistency
+  var last14=foodDays(14).filter(function(d){return d.logged;}).length;
+  ins.push({icon:last14>=11?"🔥":"🗓",
+    txt:"You logged "+last14+" of the last 14 days. "+(last14>=11?"That's enough consistency for the numbers above to mean something.":
+      "Tracking is patchy — the patterns above are drawn from what's there, so fill the gaps before you act hard on them.")});
+  return ins;
+}
+
+// ── Home card ─────────────────────────────────────────────────
+function renderFoodHome(){
+  var el=document.getElementById("food-home");if(!el)return;
+  var iso=localDateStr(new Date()), t=targetsFor(iso), a=dayTotals(iso), c=complianceFor(iso);
+  var series=complianceSeries(14).filter(function(d){return d.score!=null;});
+  var avgScore=series.length?Math.round(_avg(series.map(function(d){return d.score;}))):null;
+  var inProgress=c&&!c.complete;
+  var pace=inProgress?dayPace(iso):null;
+  var band=complianceBand(c?c.score:(avgScore||0));
+  var html='<div class="card">'+
+    '<div class="card-h" style="display:flex;justify-content:space-between;align-items:center">'+
+      '<span>Food plan</span>'+
+      '<span style="font-size:10px;color:var(--t3);text-transform:none;letter-spacing:0;cursor:pointer" onclick="goFood()">Open ›</span></div>';
+  // Today line
+  var ringPct=inProgress?(t.kcal.v?Math.min(100,Math.round(a.kcal/t.kcal.v*100)):0):(c?c.score:0);
+  var ringCol=inProgress?pace.color:(c?band.c:"var(--t3)");
+  html+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">'+
+    '<div style="width:62px;height:62px;border-radius:50%;flex-shrink:0;background:conic-gradient('+ringCol+' '+ringPct+'%,var(--bg3) 0);display:flex;align-items:center;justify-content:center">'+
+      '<div style="width:50px;height:50px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center">'+
+        '<div style="font-family:var(--mono);font-weight:800;font-size:'+(inProgress?"14px":"17px")+';color:'+ringCol+'">'+(c?(inProgress?ringPct+"%":c.score):"—")+'</div>'+
+      '</div></div>'+
+    '<div style="flex:1;min-width:0">'+
+      '<div style="font-size:13.5px;font-weight:700">'+(c?(inProgress?pace.label:band.label+" today"):"Nothing logged today")+'</div>'+
+      '<div style="font-size:12px;color:var(--t2);line-height:1.5;margin-top:2px">'+
+        Math.round(a.kcal)+' / '+t.kcal.v+' kcal · P '+Math.round(a.protein_g)+'/'+t.protein_g.v+' · C '+Math.round(a.carbs_g)+'/'+t.carbs_g.v+
+        ' · '+(a.water_ml/1000).toFixed(1)+'/'+(t.water_ml.v/1000).toFixed(1)+' L'+
+      '</div>'+
+      (t._fuel.adjusted?'<div style="font-size:11px;color:var(--brand);margin-top:3px">⚡ Topped up '+t._fuel.add.kcal+' kcal for today’s training</div>':
+        '<div style="font-size:11px;color:var(--t3);margin-top:3px">Baseline day — no training top-up</div>')+
+    '</div></div>';
+  if(series.length>=2){
+    html+='<div class="chart-sm"><canvas id="foodComplianceChart"></canvas></div>'+
+      '<div style="display:flex;gap:14px;justify-content:center;font-size:11px;color:var(--t3);margin-top:8px;flex-wrap:wrap">'+
+        '<span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#00c896;margin-right:5px"></span>Rest day</span>'+
+        '<span><span style="display:inline-block;width:8px;height:8px;border-radius:2px;background:#3b82f6;margin-right:5px"></span>Training day</span>'+
+        (avgScore!=null?'<span>14-day average '+avgScore+'/100</span>':'')+
+      '</div>';
+  }else{
+    html+='<div style="font-size:12.5px;color:var(--t2);line-height:1.55;padding:6px 0">'+
+      'Log your meals for a few days and your compliance trend appears here — it keeps running whether or not the training plan is active.</div>';
+  }
+  // Report
+  var ins=nutritionInsights().slice(0,3);
+  if(ins.length){
+    html+='<div style="margin-top:12px;padding-top:12px;border-top:1px solid var(--line)">'+
+      ins.map(function(i){return '<div style="display:flex;gap:9px;align-items:flex-start;padding:6px 0">'+
+        '<span style="font-size:14px;flex-shrink:0">'+i.icon+'</span>'+
+        '<span style="font-size:12px;color:var(--t2);line-height:1.5">'+esc(i.txt)+'</span></div>';}).join("")+
+      '<div style="font-size:11px;color:var(--brand);cursor:pointer;margin-top:6px" onclick="goHealth()">Full nutrition report ›</div>'+
+    '</div>';
+  }
+  el.innerHTML=html+'</div>';
+  if(series.length>=2)drawFoodCompliance(series);
+}
+function drawFoodCompliance(series){
+  mk("foodComplianceChart",{type:"bar",
+    data:{labels:series.map(function(d){return new Date(d.date+"T00:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"});}),
+      datasets:[{data:series.map(function(d){return d.score;}),
+        backgroundColor:series.map(function(d){return d.trained?"rgba(59,130,246,.65)":"rgba(0,200,150,.6)";}),borderRadius:5}]},
+    options:Object.assign({},CD,{scales:Object.assign({},CD.scales,{y:Object.assign({},(CD.scales&&CD.scales.y)||{},{min:0,max:100})})})});
+}
+function goFood(){showPage("food",document.querySelector(".nav button[onclick*=\"'food'\"]"));}
+function goHealth(){showPage("health",document.querySelector(".nav button[onclick*=\"'health'\"]"));}
+
+// ── Health tab: full nutrition report ─────────────────────────
+function nutritionHealthHTML(){
+  var days=foodDays(30), logged=days.filter(function(d){return d.logged;});
+  var h='<div style="font-size:15px;font-weight:800;letter-spacing:-.2px;margin:22px 0 4px">Nutrition &amp; fuelling</div>'+
+    '<div style="font-size:12.5px;color:var(--t2);margin-bottom:10px">What you ate, what you needed, and how the two move with your sleep, recovery and training.</div>';
+  if(!logged.length){
+    return h+'<div class="card" style="text-align:center;color:var(--t3);padding:26px 20px;font-size:13.5px;line-height:1.6">'+
+      'No food logged yet.<br><br>Add meals on the <b onclick="goFood()" style="color:var(--brand);cursor:pointer">Food</b> tab and this becomes a full report — macro trends, hydration, and how your eating lines up with recovery and training.</div>';
+  }
+  var kg=bodyKg();
+  var avgK=_avg(logged.map(function(d){return d.totals.kcal;}));
+  var avgTK=_avg(logged.map(function(d){return d.targets.kcal.v;}));
+  var avgP=_avg(logged.map(function(d){return d.totals.protein_g;}));
+  var avgC=_avg(logged.map(function(d){return d.totals.carbs_g;}));
+  var avgF=_avg(logged.map(function(d){return d.totals.fat_g;}));
+  var avgFib=_avg(logged.map(function(d){return d.totals.fiber_g;}));
+  var avgW=_avg(logged.map(function(d){return d.totals.water_ml;}));
+  var avgComp=_avg(logged.map(function(d){return d.compliance;}));
+  function tile(label,val,sub,color){
+    return '<div style="flex:1;min-width:104px;background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:12px 11px">'+
+      '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t3)">'+label+'</div>'+
+      '<div style="font-family:var(--mono);font-size:19px;font-weight:700;color:'+(color||"var(--t1)")+';margin-top:4px">'+val+'</div>'+
+      '<div style="font-size:11px;color:var(--t3);margin-top:2px">'+sub+'</div></div>';
+  }
+  h+='<div style="display:flex;flex-wrap:wrap;gap:9px;margin-bottom:14px">'+
+    tile("Compliance",Math.round(avgComp),"avg over "+logged.length+" days",complianceBand(avgComp).c)+
+    tile("Calories",Math.round(avgK),"vs "+Math.round(avgTK)+" needed","#00c896")+
+    tile("Protein",Math.round(avgP)+"g",(avgP/kg).toFixed(1)+" g/kg","#8b5cf6")+
+    tile("Carbs",Math.round(avgC)+"g",(avgC/kg).toFixed(1)+" g/kg","#3b82f6")+
+    tile("Fat",Math.round(avgF)+"g",(avgK>0?Math.round(avgF*9/avgK*100)+"% of energy":"of energy"),"#f59e0b")+
+    tile("Fibre",Math.round(avgFib)+"g","target "+baseTargets().fiber_g.v+" g","#22c55e")+
+    tile("Water",(avgW/1000).toFixed(1)+"L","target "+(baseTargets().water_ml.v/1000).toFixed(1)+" L","#60a5fa")+
+  '</div>';
+  // Energy balance chart
+  h+='<div class="card"><div class="card-h">Energy in vs energy needed — 30 days</div>'+
+    '<div class="chart-box"><canvas id="foodEnergyChart"></canvas></div>'+
+    '<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:8px">Bars are what you ate; the line is what that day needed once training was counted. '+
+    'Gaps on training days matter more than gaps on rest days.</div></div>';
+  // Macro split
+  h+='<div class="card"><div class="card-h">Where your calories came from</div>'+
+    '<div class="chart-sm"><canvas id="foodMacroChart"></canvas></div>'+
+    '<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:8px">Protein, carbohydrate and fat as kcal per day. '+
+    'On a hard training day the blue band should grow — that’s the fuel the session runs on.</div></div>';
+  // Hydration
+  h+='<div class="card"><div class="card-h">Hydration</div>'+
+    '<div class="chart-sm"><canvas id="foodWaterChart"></canvas></div></div>';
+  // Training-day fuelling table
+  var tr=logged.filter(function(d){return d.trained;}), rest=logged.filter(function(d){return !d.trained;});
+  if(tr.length&&rest.length){
+    function row(label,a,b,unit){
+      return '<div style="display:flex;align-items:center;gap:8px;padding:8px 0;border-top:1px solid var(--line)">'+
+        '<span style="font-size:12.5px;color:var(--t1);font-weight:600;flex:1">'+label+'</span>'+
+        '<span style="font-family:var(--mono);font-size:12.5px;color:#3b82f6;width:78px;text-align:right">'+a+unit+'</span>'+
+        '<span style="font-family:var(--mono);font-size:12.5px;color:var(--t2);width:78px;text-align:right">'+b+unit+'</span></div>';
+    }
+    h+='<div class="card"><div class="card-h">Training days vs rest days</div>'+
+      '<div style="display:flex;gap:8px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.5px;color:var(--t3);padding-bottom:4px">'+
+        '<span style="flex:1"></span><span style="width:78px;text-align:right;color:#3b82f6">Training ('+tr.length+')</span><span style="width:78px;text-align:right">Rest ('+rest.length+')</span></div>'+
+      row("Calories",Math.round(_avg(tr.map(function(d){return d.totals.kcal;}))),Math.round(_avg(rest.map(function(d){return d.totals.kcal;})))," ")+
+      row("Carbs",Math.round(_avg(tr.map(function(d){return d.totals.carbs_g;}))),Math.round(_avg(rest.map(function(d){return d.totals.carbs_g;})))," g")+
+      row("Protein",Math.round(_avg(tr.map(function(d){return d.totals.protein_g;}))),Math.round(_avg(rest.map(function(d){return d.totals.protein_g;})))," g")+
+      row("Water",(_avg(tr.map(function(d){return d.totals.water_ml;}))/1000).toFixed(1),(_avg(rest.map(function(d){return d.totals.water_ml;}))/1000).toFixed(1)," L")+
+      row("Compliance",Math.round(_avg(tr.map(function(d){return d.compliance;}))),Math.round(_avg(rest.map(function(d){return d.compliance;})))," /100")+
+    '</div>';
+  }
+  // Cross-domain insights
+  var ins=nutritionInsights();
+  h+='<div class="card"><div class="card-h" style="margin-bottom:10px">How food, sleep, recovery and training interact</div>'+
+    ins.map(function(i){return '<div style="display:flex;gap:10px;align-items:flex-start;padding:9px 0;border-top:1px solid var(--line)">'+
+      '<span style="font-size:16px;flex-shrink:0">'+i.icon+'</span>'+
+      '<span style="font-size:13px;color:var(--t2);line-height:1.55">'+esc(i.txt)+'</span></div>';}).join("")+
+    '<div style="font-size:11px;color:var(--t3);margin-top:10px;line-height:1.5">Every line above is computed from your own logged days — sample sizes are stated so you can judge how much to trust each one. '+
+    'Associations in your own data, not proof of cause.</div></div>';
+  return h;
+}
+function drawNutritionCharts(){
+  var days=foodDays(30);
+  var lab=days.map(function(d){return new Date(d.iso+"T00:00:00").toLocaleDateString("en-GB",{day:"numeric",month:"short"});});
+  if(!document.getElementById("foodEnergyChart"))return;
+  mk("foodEnergyChart",{type:"bar",data:{labels:lab,datasets:[
+    {label:"Eaten",data:days.map(function(d){return d.logged?Math.round(d.totals.kcal):null;}),
+      backgroundColor:days.map(function(d){return d.trained?"rgba(59,130,246,.6)":"rgba(0,200,150,.55)";}),borderRadius:4,order:2},
+    {label:"Needed",data:days.map(function(d){return d.targets.kcal.v;}),type:"line",borderColor:"#f59e0b",
+      borderWidth:2,pointRadius:0,tension:.25,fill:false,order:1}
+  ]},options:Object.assign({},CD,{interaction:{mode:"index",intersect:false},
+    plugins:Object.assign({},CD.plugins,{legend:{display:true,position:"bottom",labels:{color:"#6b7480",font:{size:10},boxWidth:8,padding:10,usePointStyle:true}}})})});
+  mk("foodMacroChart",{type:"bar",data:{labels:lab,datasets:[
+    {label:"Protein",data:days.map(function(d){return d.logged?Math.round(d.totals.protein_g*4):null;}),backgroundColor:"rgba(139,92,246,.75)",stack:"m",borderRadius:3},
+    {label:"Carbs",data:days.map(function(d){return d.logged?Math.round(d.totals.carbs_g*4):null;}),backgroundColor:"rgba(59,130,246,.75)",stack:"m",borderRadius:3},
+    {label:"Fat",data:days.map(function(d){return d.logged?Math.round(d.totals.fat_g*9):null;}),backgroundColor:"rgba(245,158,11,.75)",stack:"m",borderRadius:3}
+  ]},options:Object.assign({},CD,{scales:Object.assign({},CD.scales,{x:Object.assign({},(CD.scales&&CD.scales.x)||{},{stacked:true}),y:Object.assign({},(CD.scales&&CD.scales.y)||{},{stacked:true})}),
+    plugins:Object.assign({},CD.plugins,{legend:{display:true,position:"bottom",labels:{color:"#6b7480",font:{size:10},boxWidth:8,padding:10,usePointStyle:true}}})})});
+  mk("foodWaterChart",{type:"bar",data:{labels:lab,datasets:[
+    {label:"Water (L)",data:days.map(function(d){return d.logged?Math.round(d.totals.water_ml)/1000:null;}),backgroundColor:"rgba(59,130,246,.6)",borderRadius:4},
+    {label:"Target",data:days.map(function(d){return d.targets.water_ml.v/1000;}),type:"line",borderColor:"#60a5fa",borderWidth:1.5,borderDash:[4,3],pointRadius:0,fill:false}
+  ]},options:CD});
+}
+
+
+// ── Training tab: Plan / Activity switcher ────────────────────
+function showTrainingTab(t){
+  ["plan","log"].forEach(function(k){
+    var p=document.getElementById("train-"+k), b=document.getElementById("seg-"+k);
+    if(p)p.style.display=(k===t)?"":"none";
+    if(b)b.classList.toggle("active",k===t);
+  });
+  var s=document.getElementById("scroll");if(s)s.scrollTop=0;
+}
+
+// ── Load nutrition data ───────────────────────────────────────
+async function loadNutritionData(){
+  var tok=getToken();
+  var np=null, fl=null;
+  try{np=tok?await apiGetJSON("nutrition_plan.json",tok):null;}catch(e){}
+  if(!np)np=await fetchJSON("nutrition_plan.json");
+  try{fl=tok?await apiGetJSON("food_log.json",tok):null;}catch(e){}
+  if(!fl)fl=await fetchJSON("food_log.json");
+  // Local copies win when they're newer — the phone logs meals offline.
+  var localPlan=null,localLog=null;
+  try{localPlan=JSON.parse(localStorage.getItem("nutrition_plan_v1")||"null");}catch(e){}
+  try{localLog=JSON.parse(localStorage.getItem("food_log_v1")||"null");}catch(e){}
+  nutritionPlan=(localPlan&&(!np||String(localPlan.updated||"")>String(np.updated||"")))?localPlan:(np||localPlan||null);
+  foodLog=mergeFoodLogs(fl&&fl.days?fl:{version:1,days:{}},localLog&&localLog.days?localLog:{version:1,days:{}});
+  saveFoodLocal();
+}
+
+// ── Coach context ─────────────────────────────────────────────
+function foodCoachContext(){
+  var iso=localDateStr(new Date()), t=targetsFor(iso), a=dayTotals(iso), c=complianceFor(iso);
+  var base=baseTargets(), b=nutriBody();
+  var lines=[];
+  lines.push("═══ DIEGO'S NUTRITION ═══");
+  lines.push("Body: "+b.weight_kg+" kg"+(b.height_cm?", "+b.height_cm+" cm":"")+(b.age?", "+b.age+" y":"")+", goal "+b.goal+".");
+  if(hasNutritionPlan()){
+    lines.push("Plan from "+((nutritionPlan&&nutritionPlan.provider)||"his doctor/dietitian")+
+      (nutritionPlan&&nutritionPlan.methodology?" — "+nutritionPlan.methodology:"")+
+      " Baseline day: "+base.kcal.v+" kcal, "+base.protein_g.v+"g protein, "+base.carbs_g.v+"g carbs, "+base.fat_g.v+"g fat, "+
+      base.fiber_g.v+"g fibre, "+base.water_ml.v+"ml water. Values marked 'reference' were NOT prescribed — they come from published standards (Mifflin-St Jeor, ACSM/AND/DC, IOM DRI, EFSA): "+
+      Object.keys(base).filter(function(k){return base[k].src!=="plan";}).join(", ")||"none");
+    if(nutritionPlan&&(nutritionPlan.restricted_foods||[]).length)lines.push("Plan says avoid: "+nutritionPlan.restricted_foods.join(", ")+".");
+  }else{
+    lines.push("No doctor's plan on file — targets are reference values for his body ("+base.kcal.v+" kcal, "+base.protein_g.v+
+      "g protein). Say so when you talk numbers, and suggest he add the plan in Settings → Nutrition plan.");
+  }
+  var f=t._fuel;
+  lines.push("TODAY'S TARGET: "+t.kcal.v+" kcal, "+t.protein_g.v+"g protein, "+t.carbs_g.v+"g carbs, "+t.fat_g.v+"g fat, "+
+    t.fiber_g.v+"g fibre, "+t.water_ml.v+"ml water — "+(f.adjusted?("topped up for training: "+f.reason):f.reason));
+  var pace=dayPace(iso);
+  lines.push("EATEN SO FAR TODAY: "+Math.round(a.kcal)+" kcal, "+Math.round(a.protein_g)+"g protein, "+Math.round(a.carbs_g)+
+    "g carbs, "+Math.round(a.fat_g)+"g fat, "+Math.round(a.fiber_g)+"g fibre, "+a.water_ml+"ml water"+
+    (c?(c.complete?" - day complete, compliance "+c.score+"/100."
+        :" - "+pace.label.toLowerCase()+" (by this hour he'd usually be near "+pace.expectedKcal+" kcal; "+pace.leftKcal+
+         " kcal and "+pace.leftProtein+"g protein still to go). Do NOT call a day in progress non-compliant - judge it on pace, not on the whole day's target.")
+      :" - nothing logged yet today."));
+  var recent=foodDays(7).filter(function(d){return d.logged;});
+  if(recent.length){
+    lines.push("Last 7 days logged ("+recent.length+"): "+recent.map(function(d){
+      return d.iso+" "+Math.round(d.totals.kcal)+"kcal/"+d.targets.kcal.v+" P"+Math.round(d.totals.protein_g)+" C"+Math.round(d.totals.carbs_g)+
+        " fib"+Math.round(d.totals.fiber_g)+" water"+Math.round(d.totals.water_ml)+" score"+d.compliance+(d.trained?" [trained]":"");
+    }).join(" | "));
+    var ins=nutritionInsights().slice(0,4);
+    if(ins.length)lines.push("Patterns in HIS data: "+ins.map(function(i){return i.txt;}).join(" "));
+  }
+  lines.push("NUTRITION RULES FOR YOU: his doctor's numbers are the prescription — never override them, and never contradict a plan a clinician wrote. "+
+    "You adjust FUELLING AROUND TRAINING (carb timing, protein after sessions, hydration) and you flag under-fuelling. "+
+    "Anything the plan didn't state, cite as a reference standard, not as his doctor's instruction. "+
+    "If he describes something he ate, call log_meal so it lands in his log; if he mentions drinking, call log_water. "+
+    "Send him to a clinician for anything clinical (blood results, symptoms, supplements, medication, eating-disorder signs) — coach the fuelling, not the medicine.");
+  return lines.join("\n")+"\n\n";
+}
+
+var LOG_MEAL_TOOL={
+  name:"log_meal",
+  description:"Log something Diego says he ate or drank into his food diary. Use whenever he describes food in conversation ('I had chicken and rice for lunch'). Estimate the nutrition from standard food-composition data when he doesn't give numbers, and tell him what you assumed.",
+  input_schema:{type:"object",properties:{
+    date:{type:"string",description:"YYYY-MM-DD. Today unless he says otherwise."},
+    slot:{type:"string",description:"breakfast, lunch, pm_snack, dinner or extra"},
+    name:{type:"string",description:"Short name for the meal"},
+    items:{type:"array",description:"Each food with its nutrition for the amount eaten",
+      items:{type:"object",properties:{
+        name:{type:"string"},qty:{type:"string"},kcal:{type:"number"},
+        protein_g:{type:"number"},carbs_g:{type:"number"},fat_g:{type:"number"},fiber_g:{type:"number"}
+      },required:["name","kcal"]}},
+    confidence:{type:"number",description:"0-1, how sure you are of the estimate"}
+  },required:["slot","items"]}
+};
+var LOG_WATER_TOOL={
+  name:"log_water",
+  description:"Add water Diego says he drank to today's hydration total.",
+  input_schema:{type:"object",properties:{
+    ml:{type:"number",description:"Millilitres to add (a glass ≈ 250 ml, a bottle ≈ 500 ml)"},
+    date:{type:"string",description:"YYYY-MM-DD, today unless stated"}
+  },required:["ml"]}
+};
+function coachLogMeal(input){
+  try{
+    var iso=(input.date&&/^\d{4}-\d{2}-\d{2}$/.test(input.date))?input.date:localDateStr(new Date());
+    var items=(input.items||[]).map(function(i){
+      var o={name:String(i.name||"item"),qty:String(i.qty||"")};
+      MACROS.forEach(function(k){o[k]=_num(i[k])||0;});
+      return o;
+    });
+    if(!items.length)return "No items given — nothing logged.";
+    var totals=sumItems(items);
+    var d=dayEntry(iso,true);
+    d.meals.push({id:"m"+Date.now()+Math.random().toString(36).slice(2,6),
+      slot:input.slot||"extra",name:input.name||items[0].name,time:new Date().toTimeString().slice(0,5),
+      source:"coach",confidence:_num(input.confidence),items:items,totals:totals,note:""});
+    touchDay(iso);renderFood();renderFoodHome();
+    var t=targetsFor(iso), a=dayTotals(iso);
+    return "Logged "+Math.round(totals.kcal)+" kcal to "+(input.slot||"extra")+" on "+iso+
+      ". Day now "+Math.round(a.kcal)+"/"+t.kcal.v+" kcal, protein "+Math.round(a.protein_g)+"/"+t.protein_g.v+"g.";
+  }catch(e){return "Couldn't log that: "+e.message;}
+}
+function coachLogWater(input){
+  try{
+    var iso=(input.date&&/^\d{4}-\d{2}-\d{2}$/.test(input.date))?input.date:localDateStr(new Date());
+    var ml=Math.round(_num(input.ml)||0);
+    if(!ml)return "No amount given.";
+    var d=dayEntry(iso,true);
+    d.water_ml=Math.max(0,Math.round((_num(d.water_ml)||0)+ml));
+    touchDay(iso);renderFood();renderFoodHome();
+    var t=targetsFor(iso);
+    return "Added "+ml+" ml. Now "+d.water_ml+" of "+t.water_ml.v+" ml for "+iso+".";
+  }catch(e){return "Couldn't log that: "+e.message;}
+}
+
 async function init(){
   var stamp=document.getElementById("build-stamp");if(stamp)stamp.textContent=BUILD;
   var _t=getToken();
@@ -3904,7 +5802,10 @@ async function init(){
   renderPrefs();renderPausedBtn();
   weekOffset=planStartOffset();updateWeekLabel();
   renderAvail();renderLog();renderPlan();renderGoalsSummary();updateGenLabel();
-  renderPlanPreamble();renderBlockOverview();loadChatHistory();renderHealth();
+  renderPlanPreamble();renderBlockOverview();loadChatHistory();
+  // Nutrition loads before the food/health renders so targets are real, not defaults.
+  await loadNutritionData();
+  updateNutriSettingSub();renderFood();renderFoodHome();renderHealth();
   if(workouts.length)renderHome();
   else{renderGamify();if(goals)renderGoalBanner(0,0);}
   var hasKeys=getToken()&&localStorage.getItem("anthropic_key");

@@ -1,4 +1,4 @@
-var SW_VERSION = '20260705-3';
+var SW_VERSION = '20260915-4';
 var SHELL_CACHE = 'shell-' + SW_VERSION;
 var CDN_CACHE = 'cdn-v1';
 var SHELL = ['./', './dashboard.html', './manifest.json', './apple-touch-icon.png', './icon-192.png', './icon-512.png'];

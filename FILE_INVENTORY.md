@@ -2,6 +2,25 @@
 
 All files you need to deploy the system.
 
+## Nutrition Data Files
+
+### `nutrition_plan.json`
+**The food plan.** Targets (calories, protein, carbs, fat, fibre, water), each
+tagged with where it came from — `plan` (your clinician stated it), `estimated`
+(worked out from the meals the plan prescribes), `manual` (you typed it) or
+`reference` (a published standard). Also holds the meal structure with portions,
+prescribed and restricted foods, the plan's method, and your body details
+(weight, height, age, sex, activity, goal) used to size anything missing.
+
+Written by the app from Settings → Nutrition plan. See `NUTRITION.md`.
+
+### `food_log.json`
+**What you actually ate.** `{version, days:{"YYYY-MM-DD": {meals:[…], water_ml, updated}}}`.
+Each meal carries its items with per-item macros, the totals, which route it was
+logged through (`manual`, `label`, `photo`, `coach`) and, for AI estimates, the
+confidence. Merged per-day by `updated` timestamp, so logging on two devices
+doesn't clobber. Mirrored to `localStorage` so the app works offline.
+
 ## Core Application Files
 
 ### `sync.py` (18 KB)

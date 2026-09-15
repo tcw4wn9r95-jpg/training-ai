@@ -1,0 +1,171 @@
+{
+  "source": "imported_from_nutriprep",
+  "updated": "2026-06-12",
+  "provider": "Nutritionist plan (imported from NutriPrep)",
+  "language_detected": "es",
+  "methodology": "Glucose Goddess — structure meals to blunt blood-glucose spikes: eat vegetables/fibre first, keep breakfast savoury and protein-rich, add a little vinegar or fat to carbs, and move gently after eating.",
+  "targets": {
+    "kcal": {
+      "value": 1980,
+      "src": "estimated"
+    },
+    "protein_g": {
+      "value": 150,
+      "src": "estimated"
+    },
+    "carbs_g": {
+      "value": 180,
+      "src": "estimated"
+    },
+    "fat_g": {
+      "value": 70,
+      "src": "estimated"
+    },
+    "fiber_g": {
+      "value": 32,
+      "src": "estimated"
+    },
+    "water_ml": {
+      "value": 2000,
+      "src": "estimated"
+    }
+  },
+  "meal_structure": [
+    "breakfast",
+    "lunch",
+    "pm_snack",
+    "dinner"
+  ],
+  "meals": [
+    {
+      "slot": "breakfast",
+      "label": "Breakfast",
+      "time": "09:00",
+      "components": [
+        {
+          "category": "Protein",
+          "portion": "2 eggs OR 2 slices of smoked salmon OR a protein serving"
+        },
+        {
+          "category": "Protein / Fat",
+          "portion": "30 g cheese OR 1/4 avocado"
+        },
+        {
+          "category": "Starch",
+          "portion": "30-40 g whole-grain or sourdough bread"
+        },
+        {
+          "category": "Fruit",
+          "portion": "1 cup strawberries/raspberries/blueberries OR 1 peach OR 1/2 banana OR 2 kiwis OR 1 orange OR 1 apple"
+        },
+        {
+          "category": "Dairy",
+          "portion": "1 cup kefir with skim milk OR 3/4 cup Greek yogurt"
+        }
+      ],
+      "water_ml": 500
+    },
+    {
+      "slot": "lunch",
+      "label": "Lunch",
+      "time": "13:00",
+      "components": [
+        {
+          "category": "Vegetables",
+          "portion": "1 cup cooked vegetables OR 2 cups raw"
+        },
+        {
+          "category": "Protein (raw weight)",
+          "portion": "180 g chicken OR fish OR turkey OR pork loin OR beef (in sauce, grilled, or oven-baked)"
+        },
+        {
+          "category": "Starch (cooked measure)",
+          "portion": "1/2 cup whole-grain pasta or quinoa OR 1 sweet potato OR 1 potato with skin OR 2 corn tortillas"
+        },
+        {
+          "category": "Legume",
+          "portion": "1/3 cup lentils OR 1/4 cup hummus OR 1/3 cup chickpeas"
+        },
+        {
+          "category": "Fruit",
+          "portion": "1 cup strawberries/raspberries/blueberries OR 1 peach OR 1/2 banana"
+        },
+        {
+          "category": "Fat",
+          "portion": "2 tsp olive oil OR 2 tsp sesame oil"
+        }
+      ],
+      "water_ml": 500
+    },
+    {
+      "slot": "pm_snack",
+      "label": "Mid-afternoon snack",
+      "time": "17:00",
+      "components": [
+        {
+          "category": "Option 1",
+          "portion": "20 g almonds/walnuts/cashews/pistachios + 1 apple OR 1 pear OR 1 nectarine"
+        },
+        {
+          "category": "Option 2",
+          "portion": "1 Barebells bar"
+        },
+        {
+          "category": "Option 3",
+          "portion": "3/4 cup Greek yogurt + 1/4 cup almonds/walnuts/pistachios"
+        }
+      ],
+      "water_ml": 500
+    },
+    {
+      "slot": "dinner",
+      "label": "Dinner",
+      "time": "20:00",
+      "components": [
+        {
+          "category": "Vegetables",
+          "portion": "1 cup vegetables - baby carrots and cherry tomatoes"
+        },
+        {
+          "category": "Protein",
+          "portion": "1 can tuna OR 1 egg + 30 g cheese OR 2 slices turkey ham or chicken + 30 g cheese OR 90 g chicken + 30 g cheese"
+        },
+        {
+          "category": "Starch",
+          "portion": "1 whole-grain pita OR 50 g whole-grain sourdough bread"
+        },
+        {
+          "category": "Fat",
+          "portion": "2 tsp olive oil OR 1/4 avocado"
+        }
+      ],
+      "water_ml": 500
+    }
+  ],
+  "prescribed_foods": [
+    "vegetables/fibre first at each meal (Glucose Goddess)",
+    "savoury, protein-rich breakfast",
+    "lean proteins: chicken, fish, turkey, pork loin, beef",
+    "legumes: lentils, chickpeas, hummus",
+    "whole grains and sourdough over refined starches",
+    "nuts: almonds, walnuts, cashews, pistachios",
+    "Greek yogurt and kefir"
+  ],
+  "restricted_foods": [
+    "juices",
+    "soups",
+    "fried or breaded foods",
+    "chocolate or sweets",
+    "alcoholic beverages"
+  ],
+  "notes": "Imported from the NutriPrep parse of the nutritionist's sheet. The sheet lists portions rather than numbers, so the macro targets were worked out from the prescribed meals rather than stated by the clinician - check them, and re-photograph the plan in Settings if the numbers should be different. Hydration target is the sum of the water the plan asks for at each meal (2000 ml).",
+  "confidence": 0.9,
+  "body": {
+    "weight_kg": null,
+    "height_cm": null,
+    "age": null,
+    "sex": "male",
+    "activity": 1.375,
+    "goal": "loss"
+  }
+}
