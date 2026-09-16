@@ -213,10 +213,88 @@
             "fat_g": 10.2,
             "fiber_g": 1.1
           }
+        },
+        {
+          "id": "m178958668090923xx",
+          "slot": "dinner",
+          "name": "Chicken Fried Rice with Vegetables",
+          "time": "20:24",
+          "source": "photo",
+          "confidence": 0.82,
+          "ai_notes": "Meal totals: ~483 kcal | 31.7g protein | 57.3g carbs | 15.0g fat | 1.9g fiber | 1.4g free sugar. **Glucose Goddess alignment**: Rice (53g carbs) should ideally be eaten *after* vegetables and protein; currently protein and veg are mixed throughout. Suggest eating the 20g peas and 15g carrot first, then rice and chicken. Oil content supports fat pairing with carbs (good). No visible vinegar—could strengthen glucose response management. Gentle movement post-meal recommended given refined carb load.",
+          "corrections": "item 1 (\"Fried meatballs (appears to be pork or beef)\") is actually: These are chicken pieces, approx 80 grams; item 3 (\"Peas (green peas, cooked)\") is actually: 20grams",
+          "ai_rounds": 1,
+          "note": "",
+          "items": [
+            {
+              "name": "Chicken pieces, fried",
+              "qty": "80 g",
+              "kcal": 165,
+              "protein_g": 26,
+              "carbs_g": 0,
+              "fat_g": 6.5,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Cooked white rice (with cooking oil)",
+              "qty": "160 g",
+              "kcal": 241,
+              "protein_g": 4.3,
+              "carbs_g": 53,
+              "fat_g": 2.1,
+              "fiber_g": 0.9,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Green peas, cooked",
+              "qty": "20 g",
+              "kcal": 17,
+              "protein_g": 1.3,
+              "carbs_g": 3,
+              "fat_g": 0.2,
+              "fiber_g": 0.7,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Diced carrot, cooked",
+              "qty": "15 g",
+              "kcal": 6,
+              "protein_g": 0.1,
+              "carbs_g": 1.3,
+              "fat_g": 0.1,
+              "fiber_g": 0.3,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Cooking oil (frying fat, additional to items above)",
+              "qty": "6 g",
+              "kcal": 54,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 6,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 483,
+            "protein_g": 31.7,
+            "carbs_g": 57.3,
+            "fat_g": 14.9,
+            "fiber_g": 1.9,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
         }
       ],
       "water_ml": 1250,
-      "updated": "2026-09-16T18:36:25.228Z"
+      "updated": "2026-09-16T19:24:40.910Z"
     }
   }
 }
