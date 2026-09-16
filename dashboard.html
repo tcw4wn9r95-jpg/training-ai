@@ -631,6 +631,30 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .mt-row .v{font-family:var(--mono);font-size:11px;color:var(--t3);width:96px;text-align:right;flex-shrink:0}
 .prov{font-size:11px;color:var(--t3);line-height:1.5;margin-top:10px;padding-top:9px;border-top:1px solid var(--line)}
 .prov b{color:var(--t2);font-weight:700}
+
+/* ── Meal advisor ───────────────────────────────────────────── */
+.en-gap{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px 15px;box-shadow:var(--card-shadow)}
+.en-gap-row{display:flex;align-items:center;gap:8px;padding:5px 0}
+.en-gap-row .l{font-size:12px;color:var(--t2);width:58px;flex-shrink:0}
+.en-gap-row .bar{flex:1;height:6px;border-radius:4px;background:var(--bg3);overflow:hidden}
+.en-gap-row .bar i{display:block;height:100%;border-radius:4px}
+.en-gap-row .v{font-family:var(--mono);font-size:11.5px;width:104px;text-align:right;flex-shrink:0;color:var(--t2)}
+.en-opt{background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:14px 15px;margin-bottom:11px;box-shadow:var(--card-shadow)}
+.en-opt.best{border-color:var(--brand-edge)}
+.en-opt-head{display:flex;align-items:flex-start;gap:9px;margin-bottom:6px}
+.en-opt-name{font-size:14.5px;font-weight:800;flex:1;min-width:0;line-height:1.3}
+.en-tag{font-size:9.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;border-radius:5px;padding:2px 6px;flex-shrink:0}
+.en-why{font-size:12.5px;color:var(--t2);line-height:1.55;margin-bottom:9px}
+.en-items{font-size:12px;color:var(--t2);line-height:1.6}
+.en-items div{display:flex;gap:8px}
+.en-items .q{color:var(--t3);flex-shrink:0}
+.en-tot{font-family:var(--mono);font-size:11.5px;color:var(--t3);margin-top:8px;padding-top:8px;border-top:1px solid var(--line)}
+.en-act{display:flex;gap:8px;margin-top:11px}
+.en-act button{flex:1;border-radius:11px;padding:10px;font-size:13px;font-weight:700;cursor:pointer;font-family:var(--font);border:1px solid var(--line)}
+.en-act .log{background:var(--brand-dim);color:var(--brand);border-color:var(--brand-edge)}
+.en-act .tweak{background:var(--bg3);color:var(--t2)}
+.en-fix{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
+.en-fix .sign{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
 </style>
 </head>
 <body>
@@ -838,6 +862,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     </div>
     <div id="coach-msgs"></div>
     <div class="quick-q">
+      <button onclick="goFood();openEatNow()">What do I eat now?</button>
       <button onclick="askQuick('How does my training look this week?')">This week?</button>
       <button onclick="askQuick('Should I train today or rest?')">Train today?</button>
       <button onclick="askQuick('How is my fitness trending?')">Trend?</button>
@@ -1262,6 +1287,48 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   </div>
 </div>
 
+
+<!-- ── What should I eat now ───────────────────────────────────────── -->
+<div class="modal" id="eat-now" style="z-index:330">
+  <div class="modal-top">
+    <button class="back" onclick="closeEatNow()">← Back</button>
+    <span class="ttl">What should I eat?</span>
+  </div>
+  <div class="modal-body">
+    <div id="en-gap"></div>
+    <div class="tabs" style="margin-top:14px">
+      <button id="en-tab-suggest" class="active" onclick="eatTab('suggest')">🍽 Suggest a meal</button>
+      <button id="en-tab-check" onclick="eatTab('check')">🤔 Check my idea</button>
+    </div>
+
+    <div id="en-pane-suggest">
+      <div class="fld">
+        <label>Anything I should work with? (optional)</label>
+        <textarea id="en-have" style="min-height:76px" placeholder="What's in the fridge: eggs, Greek yogurt, sweet potato, chicken thighs. Nothing that takes more than 15 minutes."></textarea>
+        <div class="hint">Leave it blank and Claudio suggests from your plan's foods.</div>
+      </div>
+      <button class="btn" onclick="askWhatToEat()" style="background:linear-gradient(135deg,#006e53,#00c896)">Tell me what to eat</button>
+      <div id="en-suggest-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
+    </div>
+
+    <div id="en-pane-check" style="display:none">
+      <div class="fld">
+        <label>What are you thinking of eating?</label>
+        <textarea id="en-idea" style="min-height:84px" placeholder="Two slices of pizza and a beer. Or: chicken thighs with rice and whatever salad is left."></textarea>
+      </div>
+      <div class="fld">
+        <label>What have you got available? (optional)</label>
+        <textarea id="en-idea-have" style="min-height:64px" placeholder="Greek yogurt, eggs, frozen peas, sourdough, olive oil."></textarea>
+        <div class="hint">Claudio can only suggest additions from what you actually have.</div>
+      </div>
+      <button class="btn" onclick="checkMyIdea()" style="background:linear-gradient(135deg,#006e53,#00c896)">Does this work?</button>
+      <div id="en-check-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
+    </div>
+
+    <div id="en-result" style="margin-top:16px"></div>
+  </div>
+</div>
+
 <!-- Onboarding overlay -->
 <div id="onboarding" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column">
   <div style="padding:calc(18px + env(safe-area-inset-top)) 18px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px">
@@ -1347,7 +1414,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-23";
+const BUILD="20260916-24";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -5083,7 +5150,8 @@ function mealCardHTML(iso,slot){
   meals.forEach(function(m){
     var mt=m.totals||sumItems(m.items);
     var corrected=!!(m.corrections&&String(m.corrections).trim());
-    var sp=m.source==="described"?{t:corrected?"Described, corrected":"Described",c:"var(--brand)",bg:"var(--brand-dim)"}:
+    var sp=m.source==="suggested"?{t:"Coach suggested",c:"var(--brand)",bg:"var(--brand-dim)"}:
+           m.source==="described"?{t:corrected?"Described, corrected":"Described",c:"var(--brand)",bg:"var(--brand-dim)"}:
            m.source==="photo"?{t:corrected?"Photo, corrected":"AI photo",c:"var(--violet)",bg:"rgba(139,92,246,.14)"}:
            m.source==="label"?{t:"Label",c:"var(--blue)",bg:"rgba(59,130,246,.14)"}:
            {t:"Manual",c:"var(--t3)",bg:"var(--tint2)"};
@@ -5112,6 +5180,287 @@ function mealCardHTML(iso,slot){
   return h+'</div>';
 }
 
+
+
+// ── WHAT SHOULD I EAT NOW ─────────────────────────────────────
+// The app knows what the day still owes him and what his plan allows. This
+// turns that into an answer: either a meal to eat now, or a verdict on the
+// one he already has in mind — what to add to it, or what to leave off.
+var _eatResult=null;
+
+// Which meal slot "now" belongs to: the one whose time is closest behind us,
+// or the next one if we're within an hour of it.
+function slotForNow(){
+  var ms=mealTimes(), now=minutesNow();
+  if(!ms.length)return "extra";
+  for(var i=0;i<ms.length;i++){
+    var t=hhmmToMin(ms[i].time);
+    if(now<t+90)return ms[i].id;      // before it, or still inside its window
+  }
+  return "extra";
+}
+function remainingToday(){
+  var iso=localDateStr(new Date()), t=targetsFor(iso), a=dayTotals(iso);
+  var out={iso:iso,targets:t,eaten:a,left:{}};
+  MACROS.concat(["water_ml"]).forEach(function(k){
+    out.left[k]=Math.round((t[k].v||0)-(a[k]||0));
+  });
+  return out;
+}
+function gapSummaryHTML(){
+  var r=remainingToday(), slot=slotForNow(), meta=slotMeta(slot);
+  var t=r.targets, a=r.eaten;
+  var f=t._fuel;
+  var rows=[["kcal","Calories","var(--brand)","kcal"],["protein_g","Protein","var(--violet)","g"],
+            ["carbs_g","Carbs","var(--blue)","g"],["fat_g","Fat","var(--amber)","g"],
+            ["fiber_g","Fibre","var(--green)","g"]].map(function(row){
+    var v=a[row[0]]||0, tgt=t[row[0]].v, pct=tgt>0?Math.min(100,Math.round(v/tgt*100)):0;
+    var left=r.left[row[0]];
+    return '<div class="en-gap-row">'+
+      '<span class="l">'+row[1]+'</span>'+
+      '<span class="bar"><i style="width:'+pct+'%;background:'+row[2]+'"></i></span>'+
+      '<span class="v">'+(left>0?left+' '+row[3]+' left':Math.abs(left)+' '+row[3]+' over')+'</span>'+
+    '</div>';
+  }).join("");
+  return '<div class="en-gap">'+
+    '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:8px">'+
+      'Where the day stands · '+new Date().toTimeString().slice(0,5)+'</div>'+
+    '<div style="font-size:14px;font-weight:800;margin-bottom:8px">Next up: '+esc(meta.label)+'</div>'+
+    rows+
+    '<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:8px">'+
+      (f.adjusted?'⚡ '+esc(f.reason):esc(f.reason))+
+    '</div>'+
+  '</div>';
+}
+function eatContextBlock(){
+  var r=remainingToday(), slot=slotForNow(), meta=slotMeta(slot);
+  var d=dayEntry(r.iso);
+  var eaten=(d.meals||[]).map(function(m){
+    var mt=m.totals||sumItems(m.items);
+    return (slotMeta(m.slot).label||m.slot)+" — "+(m.name||"meal")+" ("+Math.round(mt.kcal)+" kcal, P"+Math.round(mt.protein_g)+")";
+  }).join("; ")||"nothing yet";
+  var guide=planMealFor(slot);
+  var lines=[];
+  lines.push("TIME NOW: "+new Date().toTimeString().slice(0,5)+". The meal he's about to eat is his "+meta.label+".");
+  lines.push("ALREADY EATEN TODAY: "+eaten+".");
+  lines.push("STILL TO GO TODAY (target minus eaten): "+r.left.kcal+" kcal, "+r.left.protein_g+"g protein, "+
+    r.left.carbs_g+"g carbs, "+r.left.fat_g+"g fat, "+r.left.fiber_g+"g fibre, "+r.left.water_ml+"ml water. "+
+    "A negative number means he is already over on that one.");
+  lines.push("TODAY'S FULL TARGET: "+r.targets.kcal.v+" kcal, "+r.targets.protein_g.v+"g protein, "+r.targets.carbs_g.v+
+    "g carbs, "+r.targets.fat_g.v+"g fat, "+r.targets.fiber_g.v+"g fibre. "+r.targets._fuel.reason);
+  if(guide&&(guide.components||[]).length){
+    lines.push("WHAT HIS PLAN PRESCRIBES FOR "+meta.label.toUpperCase()+": "+
+      guide.components.map(function(c){return c.category+": "+c.portion;}).join(" | ")+".");
+  }
+  if(nutritionPlan&&nutritionPlan.methodology)lines.push("HIS PLAN'S METHOD: "+nutritionPlan.methodology);
+  if(nutritionPlan&&(nutritionPlan.prescribed_foods||[]).length)
+    lines.push("FOODS HIS PLAN FAVOURS: "+nutritionPlan.prescribed_foods.join(", ")+".");
+  if(nutritionPlan&&(nutritionPlan.restricted_foods||[]).length)
+    lines.push("FOODS HIS PLAN RESTRICTS (never suggest these; flag them if he proposes one): "+nutritionPlan.restricted_foods.join(", ")+".");
+  lines.push("He is "+bodyKg()+" kg. Meals must be realistic home food, not restaurant fantasy, and portions in grams or household measures.");
+  return lines.join("\n");
+}
+
+function openEatNow(){
+  document.getElementById("en-gap").innerHTML=gapSummaryHTML();
+  document.getElementById("en-result").innerHTML="";
+  ["en-suggest-status","en-check-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
+  _eatResult=null;
+  eatTab("suggest");
+  document.getElementById("eat-now").classList.add("open");
+  document.body.style.overflow="hidden";
+}
+function closeEatNow(){
+  document.getElementById("eat-now").classList.remove("open");
+  document.body.style.overflow=document.getElementById("meal-modal").classList.contains("open")?"hidden":"";
+}
+function eatTab(t){
+  ["suggest","check"].forEach(function(k){
+    var p=document.getElementById("en-pane-"+k), b=document.getElementById("en-tab-"+k);
+    if(p)p.style.display=(k===t)?"":"none";
+    if(b)b.classList.toggle("active",k===t);
+  });
+  var res=document.getElementById("en-result");if(res)res.innerHTML="";
+}
+
+// ── Suggest a meal ────────────────────────────────────────────
+async function askWhatToEat(){
+  var st=document.getElementById("en-suggest-status");
+  var have=(document.getElementById("en-have").value||"").trim();
+  st.textContent="Claudio is looking at your day…";
+  try{
+    var r=await claudeJSON(
+      "You are Coach Claudio, a sports dietitian. Diego wants to know what to eat right now. Use what the day still needs "+
+      "and what his plan allows, and suggest meals he can actually make.\n\n"+
+      eatContextBlock()+"\n\n"+
+      (have?"WHAT HE HAS OR WANTS TO WORK WITH: "+have+"\nStick to this — do not suggest anything he hasn't got.\n\n":"")+
+      "Give 2 or 3 options. Aim each at roughly the share of the remaining calories this meal should carry — do not try to "+
+      "close the whole day's gap in one sitting unless it's the last meal. Favour protein and fibre when those are the ones "+
+      "behind. If he is already over on something, say so and keep that low rather than pretending it doesn't matter.\n\n"+
+      "Return ONLY this JSON:\n"+
+      '{"read":"one sentence on what the day still needs","options":[{"name":"short name","why":"why this one fits, in one or two sentences",'+
+      '"prep":"about 10 minutes","items":[{"name":"food","qty":"150 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0}],'+
+      '"plan_fit":"how it sits with his plan"}],"notes":"anything worth adding, or empty"}',
+      null,2200);
+    if(!(r.options||[]).length)throw new Error("No suggestions came back — try again, or say what you have in.");
+    _eatResult={kind:"suggest",data:r};
+    st.textContent="";
+    renderEatResult();
+  }catch(e){st.textContent=e.message;}
+}
+
+// ── Check an idea ─────────────────────────────────────────────
+async function checkMyIdea(){
+  var st=document.getElementById("en-check-status");
+  var idea=(document.getElementById("en-idea").value||"").trim();
+  var have=(document.getElementById("en-idea-have").value||"").trim();
+  if(idea.length<3){st.textContent="Say what you're thinking of eating first.";return;}
+  st.textContent="Claudio is working it out…";
+  try{
+    var r=await claudeJSON(
+      "You are Coach Claudio, a sports dietitian. Diego is about to eat something and wants to know whether it works, and what "+
+      "to change. Be straight with him and stay practical — he is holding the food right now.\n\n"+
+      eatContextBlock()+"\n\n"+
+      "WHAT HE IS THINKING OF EATING:\n"+idea+"\n\n"+
+      (have?"WHAT HE HAS AVAILABLE (only suggest additions from this list):\n"+have+"\n\n":
+            "He hasn't said what else he has in, so keep additions to staples and say they depend on what he's got.\n\n")+
+      "Work out what he described, then decide: does it work as is, does it need something added, or should something come off "+
+      "or be cut down? Never tell him to skip the meal. If it breaks his plan's restrictions, say so plainly but without lecturing. "+
+      "final_items is what you are telling him to actually eat — his idea with your additions in and your removals out, each with "+
+      "its nutrition, because he will log exactly this.\n\n"+
+      "Return ONLY this JSON:\n"+
+      '{"verdict":"good"|"adjust"|"rethink","headline":"the answer in one line",'+
+      '"meal_name":"a short name for the meal itself, 2-5 words, for his food diary",'+
+      '"add":[{"name":"food","qty":"150 g","why":"what it fixes"}],'+
+      '"remove":[{"name":"food","qty":"how much to drop","why":"why"}],'+
+      '"final_items":[{"name":"food","qty":"150 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0}],'+
+      '"after":"what the rest of the day looks like once he eats this","notes":"anything else, or empty"}',
+      null,2200);
+    if(!(r.final_items||[]).length)throw new Error("That came back empty — try describing it in a bit more detail.");
+    _eatResult={kind:"check",data:r,idea:idea};
+    st.textContent="";
+    renderEatResult();
+  }catch(e){st.textContent=e.message;}
+}
+
+// ── Results ───────────────────────────────────────────────────
+function normItems(list){
+  return (list||[]).map(function(i){
+    var o={name:i.name||"item",qty:i.qty||""};
+    MACROS.forEach(function(k){o[k]=_num(i[k])!=null?Math.round(_num(i[k])*10)/10:0;});
+    return o;
+  });
+}
+function totalsLine(items){
+  var t=sumItems(items);
+  return Math.round(t.kcal)+' kcal · P '+Math.round(t.protein_g)+' · C '+Math.round(t.carbs_g)+
+         ' · F '+Math.round(t.fat_g)+' · fibre '+Math.round(t.fiber_g);
+}
+function afterLine(items){
+  var r=remainingToday(), t=sumItems(items);
+  var k=Math.round(r.left.kcal-t.kcal), p=Math.round(r.left.protein_g-t.protein_g);
+  return "Leaves "+(k>=0?k+" kcal":Math.abs(k)+" kcal over")+" and "+
+         (p>=0?p+" g protein":Math.abs(p)+" g over")+" for the rest of the day.";
+}
+function renderEatResult(){
+  var box=document.getElementById("en-result");if(!box||!_eatResult)return;
+  var d=_eatResult.data, h="";
+  if(_eatResult.kind==="suggest"){
+    if(d.read)h+='<div class="en-why" style="margin-bottom:12px">'+esc(d.read)+'</div>';
+    h+=(d.options||[]).map(function(o,i){
+      var items=normItems(o.items);
+      return '<div class="en-opt'+(i===0?" best":"")+'">'+
+        '<div class="en-opt-head">'+
+          '<span class="en-opt-name">'+esc(o.name||"Option "+(i+1))+'</span>'+
+          (i===0?'<span class="en-tag" style="color:var(--brand);background:var(--brand-dim)">Best fit</span>':'')+
+          (o.prep?'<span class="en-tag" style="color:var(--t3);background:var(--tint2)">'+esc(o.prep)+'</span>':'')+
+        '</div>'+
+        (o.why?'<div class="en-why">'+esc(o.why)+'</div>':'')+
+        '<div class="en-items">'+items.map(function(it){
+          return '<div><span class="q">'+esc(it.qty||"")+'</span><span>'+esc(it.name)+'</span></div>';}).join("")+'</div>'+
+        '<div class="en-tot">'+totalsLine(items)+'</div>'+
+        '<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:6px">'+esc(afterLine(items))+
+          (o.plan_fit?'<br>'+esc(o.plan_fit):'')+'</div>'+
+        '<div class="en-act">'+
+          '<button class="log" onclick="logSuggestion('+i+')">Log this meal</button>'+
+          '<button class="tweak" onclick="tweakSuggestion('+i+')">Edit first</button>'+
+        '</div>'+
+      '</div>';
+    }).join("");
+    if(d.notes)h+='<div style="font-size:12px;color:var(--t3);line-height:1.55;margin-top:4px">'+esc(d.notes)+'</div>';
+  }else{
+    var v=d.verdict||"adjust";
+    var band=v==="good"?{t:"Works as is",c:"var(--green)",bg:"rgba(34,197,94,.12)"}:
+             v==="rethink"?{t:"Worth a rethink",c:"var(--red)",bg:"rgba(239,68,68,.12)"}:
+             {t:"Needs a tweak",c:"var(--amber)",bg:"rgba(245,158,11,.14)"};
+    var items=normItems(d.final_items);
+    h+='<div class="en-opt best">'+
+      '<div class="en-opt-head">'+
+        '<span class="en-opt-name">'+esc(d.headline||"Here's the call")+'</span>'+
+        '<span class="en-tag" style="color:'+band.c+';background:'+band.bg+'">'+band.t+'</span>'+
+      '</div>';
+    (d.add||[]).forEach(function(a){
+      h+='<div class="en-fix"><span class="sign" style="color:var(--green);background:rgba(34,197,94,.14)">+</span>'+
+        '<span style="flex:1;font-size:12.5px;line-height:1.5"><b>'+esc(a.qty?a.qty+" ":"")+esc(a.name||"")+'</b>'+
+        (a.why?' <span style="color:var(--t3)">— '+esc(a.why)+'</span>':'')+'</span></div>';
+    });
+    (d.remove||[]).forEach(function(a){
+      h+='<div class="en-fix"><span class="sign" style="color:var(--red);background:rgba(239,68,68,.12)">−</span>'+
+        '<span style="flex:1;font-size:12.5px;line-height:1.5"><b>'+esc(a.qty?a.qty+" ":"")+esc(a.name||"")+'</b>'+
+        (a.why?' <span style="color:var(--t3)">— '+esc(a.why)+'</span>':'')+'</span></div>';
+    });
+    h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin:12px 0 6px">'+
+        'So eat this</div>'+
+      '<div class="en-items">'+items.map(function(it){
+        return '<div><span class="q">'+esc(it.qty||"")+'</span><span>'+esc(it.name)+'</span></div>';}).join("")+'</div>'+
+      '<div class="en-tot">'+totalsLine(items)+'</div>'+
+      '<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:6px">'+esc(d.after||afterLine(items))+'</div>'+
+      '<div class="en-act">'+
+        '<button class="log" onclick="logSuggestion(0)">Log this meal</button>'+
+        '<button class="tweak" onclick="tweakSuggestion(0)">Edit first</button>'+
+      '</div>'+
+    '</div>';
+    if(d.notes)h+='<div style="font-size:12px;color:var(--t3);line-height:1.55">'+esc(d.notes)+'</div>';
+  }
+  box.innerHTML=h;
+}
+function suggestionItems(i){
+  if(!_eatResult)return null;
+  if(_eatResult.kind==="suggest"){
+    var o=(_eatResult.data.options||[])[i];
+    return o?{name:o.name||"Meal",items:normItems(o.items)}:null;
+  }
+  var items=normItems(_eatResult.data.final_items);
+  // The headline is a verdict, not a meal name — it has no business in the diary.
+  var name=String(_eatResult.data.meal_name||"").trim();
+  if(!name){
+    var idea=String(_eatResult.idea||"").trim();
+    name=idea?(idea.length>40?idea.slice(0,38).replace(/[\s,;.]+$/,"")+"\u2026":idea)
+             :(items[0]?items[0].name:"Meal");
+  }
+  return {name:name,items:items};
+}
+// Hand the suggestion to the normal meal sheet, pre-filled, so it goes through
+// the same review-and-save path as everything else.
+function handOffSuggestion(i,openEditor){
+  var s=suggestionItems(i);if(!s)return;
+  closeEatNow();
+  openMealModal(slotForNow());
+  _mealDraft.items=s.items.slice();
+  _mealDraft.name=s.name;
+  _mealDraft.source="suggested";
+  _mealDraft.confidence=null;
+  _mealDraft.notes=(_eatResult.kind==="check"?"Checked against the day before eating.":"Suggested by Coach Claudio for this point in the day.");
+  renderMealItems();mealTab("manual");
+  showReviewNote((_eatResult.kind==="check"?"Coach Claudio's version of your idea":"Coach Claudio's suggestion")+
+    " — check the amounts against what you actually ate, then save.");
+  return s;
+}
+function logSuggestion(i){
+  var s=handOffSuggestion(i);
+  if(s)saveMeal();
+}
+function tweakSuggestion(i){handOffSuggestion(i,true);}
 
 // ── MEAL BREAKDOWN ────────────────────────────────────────────
 // A logged meal is a stack of components, and the totals hide which one did
@@ -5189,6 +5538,7 @@ function mealDetailHTML(m,iso){
   // Where the numbers came from
   var prov=[];
   var srcName={photo:"a photo of the plate, read by Coach Claudio",described:"your description, worked out by Coach Claudio",
+    suggested:"a suggestion from Coach Claudio, checked against your day",
     label:"the packet's nutrition label",coach:"a chat with Coach Claudio",manual:"numbers you typed in"}[m.source]||"your entry";
   prov.push("<b>From:</b> "+srcName+(m.time?", logged "+esc(m.time):""));
   if(_num(m.confidence)!=null)prov.push("<b>Confidence:</b> "+Math.round(_num(m.confidence)*100)+"%"+
@@ -5281,6 +5631,22 @@ function renderFood(){
   html+=waterCardHTML(iso,t);
   html+=dayScoreHTML(iso);
   // Meals
+  // Ask before eating, not just log after.
+  if(foodDayOffset===0){
+    var _rl=remainingToday();
+    html+='<div class="card" style="background-color:var(--bg2);background-image:var(--card-grad-green);border-color:var(--brand-edge);cursor:pointer" onclick="openEatNow()">'+
+      '<div style="display:flex;align-items:center;gap:12px">'+
+        '<span style="font-size:22px">\ud83c\udf7d</span>'+
+        '<div style="flex:1;min-width:0">'+
+          '<div style="font-size:14.5px;font-weight:800;letter-spacing:-.2px">What should I eat now?</div>'+
+          '<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:2px">'+
+            (_rl.left.kcal>0?_rl.left.kcal+' kcal and '+Math.max(0,_rl.left.protein_g)+' g protein still to go':
+             'You\u2019re at your calories for today')+
+            ' \u00b7 or tell Claudio what you\u2019re thinking of eating</div>'+
+        '</div>'+
+        '<span style="color:var(--brand);font-size:18px;flex-shrink:0">\u203a</span>'+
+      '</div></div>';
+  }
   html+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin:18px 0 10px">Meals</div>';
   mealSlots().forEach(function(s){html+=mealCardHTML(iso,s);});
   // Plan reference

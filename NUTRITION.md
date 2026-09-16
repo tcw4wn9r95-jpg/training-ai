@@ -118,6 +118,38 @@ You can also just tell Coach Claudio ("I had chicken and rice") — it calls
 Everything is stored in `food_log.json`, keyed by date, merged per-day against
 the remote copy so logging on the phone and on the laptop doesn't clobber.
 
+## Asking what to eat
+
+The Food tab's top card — **What should I eat now?** — turns the day's
+remaining numbers into an answer rather than a report. It opens on where the
+day stands: what's eaten, what's left of each macro, which meal is next by your
+plan's own meal times, and whether training has topped the targets up.
+
+Two ways to use it:
+
+- **Suggest a meal.** Optionally say what you have in or how long you've got.
+  You get two or three options, each with its ingredients and amounts, why it
+  fits what's still missing, roughly how long it takes, how it sits with your
+  plan, and what it leaves for the rest of the day. The totals under each
+  option are computed by the app from the ingredients, not taken on trust from
+  the model.
+
+- **Check my idea.** Say what you're thinking of eating, and what you have
+  available. You get a verdict — works as is, needs a tweak, worth a rethink —
+  then what to **add** and what to **drop or cut down**, each with a reason,
+  and the final list of what to actually eat. Additions only come from what you
+  said you have. It never tells you to skip the meal.
+
+Either way, **Log this meal** drops the result into the normal meal sheet,
+pre-filled and pre-slotted by the time of day, so it saves through the same
+review path as everything else and shows up as *Coach suggested*. **Edit
+first** does the same without saving, for when you ate three quarters of it.
+
+The prompt carries your remaining macros, the time, the meal your plan expects
+next, its prescribed portions for that meal, your plan's method, and its
+restricted foods — which are never suggested, and are flagged if you propose
+one yourself.
+
 ## Opening a meal
 
 Tap any logged meal and it opens into its components. Each one shows its
