@@ -118,6 +118,20 @@ You can also just tell Coach Claudio ("I had chicken and rice") — it calls
 Everything is stored in `food_log.json`, keyed by date, merged per-day against
 the remote copy so logging on the phone and on the laptop doesn't clobber.
 
+## Opening a meal
+
+Tap any logged meal and it opens into its components. Each one shows its
+amount, its calories and its share of the meal, a bar splitting its energy
+between protein, carbohydrate and fat, and the grams of each including fibre.
+Under that, the meal's total is drawn against the day's targets — what this one
+meal was worth as a percentage of each, training top-up included.
+
+The last block is provenance: where the numbers came from (a photo, your
+description, a packet label, a chat with the coach, or typed in), the time it
+was logged, the confidence and how many correction rounds it took, what you
+corrected, and what Claude assumed. A meal logged with only a total and no
+breakdown says so rather than inventing components.
+
 ## Compliance
 
 Each macro is scored against the day's target: calories, carbs and fat as a
