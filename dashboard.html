@@ -1240,7 +1240,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-19";
+const BUILD="20260916-20";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -4717,8 +4717,16 @@ async function pushFoodLog(){
     }
     var merged=mergeFoodLogs(remote,foodLog);
     foodLog=merged;saveFoodLocal();
-    var body={message:"Food log "+foodDate(),content:btoa(unescape(encodeURIComponent(JSON.stringify(merged,null,2))))};
+    // Don't commit days that carry nothing — opening a day, or adding water and
+    // taking it straight back off, was writing empty entries to the repo.
+    var toCommit={version:1,days:{}};
+    Object.keys(merged.days||{}).forEach(function(k){
+      var d=merged.days[k];
+      if((d.meals&&d.meals.length)||(_num(d.water_ml)||0)>0)toCommit.days[k]=d;
+    });
+    var body={message:"Food log "+foodDate(),content:btoa(unescape(encodeURIComponent(JSON.stringify(toCommit,null,2))))};
     if(sha)body.sha=sha;
+    if(JSON.stringify(toCommit.days)===JSON.stringify((remote&&remote.days)||{})){_foodSyncing=false;return true;}
     var put=await fetch(API+"/food_log.json",{method:"PUT",
       headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify(body)});
     _foodSyncing=false;
