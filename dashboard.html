@@ -106,127 +106,139 @@ try{var _tp=localStorage.getItem("theme_pref");
 /* ── THEME ─────────────────────────────────────────────────────
    Dark is the default. Light follows the iOS system setting through
    prefers-color-scheme; Appearance in Settings can pin either one by
-   setting data-theme on <html>, which wins over the media query. */
+   setting data-theme on <html>, which wins over the media query.
+   Both palettes are warm-toned: warm charcoal in the dark, warm paper in
+   the light, with a sunrise tint at the top of the page. */
 :root{
   color-scheme:dark;
-  --bg:#09090b; --bg2:#111114; --bg3:#1a1a1f; --line:rgba(255,255,255,.06);
-  --t1:#f2f2f3; --t2:#a0a0aa; --t3:#62626e;
+  /* Warm charcoal rather than neutral black — the whole app reads warmer. */
+  --bg:#0c0a09; --bg2:#16130f; --bg3:#221d17; --line:rgba(255,236,214,.08);
+  --t1:#f7f2ea; --t2:#aaa197; --t3:#6f665b;
   --brand:#00c896; --brand-dim:rgba(0,200,150,.15); --brand-glow:rgba(0,200,150,.25);
   --brand-edge:rgba(0,200,150,.28);
-  --blue:#3b82f6; --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --violet:#8b5cf6;
+  --blue:#3b82f6; --green:#22c55e; --amber:#f59e0b; --red:#f2634b; --violet:#9d6cf5;
   --run:#3b82f6; --bike:#22c55e; --strength:#f59e0b;
-  --neutral:#6b7480;
-  /* Surfaces layered over the card background */
-  --tint:rgba(255,255,255,.03); --tint2:rgba(255,255,255,.05); --tint3:rgba(255,255,255,.09);
-  --hairline:rgba(255,255,255,.14); --mark:rgba(255,255,255,.45);
-  --scrim:rgba(0,0,0,.6); --scrim-blur:rgba(9,9,11,.82);
-  --bar-bg:rgba(9,9,11,.88); --nav-bg:rgba(9,9,11,.92);
-  --on-brand:#09090b; --on-solid:#fff;
-  --hero-grad:linear-gradient(160deg,#13161b,#171b22);
-  --card-grad:linear-gradient(160deg,#111114,#141418);
-  --card-grad-green:linear-gradient(160deg,#111114,#131618);
-  --card-grad-amber:linear-gradient(160deg,#111114,#16130f);
-  --goal-grad:linear-gradient(140deg,#1a1530,#15161f);
-  --logo-grad:linear-gradient(135deg,#003d2e,#00c896);
-  --card-shadow:none; --shadow-lg:0 24px 64px rgba(0,0,0,.5);
-  --glow:rgba(0,200,150,.04);
-  /* Charts */
+  --neutral:#7d7469;
   --c-yoga:#a855f7; --c-hike:#fb923c; --c-walk:#93c5fd; --c-row:#14b8a6;
   --c-elliptical:#fbbf24; --c-tennis:#a3e635; --c-soccer:#34d399; --c-boxing:#fb7185;
   --c-soft-red:#f87171; --c-soft-green:#4ade80;
-  --grid:rgba(255,255,255,.04); --tick:#6b7480;
-  --tip-bg:#1c2127; --tip-line:rgba(255,255,255,.1); --tip-t:#f4f6f8; --tip-b:#aeb6c0;
+  /* Surfaces layered over the card background */
+  --tint:rgba(255,238,220,.035); --tint2:rgba(255,238,220,.055); --tint3:rgba(255,238,220,.09);
+  --hairline:rgba(255,238,220,.15); --mark:rgba(255,246,236,.45);
+  --scrim:rgba(0,0,0,.6); --scrim-blur:rgba(12,10,9,.82);
+  --bar-bg:rgba(12,10,9,.88); --nav-bg:rgba(12,10,9,.92);
+  --on-brand:#0c0a09; --on-solid:#fff;
+  --hero-grad:linear-gradient(160deg,#191410,#1f1a14);
+  --card-grad:linear-gradient(160deg,#16130f,#1b1712);
+  --card-grad-green:linear-gradient(160deg,#16130f,#141a16);
+  --card-grad-amber:linear-gradient(160deg,#16130f,#1f1810);
+  --goal-grad:linear-gradient(140deg,#241a2f,#1c1720);
+  --logo-grad:linear-gradient(135deg,#00694a,#00d3a0); --logo-solid:#00875f;
+  --card-shadow:none; --shadow-lg:0 24px 64px rgba(0,0,0,.55);
+  /* A sunrise tint at the top of the page instead of a cold green one */
+  --glow:rgba(255,168,84,.055);
+  /* Charts */
+  --ch-rest:rgba(0,200,150,.6); --ch-train:rgba(59,130,246,.65);
+  --grid:rgba(255,238,220,.05); --tick:#7d7469;
+  --tip-bg:#221d17; --tip-line:rgba(255,238,220,.12); --tip-t:#f7f2ea; --tip-b:#b8afa3;
   --r:16px;
   --font:"Manrope",-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
   --mono:"SF Mono",ui-monospace,"Roboto Mono",Menlo,monospace;
 }
 :root[data-theme="dark"]{
   color-scheme:dark;
-  --bg:#09090b; --bg2:#111114; --bg3:#1a1a1f; --line:rgba(255,255,255,.06);
-  --t1:#f2f2f3; --t2:#a0a0aa; --t3:#62626e;
+  /* Warm charcoal rather than neutral black — the whole app reads warmer. */
+  --bg:#0c0a09; --bg2:#16130f; --bg3:#221d17; --line:rgba(255,236,214,.08);
+  --t1:#f7f2ea; --t2:#aaa197; --t3:#6f665b;
   --brand:#00c896; --brand-dim:rgba(0,200,150,.15); --brand-glow:rgba(0,200,150,.25);
   --brand-edge:rgba(0,200,150,.28);
-  --blue:#3b82f6; --green:#22c55e; --amber:#f59e0b; --red:#ef4444; --violet:#8b5cf6;
+  --blue:#3b82f6; --green:#22c55e; --amber:#f59e0b; --red:#f2634b; --violet:#9d6cf5;
   --run:#3b82f6; --bike:#22c55e; --strength:#f59e0b;
-  --neutral:#6b7480;
-  /* Surfaces layered over the card background */
-  --tint:rgba(255,255,255,.03); --tint2:rgba(255,255,255,.05); --tint3:rgba(255,255,255,.09);
-  --hairline:rgba(255,255,255,.14); --mark:rgba(255,255,255,.45);
-  --scrim:rgba(0,0,0,.6); --scrim-blur:rgba(9,9,11,.82);
-  --bar-bg:rgba(9,9,11,.88); --nav-bg:rgba(9,9,11,.92);
-  --on-brand:#09090b; --on-solid:#fff;
-  --hero-grad:linear-gradient(160deg,#13161b,#171b22);
-  --card-grad:linear-gradient(160deg,#111114,#141418);
-  --card-grad-green:linear-gradient(160deg,#111114,#131618);
-  --card-grad-amber:linear-gradient(160deg,#111114,#16130f);
-  --goal-grad:linear-gradient(140deg,#1a1530,#15161f);
-  --logo-grad:linear-gradient(135deg,#003d2e,#00c896);
-  --card-shadow:none; --shadow-lg:0 24px 64px rgba(0,0,0,.5);
-  --glow:rgba(0,200,150,.04);
-  /* Charts */
+  --neutral:#7d7469;
   --c-yoga:#a855f7; --c-hike:#fb923c; --c-walk:#93c5fd; --c-row:#14b8a6;
   --c-elliptical:#fbbf24; --c-tennis:#a3e635; --c-soccer:#34d399; --c-boxing:#fb7185;
   --c-soft-red:#f87171; --c-soft-green:#4ade80;
-  --grid:rgba(255,255,255,.04); --tick:#6b7480;
-  --tip-bg:#1c2127; --tip-line:rgba(255,255,255,.1); --tip-t:#f4f6f8; --tip-b:#aeb6c0;
+  /* Surfaces layered over the card background */
+  --tint:rgba(255,238,220,.035); --tint2:rgba(255,238,220,.055); --tint3:rgba(255,238,220,.09);
+  --hairline:rgba(255,238,220,.15); --mark:rgba(255,246,236,.45);
+  --scrim:rgba(0,0,0,.6); --scrim-blur:rgba(12,10,9,.82);
+  --bar-bg:rgba(12,10,9,.88); --nav-bg:rgba(12,10,9,.92);
+  --on-brand:#0c0a09; --on-solid:#fff;
+  --hero-grad:linear-gradient(160deg,#191410,#1f1a14);
+  --card-grad:linear-gradient(160deg,#16130f,#1b1712);
+  --card-grad-green:linear-gradient(160deg,#16130f,#141a16);
+  --card-grad-amber:linear-gradient(160deg,#16130f,#1f1810);
+  --goal-grad:linear-gradient(140deg,#241a2f,#1c1720);
+  --logo-grad:linear-gradient(135deg,#00694a,#00d3a0); --logo-solid:#00875f;
+  --card-shadow:none; --shadow-lg:0 24px 64px rgba(0,0,0,.55);
+  /* A sunrise tint at the top of the page instead of a cold green one */
+  --glow:rgba(255,168,84,.055);
+  /* Charts */
+  --ch-rest:rgba(0,200,150,.6); --ch-train:rgba(59,130,246,.65);
+  --grid:rgba(255,238,220,.05); --tick:#7d7469;
+  --tip-bg:#221d17; --tip-line:rgba(255,238,220,.12); --tip-t:#f7f2ea; --tip-b:#b8afa3;
 }
 @media (prefers-color-scheme: light){
   :root:not([data-theme="dark"]){
   color-scheme:light;
-  --bg:#f5f6f8; --bg2:#ffffff; --bg3:#eceef2; --line:rgba(17,24,39,.10);
-  --t1:#15171c; --t2:#565d6b; --t3:#858b98;
-  --brand:#00875f; --brand-dim:rgba(0,135,95,.10); --brand-glow:rgba(0,135,95,.2);
-  --brand-edge:rgba(0,135,95,.28);
-  --blue:#2563eb; --green:#15803d; --amber:#b45309; --red:#dc2626; --violet:#6d28d9;
+  /* Warm paper, not cold grey. */
+  --bg:#faf6f0; --bg2:#fffdfa; --bg3:#f1ebe2; --line:rgba(74,54,34,.12);
+  --t1:#231d16; --t2:#61584c; --t3:#8f8577;
+  --brand:#0a7f5a; --brand-dim:rgba(10,127,90,.10); --brand-glow:rgba(10,127,90,.2);
+  --brand-edge:rgba(10,127,90,.28);
+  --blue:#2563eb; --green:#15803d; --amber:#b45309; --red:#c9402c; --violet:#7c3aa8;
   --run:#2563eb; --bike:#15803d; --strength:#b45309;
-  --neutral:#6b7280;
-  --tint:rgba(17,24,39,.035); --tint2:rgba(17,24,39,.05); --tint3:rgba(17,24,39,.08);
-  --hairline:rgba(17,24,39,.18); --mark:rgba(17,24,39,.4);
-  --scrim:rgba(17,24,39,.34); --scrim-blur:rgba(245,246,248,.82);
-  --bar-bg:rgba(245,246,248,.88); --nav-bg:rgba(255,255,255,.94);
-  --on-brand:#ffffff; --on-solid:#fff;
-  --hero-grad:linear-gradient(160deg,#ffffff,#eff3f7);
-  --card-grad:linear-gradient(160deg,#ffffff,#f3f5f9);
-  --card-grad-green:linear-gradient(160deg,#ffffff,#eef8f4);
-  --card-grad-amber:linear-gradient(160deg,#ffffff,#fdf6ec);
-  --goal-grad:linear-gradient(140deg,#f2efff,#eef2fb);
-  --logo-grad:linear-gradient(135deg,#00694a,#00a87c);
-  --card-shadow:0 1px 2px rgba(17,24,39,.05); --shadow-lg:0 24px 64px rgba(17,24,39,.22);
-  --glow:rgba(0,135,95,.06);
+  --neutral:#7c7266;
   --c-yoga:#7e22ce; --c-hike:#c2410c; --c-walk:#1d4ed8; --c-row:#0f766e;
   --c-elliptical:#a16207; --c-tennis:#4d7c0f; --c-soccer:#047857; --c-boxing:#be123c;
-  --c-soft-red:#dc2626; --c-soft-green:#16a34a;
-  --grid:rgba(17,24,39,.07); --tick:#6b7280;
-  --tip-bg:#ffffff; --tip-line:rgba(17,24,39,.12); --tip-t:#15171c; --tip-b:#4b5563;
+  --c-soft-red:#c9402c; --c-soft-green:#15803d;
+  --tint:rgba(74,54,34,.04); --tint2:rgba(74,54,34,.06); --tint3:rgba(74,54,34,.09);
+  --hairline:rgba(74,54,34,.2); --mark:rgba(53,39,24,.4);
+  --scrim:rgba(45,32,20,.36); --scrim-blur:rgba(250,246,240,.82);
+  --bar-bg:rgba(250,246,240,.9); --nav-bg:rgba(255,253,250,.94);
+  --on-brand:#ffffff; --on-solid:#fff;
+  --hero-grad:linear-gradient(160deg,#fffdfa,#f6efe4);
+  --card-grad:linear-gradient(160deg,#fffdfa,#f8f1e7);
+  --card-grad-green:linear-gradient(160deg,#fffdfa,#eef8f1);
+  --card-grad-amber:linear-gradient(160deg,#fffdfa,#fdf3e2);
+  --goal-grad:linear-gradient(140deg,#f7f0ff,#fdf2e8);
+  --logo-grad:linear-gradient(135deg,#00694a,#12b184); --logo-solid:#00875f;
+  --card-shadow:0 1px 2px rgba(92,68,44,.07); --shadow-lg:0 24px 64px rgba(74,54,34,.22);
+  --glow:rgba(255,170,80,.11);
+  --ch-rest:rgba(10,127,90,.6); --ch-train:rgba(37,99,235,.6);
+  --grid:rgba(74,54,34,.08); --tick:#8a8073;
+  --tip-bg:#fffdfa; --tip-line:rgba(74,54,34,.14); --tip-t:#231d16; --tip-b:#61584c;
   }
 }
 :root[data-theme="light"]{
   color-scheme:light;
-  --bg:#f5f6f8; --bg2:#ffffff; --bg3:#eceef2; --line:rgba(17,24,39,.10);
-  --t1:#15171c; --t2:#565d6b; --t3:#858b98;
-  --brand:#00875f; --brand-dim:rgba(0,135,95,.10); --brand-glow:rgba(0,135,95,.2);
-  --brand-edge:rgba(0,135,95,.28);
-  --blue:#2563eb; --green:#15803d; --amber:#b45309; --red:#dc2626; --violet:#6d28d9;
+  /* Warm paper, not cold grey. */
+  --bg:#faf6f0; --bg2:#fffdfa; --bg3:#f1ebe2; --line:rgba(74,54,34,.12);
+  --t1:#231d16; --t2:#61584c; --t3:#8f8577;
+  --brand:#0a7f5a; --brand-dim:rgba(10,127,90,.10); --brand-glow:rgba(10,127,90,.2);
+  --brand-edge:rgba(10,127,90,.28);
+  --blue:#2563eb; --green:#15803d; --amber:#b45309; --red:#c9402c; --violet:#7c3aa8;
   --run:#2563eb; --bike:#15803d; --strength:#b45309;
-  --neutral:#6b7280;
-  --tint:rgba(17,24,39,.035); --tint2:rgba(17,24,39,.05); --tint3:rgba(17,24,39,.08);
-  --hairline:rgba(17,24,39,.18); --mark:rgba(17,24,39,.4);
-  --scrim:rgba(17,24,39,.34); --scrim-blur:rgba(245,246,248,.82);
-  --bar-bg:rgba(245,246,248,.88); --nav-bg:rgba(255,255,255,.94);
-  --on-brand:#ffffff; --on-solid:#fff;
-  --hero-grad:linear-gradient(160deg,#ffffff,#eff3f7);
-  --card-grad:linear-gradient(160deg,#ffffff,#f3f5f9);
-  --card-grad-green:linear-gradient(160deg,#ffffff,#eef8f4);
-  --card-grad-amber:linear-gradient(160deg,#ffffff,#fdf6ec);
-  --goal-grad:linear-gradient(140deg,#f2efff,#eef2fb);
-  --logo-grad:linear-gradient(135deg,#00694a,#00a87c);
-  --card-shadow:0 1px 2px rgba(17,24,39,.05); --shadow-lg:0 24px 64px rgba(17,24,39,.22);
-  --glow:rgba(0,135,95,.06);
+  --neutral:#7c7266;
   --c-yoga:#7e22ce; --c-hike:#c2410c; --c-walk:#1d4ed8; --c-row:#0f766e;
   --c-elliptical:#a16207; --c-tennis:#4d7c0f; --c-soccer:#047857; --c-boxing:#be123c;
-  --c-soft-red:#dc2626; --c-soft-green:#16a34a;
-  --grid:rgba(17,24,39,.07); --tick:#6b7280;
-  --tip-bg:#ffffff; --tip-line:rgba(17,24,39,.12); --tip-t:#15171c; --tip-b:#4b5563;
+  --c-soft-red:#c9402c; --c-soft-green:#15803d;
+  --tint:rgba(74,54,34,.04); --tint2:rgba(74,54,34,.06); --tint3:rgba(74,54,34,.09);
+  --hairline:rgba(74,54,34,.2); --mark:rgba(53,39,24,.4);
+  --scrim:rgba(45,32,20,.36); --scrim-blur:rgba(250,246,240,.82);
+  --bar-bg:rgba(250,246,240,.9); --nav-bg:rgba(255,253,250,.94);
+  --on-brand:#ffffff; --on-solid:#fff;
+  --hero-grad:linear-gradient(160deg,#fffdfa,#f6efe4);
+  --card-grad:linear-gradient(160deg,#fffdfa,#f8f1e7);
+  --card-grad-green:linear-gradient(160deg,#fffdfa,#eef8f1);
+  --card-grad-amber:linear-gradient(160deg,#fffdfa,#fdf3e2);
+  --goal-grad:linear-gradient(140deg,#f7f0ff,#fdf2e8);
+  --logo-grad:linear-gradient(135deg,#00694a,#12b184); --logo-solid:#00875f;
+  --card-shadow:0 1px 2px rgba(92,68,44,.07); --shadow-lg:0 24px 64px rgba(74,54,34,.22);
+  --glow:rgba(255,170,80,.11);
+  --ch-rest:rgba(10,127,90,.6); --ch-train:rgba(37,99,235,.6);
+  --grid:rgba(74,54,34,.08); --tick:#8a8073;
+  --tip-bg:#fffdfa; --tip-line:rgba(74,54,34,.14); --tip-t:#231d16; --tip-b:#61584c;
 }
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
@@ -243,9 +255,12 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
   background:var(--bar-bg);backdrop-filter:saturate(180%) blur(20px);
   border-bottom:1px solid var(--line);z-index:50}
 .logo-mark{width:30px;height:30px;border-radius:9px;
-  background:var(--logo-grad);
+  background-color:var(--logo-solid,#00875f);
+  background-image:var(--logo-grad);
   display:flex;align-items:center;justify-content:center;
-  box-shadow:0 2px 10px rgba(0,200,150,.35)}
+  box-shadow:0 2px 10px rgba(0,200,150,.28)}
+/* The arc inside the mark always sits on green, in either theme. */
+.logo-mark svg circle{stroke:#fff}
 .brand{font-size:16px;font-weight:700;letter-spacing:-.3px}
 .brand span{color:var(--brand);font-weight:700}
 .gear{margin-left:auto;width:36px;height:36px;border-radius:10px;border:none;
@@ -277,7 +292,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
   color:var(--t3);margin-bottom:12px}
 
 /* Hero — today's session */
-.gb{border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid rgba(139,92,246,.25);background:var(--goal-grad)}
+.gb{border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden;border:1px solid rgba(139,92,246,.25);background-color:var(--bg2);background-image:var(--goal-grad)}
 .gb-top{display:flex;align-items:center;gap:8px;margin-bottom:10px}
 .gb-eyebrow{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:1px;color:var(--violet)}
 .gb-goal{font-size:18px;font-weight:800;letter-spacing:-.4px;line-height:1.2;margin-bottom:3px}
@@ -287,7 +302,7 @@ body{background:var(--bg);color:var(--t1);font-family:var(--font);
 .gb-readiness{display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-top:8px}
 .gb-dot{width:9px;height:9px;border-radius:50%}
 .gb-msg{font-size:12px;color:var(--t2);line-height:1.5;margin-top:8px}
-.hero{background:var(--hero-grad);
+.hero{background-color:var(--bg2);background-image:var(--hero-grad);
   border:1px solid var(--line);border-radius:18px;padding:18px;margin-bottom:14px;position:relative;overflow:hidden}
 .hero::before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:var(--accent,var(--brand))}
 .hero-top{display:flex;align-items:center;gap:8px;margin-bottom:4px}
@@ -668,7 +683,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div class="chart-box"><canvas id="pmcChart"></canvas></div>
     </div>
 
-    <div class="card" id="proj-card" style="display:none;background:var(--card-grad);border-color:rgba(0,200,150,.18)">
+    <div class="card" id="proj-card" style="display:none;background-color:var(--bg2);background-image:var(--card-grad);border-color:rgba(0,200,150,.18)">
       <div class="card-h" style="color:var(--blue)">📈 If you stick to the plan</div>
       <div class="proj-stats">
         <div class="proj-stat">
@@ -1225,7 +1240,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-18";
+const BUILD="20260916-19";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -2828,7 +2843,7 @@ function openMetricDetail(key){
   // What it is
   html+='<div class="card"><div class="card-h" style="margin-bottom:8px">What this is</div><div style="font-size:13px;color:var(--t2);line-height:1.6">'+esc(info.what)+'</div></div>';
   // So what for training
-  html+='<div class="card" style="border-color:rgba(0,200,150,.18);background:var(--card-grad)">'+
+  html+='<div class="card" style="border-color:rgba(0,200,150,.18);background-color:var(--bg2);background-image:var(--card-grad)">'+
     '<div class="card-h" style="color:var(--brand);margin-bottom:10px">So what for your training</div>'+
     an.bullets.map(function(b){return '<div style="display:flex;gap:9px;align-items:flex-start;padding:7px 0"><span style="color:var(--brand);flex-shrink:0">•</span><span style="font-size:13px;color:var(--t1);line-height:1.6">'+esc(b)+'</span></div>';}).join("")+
     '<div style="font-size:12px;color:var(--t3);line-height:1.5;margin-top:10px;padding-top:10px;border-top:1px solid var(--line)">'+esc(info.training)+'</div>'+
@@ -4885,7 +4900,7 @@ function fuelBannerHTML(iso,t){
   if(f.hours>=1)tips.push("On a session over an hour, 30–60 g of carbohydrate per hour during it keeps the quality up (ACSM/AND/DC).");
   if(f.src==="planned")tips.push("Front-load the extra carbs before and around the session, not late at night.");
   else tips.push("Get protein in within a couple of hours of finishing — around "+Math.round(bodyKg()*0.3)+" g does the repair job.");
-  return '<div class="card" style="border-color:rgba(0,200,150,.2);background:var(--card-grad-green);padding:14px 15px">'+
+  return '<div class="card" style="border-color:rgba(0,200,150,.2);background-color:var(--bg2);background-image:var(--card-grad-green);padding:14px 15px">'+
     '<div style="display:flex;gap:10px;align-items:flex-start">'+
       '<span style="font-size:17px">⚡</span>'+
       '<div style="flex:1">'+
@@ -5023,7 +5038,7 @@ function renderFood(){
   var iso=foodDate(), t=targetsFor(iso), a=dayTotals(iso);
   var html="";
   if(!hasNutritionPlan()){
-    html+='<div class="card" style="border-color:rgba(245,158,11,.22);background:var(--card-grad-amber)">'+
+    html+='<div class="card" style="border-color:rgba(245,158,11,.22);background-color:var(--bg2);background-image:var(--card-grad-amber)">'+
       '<div style="display:flex;gap:10px;align-items:flex-start">'+
         '<span style="font-size:17px">🩺</span>'+
         '<div style="flex:1"><div style="font-size:13.5px;font-weight:700;margin-bottom:3px">No plan from your doctor yet</div>'+

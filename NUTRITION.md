@@ -110,7 +110,9 @@ system.
 
 The whole UI is driven by one set of CSS custom properties defined per theme,
 so light mode is a real palette (darker accents that hold their contrast on a
-white card) rather than an inverted dark one. Charts rebuild their colours and
+warm card) rather than an inverted dark one. Both palettes are warm-toned —
+warm paper in the light, warm charcoal in the dark, with a sunrise tint at the
+top of the page. Charts rebuild their colours and
 repaint whenever the theme changes, and a pinned theme is applied before the
 first paint so the app never flashes the wrong one on launch.
 
