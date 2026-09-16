@@ -69,7 +69,7 @@ actually did — the pause suppresses *planned* fuel, not real work.
 
 ## Logging what you eat
 
-Three ways in, all of which end at the same editable ingredient list so you can
+Four ways in, all of which end at the same editable ingredient list so you can
 correct anything before it's saved:
 
 1. **Type it in** — ingredients with their own numbers. The ✨ button next to a
@@ -78,7 +78,18 @@ correct anything before it's saved:
    Claude reads the table as printed (handling per-100 g vs per-serving, and kJ
    → kcal) and does the portion maths, returning `null` for anything the label
    doesn't print.
-3. **Meal photo** — photograph the plate. Claude identifies each component,
+3. **Describe it** — say what went in, in your own words. Built for the meals a
+   camera is useless on: a smoothie stops being legible the moment it's
+   blended, and you know exactly what you put in it. Rough amounts are fine —
+   a handful, a scoop, a splash — and there's a second field for how much of it
+   you actually had, so half a blender-full scales properly.
+
+   Claude breaks the description into items, states what it assumed for each
+   vague amount, and drops its confidence where it had to guess. It then goes
+   through the same check screen as a photo (below), showing your own words back
+   to you in place of the picture. Saved entries read *Described*.
+
+4. **Meal photo** — photograph the plate. Claude identifies each component,
    estimates its portion, and returns a confidence score plus a box around each
    food and a list of what it genuinely can't tell.
 
