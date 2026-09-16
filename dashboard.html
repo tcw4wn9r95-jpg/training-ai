@@ -121,7 +121,7 @@ try{var _tp=localStorage.getItem("theme_pref");
   --neutral:#7d7469;
   --c-yoga:#a855f7; --c-hike:#fb923c; --c-walk:#93c5fd; --c-row:#14b8a6;
   --c-elliptical:#fbbf24; --c-tennis:#a3e635; --c-soccer:#34d399; --c-boxing:#fb7185;
-  --c-soft-red:#f87171; --c-soft-green:#4ade80;
+  --c-soft-red:#f87171; --c-soft-green:#4ade80; --c-sugar:#f472b6;
   /* Surfaces layered over the card background */
   --tint:rgba(255,238,220,.035); --tint2:rgba(255,238,220,.055); --tint3:rgba(255,238,220,.09);
   --hairline:rgba(255,238,220,.15); --mark:rgba(255,246,236,.45);
@@ -157,7 +157,7 @@ try{var _tp=localStorage.getItem("theme_pref");
   --neutral:#7d7469;
   --c-yoga:#a855f7; --c-hike:#fb923c; --c-walk:#93c5fd; --c-row:#14b8a6;
   --c-elliptical:#fbbf24; --c-tennis:#a3e635; --c-soccer:#34d399; --c-boxing:#fb7185;
-  --c-soft-red:#f87171; --c-soft-green:#4ade80;
+  --c-soft-red:#f87171; --c-soft-green:#4ade80; --c-sugar:#f472b6;
   /* Surfaces layered over the card background */
   --tint:rgba(255,238,220,.035); --tint2:rgba(255,238,220,.055); --tint3:rgba(255,238,220,.09);
   --hairline:rgba(255,238,220,.15); --mark:rgba(255,246,236,.45);
@@ -191,7 +191,7 @@ try{var _tp=localStorage.getItem("theme_pref");
   --neutral:#7c7266;
   --c-yoga:#7e22ce; --c-hike:#c2410c; --c-walk:#1d4ed8; --c-row:#0f766e;
   --c-elliptical:#a16207; --c-tennis:#4d7c0f; --c-soccer:#047857; --c-boxing:#be123c;
-  --c-soft-red:#c9402c; --c-soft-green:#15803d;
+  --c-soft-red:#c9402c; --c-soft-green:#15803d; --c-sugar:#be185d;
   --tint:rgba(74,54,34,.04); --tint2:rgba(74,54,34,.06); --tint3:rgba(74,54,34,.09);
   --hairline:rgba(74,54,34,.2); --mark:rgba(53,39,24,.4);
   --scrim:rgba(45,32,20,.36); --scrim-blur:rgba(250,246,240,.82);
@@ -222,7 +222,7 @@ try{var _tp=localStorage.getItem("theme_pref");
   --neutral:#7c7266;
   --c-yoga:#7e22ce; --c-hike:#c2410c; --c-walk:#1d4ed8; --c-row:#0f766e;
   --c-elliptical:#a16207; --c-tennis:#4d7c0f; --c-soccer:#047857; --c-boxing:#be123c;
-  --c-soft-red:#c9402c; --c-soft-green:#15803d;
+  --c-soft-red:#c9402c; --c-soft-green:#15803d; --c-sugar:#be185d;
   --tint:rgba(74,54,34,.04); --tint2:rgba(74,54,34,.06); --tint3:rgba(74,54,34,.09);
   --hairline:rgba(74,54,34,.2); --mark:rgba(53,39,24,.4);
   --scrim:rgba(45,32,20,.36); --scrim-blur:rgba(250,246,240,.82);
@@ -1092,6 +1092,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <div class="fld"><label>Carbs (g)</label><input id="tg-carbs" type="number" inputmode="numeric" placeholder="—"></div>
         <div class="fld"><label>Fat (g)</label><input id="tg-fat" type="number" inputmode="numeric" placeholder="—"></div>
         <div class="fld"><label>Fibre (g)</label><input id="tg-fiber" type="number" inputmode="numeric" placeholder="—"></div>
+        <div class="fld"><label>Free sugar (g)</label><input id="tg-freesugar" type="number" inputmode="numeric" placeholder="—"></div>
         <div class="fld"><label>Water (ml)</label><input id="tg-water" type="number" inputmode="numeric" placeholder="—"></div>
       </div>
       <div id="tg-sources" class="src-note"></div>
@@ -1147,6 +1148,9 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         (1–3 h/day), same joint position stand.<br>
         Fat — 20–35% of energy (IOM / NASEM Acceptable Macronutrient Distribution Range).<br>
         Fibre — 14 g per 1000 kcal (IOM / NASEM Adequate Intake).<br>
+      Free sugar — under 10% of total energy, WHO guideline on sugars intake for adults and children,
+      with a conditional further reduction below 5%. Free sugars are sugars added to food plus those in
+      honey, syrups and fruit juice; the sugar in whole fruit, vegetables and milk is not included.<br>
         Water — EFSA adequate intake for total water, 2.5 L/day men and 2.0 L/day women, of which
         roughly 20–30% comes from food; plus 0.4–0.8 L per hour of training (ACSM exercise and
         fluid replacement position stand).<br>
@@ -1414,7 +1418,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-24";
+const BUILD="20260916-25";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -4627,14 +4631,25 @@ let foodLog={version:1,days:{}};        // food_log.json
 let foodDayOffset=0;                    // 0 = today, -1 = yesterday …
 let _foodSyncTimer=null, _foodSyncing=false;
 
-const MACROS=["kcal","protein_g","carbs_g","fat_g","fiber_g"];
+// Sugar is tracked as two numbers because the guidance only applies to one of
+// them. sugar_g is total sugars, the figure a packet prints, and it includes
+// the sugar naturally in fruit, milk and plain yogurt. free_sugar_g is what
+// the WHO guideline is actually about: sugar added to food, plus what is in
+// honey, syrups and fruit juice. Holding his plan's prescribed berries and
+// kefir against a free-sugar ceiling would be nonsense, so only free sugar
+// carries a target.
+const MACROS=["kcal","protein_g","carbs_g","fat_g","fiber_g","sugar_g","free_sugar_g"];
 const MACRO_META={
   kcal:{label:"Calories",unit:"kcal",color:"var(--brand)",kind:"band"},
   protein_g:{label:"Protein",unit:"g",color:"var(--violet)",kind:"atleast"},
   carbs_g:{label:"Carbs",unit:"g",color:"var(--blue)",kind:"band"},
   fat_g:{label:"Fat",unit:"g",color:"var(--amber)",kind:"band"},
-  fiber_g:{label:"Fibre",unit:"g",color:"var(--green)",kind:"atleast"}
+  fiber_g:{label:"Fibre",unit:"g",color:"var(--green)",kind:"atleast"},
+  sugar_g:{label:"Sugar",unit:"g",color:"var(--c-sugar)",kind:"info"},
+  free_sugar_g:{label:"Free sugar",unit:"g",color:"var(--c-sugar)",kind:"atmost"}
 };
+// Which macros get a row of their own on the day card, in order.
+const DAY_ROWS=["kcal","protein_g","carbs_g","fat_g","fiber_g"];
 const DEFAULT_SLOTS=[
   {id:"breakfast",label:"Breakfast",icon:"☀️"},
   {id:"lunch",label:"Lunch",icon:"🍽"},
@@ -4693,6 +4708,10 @@ function referenceTargets(){
     carbs=(kcal-protein*4-fat*9)/4;
   }
   var fiber=14*kcal/1000;
+  // WHO: free sugars under 10% of total energy, with a further conditional
+  // recommendation of under 5%. The 10% line is the target; the 5% is shown
+  // as the stricter aim rather than used as a pass mark.
+  var freeSugar=kcal*0.10/4;
   // EFSA total-water adequate intake, minus the ~25% that comes from food.
   var water=b.sex==="female"?1600:2000;
   return {
@@ -4701,6 +4720,7 @@ function referenceTargets(){
     carbs_g:Math.round(carbs),
     fat_g:Math.round(fat),
     fiber_g:Math.round(fiber),
+    free_sugar_g:Math.round(freeSugar),
     water_ml:water
   };
 }
@@ -4710,7 +4730,7 @@ function referenceTargets(){
 function baseTargets(){
   var ref=referenceTargets(), out={}, t=(nutritionPlan&&nutritionPlan.targets)||{};
   var KNOWN_SRC={plan:1,estimated:1,manual:1,reference:1};
-  ["kcal","protein_g","carbs_g","fat_g","fiber_g","water_ml"].forEach(function(k){
+  ["kcal","protein_g","carbs_g","fat_g","fiber_g","free_sugar_g","water_ml"].forEach(function(k){
     var raw=t[k], v=null, src="reference";
     if(raw&&typeof raw==="object"){v=_num(raw.value);src=raw.src||"plan";}
     else v=_num(raw);
@@ -4817,7 +4837,8 @@ function fuelFor(iso){
   var addWater=Math.round(hours*600/50)*50;
   return {
     adjusted:true,src:src,kcal:kcal,hours:hours,sessions:labels,
-    add:{kcal:addCarb*4+addProt*4+addFat*9,protein_g:addProt,carbs_g:addCarb,fat_g:addFat,fiber_g:0,water_ml:addWater},
+    add:{kcal:addCarb*4+addProt*4+addFat*9,protein_g:addProt,carbs_g:addCarb,fat_g:addFat,fiber_g:0,
+      sugar_g:0,free_sugar_g:0,water_ml:addWater},
     reason:(src==="planned"?"Fuelled for today's planned ":src==="measured"?"Fuelled for the ":"Fuelled for the ")+
       labels.join(" + ")+(src==="planned"?"":" you trained")+" — about "+kcal+" kcal of extra work."
   };
@@ -4841,7 +4862,7 @@ function dayEntry(iso,create){
   if(!d&&create){d={date:iso,meals:[],water_ml:0,updated:new Date().toISOString()};foodLog.days[iso]=d;}
   return d||{date:iso,meals:[],water_ml:0};
 }
-function blankTotals(){return {kcal:0,protein_g:0,carbs_g:0,fat_g:0,fiber_g:0};}
+function blankTotals(){var t={};MACROS.forEach(function(k){t[k]=0;});return t;}
 function sumItems(items){
   var t=blankTotals();
   (items||[]).forEach(function(i){MACROS.forEach(function(k){t[k]+=_num(i[k])||0;});});
@@ -4925,17 +4946,30 @@ function scorePart(actual,target,kind){
   if(!target||target<=0)return null;
   var r=actual/target;
   if(kind==="atleast")return Math.round(clamp(r>=1?100:100-(1-r)*140,0,100));
+  // A ceiling: at or under it is perfect, and it falls away above.
+  if(kind==="atmost")return Math.round(clamp(r<=1?100:100-(r-1)*120,0,100));
+  if(kind==="info")return null;
   var dev=Math.abs(r-1);
   if(dev<=0.10)return 100;
   return Math.round(clamp(100-(dev-0.10)*250,0,100));
 }
-const COMPLIANCE_WEIGHTS={kcal:.30,protein_g:.25,carbs_g:.15,fat_g:.10,fiber_g:.10,water_ml:.10};
+const COMPLIANCE_WEIGHTS={kcal:.30,protein_g:.25,carbs_g:.15,fat_g:.10,fiber_g:.10,free_sugar_g:.10,water_ml:.10};
+// True when at least one item logged that day carried the key — so a nutrient
+// nobody recorded is left out of the score instead of counting as a perfect 0.
+function dayHasData(iso,key){
+  var d=dayEntry(iso);
+  return (d.meals||[]).some(function(m){
+    return (m.items||[]).some(function(i){return _num(i[key])!=null;});
+  });
+}
 function complianceFor(iso){
   var t=targetsFor(iso), a=dayTotals(iso);
   if(!(a.kcal>0||a.water_ml>0))return null;
   var parts=[], num=0, den=0;
-  MACROS.concat(["water_ml"]).forEach(function(k){
+  ["kcal","protein_g","carbs_g","fat_g","fiber_g","free_sugar_g","water_ml"].forEach(function(k){
+    if(k==="free_sugar_g"&&!dayHasData(iso,"free_sugar_g"))return;
     var meta=MACRO_META[k]||{label:"Water",unit:"ml",color:"var(--blue)",kind:"atleast"};
+    if(!t[k])return;
     var sc=scorePart(a[k]||0,t[k].v,meta.kind);
     if(sc==null)return;
     var w=COMPLIANCE_WEIGHTS[k]||0;
@@ -5068,6 +5102,40 @@ function macroRowHTML(key,actual,tg){
   (tg.add>0?'<div style="font-size:10.5px;color:var(--t3);margin:-4px 0 4px 72px">plan '+tg.base+' + '+tg.add+' to fuel training'+(left>0?" · "+left+" "+meta.unit+" to go":"")+'</div>':'');
 }
 
+// Total sugar is context, not a target — it includes the fruit and dairy his
+// plan asks for. Free sugar is the one with a ceiling on it.
+function sugarRowsHTML(iso,a,t){
+  var hasTotal=dayHasData(iso,"sugar_g"), hasFree=dayHasData(iso,"free_sugar_g");
+  if(!hasTotal&&!hasFree&&!(a.sugar_g>0||a.free_sugar_g>0)){
+    return '<div style="font-size:10.5px;color:var(--t3);margin:-4px 0 6px 72px">sugar not recorded on today\u2019s entries</div>';
+  }
+  var h="";
+  if(hasTotal||a.sugar_g>0){
+    var shr=a.carbs_g>0?Math.round(a.sugar_g/a.carbs_g*100):null;
+    h+='<div style="display:flex;align-items:center;gap:10px;padding:2px 0 6px 0">'+
+      '<div style="font-size:11.5px;color:var(--t3);width:62px;flex-shrink:0;padding-left:10px;white-space:nowrap">\u21b3 sugar</div>'+
+      '<div style="flex:1;height:4px;border-radius:3px;background:var(--bg3);overflow:hidden">'+
+        '<div style="height:100%;width:'+(a.carbs_g>0?Math.min(100,Math.round(a.sugar_g/a.carbs_g*100)):0)+'%;background:var(--c-sugar)"></div></div>'+
+      '<div style="font-family:var(--mono);font-size:11px;color:var(--t3);width:92px;text-align:right">'+
+        Math.round(a.sugar_g)+' g'+(shr!=null?' \u00b7 '+shr+'%':'')+'</div>'+
+    '</div>';
+  }
+  if(t.free_sugar_g){
+    var fv=a.free_sugar_g||0, ft=t.free_sugar_g.v;
+    var pct=ft>0?Math.min(140,Math.round(fv/ft*100)):0;
+    var over=fv>ft;
+    h+='<div class="macro-row" style="border-top:none;padding-top:0">'+
+      '<div class="macro-name" style="font-size:12px">Free sugar</div>'+
+      '<div class="macro-bar"><div class="macro-fill" style="width:'+Math.min(100,pct)+'%;background:'+(over?"var(--red)":"var(--c-sugar)")+'"></div></div>'+
+      '<div class="macro-val">'+Math.round(fv)+' / '+ft+'<span style="color:var(--t3)"> g</span></div>'+
+    '</div>'+
+    '<div style="font-size:10.5px;color:'+(over?"var(--red)":"var(--t3)")+';margin:-4px 0 4px 72px">'+
+      (hasFree?(over?'over the ceiling \u2014 WHO puts free sugars under 10% of energy'
+                    :'added and juice sugar only \u00b7 ceiling is 10% of energy (WHO), '+Math.round(ft/2)+' g would be the stricter 5%')
+             :'no free-sugar figure on today\u2019s entries yet')+'</div>';
+  }
+  return h;
+}
 function fuelBannerHTML(iso,t){
   var f=t._fuel;
   if(!f.adjusted){
@@ -5166,7 +5234,8 @@ function mealCardHTML(iso,slot){
           (m.confidence&&m.confidence<0.7&&!corrected?'<span class="src-pill" style="color:var(--amber);background:rgba(245,158,11,.14)">Rough</span>':'')+
         '</div>'+
         '<div style="font-family:var(--mono);font-size:11.5px;color:var(--t3);margin-top:3px">'+
-          Math.round(mt.kcal)+' kcal · P '+Math.round(mt.protein_g)+' · C '+Math.round(mt.carbs_g)+' · F '+Math.round(mt.fat_g)+' · fibre '+Math.round(mt.fiber_g)+'</div>'+
+          Math.round(mt.kcal)+' kcal · P '+Math.round(mt.protein_g)+' · C '+Math.round(mt.carbs_g)+' · F '+Math.round(mt.fat_g)+
+          ' · fibre '+Math.round(mt.fiber_g)+(_num(mt.sugar_g)>0?' · sugar '+Math.round(mt.sugar_g):'')+'</div>'+
         (!open&&m.items&&m.items.length?'<div style="font-size:11px;color:var(--t3);margin-top:3px;line-height:1.45">'+
           esc(m.items.map(function(i){return (i.qty?i.qty+" ":"")+(i.name||"");}).join(", "))+
           ' <span style="color:var(--brand)">\u00b7 tap for the breakdown</span></div>':'')+
@@ -5203,7 +5272,7 @@ function remainingToday(){
   var iso=localDateStr(new Date()), t=targetsFor(iso), a=dayTotals(iso);
   var out={iso:iso,targets:t,eaten:a,left:{}};
   MACROS.concat(["water_ml"]).forEach(function(k){
-    out.left[k]=Math.round((t[k].v||0)-(a[k]||0));
+    out.left[k]=Math.round(((t[k]&&t[k].v)||0)-(a[k]||0));
   });
   return out;
 }
@@ -5213,7 +5282,8 @@ function gapSummaryHTML(){
   var f=t._fuel;
   var rows=[["kcal","Calories","var(--brand)","kcal"],["protein_g","Protein","var(--violet)","g"],
             ["carbs_g","Carbs","var(--blue)","g"],["fat_g","Fat","var(--amber)","g"],
-            ["fiber_g","Fibre","var(--green)","g"]].map(function(row){
+            ["fiber_g","Fibre","var(--green)","g"],["free_sugar_g","Free sugar","var(--c-sugar)","g"]].map(function(row){
+    if(!t[row[0]])return "";
     var v=a[row[0]]||0, tgt=t[row[0]].v, pct=tgt>0?Math.min(100,Math.round(v/tgt*100)):0;
     var left=r.left[row[0]];
     return '<div class="en-gap-row">'+
@@ -5246,6 +5316,11 @@ function eatContextBlock(){
   lines.push("STILL TO GO TODAY (target minus eaten): "+r.left.kcal+" kcal, "+r.left.protein_g+"g protein, "+
     r.left.carbs_g+"g carbs, "+r.left.fat_g+"g fat, "+r.left.fiber_g+"g fibre, "+r.left.water_ml+"ml water. "+
     "A negative number means he is already over on that one.");
+  if(r.targets.free_sugar_g){
+    lines.push("FREE SUGAR: ceiling "+r.targets.free_sugar_g.v+"g for the day (WHO, under 10% of energy), "+
+      Math.round(r.eaten.free_sugar_g||0)+"g used so far. Free sugar is added sugar plus honey, syrup and juice — the sugar "+
+      "in whole fruit, milk and plain yogurt does not count against it.");
+  }
   lines.push("TODAY'S FULL TARGET: "+r.targets.kcal.v+" kcal, "+r.targets.protein_g.v+"g protein, "+r.targets.carbs_g.v+
     "g carbs, "+r.targets.fat_g.v+"g fat, "+r.targets.fiber_g.v+"g fibre. "+r.targets._fuel.reason);
   if(guide&&(guide.components||[]).length){
@@ -5297,9 +5372,10 @@ async function askWhatToEat(){
       "Give 2 or 3 options. Aim each at roughly the share of the remaining calories this meal should carry — do not try to "+
       "close the whole day's gap in one sitting unless it's the last meal. Favour protein and fibre when those are the ones "+
       "behind. If he is already over on something, say so and keep that low rather than pretending it doesn't matter.\n\n"+
+      "For sugar, give two numbers: sugar_g is TOTAL sugars, the figure a packet prints, including the sugar naturally in fruit, milk and plain yogurt; free_sugar_g is only what was added to the food plus anything from honey, syrup or fruit juice, which is what health guidance limits. Whole fruit, plain milk and plain yogurt contribute to sugar_g but NOT to free_sugar_g. If a label prints only total sugars, estimate free sugar from what the food is and say so.\n\n"+
       "Return ONLY this JSON:\n"+
       '{"read":"one sentence on what the day still needs","options":[{"name":"short name","why":"why this one fits, in one or two sentences",'+
-      '"prep":"about 10 minutes","items":[{"name":"food","qty":"150 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0}],'+
+      '"prep":"about 10 minutes","items":[{"name":"food","qty":"150 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0}],'+
       '"plan_fit":"how it sits with his plan"}],"notes":"anything worth adding, or empty"}',
       null,2200);
     if(!(r.options||[]).length)throw new Error("No suggestions came back — try again, or say what you have in.");
@@ -5328,12 +5404,13 @@ async function checkMyIdea(){
       "or be cut down? Never tell him to skip the meal. If it breaks his plan's restrictions, say so plainly but without lecturing. "+
       "final_items is what you are telling him to actually eat — his idea with your additions in and your removals out, each with "+
       "its nutrition, because he will log exactly this.\n\n"+
+      "For sugar, give two numbers: sugar_g is TOTAL sugars, the figure a packet prints, including the sugar naturally in fruit, milk and plain yogurt; free_sugar_g is only what was added to the food plus anything from honey, syrup or fruit juice, which is what health guidance limits. Whole fruit, plain milk and plain yogurt contribute to sugar_g but NOT to free_sugar_g. If a label prints only total sugars, estimate free sugar from what the food is and say so.\n\n"+
       "Return ONLY this JSON:\n"+
       '{"verdict":"good"|"adjust"|"rethink","headline":"the answer in one line",'+
       '"meal_name":"a short name for the meal itself, 2-5 words, for his food diary",'+
       '"add":[{"name":"food","qty":"150 g","why":"what it fixes"}],'+
       '"remove":[{"name":"food","qty":"how much to drop","why":"why"}],'+
-      '"final_items":[{"name":"food","qty":"150 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0}],'+
+      '"final_items":[{"name":"food","qty":"150 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0}],'+
       '"after":"what the rest of the day looks like once he eats this","notes":"anything else, or empty"}',
       null,2200);
     if(!(r.final_items||[]).length)throw new Error("That came back empty — try describing it in a bit more detail.");
@@ -5509,6 +5586,8 @@ function mealDetailHTML(m,iso){
           '<span><b style="color:var(--blue)">C</b> '+macroVal(it.carbs_g,"g")+'</span>'+
           '<span><b style="color:var(--amber)">F</b> '+macroVal(it.fat_g,"g")+'</span>'+
           '<span><b style="color:var(--green)">fibre</b> '+macroVal(it.fiber_g,"g")+'</span>'+
+          (_num(it.sugar_g)!=null?'<span><b style="color:var(--c-sugar)">sugar</b> '+macroVal(it.sugar_g,"g")+
+            (_num(it.free_sugar_g)!=null?' <span style="color:var(--t3)">('+macroVal(it.free_sugar_g,"g")+' free)</span>':'')+'</span>':'')+
           
         '</div>'+
         (it.note?'<div class="mi-note">'+esc(it.note)+'</div>':'')+
@@ -5524,7 +5603,7 @@ function mealDetailHTML(m,iso){
       'Meal total, against your day</div>'+
     [["kcal","Calories","var(--brand)","kcal"],["protein_g","Protein","var(--violet)","g"],
      ["carbs_g","Carbs","var(--blue)","g"],["fat_g","Fat","var(--amber)","g"],
-     ["fiber_g","Fibre","var(--green)","g"]].map(function(row){
+     ["fiber_g","Fibre","var(--green)","g"],["free_sugar_g","Free sugar","var(--c-sugar)","g"]].map(function(row){
       var v=_num(mt[row[0]])||0, tgt=t[row[0]]?t[row[0]].v:0;
       var pct=tgt>0?Math.min(100,Math.round(v/tgt*100)):0;
       return '<div class="mt-row">'+
@@ -5626,7 +5705,11 @@ function renderFood(){
       '<span>Today’s macros</span>'+
       '<span style="font-size:10px;color:var(--t3);text-transform:none;letter-spacing:0">'+
       (t.kcal.src==="plan"?"from your plan":t.kcal.src==="estimated"?"read off your plan":t.kcal.src==="manual"?"your numbers":"reference values")+'</span></div>'+
-    MACROS.map(function(k){return macroRowHTML(k,a[k]||0,t[k]);}).join("")+
+    DAY_ROWS.map(function(k){
+      var row=macroRowHTML(k,a[k]||0,t[k]);
+      if(k==="carbs_g")row+=sugarRowsHTML(iso,a,t);
+      return row;
+    }).join("")+
   '</div>';
   html+=waterCardHTML(iso,t);
   html+=dayScoreHTML(iso);
@@ -5763,7 +5846,7 @@ function onMealFile(inp,kind){
 }
 
 // ── Ingredient editor ─────────────────────────────────────────
-function blankItem(){return {name:"",qty:"",kcal:"",protein_g:"",carbs_g:"",fat_g:"",fiber_g:""};}
+function blankItem(){return {name:"",qty:"",kcal:"",protein_g:"",carbs_g:"",fat_g:"",fiber_g:"",sugar_g:"",free_sugar_g:""};}
 function addIngredientRow(item){
   _mealDraft.items.push(Object.assign(blankItem(),item||{}));
   renderMealItems();
@@ -5794,8 +5877,12 @@ function renderMealItems(){
       '<div class="grid3">'+
         numFld(i,"kcal","kcal",it.kcal)+numFld(i,"protein_g","protein g",it.protein_g)+numFld(i,"carbs_g","carbs g",it.carbs_g)+
       '</div>'+
-      '<div class="grid2" style="margin-top:8px">'+
-        numFld(i,"fat_g","fat g",it.fat_g)+numFld(i,"fiber_g","fibre g",it.fiber_g)+
+      '<div class="grid3" style="margin-top:8px">'+
+        numFld(i,"fat_g","fat g",it.fat_g)+numFld(i,"fiber_g","fibre g",it.fiber_g)+numFld(i,"sugar_g","sugar g",it.sugar_g)+
+      '</div>'+
+      '<div style="display:flex;align-items:center;gap:9px;margin-top:8px">'+
+        '<div style="flex:1">'+numFld(i,"free_sugar_g","free sugar g",it.free_sugar_g)+'</div>'+
+        '<div style="flex:1.4;font-size:10.5px;color:var(--t3);line-height:1.4">of that sugar, how much was added or from juice \u2014 that\u2019s the one with a limit</div>'+
       '</div>'+
     '</div>';
   }).join("");
@@ -5810,7 +5897,8 @@ function recalcMealTotal(){
   var t=sumItems(_mealDraft.items);
   var el=document.getElementById("ml-total");
   if(el)el.innerHTML=Math.round(t.kcal)+' kcal &nbsp;·&nbsp; P '+Math.round(t.protein_g)+' g &nbsp;·&nbsp; C '+Math.round(t.carbs_g)+
-    ' g &nbsp;·&nbsp; F '+Math.round(t.fat_g)+' g &nbsp;·&nbsp; fibre '+Math.round(t.fiber_g)+' g';
+    ' g &nbsp;·&nbsp; F '+Math.round(t.fat_g)+' g &nbsp;·&nbsp; fibre '+Math.round(t.fiber_g)+' g'+
+    (t.sugar_g>0?' &nbsp;·&nbsp; sugar '+Math.round(t.sugar_g)+' g':'');
   var vs=document.getElementById("ml-vs-target");
   if(vs){
     var iso=_mealDraft.date||foodDate(), tg=targetsFor(iso), a=dayTotals(iso);
@@ -5826,7 +5914,7 @@ async function lookupItem(i,btn){
   try{
     var r=await claudeJSON("Give the nutrition for this food using standard food-composition data (USDA FoodData Central or equivalent national food composition tables).\n\nFood: "+it.name+"\nAmount: "+(it.qty||"1 typical serving")+
       "\n\nReturn ONLY this JSON, values for the amount given, numbers only:\n"+
-      '{"kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"assumed":"what you assumed about the amount","confidence":0.0}',null,400);
+      '{"kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0,"assumed":"what you assumed about the amount","confidence":0.0}',null,400);
     ["kcal","protein_g","carbs_g","fat_g","fiber_g"].forEach(function(k){if(_num(r[k])!=null)it[k]=Math.round(_num(r[k])*10)/10;});
     if(r.assumed&&!it.qty)it.qty=String(r.assumed).slice(0,30);
     renderMealItems();
@@ -5849,7 +5937,7 @@ async function readNutritionLabel(){
       "Work out the values for THAT amount from the table (watch whether the table is per 100 g, per 100 ml or per serving, and what the serving size is). "+
       "If the table gives no fibre, return null for fibre rather than guessing. Energy in kcal (convert from kJ by dividing by 4.184 if only kJ is printed).\n\n"+
       "Return ONLY this JSON:\n"+
-      '{"name":"food name","portion":"the amount eaten","basis":"per 100 g / per serving of X g — what you read","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":null,"confidence":0.0,"notes":"anything unclear in the photo"}',
+      '{"name":"food name","portion":"the amount eaten","basis":"per 100 g / per serving of X g — what you read","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":null,"sugar_g":null,"free_sugar_g":null,"confidence":0.0,"notes":"anything unclear in the photo"}',
       _mealImages.label,800);
     var item={name:r.name||name||"Packaged food",qty:r.portion||portion};
     ["kcal","protein_g","carbs_g","fat_g","fiber_g"].forEach(function(k){item[k]=_num(r[k])!=null?Math.round(_num(r[k])*10)/10:"";});
@@ -5879,8 +5967,9 @@ async function estimateMealPhoto(){
       (note?"\nThe person adds: "+note+"\n":"")+plan+"\n\n"+
       "Be honest about uncertainty: confidence 0.8+ only when portions are obvious, 0.4–0.6 when you are guessing at hidden ingredients or portion size. Where you cannot tell one food from another, say so in questions rather than picking one silently.\n\n"+
       "For every item give box: [x, y, width, height] as fractions of the image (0-1) around that food, so the person can see which thing on the plate you mean.\n\n"+
+      "For sugar, give two numbers: sugar_g is TOTAL sugars, the figure a packet prints, including the sugar naturally in fruit, milk and plain yogurt; free_sugar_g is only what was added to the food plus anything from honey, syrup or fruit juice, which is what health guidance limits. Whole fruit, plain milk and plain yogurt contribute to sugar_g but NOT to free_sugar_g. If a label prints only total sugars, estimate free sugar from what the food is and say so.\n\n"+
       "Return ONLY this JSON:\n"+
-      '{"meal_name":"short name for the plate","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"confidence":0.0,"box":[0.0,0.0,0.0,0.0],"note":"what you are unsure about for this item"}],"confidence":0.0,"questions":["anything you genuinely cannot tell from the photo"],"notes":"what you could not see and what you assumed"}',
+      '{"meal_name":"short name for the plate","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0,"confidence":0.0,"box":[0.0,0.0,0.0,0.0],"note":"what you are unsure about for this item"}],"confidence":0.0,"questions":["anything you genuinely cannot tell from the photo"],"notes":"what you could not see and what you assumed"}',
       _mealImages.photo,1800);
     var items=(r.items||[]).map(function(i){
       var o={name:i.name||"item",qty:i.qty||""};
@@ -5945,9 +6034,10 @@ async function describeMeal(){
       "Count what things are actually made of: a scoop of whey is about 30 g of powder, a tablespoon of peanut butter about 16 g."+plan+"\n\n"+
       "Be honest: confidence 0.85+ only where they gave you a real amount. Put anything you had to guess at into questions, "+
       "as a plain question you would ask them.\n\n"+
+      "For sugar, give two numbers: sugar_g is TOTAL sugars, the figure a packet prints, including the sugar naturally in fruit, milk and plain yogurt; free_sugar_g is only what was added to the food plus anything from honey, syrup or fruit juice, which is what health guidance limits. Whole fruit, plain milk and plain yogurt contribute to sugar_g but NOT to free_sugar_g. If a label prints only total sugars, estimate free sugar from what the food is and say so.\n\n"+
       "Return ONLY this JSON:\n"+
       '{"meal_name":"short name for it","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,'+
-      '"fiber_g":0,"confidence":0.0,"note":"what you assumed about this one"}],'+
+      '"fiber_g":0,"sugar_g":0,"free_sugar_g":0,"confidence":0.0,"note":"what you assumed about this one"}],'+
       '"confidence":0.0,"questions":["what you would need to ask to be sure"],"notes":"anything else you assumed"}',
       null,1800);
     if(!(r.items||[]).length)throw new Error("Couldn\u2019t make a meal out of that — try listing the ingredients.");
@@ -6129,7 +6219,7 @@ async function recalcFromCorrections(){
       "Raise your confidence only for what they actually settled; stay honest about anything still unclear, and ask about it in questions.\n\n"+
       "Return ONLY this JSON:\n"+
       '{"meal_name":"short name for it","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,'+
-      '"fiber_g":0,"confidence":0.0,'+(isText?"":'"box":[0.0,0.0,0.0,0.0],')+'"note":"anything still assumed for this item"}],'+
+      '"fiber_g":0,"sugar_g":0,"free_sugar_g":0,"confidence":0.0,'+(isText?"":'"box":[0.0,0.0,0.0,0.0],')+'"note":"anything still assumed for this item"}],'+
       '"confidence":0.0,"questions":["anything you still cannot tell"],"notes":"what you assumed"}',
       isText?null:g.b64,1800);
     if(!(r.items||[]).length)throw new Error("That came back empty — try describing the plate in the box below.");
@@ -6264,14 +6354,17 @@ function fillNutritionForm(){
   set("bd-sex",b.sex);set("bd-activity",String(b.activity));set("bd-goal",b.goal);
   set("nt-provider",(nutritionPlan&&nutritionPlan.provider)||"");
   set("tg-kcal",base.kcal.v);set("tg-protein",base.protein_g.v);set("tg-carbs",base.carbs_g.v);
-  set("tg-fat",base.fat_g.v);set("tg-fiber",base.fiber_g.v);set("tg-water",base.water_ml.v);
+  set("tg-fat",base.fat_g.v);set("tg-fiber",base.fiber_g.v);
+  if(base.free_sugar_g)set("tg-freesugar",base.free_sugar_g.v);
+  set("tg-water",base.water_ml.v);
   renderTargetSources();renderPlanSummary();
 }
 function renderTargetSources(){
   var el=document.getElementById("tg-sources");if(!el)return;
   var base=baseTargets();
   var fromPlan=[], fromRef=[], fromEst=[], fromMan=[];
-  [["kcal","Calories"],["protein_g","Protein"],["carbs_g","Carbs"],["fat_g","Fat"],["fiber_g","Fibre"],["water_ml","Water"]].forEach(function(p){
+  [["kcal","Calories"],["protein_g","Protein"],["carbs_g","Carbs"],["fat_g","Fat"],["fiber_g","Fibre"],
+   ["free_sugar_g","Free sugar"],["water_ml","Water"]].forEach(function(p){
     var src=base[p[0]].src;
     (src==="plan"?fromPlan:src==="estimated"?fromEst:src==="manual"?fromMan:fromRef).push(p[1]);
   });
@@ -6407,14 +6500,16 @@ async function saveParsedPlan(){
 }
 function fillTargetsFromReference(){
   var ref=referenceTargets();
-  [["tg-kcal","kcal"],["tg-protein","protein_g"],["tg-carbs","carbs_g"],["tg-fat","fat_g"],["tg-fiber","fiber_g"],["tg-water","water_ml"]].forEach(function(p){
+  [["tg-kcal","kcal"],["tg-protein","protein_g"],["tg-carbs","carbs_g"],["tg-fat","fat_g"],["tg-fiber","fiber_g"],
+   ["tg-freesugar","free_sugar_g"],["tg-water","water_ml"]].forEach(function(p){
     var el=document.getElementById(p[0]);
     if(el&&!String(el.value||"").trim())el.value=ref[p[1]];
   });
   document.getElementById("tg-status").textContent="Filled the blanks from reference standards for your body.";
 }
 async function saveNutritionTargets(){
-  var map=[["tg-kcal","kcal"],["tg-protein","protein_g"],["tg-carbs","carbs_g"],["tg-fat","fat_g"],["tg-fiber","fiber_g"],["tg-water","water_ml"]];
+  var map=[["tg-kcal","kcal"],["tg-protein","protein_g"],["tg-carbs","carbs_g"],["tg-fat","fat_g"],["tg-fiber","fiber_g"],
+    ["tg-freesugar","free_sugar_g"],["tg-water","water_ml"]];
   var prev=(nutritionPlan&&nutritionPlan.targets)||{}, targets={};
   var ref=referenceTargets();
   map.forEach(function(p){
@@ -6579,6 +6674,28 @@ function nutritionInsights(){
         (got>=need*0.6?"Your intake follows your training — that's exactly how it should look.":
           "You're fuelling a training day much like a rest day. Add the carbs around the session, not spread thin across the day.")});
   }
+  // Free sugar against the WHO ceiling — the number his plan's method is about
+  var fDays=logged.filter(function(d){return dayHasData(d.iso,"free_sugar_g");});
+  if(fDays.length>=3){
+    var fAvg=_avg(fDays.map(function(d){return d.totals.free_sugar_g;}));
+    var fT=baseTargets().free_sugar_g?baseTargets().free_sugar_g.v:0;
+    var overDays=fDays.filter(function(d){return d.totals.free_sugar_g>fT;}).length;
+    ins.push({icon:(fT&&fAvg<=fT)?"\ud83c\udf6f":"\ud83c\udf6d",
+      txt:"Free sugar — what's added, plus juice and syrup — is averaging "+Math.round(fAvg)+" g a day across "+
+        fDays.length+" logged days"+(fT?", against a "+fT+" g ceiling (the WHO line of 10% of energy). "+
+        (overDays?overDays+" of those days went over it. ":"None of those days went over it. "):". ")+
+        ((fT&&fAvg<=fT/2)?"That's inside the stricter 5% line too, which is where the glucose benefit your plan is built around really sits."
+                         :"Your plan's whole method is blunting glucose spikes, so this is the number it cares about most.")});
+  }
+  var tDays=logged.filter(function(d){return dayHasData(d.iso,"sugar_g");});
+  if(tDays.length>=3){
+    var tAvg=_avg(tDays.map(function(d){return d.totals.sugar_g;}));
+    var cAvg=_avg(tDays.map(function(d){return d.totals.carbs_g;}));
+    ins.push({icon:"\ud83c\udf53",
+      txt:"Total sugar averages "+Math.round(tAvg)+" g a day"+(cAvg>0?", "+Math.round(tAvg/cAvg*100)+"% of your carbohydrate":"")+
+        ". That includes the fruit, milk and yogurt your plan actually asks for, so it isn't a number to drive to zero — "+
+        "the free-sugar line above is the one to watch."});
+  }
   // Fibre consistency
   var fib=_avg(logged.map(function(d){return d.totals.fiber_g;})), fibT=baseTargets().fiber_g.v;
   if(fib!=null){
@@ -6685,6 +6802,11 @@ function nutritionHealthHTML(){
   var avgC=_avg(logged.map(function(d){return d.totals.carbs_g;}));
   var avgF=_avg(logged.map(function(d){return d.totals.fat_g;}));
   var avgFib=_avg(logged.map(function(d){return d.totals.fiber_g;}));
+  var sugarDays=logged.filter(function(d){return dayHasData(d.iso,"sugar_g");});
+  var freeDays=logged.filter(function(d){return dayHasData(d.iso,"free_sugar_g");});
+  var avgSugar=sugarDays.length?_avg(sugarDays.map(function(d){return d.totals.sugar_g;})):null;
+  var avgFree=freeDays.length?_avg(freeDays.map(function(d){return d.totals.free_sugar_g;})):null;
+  var freeTarget=baseTargets().free_sugar_g?baseTargets().free_sugar_g.v:null;
   var avgW=_avg(logged.map(function(d){return d.totals.water_ml;}));
   var avgComp=_avg(logged.map(function(d){return d.compliance;}));
   function tile(label,val,sub,color){
@@ -6700,6 +6822,9 @@ function nutritionHealthHTML(){
     tile("Carbs",Math.round(avgC)+"g",(avgC/kg).toFixed(1)+" g/kg","var(--blue)")+
     tile("Fat",Math.round(avgF)+"g",(avgK>0?Math.round(avgF*9/avgK*100)+"% of energy":"of energy"),"var(--amber)")+
     tile("Fibre",Math.round(avgFib)+"g","target "+baseTargets().fiber_g.v+" g","var(--green)")+
+    (avgSugar!=null?tile("Sugar",Math.round(avgSugar)+"g","total, "+sugarDays.length+" days logged","var(--c-sugar)"):"")+
+    (avgFree!=null?tile("Free sugar",Math.round(avgFree)+"g",(freeTarget?"ceiling "+freeTarget+" g":"added + juice"),
+      (freeTarget&&avgFree>freeTarget)?"var(--red)":"var(--c-sugar)"):"")+
     tile("Water",(avgW/1000).toFixed(1)+"L","target "+(baseTargets().water_ml.v/1000).toFixed(1)+" L","var(--blue)")+
   '</div>';
   // Energy balance chart
@@ -6815,10 +6940,13 @@ function foodCoachContext(){
   }
   var f=t._fuel;
   lines.push("TODAY'S TARGET: "+t.kcal.v+" kcal, "+t.protein_g.v+"g protein, "+t.carbs_g.v+"g carbs, "+t.fat_g.v+"g fat, "+
-    t.fiber_g.v+"g fibre, "+t.water_ml.v+"ml water — "+(f.adjusted?("topped up for training: "+f.reason):f.reason));
+    t.fiber_g.v+"g fibre, "+(t.free_sugar_g?"free sugar under "+t.free_sugar_g.v+"g, ":"")+t.water_ml.v+"ml water — "+
+    (f.adjusted?("topped up for training: "+f.reason):f.reason));
   var pace=dayPace(iso);
   lines.push("EATEN SO FAR TODAY: "+Math.round(a.kcal)+" kcal, "+Math.round(a.protein_g)+"g protein, "+Math.round(a.carbs_g)+
-    "g carbs, "+Math.round(a.fat_g)+"g fat, "+Math.round(a.fiber_g)+"g fibre, "+a.water_ml+"ml water"+
+    "g carbs, "+Math.round(a.fat_g)+"g fat, "+Math.round(a.fiber_g)+"g fibre"+
+    (dayHasData(iso,"sugar_g")?", "+Math.round(a.sugar_g)+"g total sugar of which "+Math.round(a.free_sugar_g)+"g free":"")+
+    ", "+a.water_ml+"ml water"+
     (c?(c.complete?" - day complete, compliance "+c.score+"/100."
         :" - "+pace.label.toLowerCase()+" (by this hour he'd usually be near "+pace.expectedKcal+" kcal; "+pace.leftKcal+
          " kcal and "+pace.leftProtein+"g protein still to go). Do NOT call a day in progress non-compliant - judge it on pace, not on the whole day's target.")
@@ -6832,6 +6960,9 @@ function foodCoachContext(){
     var ins=nutritionInsights().slice(0,4);
     if(ins.length)lines.push("Patterns in HIS data: "+ins.map(function(i){return i.txt;}).join(" "));
   }
+  lines.push("SUGAR: two numbers are tracked. Total sugar includes what is naturally in fruit, milk and yogurt and is NOT a "+
+    "failure to drive to zero — his plan prescribes those foods. Free sugar (added, plus honey, syrup and juice) is the one "+
+    "with a ceiling, from the WHO guideline of under 10% of energy. Judge him on free sugar; mention total sugar only as context.");
   lines.push("NUTRITION RULES FOR YOU: his doctor's numbers are the prescription — never override them, and never contradict a plan a clinician wrote. "+
     "You adjust FUELLING AROUND TRAINING (carb timing, protein after sessions, hydration) and you flag under-fuelling. "+
     "Anything the plan didn't state, cite as a reference standard, not as his doctor's instruction. "+

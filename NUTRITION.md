@@ -42,6 +42,7 @@ Used only for values your plan didn't state.
 | Carbohydrate | 3–5 g/kg light days, 5–7 g/kg moderate (~1 h/day), 6–10 g/kg endurance (1–3 h/day) — same joint position stand |
 | Fat | 20–35% of energy (IOM/NASEM Acceptable Macronutrient Distribution Range), default 30% |
 | Fibre | 14 g per 1000 kcal (IOM/NASEM Adequate Intake) |
+| Free sugar | under 10% of total energy (WHO guideline on sugars intake for adults and children), with the conditional further reduction below 5% shown as the stricter aim |
 | Water | EFSA adequate intake for total water — 2.5 L/day men, 2.0 L/day women, of which ~20–30% comes from food — plus 0.4–0.8 L per hour of training (ACSM position stand on exercise and fluid replacement) |
 | Session energy cost | MET values from the Compendium of Physical Activities (Ainsworth et al., 2011), net of resting metabolism; measured calories from your watch are used instead when the session is already synced |
 
@@ -117,6 +118,33 @@ You can also just tell Coach Claudio ("I had chicken and rice") — it calls
 
 Everything is stored in `food_log.json`, keyed by date, merged per-day against
 the remote copy so logging on the phone and on the laptop doesn't clobber.
+
+## Sugar
+
+Sugar is tracked as **two** numbers, because the guidance only applies to one
+of them.
+
+- **Total sugar** is what a packet prints — it includes the sugar naturally in
+  fruit, milk and plain yogurt. Your plan prescribes berries, kefir and
+  yogurt, so driving this to zero would mean ignoring your own plan. It is
+  shown under carbs, the way a label reads, with its share of the day's
+  carbohydrate, and it carries no target.
+- **Free sugar** is sugar added to food plus what comes from honey, syrups and
+  fruit juice. This is the one WHO puts a line under, and the one the app
+  scores: under 10% of energy, with 5% flagged as the stricter aim.
+
+Every input route asks for both: the label reader takes total sugars off the
+packet and estimates the free part from what the food is, and the photo,
+describe and lookup prompts are all told the difference explicitly. Where an
+entry has no sugar figure, the day simply isn't scored on sugar rather than
+counting a missing number as a perfect zero — the day card says so.
+
+Training tops up carbohydrate but never the free-sugar ceiling; quick sugars
+around a session come out of the carb allowance, not a raised limit.
+
+The Health report shows both averages across the days that recorded them, and
+the insight reads them the same way: free sugar against the ceiling and how
+many days went over, total sugar as context that isn't a failure.
 
 ## Asking what to eat
 
