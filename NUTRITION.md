@@ -78,10 +78,28 @@ correct anything before it's saved:
    Claude reads the table as printed (handling per-100 g vs per-serving, and kJ
    → kcal) and does the portion maths, returning `null` for anything the label
    doesn't print.
-3. **Meal photo** — photograph the plate. Claude identifies components,
-   estimates portions and returns a confidence score. Entries below 0.7 are
-   flagged *Rough* in the log, and the review note names what the photo
-   couldn't see.
+3. **Meal photo** — photograph the plate. Claude identifies each component,
+   estimates its portion, and returns a confidence score plus a box around each
+   food and a list of what it genuinely can't tell.
+
+   **When it isn't sure, it asks.** If overall confidence is under 75%, any one
+   item is under 60%, or Claude raised a question, the photo comes back with its
+   guesses drawn on it — a numbered pin and an outline per food, amber where it
+   is unsure — above its own open questions ("is the protein chicken or white
+   fish?"). Each item has a correction field, and there's a free-text box for
+   the plate as a whole.
+
+   Whatever you write goes into the next estimate as fact: the re-estimate
+   prompt carries the previous guess, your per-item corrections and your notes,
+   and instructs Claude to treat them as authoritative rather than re-identify
+   what you've settled. If it comes back confident, you land straight in the
+   review list; if something is still unclear, the photo comes back with the
+   updated guesses and you can correct it again. Corrections are saved with the
+   meal, which is why a corrected entry reads *Photo, corrected* rather than
+   *Rough*.
+
+   A confident guess can still be wrong, so the review list keeps a **Wrong
+   food? Show me the photo** button that reopens the same screen.
 
 You can also just tell Coach Claudio ("I had chicken and rice") — it calls
 `log_meal` / `log_water` and the entry lands in the same diary.

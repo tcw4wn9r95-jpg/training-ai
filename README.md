@@ -16,6 +16,7 @@ the full nutrition report) and **Coach**.
 - **Only reputable sources fill the gaps** — anything your plan doesn't state comes from published standards (Mifflin-St Jeor, ACSM/AND/DC, IOM/NASEM DRI, EFSA, WHO), is labelled as an estimate everywhere it appears, and can be overwritten; your clinician's numbers are never overridden (see `NUTRITION.md`)
 - **Fuel that follows your training** — on a training day the targets are topped up for the session (carbs first, protein on strength days, extra fluid); on a rest day, or with the plan paused and nothing trained, the baseline is left exactly as prescribed
 - **Three ways to log a meal** — type the ingredients in, photograph the nutrition label and say how much you ate, or photograph the plate and have Coach Claudio estimate it; every route ends in an editable list you check before saving, and photo estimates carry a confidence flag
+- **It asks when it can't tell** — an uncertain photo estimate comes back with Claudio's guesses drawn on your picture, pin by pin, next to the questions he can't answer from it; correct any of them in your own words and the macros are worked out again from what you actually ate
 - **Water tracking** — daily target including the training top-up, with one-tap logging
 - **Compliance you can trust** — a day in progress shows pace, not a score; the score lands when the day is done
 - **Cross-domain insights** — how protein, hydration, meal timing and fuelling line up with your HRV, resting HR, sleep and training load, computed from your own days with the sample size stated

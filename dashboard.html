@@ -575,6 +575,37 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   border-radius:9px;padding:9px 11px;margin-top:10px}
 .pill-tag{display:inline-block;font-size:11px;font-weight:600;border-radius:20px;
   padding:4px 10px;margin:0 6px 6px 0;background:var(--bg3);color:var(--t2);border:1px solid var(--line)}
+
+/* ── Photo check overlay ────────────────────────────────────── */
+.pc-figure{position:relative;border-radius:14px;overflow:hidden;border:1px solid var(--line);
+  background:var(--bg3);line-height:0}
+.pc-figure img{width:100%;display:block}
+/* Pins and boxes sit on the photo, so their colours are fixed rather than themed. */
+.pc-box{position:absolute;border:1.5px dashed rgba(255,255,255,.85);border-radius:9px;
+  box-shadow:0 0 0 1px rgba(0,0,0,.4),0 0 0 1px rgba(0,0,0,.4) inset;pointer-events:none}
+.pc-box.low{border-color:#fbbf24;border-style:solid}
+.pc-pin{position:absolute;transform:translate(-50%,-50%);display:flex;align-items:center;gap:5px;
+  cursor:pointer;line-height:1}
+.pc-pin .n{width:21px;height:21px;border-radius:50%;background:#00c896;color:#04231b;
+  font-size:11px;font-weight:800;display:flex;align-items:center;justify-content:center;
+  box-shadow:0 1px 6px rgba(0,0,0,.5);flex-shrink:0}
+.pc-pin.low .n{background:#fbbf24;color:#2a1c00}
+.pc-pin .t{background:rgba(12,10,9,.72);color:#fff;font-size:11px;font-weight:600;
+  padding:3px 8px;border-radius:8px;white-space:nowrap;max-width:40vw;overflow:hidden;
+  text-overflow:ellipsis;backdrop-filter:blur(4px)}
+.pc-item{background:var(--bg2);border:1px solid var(--line);border-radius:13px;padding:12px;margin-bottom:9px}
+.pc-item.low{border-color:rgba(245,158,11,.35)}
+.pc-item-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.pc-item-head .n{width:20px;height:20px;border-radius:50%;background:var(--brand-dim);color:var(--brand);
+  font-size:10.5px;font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.pc-item-name{font-size:14px;font-weight:700;flex:1;min-width:0}
+.pc-conf{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.4px;
+  border-radius:5px;padding:2px 6px;flex-shrink:0}
+.pc-item input{width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:9px;
+  padding:9px 11px;color:var(--t1);font-size:14px;font-family:var(--font);outline:none}
+.pc-item input:focus{border-color:rgba(0,200,150,.4)}
+.pc-q{font-size:12.5px;color:var(--t2);line-height:1.55;padding:10px 12px;border-radius:11px;
+  background:rgba(245,158,11,.09);border:1px solid rgba(245,158,11,.22);margin-top:12px}
 </style>
 </head>
 <body>
@@ -1155,6 +1186,35 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   </div>
 </div>
 
+
+<!-- ── Photo check: what Claude thinks is on the plate ─────────────── -->
+<div class="modal" id="photo-confirm" style="z-index:340">
+  <div class="modal-top">
+    <button class="back" onclick="closePhotoConfirm()">← Back</button>
+    <span class="ttl" id="pc-title">Is this what you ate?</span>
+  </div>
+  <div class="modal-body">
+    <div id="pc-intro" style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:12px"></div>
+    <div class="pc-figure" id="pc-figure">
+      <img id="pc-img" alt="Your meal">
+      <div id="pc-overlay"></div>
+    </div>
+    <div id="pc-questions"></div>
+    <div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin:16px 0 8px">What Claudio sees</div>
+    <div id="pc-items"></div>
+    <div class="fld" style="margin-top:14px">
+      <label>Put him right</label>
+      <textarea id="pc-note" placeholder="It's cod, not chicken. The white stuff is couscous, about two thirds of a cup. Cooked in butter."></textarea>
+      <div class="hint">Whatever you write here goes straight into the next estimate, along with any per-item corrections above.</div>
+    </div>
+    <button class="btn" id="pc-recalc" onclick="recalcFromCorrections()"
+      style="background:linear-gradient(135deg,#006e53,#00c896)">Recalculate with my corrections</button>
+    <button class="btn" onclick="acceptPhotoGuess()"
+      style="background:var(--bg3);color:var(--t1);margin-top:9px">That's right — use these</button>
+    <div id="pc-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
+  </div>
+</div>
+
 <!-- Onboarding overlay -->
 <div id="onboarding" style="display:none;position:fixed;inset:0;z-index:200;background:var(--bg);flex-direction:column">
   <div style="padding:calc(18px + env(safe-area-inset-top)) 18px 14px;border-bottom:1px solid var(--line);display:flex;align-items:center;gap:11px">
@@ -1240,7 +1300,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-20";
+const BUILD="20260916-21";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -4975,7 +5035,8 @@ function mealCardHTML(iso,slot){
   }
   meals.forEach(function(m){
     var mt=m.totals||sumItems(m.items);
-    var sp=m.source==="photo"?{t:"AI photo",c:"var(--violet)",bg:"rgba(139,92,246,.14)"}:
+    var corrected=!!(m.corrections&&String(m.corrections).trim());
+    var sp=m.source==="photo"?{t:corrected?"Photo, corrected":"AI photo",c:"var(--violet)",bg:"rgba(139,92,246,.14)"}:
            m.source==="label"?{t:"Label",c:"var(--blue)",bg:"rgba(59,130,246,.14)"}:
            {t:"Manual",c:"var(--t3)",bg:"var(--tint2)"};
     h+='<div class="meal-entry">'+
@@ -4983,7 +5044,7 @@ function mealCardHTML(iso,slot){
         '<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">'+
           '<span style="font-size:13px;font-weight:700">'+esc(m.name||"Meal")+'</span>'+
           '<span class="src-pill" style="color:'+sp.c+';background:'+sp.bg+'">'+sp.t+'</span>'+
-          (m.confidence&&m.confidence<0.7?'<span class="src-pill" style="color:var(--amber);background:rgba(245,158,11,.14)">Rough</span>':'')+
+          (m.confidence&&m.confidence<0.7&&!corrected?'<span class="src-pill" style="color:var(--amber);background:rgba(245,158,11,.14)">Rough</span>':'')+
         '</div>'+
         '<div style="font-family:var(--mono);font-size:11.5px;color:var(--t3);margin-top:3px">'+
           Math.round(mt.kcal)+' kcal · P '+Math.round(mt.protein_g)+' · C '+Math.round(mt.carbs_g)+' · F '+Math.round(mt.fat_g)+' · fibre '+Math.round(mt.fiber_g)+'</div>'+
@@ -5155,7 +5216,7 @@ async function claudeJSON(prompt,b64,maxTokens){
 // ── Modal plumbing ────────────────────────────────────────────
 function openMealModal(slot){
   _mealDraft={slot:slot||"breakfast",name:"",source:"manual",items:[],confidence:null,notes:"",date:foodDate()};
-  _mealImages={label:null,photo:null};
+  _mealImages={label:null,photo:null};_photoGuess=null;
   var sel=document.getElementById("ml-slot");
   sel.innerHTML=mealSlots().map(function(s){return '<option value="'+s.id+'"'+(s.id===_mealDraft.slot?" selected":"")+'>'+esc(s.label)+'</option>';}).join("");
   sel.onchange=function(){_mealDraft.slot=sel.value;};
@@ -5308,16 +5369,21 @@ async function estimateMealPhoto(){
       "(use the plate, cutlery and hand-sized cues for scale), and give its nutrition from standard food-composition data "+
       "(USDA FoodData Central or equivalent). Include cooking fat if the food looks fried, roasted or sautéed.\n"+
       (note?"\nThe person adds: "+note+"\n":"")+plan+"\n\n"+
-      "Be honest about uncertainty: confidence 0.8+ only when portions are obvious, 0.4–0.6 when you are guessing at hidden ingredients or portion size.\n\n"+
+      "Be honest about uncertainty: confidence 0.8+ only when portions are obvious, 0.4–0.6 when you are guessing at hidden ingredients or portion size. Where you cannot tell one food from another, say so in questions rather than picking one silently.\n\n"+
+      "For every item give box: [x, y, width, height] as fractions of the image (0-1) around that food, so the person can see which thing on the plate you mean.\n\n"+
       "Return ONLY this JSON:\n"+
-      '{"meal_name":"short name for the plate","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0}],"confidence":0.0,"notes":"what you could not see and what you assumed"}',
-      _mealImages.photo,1500);
+      '{"meal_name":"short name for the plate","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"confidence":0.0,"box":[0.0,0.0,0.0,0.0],"note":"what you are unsure about for this item"}],"confidence":0.0,"questions":["anything you genuinely cannot tell from the photo"],"notes":"what you could not see and what you assumed"}',
+      _mealImages.photo,1800);
     var items=(r.items||[]).map(function(i){
       var o={name:i.name||"item",qty:i.qty||""};
       ["kcal","protein_g","carbs_g","fat_g","fiber_g"].forEach(function(k){o[k]=_num(i[k])!=null?Math.round(_num(i[k])*10)/10:"";});
       return o;
     });
     if(!items.length)throw new Error("Couldn't make out any food in that photo.");
+    // Keep the raw result — the confirm overlay works off it, and it stays
+    // available so a confident-but-wrong guess can still be argued with.
+    _photoGuess={b64:_mealImages.photo,url:(document.getElementById("ml-photo-img")||{}).src||"",result:r,round:0};
+    if(guessIsUncertain(r)){st.textContent="";openPhotoConfirm(r);return;}
     _mealDraft.items=items;
     _mealDraft.source="photo";
     _mealDraft.name=r.meal_name||"Meal";
@@ -5333,7 +5399,231 @@ async function estimateMealPhoto(){
 function showReviewNote(txt){
   var el=document.getElementById("ml-review-note");
   if(!el)return;
-  el.textContent=txt;el.style.display="";
+  el.textContent=txt;
+  // A photo estimate can always be argued with again, confident or not.
+  if(_photoGuess&&_photoGuess.b64&&_mealDraft.source==="photo"){
+    var b=document.createElement("button");
+    b.textContent="Wrong food? Show me the photo";
+    b.style.cssText="display:block;margin-top:9px;background:var(--bg3);border:1px solid var(--line);color:var(--t1);"+
+      "border-radius:10px;padding:8px 13px;font-size:12.5px;font-weight:600;cursor:pointer;font-family:var(--font)";
+    b.onclick=reopenPhotoConfirm;
+    el.appendChild(b);
+  }
+  el.style.display="";
+}
+
+
+// ── PHOTO CHECK ───────────────────────────────────────────────
+// A photo estimate is a guess, and the app should say so out loud. When Claude
+// isn't sure what it's looking at, the guess is shown ON the photo — a pin and
+// a box per item — and Diego corrects it in words. Those words go back into the
+// next estimate, so the macros are computed from what he actually ate.
+let _photoGuess=null;   // {b64,url,result,round,note}
+
+function guessIsUncertain(r){
+  if(!r)return false;
+  var c=_num(r.confidence);
+  if(c!=null&&c<0.75)return true;
+  if((r.questions||[]).length)return true;
+  return (r.items||[]).some(function(i){var ic=_num(i.confidence);return ic!=null&&ic<0.6;});
+}
+function itemConfBand(c){
+  if(c==null)return {label:"?",color:"var(--t3)",bg:"var(--tint2)",low:false};
+  if(c>=0.75)return {label:Math.round(c*100)+"% sure",color:"var(--green)",bg:"rgba(34,197,94,.12)",low:false};
+  if(c>=0.5)return {label:Math.round(c*100)+"% sure",color:"var(--amber)",bg:"rgba(245,158,11,.14)",low:true};
+  return {label:"not sure",color:"var(--red)",bg:"rgba(239,68,68,.12)",low:true};
+}
+// Claude returns boxes as fractions of the image; clamp them so a bad box can't
+// push a pin off the picture.
+function pcBox(b){
+  if(!b||b.length<4)return null;
+  var x=_num(b[0]),y=_num(b[1]),w=_num(b[2]),h=_num(b[3]);
+  if(x==null||y==null||w==null||h==null)return null;
+  x=clamp(x,0,1);y=clamp(y,0,1);
+  w=clamp(w,0.02,1-x);h=clamp(h,0.02,1-y);
+  return {x:x,y:y,w:w,h:h};
+}
+
+function openPhotoConfirm(result,opts){
+  opts=opts||{};
+  _photoGuess={b64:_mealImages.photo,url:(document.getElementById("ml-photo-img")||{}).src||"",
+    result:result,round:(_photoGuess&&opts.keepRound?_photoGuess.round:0)};
+  document.getElementById("photo-confirm").classList.add("open");
+  document.body.style.overflow="hidden";
+  renderPhotoConfirm();
+}
+function closePhotoConfirm(){
+  document.getElementById("photo-confirm").classList.remove("open");
+  document.body.style.overflow=document.getElementById("meal-modal").classList.contains("open")?"hidden":"";
+  // Backing out isn't the same as accepting — say what happened to the estimate.
+  if(_photoGuess&&!_photoGuess.accepted){
+    var ps=document.getElementById("ml-photo-status");
+    if(ps)ps.innerHTML='Estimate set aside. <span style="color:var(--brand);cursor:pointer" onclick="reopenPhotoConfirm()">Show it again</span>, '+
+      'retake the photo, or type the meal in yourself.';
+  }
+}
+function renderPhotoConfirm(){
+  var g=_photoGuess;if(!g)return;
+  var r=g.result, items=r.items||[];
+  var img=document.getElementById("pc-img");
+  if(g.url)img.src=g.url;
+  var conf=_num(r.confidence);
+  var unsure=guessIsUncertain(r);
+  document.getElementById("pc-title").textContent=unsure?"Is this what you ate?":"Check the plate";
+  document.getElementById("pc-intro").innerHTML=
+    (unsure?"Claudio isn't certain about this one"+(conf!=null?" ("+Math.round(conf*100)+"% overall)":"")+
+            ". Here's what he thinks is on the plate — put him right and he'll work the macros out again."
+           :"Here's what Claudio read off the photo"+(conf!=null?", "+Math.round(conf*100)+"% confident":"")+
+            ". Correct anything that's off, or carry on.")+
+    (g.round?'<br><span style="color:var(--t3);font-size:12px">Estimate '+(g.round+1)+', after your corrections.</span>':"");
+
+  // Pins and boxes over the photo
+  var ov=document.getElementById("pc-overlay");
+  ov.innerHTML=items.map(function(it,i){
+    var b=pcBox(it.box);if(!b)return "";
+    var band=itemConfBand(_num(it.confidence));
+    var cx=(b.x+b.w/2)*100, cy=(b.y+b.h/2)*100;
+    return '<div class="pc-box'+(band.low?" low":"")+'" style="left:'+(b.x*100)+'%;top:'+(b.y*100)+'%;width:'+(b.w*100)+'%;height:'+(b.h*100)+'%"></div>'+
+      '<div class="pc-pin'+(band.low?" low":"")+'" style="left:'+cx+'%;top:'+cy+'%" onclick="focusPcItem('+i+')">'+
+        '<span class="n">'+(i+1)+'</span><span class="t">'+esc(it.name||"?")+'</span></div>';
+  }).join("");
+  var anyBox=items.some(function(it){return pcBox(it.box);});
+  ov.style.display=anyBox?"":"none";
+
+  // What Claude is unsure about, in its own words
+  var qs=(r.questions||[]).filter(Boolean);
+  document.getElementById("pc-questions").innerHTML=qs.length
+    ? '<div class="pc-q"><b>Claudio isn’t sure about:</b><br>'+qs.map(function(q){return "• "+esc(q);}).join("<br>")+'</div>'
+    : (r.notes?'<div class="pc-q" style="background:var(--tint);border-color:var(--line);color:var(--t2)">'+esc(r.notes)+'</div>':"");
+
+  // Editable per-item corrections
+  document.getElementById("pc-items").innerHTML=items.map(function(it,i){
+    var band=itemConfBand(_num(it.confidence));
+    var mt=Math.round(_num(it.kcal)||0);
+    return '<div class="pc-item'+(band.low?" low":"")+'" id="pc-item-'+i+'">'+
+      '<div class="pc-item-head">'+
+        '<span class="n">'+(i+1)+'</span>'+
+        '<span class="pc-item-name">'+esc(it.name||"Something")+(it.qty?' <span style="color:var(--t3);font-weight:600">'+esc(it.qty)+'</span>':'')+'</span>'+
+        '<span class="pc-conf" style="color:'+band.color+';background:'+band.bg+'">'+band.label+'</span>'+
+      '</div>'+
+      (mt?'<div style="font-family:var(--mono);font-size:11.5px;color:var(--t3);margin:-3px 0 8px">'+mt+' kcal · P '+
+        Math.round(_num(it.protein_g)||0)+' · C '+Math.round(_num(it.carbs_g)||0)+' · F '+Math.round(_num(it.fat_g)||0)+'</div>':'')+
+      (it.note?'<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-bottom:8px">'+esc(it.note)+'</div>':'')+
+      '<input id="pc-fix-'+i+'" placeholder="Not right? Say what it is and how much" value="'+escAttr(it.fix||"")+'" '+
+        'oninput="_photoGuess.result.items['+i+'].fix=this.value">'+
+    '</div>';
+  }).join("");
+  var note=document.getElementById("pc-note");
+  if(note&&g.note!=null)note.value=g.note;
+  document.getElementById("pc-status").textContent="";
+}
+function focusPcItem(i){
+  var el=document.getElementById("pc-item-"+i);if(!el)return;
+  el.scrollIntoView({behavior:"smooth",block:"center"});
+  var inp=document.getElementById("pc-fix-"+i);
+  if(inp)setTimeout(function(){inp.focus();},320);
+}
+function collectCorrections(){
+  var g=_photoGuess;if(!g)return {free:"",perItem:[]};
+  var free=((document.getElementById("pc-note")||{}).value||"").trim();
+  var perItem=(g.result.items||[]).map(function(it,i){
+    var fix=String(it.fix||"").trim();
+    return fix?{n:i+1,was:it.name||"item",fix:fix}:null;
+  }).filter(Boolean);
+  return {free:free,perItem:perItem};
+}
+function correctionsText(c){
+  var bits=[];
+  if(c.perItem.length)bits.push(c.perItem.map(function(p){
+    return 'item '+p.n+' ("'+p.was+'") is actually: '+p.fix;
+  }).join("; "));
+  if(c.free)bits.push(c.free);
+  return bits.join(". ");
+}
+
+async function recalcFromCorrections(){
+  var g=_photoGuess;if(!g)return;
+  var st=document.getElementById("pc-status");
+  var c=collectCorrections();
+  var text=correctionsText(c);
+  if(!text){st.textContent="Add a correction first — or tap “That’s right” to keep this estimate.";return;}
+  g.note=c.free;
+  var btn=document.getElementById("pc-recalc");
+  btn.disabled=true;btn.style.opacity="0.6";
+  st.textContent="Working the macros out again…";
+  try{
+    var prev=(g.result.items||[]).map(function(it,i){return (i+1)+". "+(it.name||"?")+(it.qty?" ("+it.qty+")":"");}).join("\n");
+    var plan=nutritionPlan&&nutritionPlan.methodology?("\nThe person's dietitian plan follows: "+nutritionPlan.methodology):"";
+    var r=await claudeJSON(
+      "You are a sports dietitian re-estimating this plate. You already guessed at it once and the person has corrected you.\n\n"+
+      "YOUR PREVIOUS GUESS:\n"+prev+"\n\n"+
+      "THEIR CORRECTIONS (authoritative — take these as fact, do not argue with them or re-identify what they have told you):\n"+
+      text+"\n\n"+
+      "Re-identify everything on the plate with those corrections applied, keep what they didn't dispute, estimate portions in grams "+
+      "(plate, cutlery and hand-size cues for scale) and give the nutrition from standard food-composition data (USDA FoodData Central "+
+      "or equivalent). Include cooking fat where the food looks fried, roasted or sautéed."+plan+"\n\n"+
+      "Raise your confidence only for what they actually settled; stay honest about anything still unclear, and ask about it in questions.\n\n"+
+      "Return ONLY this JSON:\n"+
+      '{"meal_name":"short name for the plate","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,'+
+      '"fiber_g":0,"confidence":0.0,"box":[0.0,0.0,0.0,0.0],"note":"anything still assumed for this item"}],'+
+      '"confidence":0.0,"questions":["anything you still cannot tell"],"notes":"what you assumed"}',
+      g.b64,1800);
+    if(!(r.items||[]).length)throw new Error("That came back empty — try describing the plate in the box below.");
+    g.result=r;
+    g.round=(g.round||0)+1;
+    g.appliedCorrections=(g.appliedCorrections?g.appliedCorrections+" ":"")+text;
+    // These corrections have been sent and applied — clear the form so they
+    // aren't counted a second time as unsent notes.
+    g.note="";
+    var noteEl=document.getElementById("pc-note");if(noteEl)noteEl.value="";
+    btn.disabled=false;btn.style.opacity="";
+    if(!guessIsUncertain(r)){
+      // Settled — take it straight through to the review list.
+      acceptPhotoGuess();
+      return;
+    }
+    renderPhotoConfirm();
+    document.getElementById("pc-status").textContent="Updated. Still a couple of things he's unsure about — correct them or carry on.";
+  }catch(e){
+    btn.disabled=false;btn.style.opacity="";
+    st.textContent=e.message;
+  }
+}
+
+function acceptPhotoGuess(){
+  var g=_photoGuess;if(!g)return;
+  var r=g.result;
+  // A correction typed but never recalculated still belongs on the record.
+  var c=collectCorrections();
+  var pending=correctionsText(c);
+  var items=(r.items||[]).map(function(i){
+    var o={name:i.name||"item",qty:i.qty||""};
+    ["kcal","protein_g","carbs_g","fat_g","fiber_g"].forEach(function(k){o[k]=_num(i[k])!=null?Math.round(_num(i[k])*10)/10:"";});
+    return o;
+  });
+  _mealDraft.items=items;
+  _mealDraft.source="photo";
+  _mealDraft.name=r.meal_name||"Meal";
+  _mealDraft.confidence=_num(r.confidence);
+  _mealDraft.notes=r.notes||"";
+  _mealDraft.corrections=[g.appliedCorrections||"",pending].filter(Boolean).join(" | ");
+  _mealDraft.rounds=g.round||0;
+  g.accepted=true;
+  var conf=_num(r.confidence);
+  showReviewNote((g.round?"Re-estimated after your corrections":"Estimated from your photo")+
+    (conf!=null?" — confidence "+Math.round(conf*100)+"%":"")+". "+(r.notes||"")+
+    (pending?" Your last note wasn't sent back to Claudio, so check those numbers yourself.":"")+
+    " Adjust anything below before saving.");
+  closePhotoConfirm();
+  renderMealItems();mealTab("manual");
+  var ps=document.getElementById("ml-photo-status");if(ps)ps.textContent="";
+}
+// Reachable from the review list too, so a confident-but-wrong guess can still be argued with.
+function reopenPhotoConfirm(){
+  if(!_photoGuess||!_photoGuess.b64){return;}
+  document.getElementById("photo-confirm").classList.add("open");
+  document.body.style.overflow="hidden";
+  renderPhotoConfirm();
 }
 
 // ── Save / delete ─────────────────────────────────────────────
@@ -5360,6 +5650,8 @@ function saveMeal(){
     source:_mealDraft.source||"manual",
     confidence:_mealDraft.confidence,
     ai_notes:_mealDraft.notes||"",
+    corrections:_mealDraft.corrections||"",
+    ai_rounds:_mealDraft.rounds||0,
     note:(document.getElementById("ml-note").value||"").trim(),
     items:items,totals:totals
   });
