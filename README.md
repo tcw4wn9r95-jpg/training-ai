@@ -32,6 +32,7 @@ the full nutrition report) and **Coach**.
 - **Garmin Integration** — Workouts push directly to your Fenix with step-by-step guidance
 - **Coach Claudio** — In-app AI coach for daily training and fuelling questions; tell it what you ate and it logs it for you
 - **Performance Dashboard** — PMC (Performance Management Chart), TSS, compliance tracking
+- **Light & Dark, matched to iOS** — follows your iPhone's appearance setting, switching with it live (including the automatic sunset switch); Appearance in Settings can pin Light or Dark instead
 - **Mobile-First** — Works perfectly on iPhone; add to home screen as an app
 
 ## System Architecture
