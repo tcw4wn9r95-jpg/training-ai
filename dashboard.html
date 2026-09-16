@@ -5981,10 +5981,17 @@ async function commitNutritionPlan(msg){
   var token=getToken();
   if(!token)return false;
   try{
-    var sha=null;
+    var sha=null, current=null;
     var r=await fetch(API+"/nutrition_plan.json",{headers:{Authorization:"Bearer "+token}});
-    if(r.ok){var meta=await r.json();sha=meta.sha;}
-    var body={message:msg,content:btoa(unescape(encodeURIComponent(JSON.stringify(nutritionPlan,null,2))))};
+    if(r.ok){
+      var meta=await r.json();sha=meta.sha;
+      try{current=decodeURIComponent(escape(atob(meta.content.replace(/\n/g,''))));}catch(e){}
+    }
+    var json=JSON.stringify(nutritionPlan,null,2);
+    // Saving an unchanged plan used to commit anyway, which put empty commits
+    // on the repo. Nothing to say to GitHub if nothing actually changed.
+    if(current!=null&&current===json)return true;
+    var body={message:msg,content:btoa(unescape(encodeURIComponent(json)))};
     if(sha)body.sha=sha;
     var put=await fetch(API+"/nutrition_plan.json",{method:"PUT",
       headers:{Authorization:"Bearer "+token,"Content-Type":"application/json"},body:JSON.stringify(body)});
