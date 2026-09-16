@@ -165,10 +165,58 @@
             "fat_g": 7.7,
             "fiber_g": 0.7
           }
+        },
+        {
+          "id": "m1789577342636pjlx",
+          "slot": "breakfast",
+          "name": "Whey Protein Smoothie",
+          "time": "17:49",
+          "source": "described",
+          "confidence": 0.75,
+          "ai_notes": "Glucose Goddess perspective: This is high in carbs relative to fibre (14.6g carbs, 1.1g fibre). The banana and milk sugars will spike glucose. Recommendations: add vegetables/greens to the smoothie, include a fat source (nut butter, seeds, or olive oil), and gentle movement post-meal to blunt the spike.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Whey protein powder",
+              "qty": "30 g",
+              "kcal": 120,
+              "protein_g": 24,
+              "carbs_g": 2,
+              "fat_g": 2,
+              "fiber_g": 0
+            },
+            {
+              "name": "Lactose-free milk",
+              "qty": "240 ml",
+              "kcal": 149,
+              "protein_g": 8,
+              "carbs_g": 12,
+              "fat_g": 8,
+              "fiber_g": 0
+            },
+            {
+              "name": "Banana",
+              "qty": "55 g",
+              "kcal": 49,
+              "protein_g": 0.6,
+              "carbs_g": 12.6,
+              "fat_g": 0.2,
+              "fiber_g": 1.1
+            }
+          ],
+          "totals": {
+            "kcal": 318,
+            "protein_g": 32.6,
+            "carbs_g": 26.6,
+            "fat_g": 10.2,
+            "fiber_g": 1.1
+          }
         }
       ],
       "water_ml": 1000,
-      "updated": "2026-09-16T16:46:00.434Z"
+      "updated": "2026-09-16T16:49:02.637Z"
     }
   }
 }
