@@ -101,6 +101,19 @@ pace instead — where you are against where you'd normally be by this hour,
 based on your plan's meal times — and the compliance score lands once the last
 meal slot has passed. Reports and the compliance chart only use finished days.
 
+## Appearance
+
+The app follows your iPhone's Light/Dark setting, switching live when the phone
+does (including the automatic sunset switch). Settings → Appearance can pin
+Light or Dark instead; "Match iOS" is the default and hands control back to the
+system.
+
+The whole UI is driven by one set of CSS custom properties defined per theme,
+so light mode is a real palette (darker accents that hold their contrast on a
+white card) rather than an inverted dark one. Charts rebuild their colours and
+repaint whenever the theme changes, and a pinned theme is applied before the
+first paint so the app never flashes the wrong one on launch.
+
 ## Reports
 
 - **Home** — today's ring (pace while the day runs, score once it's done),
