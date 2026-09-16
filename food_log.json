@@ -42,10 +42,85 @@
             "fat_g": 18.6,
             "fiber_g": 2.4
           }
+        },
+        {
+          "id": "m1789560709061ktid",
+          "slot": "lunch",
+          "name": "Beef with mozzarella and roasted sweet potato",
+          "time": "13:11",
+          "source": "photo",
+          "confidence": 0.82,
+          "ai_notes": "Meal aligns well with Glucose Goddess approach: vegetables (sweet potato) and fibre (beans) are prominent; protein-rich beef base; mozzarella adds fat which helps blunt glucose response. Recommend eating the sweet potato and beans first, then beef. Minor vinegar or additional fat pairing would further optimize glucose control. Plating is attractive and portion-controlled.",
+          "corrections": "item 1 (\"Beef stew (braised beef chunks in tomato-based sauce)\") is actually: It’s 100 grams of beef, everything else is ok; item 2 (\"Shredded cheese (appears to be cheddar or similar hard cheese)\") is actually: It’s mozzarella cheese; item 3 (\"Sweet potato, roasted/fried (fries/batons)\") is actually: Pre cooked, finished in oven",
+          "ai_rounds": 1,
+          "note": "",
+          "items": [
+            {
+              "name": "Beef (braised in tomato-based sauce)",
+              "qty": "100 g",
+              "kcal": 180,
+              "protein_g": 26,
+              "carbs_g": 2,
+              "fat_g": 8,
+              "fiber_g": 0
+            },
+            {
+              "name": "Red kidney beans (in sauce)",
+              "qty": "40 g",
+              "kcal": 32,
+              "protein_g": 2.2,
+              "carbs_g": 5.8,
+              "fat_g": 0.1,
+              "fiber_g": 1.6
+            },
+            {
+              "name": "Tomato-based sauce",
+              "qty": "60 g",
+              "kcal": 28,
+              "protein_g": 1.2,
+              "carbs_g": 5,
+              "fat_g": 0.3,
+              "fiber_g": 1
+            },
+            {
+              "name": "Mozzarella cheese, shredded",
+              "qty": "25 g",
+              "kcal": 80,
+              "protein_g": 6.3,
+              "carbs_g": 0.6,
+              "fat_g": 6.3,
+              "fiber_g": 0
+            },
+            {
+              "name": "Sweet potato, roasted/oven-finished",
+              "qty": "90 g",
+              "kcal": 74,
+              "protein_g": 1.2,
+              "carbs_g": 17,
+              "fat_g": 0.1,
+              "fiber_g": 2.7
+            },
+            {
+              "name": "Cooking oil (roasting/finishing)",
+              "qty": "2 g",
+              "kcal": 18,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 2,
+              "fiber_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 412,
+            "protein_g": 36.9,
+            "carbs_g": 30.4,
+            "fat_g": 16.8,
+            "fiber_g": 5.3
+          }
         }
       ],
       "water_ml": 0,
-      "updated": "2026-09-16T10:01:24.234Z"
+      "updated": "2026-09-16T12:11:49.062Z"
     }
   }
 }
