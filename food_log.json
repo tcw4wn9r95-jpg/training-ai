@@ -117,10 +117,58 @@
             "fat_g": 16.8,
             "fiber_g": 5.3
           }
+        },
+        {
+          "id": "m1789577160430t5bw",
+          "slot": "pm_snack",
+          "name": "Two-flavor ice cream cone",
+          "time": "17:46",
+          "source": "photo",
+          "confidence": 0.83,
+          "ai_notes": "Image taken in what appears to be a casual dining/ice cream shop setting. Cone held at angle makes precise layer measurement difficult. Glucose Goddess context: this is a high-sugar, high-fat snack with minimal fiber—no savory/protein component, no vegetables, and rapid glucose impact expected without mitigation strategies (vinegar, fat-with-carbs timing, or movement after). Total estimated ~175 kcal, 24.7g carbs, 7.7g fat.",
+          "corrections": "item 1 (\"Chocolate ice cream\") is actually: It’s stracciatella item 2 (\"Cookies & cream ice cream (or similar speckled flavor)\") is actually: It’s not cookies and cream, it’s dark chocolate",
+          "ai_rounds": 2,
+          "note": "",
+          "items": [
+            {
+              "name": "Dark chocolate ice cream",
+              "qty": "40 g",
+              "kcal": 60,
+              "protein_g": 1,
+              "carbs_g": 6.5,
+              "fat_g": 3.5,
+              "fiber_g": 0.4
+            },
+            {
+              "name": "Stracciatella ice cream (vanilla with chocolate pieces)",
+              "qty": "45 g",
+              "kcal": 67,
+              "protein_g": 1.2,
+              "carbs_g": 7.2,
+              "fat_g": 3.6,
+              "fiber_g": 0.1
+            },
+            {
+              "name": "Waffle/sugar cone",
+              "qty": "12 g",
+              "kcal": 48,
+              "protein_g": 0.9,
+              "carbs_g": 9,
+              "fat_g": 0.6,
+              "fiber_g": 0.2
+            }
+          ],
+          "totals": {
+            "kcal": 175,
+            "protein_g": 3.1,
+            "carbs_g": 22.7,
+            "fat_g": 7.7,
+            "fiber_g": 0.7
+          }
         }
       ],
       "water_ml": 1000,
-      "updated": "2026-09-16T16:43:39.818Z"
+      "updated": "2026-09-16T16:46:00.434Z"
     }
   }
 }
