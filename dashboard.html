@@ -2577,6 +2577,15 @@ function timerDone(){
 // recovery score with evidence-weighted weights.
 var HEALTH_WEIGHTS={hrv:0.35,sleep:0.25,rhr:0.20,bb:0.10,stress:0.07,resp:0.03};
 function _num(x){return (typeof x==="number"&&!isNaN(x))?x:null;}
+// Same guard for form fields, whose .value is always a string ("" when empty,
+// and a comma decimal on some keyboards).
+function _numIn(v){
+  if(v==null)return null;
+  var t=String(v).trim().replace(",",".");
+  if(!t)return null;
+  var n=parseFloat(t);
+  return isNaN(n)?null:n;
+}
 function _stats(arr){
   var xs=arr.filter(function(v){return typeof v==="number"&&!isNaN(v);});
   if(!xs.length)return null;
@@ -5529,7 +5538,7 @@ async function saveNutritionTargets(){
   var prev=(nutritionPlan&&nutritionPlan.targets)||{}, targets={};
   var ref=referenceTargets();
   map.forEach(function(p){
-    var v=_num(document.getElementById(p[0]).value);
+    var v=_numIn(document.getElementById(p[0]).value);
     if(!(v>0))return;
     var before=prev[p[1]], beforeV=(before&&typeof before==="object")?_num(before.value):_num(before);
     // Keep "plan" provenance only while the number is untouched or was already
@@ -5537,6 +5546,11 @@ async function saveNutritionTargets(){
     var src=(beforeV===Math.round(v)&&before&&before.src)?before.src:(Math.round(v)===ref[p[1]]?"reference":"manual");
     targets[p[1]]={value:Math.round(v),src:src};
   });
+  // Never let an empty form wipe a plan that has real numbers in it.
+  if(!Object.keys(targets).length&&Object.keys(prev).length){
+    document.getElementById("tg-status").textContent="Nothing to save — the targets were all blank, so your plan is untouched.";
+    return;
+  }
   nutritionPlan=Object.assign({},nutritionPlan||{},{targets:targets,updated:localDateStr(new Date())});
   if(!nutritionPlan.source)nutritionPlan.source="manual";
   var st=document.getElementById("tg-status");
@@ -5546,20 +5560,26 @@ async function saveNutritionTargets(){
   renderTargetSources();updateNutriSettingSub();renderFood();renderFoodHome();
 }
 async function saveBodyProfile(){
+  // A field left blank keeps whatever was there before rather than clearing it.
+  var had=(nutritionPlan&&nutritionPlan.body)||{};
+  function keep(id,prev){var v=_numIn(document.getElementById(id).value);return v!=null?v:(_num(prev)!=null?prev:null);}
   var body={
-    weight_kg:_num(document.getElementById("bd-weight").value),
-    height_cm:_num(document.getElementById("bd-height").value),
-    age:_num(document.getElementById("bd-age").value),
-    sex:document.getElementById("bd-sex").value,
-    activity:_num(document.getElementById("bd-activity").value),
-    goal:document.getElementById("bd-goal").value
+    weight_kg:keep("bd-weight",had.weight_kg),
+    height_cm:keep("bd-height",had.height_cm),
+    age:keep("bd-age",had.age),
+    sex:document.getElementById("bd-sex").value||had.sex||"male",
+    activity:keep("bd-activity",had.activity)||1.375,
+    goal:document.getElementById("bd-goal").value||had.goal||"maintain"
   };
   nutritionPlan=Object.assign({},nutritionPlan||{},{body:body,updated:localDateStr(new Date())});
   if(!nutritionPlan.source)nutritionPlan.source="manual";
   var st=document.getElementById("bd-status");
   st.textContent="Saving…";
   var ok=await commitNutritionPlan("Body details for nutrition targets");
-  st.textContent=ok?"Saved.":"Saved on this device — add your GitHub token in Settings to sync it.";
+  var ref=referenceTargets();
+  st.textContent=(ok?"Saved.":"Saved on this device — add your GitHub token in Settings to sync it.")+
+    (body.weight_kg?" Reference day for "+body.weight_kg+" kg: "+ref.kcal+" kcal, "+ref.protein_g+" g protein."
+                   :" Add your weight — without it the app sizes everything off a 75 kg default.");
   fillNutritionForm();renderFood();renderFoodHome();
 }
 async function commitNutritionPlan(msg){
