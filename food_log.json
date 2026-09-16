@@ -3,9 +3,49 @@
   "days": {
     "2026-09-16": {
       "date": "2026-09-16",
-      "meals": [],
+      "meals": [
+        {
+          "id": "m1789552884233j19h",
+          "slot": "breakfast",
+          "name": "Scrambled eggs with wholemeal toast",
+          "time": "11:01",
+          "source": "photo",
+          "confidence": 0.92,
+          "ai_notes": "Corrected to 1 slice wholemeal toast per client feedback. Kept scrambled eggs estimate as unchallenged. Strong natural light shows plate clearly. Glucose Goddess alignment: savoury protein-rich breakfast with fibre from wholemeal carb, though ideally vegetables would precede the toast if optimising for glucose blunting.",
+          "corrections": "item 2 (\"Wholemeal toast (2 slices)\") is actually: It’s just one slice",
+          "ai_rounds": 1,
+          "note": "",
+          "items": [
+            {
+              "name": "Scrambled eggs (cooked in sunflower oil)",
+              "qty": "120 g",
+              "kcal": 220,
+              "protein_g": 12.5,
+              "carbs_g": 1.2,
+              "fat_g": 18,
+              "fiber_g": 0
+            },
+            {
+              "name": "Wholemeal toast (1 slice)",
+              "qty": "30 g",
+              "kcal": 79,
+              "protein_g": 3.6,
+              "carbs_g": 14.1,
+              "fat_g": 0.6,
+              "fiber_g": 2.4
+            }
+          ],
+          "totals": {
+            "kcal": 299,
+            "protein_g": 16.1,
+            "carbs_g": 15.3,
+            "fat_g": 18.6,
+            "fiber_g": 2.4
+          }
+        }
+      ],
       "water_ml": 0,
-      "updated": "2026-09-16T06:24:47.485Z"
+      "updated": "2026-09-16T10:01:24.234Z"
     }
   }
 }
