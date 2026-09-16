@@ -655,6 +655,32 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .en-act .tweak{background:var(--bg3);color:var(--t2)}
 .en-fix{display:flex;gap:9px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line)}
 .en-fix .sign{width:20px;height:20px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800}
+
+/* ── Home: greeting, pillars, next action ───────────────────── */
+.greet{margin:2px 0 14px}
+.greet .h{font-size:23px;font-weight:800;letter-spacing:-.6px;line-height:1.15}
+.greet .d{font-size:12.5px;color:var(--t3);margin-top:3px}
+.greet .goal{font-size:12px;color:var(--t3);margin-top:5px}
+.greet .goal b{color:var(--t2);font-weight:600}
+.pillars{display:flex;gap:9px;margin-bottom:14px}
+.pillar{flex:1;min-width:0;background:var(--bg2);border:1px solid var(--line);border-radius:16px;
+  padding:13px 8px 12px;text-align:center;cursor:pointer;box-shadow:var(--card-shadow);transition:transform .12s ease}
+.pillar:active{transform:scale(.97)}
+.pillar .ring{width:60px;height:60px;border-radius:50%;margin:0 auto 8px;display:flex;align-items:center;justify-content:center}
+.pillar .ring i{width:48px;height:48px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;
+  align-items:center;justify-content:center;font-family:var(--mono);font-weight:800;font-size:16px;font-style:normal;line-height:1}
+.pillar .ring i span{font-size:8.5px;font-weight:700;font-family:var(--font);color:var(--t3);letter-spacing:.3px}
+.pillar .lbl{font-size:10px;font-weight:800;text-transform:uppercase;letter-spacing:.6px;color:var(--t3)}
+.pillar .sub{font-size:11.5px;color:var(--t2);margin-top:3px;line-height:1.3;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.nextup{display:flex;align-items:center;gap:12px;padding:14px 15px;border-radius:16px;
+  background-color:var(--bg2);background-image:var(--card-grad-green);border:1px solid var(--brand-edge);
+  margin-bottom:14px;cursor:pointer;box-shadow:var(--card-shadow)}
+.nextup .ic{font-size:21px;flex-shrink:0}
+.nextup .tx{flex:1;min-width:0}
+.nextup .t{font-size:14.5px;font-weight:800;letter-spacing:-.2px;line-height:1.25}
+.nextup .s{font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:2px}
+.nextup .go{color:var(--brand);font-size:18px;flex-shrink:0}
 </style>
 </head>
 <body>
@@ -713,7 +739,8 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 
   <!-- HOME -->
   <div class="page active" id="page-home">
-    <div id="goal-banner" style="display:none"></div>
+    <div id="today-strip"></div>
+    <div id="next-up"></div>
     <div class="hero" id="today-hero" style="--accent:var(--blue)">
       <div class="hero-top">
         <span class="hero-eyebrow">Today · <span id="today-date">—</span></span>
@@ -1418,7 +1445,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-26";
+const BUILD="20260916-27";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -1547,6 +1574,9 @@ function buildPMC(days){
 
 // ── RENDER HOME ───────────────────────────────────────────────
 function renderHome(){
+  try{renderTodayStrip();}catch(e){}
+  try{renderTodayHero();}catch(e){}
+  try{renderNextUp();}catch(e){}
   try{renderFoodHome();}catch(e){}
   if(!workouts.length){
     document.getElementById("form-state").textContent="No training data";
@@ -1556,7 +1586,7 @@ function renderHome(){
     document.getElementById("kpi-atl").textContent="—";
     document.getElementById("kpi-week").textContent="—";
     var rEl=document.getElementById("kpi-ramp");if(rEl)rEl.textContent="CTL";
-    renderTodayHero();renderWeekProgress();renderGamify();renderGoalBanner(0,0);drawSleep(sleep);
+    renderTodayHero();renderWeekProgress();renderGamify();renderTodayStrip();renderNextUp();drawSleep(sleep);
     return;
   }
   var pmc=buildPMC(pmcDays);
@@ -1617,84 +1647,9 @@ function renderHome(){
   renderWeekProgress();
   renderGamify();
   renderProjection(ctl,atl);
-  renderGoalBanner(ctl,atl);
 }
 
 // ── GOAL BANNER (top of home) ─────────────────────────────────
-function renderGoalBanner(ctlNow,atlNow){
-  var el=document.getElementById("goal-banner");
-  if(!goals||!goals.primary_goal){el.style.display="none";return;}
-  el.style.display="block";
-
-  // Projected fitness if the current plan's weekly TSS is sustained
-  var weekTSS=(planJson||[]).reduce(function(s,x){return s+(x.planned_tss||0);},0);
-
-  var hasDate=goals.target_date&&/^\d{4}-\d{2}-\d{2}/.test(goals.target_date);
-  if(hasDate){
-    var ev=new Date(goals.target_date.substring(0,10)+"T00:00:00");
-    var now=new Date();now.setHours(0,0,0,0);
-    var days=Math.round((ev-now)/864e5);
-    var weeks=Math.max(0,Math.round(days/7));
-
-    // Project CTL & TSB to event day using planned weekly load
-    var dailyTSS=weekTSS?weekTSS/7:0, c=ctlNow,a=atlNow;
-    for(var d=0;d<Math.max(0,days);d++){c+=(dailyTSS-c)/42;a+=(dailyTSS-a)/7;}
-    var projCTL=Math.round(c), projTSB=Math.round(c-a);
-
-    var ready,rclr,rmsg;
-    if(days<0){ready="Event passed";rclr="var(--neutral)";rmsg="Set a new goal in settings to keep building.";}
-    else if(days===0){ready="Race day! 🎉";rclr="var(--violet)";rmsg="Trust your training. Go well.";}
-    else{
-      if(projTSB>=5){ready="On track — fresh";rclr="var(--green)";rmsg="Projected form is positive on the day. You'll arrive rested and race-ready if you hold the plan.";}
-      else if(projTSB>=-5){ready="On track";rclr="var(--green)";rmsg="Form lands near neutral — good. A clean taper in the final week will sharpen you up.";}
-      else if(projTSB>=-15){ready="Tighten the taper";rclr="var(--amber)";rmsg="You'll still be carrying fatigue on the day. Ease volume in the final 1-2 weeks to peak properly.";}
-      else{ready="Fatigue risk";rclr="var(--red)";rmsg="Projected to be deep in fatigue at the event. Plan a real taper, or the goal load may be too high.";}
-    }
-    var fitColor=days>0?rclr:"var(--neutral)";
-    el.innerHTML=
-      '<div class="gb">'+
-        '<div class="gb-top"><span class="gb-eyebrow">🎯 Goal · '+(weeks>0?weeks+(weeks===1?" week":" weeks")+" out":"this week")+'</span></div>'+
-        '<div class="gb-goal">'+esc(goals.primary_goal)+'</div>'+
-        (goals.target_event?'<div style="font-size:13px;color:var(--t2)">'+esc(goals.target_event)+' · '+ev.toLocaleDateString("en-GB",{weekday:"short",day:"numeric",month:"long"})+'</div>':"")+
-        '<div class="gb-count"><span class="n" style="color:'+fitColor+'">'+(days>=0?days:0)+'</span><span class="u">days to go</span></div>'+
-        '<div class="gb-readiness"><span class="gb-dot" style="background:'+rclr+'"></span><span style="color:'+rclr+'">'+ready+'</span>'+
-          '<span style="color:var(--t3);font-weight:500;margin-left:auto">proj. fitness '+projCTL+' · form '+(projTSB>0?"+":"")+projTSB+'</span></div>'+
-        '<div class="gb-msg">'+rmsg+'</div>'+
-      '</div>';
-  } else {
-    // Open-ended goal — key metric for the goal type
-    var gt=(goals.goal_type||"").toLowerCase();
-    var metricLabel,curVal,trendStr="",msg;
-    var monStr2=(function(){var t=new Date(),dw=t.getDay()||7,m=new Date(t);m.setDate(t.getDate()-dw+1);return m.toISOString().split("T")[0];})();
-    var wkKm=workouts.filter(w=>w.date>=monStr2).reduce((s,w)=>s+(w.distance_km||0),0);
-
-    if(gt.indexOf("weight")>-1){
-      metricLabel="Weekly training load";curVal=Math.round(weekTSS||0)+" TSS planned";
-      msg="Consistent calorie burn comes from steady weekly load. Hitting your sessions is the lever — keep the streak going.";
-    } else if(gt.indexOf("endurance")>-1){
-      metricLabel="This week's volume";curVal=wkKm.toFixed(1)+" km";
-      msg="Endurance is built by progressive volume. Each week's long session is the one that moves the needle.";
-    } else { // speed / general fitness / other → CTL-based
-      var pmc2=buildPMC(90),ctl7ago=pmc2.C[pmc2.C.length-8]||ctlNow;
-      var ramp2=(ctlNow-ctl7ago).toFixed(1);
-      metricLabel="Fitness (CTL)";curVal=Math.round(ctlNow);
-      trendStr=(ramp2>=0?" ▲ +":" ▼ ")+Math.abs(ramp2)+"/wk";
-      msg=gt.indexOf("speed")>-1?"Speed rides on a strong aerobic base plus sharp intervals. Watch fitness climb while you keep the quality sessions in.":"General fitness tracks your CTL — the steady climb of consistent training. You're building it week on week.";
-    }
-    el.innerHTML=
-      '<div class="gb">'+
-        '<div class="gb-top"><span class="gb-eyebrow">🎯 Goal</span></div>'+
-        '<div class="gb-goal">'+esc(goals.primary_goal)+'</div>'+
-        '<div style="margin-top:10px">'+
-          '<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3)">'+metricLabel+'</div>'+
-          '<div style="font-size:22px;font-weight:800;font-family:var(--mono);color:var(--t1);margin-top:3px">'+
-            curVal+'<span style="font-size:12px;font-weight:600;color:var(--t2);margin-left:6px">'+trendStr+'</span>'+
-          '</div>'+
-        '</div>'+
-        '<div class="gb-msg" style="margin-top:8px">'+msg+'</div>'+
-      '</div>';
-  }
-}
 function esc(s){return (s||"").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
 
 // ── PROJECTION: where you'll be if you hit the plan ───────────
@@ -1787,12 +1742,18 @@ function workoutSynopsis(session){
   return parts.join(" → ");
 }
 function renderTodayHero(){
-  var today=new Date().toISOString().split("T")[0];
+  var today=localDateStr(new Date());
   document.getElementById("today-date").textContent=new Date().toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"short"});
   var session=planJson.find(s=>s.date===today);
   var done=workouts.filter(w=>w.date===today);
   var hero=document.getElementById("today-hero"),pill=document.getElementById("today-pill"),stats=document.getElementById("today-stats");
   var synEl=document.getElementById("today-synopsis"),noteEl=document.getElementById("today-coach-note");
+  if(!hero)return;
+  // Nothing planned and nothing done: the card has nothing to say, and the
+  // next-action card above it already covers an empty day. It used to sit on
+  // "Loading…" for ever whenever Garmin had no activities to show.
+  if(!done.length&&!session){hero.style.display="none";return;}
+  hero.style.display="";
 
   if(done.length){
     // ── Completed workout ──────────────────────────────────────
@@ -5251,6 +5212,141 @@ function mealCardHTML(iso,slot){
 
 
 
+
+// ── HOME: today at a glance ───────────────────────────────────
+// The top of the screen answers one question — how am I doing today — across
+// the three things this app actually tracks, and then names the one thing
+// worth doing next. Anything static (a goal that never changes, a link into
+// settings) belongs further down or in Settings, not above the fold.
+function greetingWord(){
+  var h=new Date().getHours();
+  return h<5?"Still up":h<12?"Good morning":h<18?"Good afternoon":"Good evening";
+}
+function weekStats(){
+  var thisMon=localDateStr(mondayOf(0));
+  var arr=(getPlanJsonMon()===thisMon&&planJson.length)?planJson:(planForOffset(0)||[]);
+  var doneN=0;
+  arr.forEach(function(s){var st=sessionStatus(s);if(st&&(st.k==="done"||st.k==="partial"))doneN++;});
+  var plannedTSS=arr.reduce(function(t,s){return t+(s.planned_tss||0);},0);
+  var doneTSS=Math.round(workouts.filter(function(w){return w.date>=thisMon;}).reduce(function(t,w){return t+getTSS(w);},0));
+  var pct=plannedTSS?Math.min(100,Math.round(doneTSS/plannedTSS*100)):(arr.length?Math.round(doneN/arr.length*100):0);
+  return {planned:arr.length,done:doneN,pct:pct,plannedTSS:plannedTSS,doneTSS:doneTSS,sessions:arr};
+}
+function renderTodayStrip(){
+  var el=document.getElementById("today-strip");if(!el)return;
+  var now=new Date();
+  var name=(profile&&profile.name)?profile.name:"";
+  var iso=localDateStr(now);
+
+  // Recovery — from Garmin's overnight numbers
+  var rec=null;try{rec=computeRecovery();}catch(e){}
+  var recPct=rec?rec.score:0;
+  var recTxt=rec?String(rec.score):"—";
+  var recCol=rec?rec.band.c:"var(--t3)";
+  var recSub=rec?rec.band.label:"Sync to see it";
+
+  // Fuel — how today's eating is going, by pace while the day runs
+  var c=null;try{c=complianceFor(iso);}catch(e){}
+  var t=targetsFor(iso), a=dayTotals(iso);
+  var fuelPct, fuelTxt, fuelCol, fuelSub;
+  if(c&&c.complete){
+    var b=complianceBand(c.score);
+    fuelPct=c.score;fuelTxt=String(c.score);fuelCol=b.c;fuelSub=b.label;
+  }else if(c){
+    var p=dayPace(iso);
+    fuelPct=t.kcal.v?Math.min(100,Math.round(a.kcal/t.kcal.v*100)):0;
+    fuelTxt=fuelPct+"%";fuelCol=p.color;fuelSub=p.label;
+  }else{
+    fuelPct=0;fuelTxt="—";fuelCol="var(--t3)";fuelSub="Nothing logged";
+  }
+
+  // Training — this week against the plan
+  var w=weekStats();
+  var trPct=w.planned?w.pct:0;
+  var trTxt=w.planned?(w.done+"/"+w.planned):"—";
+  var trCol=planPaused?"var(--t3)":(w.planned?(w.pct>=100?"var(--green)":"var(--blue)"):"var(--t3)");
+  var trSub=planPaused?"Plan paused":(w.planned?(w.done+" of "+w.planned+" done"):"No plan this week");
+
+  el.innerHTML=
+    '<div class="greet">'+
+      '<div class="h">'+greetingWord()+(name?", "+esc(name):"")+'</div>'+
+      '<div class="d">'+now.toLocaleDateString("en-GB",{weekday:"long",day:"numeric",month:"long"})+'</div>'+
+      (goals&&goals.primary_goal?'<div class="goal"><b>Working towards:</b> '+esc(goals.primary_goal)+'</div>':'')+
+    '</div>'+
+    '<div class="pillars">'+
+      pillarCard("Recovery",recPct,recTxt,recCol,recSub,"goHealth()")+
+      pillarCard("Fuel",fuelPct,fuelTxt,fuelCol,fuelSub,"goFood()")+
+      pillarCard("Training",trPct,trTxt,trCol,trSub,"goTraining()")+
+    '</div>';
+}
+function pillarCard(label,pct,text,color,sub,onclick){
+  return '<div class="pillar" onclick="'+onclick+'">'+
+    '<div class="ring" style="background:conic-gradient('+color+' '+clamp(pct,0,100)+'%,var(--bg3) 0)">'+
+      '<i style="color:'+color+'">'+esc(text)+'</i></div>'+
+    '<div class="lbl">'+esc(label)+'</div>'+
+    '<div class="sub" title="'+escAttr(sub)+'">'+esc(sub)+'</div>'+
+  '</div>';
+}
+function goTraining(){
+  var b=document.querySelector('.nav button[onclick*="\'plan\'"]');
+  showPage("plan",b);showTrainingTab("plan");
+}
+
+// The single most useful thing right now, chosen from the day's actual state.
+function nextUpAction(){
+  var iso=localDateStr(new Date()), now=minutesNow();
+  var t=targetsFor(iso), a=dayTotals(iso), d=dayEntry(iso);
+  var acts=actualsOn(iso), planned=planPaused?[]:planSessionsOn(iso);
+  var doneToday=acts.length>0;
+
+  // 1. A session that's planned for today and not done yet.
+  if(planned.length&&!doneToday){
+    var s=planned[0];
+    return {icon:"🏃",title:"Today: "+(s.name||(s.sport||"session").replace(/_/g," ")),
+      sub:(s.planned_tss?s.planned_tss+" TSS planned":"On your plan for today")+" · open it to see the steps",
+      act:"goTraining()"};
+  }
+  // 2. A meal slot that's due and has nothing logged against it.
+  var slots=mealTimes();
+  for(var i=slots.length-1;i>=0;i--){
+    var st=slots[i], tmin=hhmmToMin(st.time);
+    if(now<tmin-15)continue;
+    var has=(d.meals||[]).some(function(m){return m.slot===st.id;});
+    if(has)continue;
+    var left=Math.max(0,t.kcal.v-a.kcal);
+    return {icon:"🍽",title:slotMeta(st.id).label+" isn't logged",
+      sub:left?left+" kcal and "+Math.max(0,t.protein_g.v-Math.round(a.protein_g))+" g protein left today — ask what fits, or log it":
+               "Log it, or ask Claudio what fits what's left",
+      act:"goFood();openEatNow()"};
+  }
+  // 3. Water, once the day is well under way.
+  if(now>=13*60&&t.water_ml&&(a.water_ml||0)<t.water_ml.v*0.6){
+    return {icon:"💧",title:"Hydration is behind",
+      sub:Math.round((t.water_ml.v-(a.water_ml||0))/250)+" more glasses to hit "+(t.water_ml.v/1000).toFixed(1)+" L",
+      act:"goFood()"};
+  }
+  // 4. A session done but not yet reviewed by the coach.
+  if(doneToday){
+    return {icon:"✅",title:"Session done — "+(acts[0].name||acts[0].sport||"training"),
+      sub:"Ask Coach Claudio how it went, or check your recovery",act:"goHealth()"};
+  }
+  // 5. Nothing outstanding.
+  var c=complianceFor(iso);
+  return {icon:"👌",title:"Nothing due right now",
+    sub:c?"Food's logged and there's no session on the plan. Rest is part of it.":
+         "No session today. Log what you eat as you go and the day takes care of itself.",
+    act:"goFood()"};
+}
+function renderNextUp(){
+  var el=document.getElementById("next-up");if(!el)return;
+  var n;try{n=nextUpAction();}catch(e){el.innerHTML="";return;}
+  el.innerHTML='<div class="nextup" onclick="'+n.act+'">'+
+    '<span class="ic">'+n.icon+'</span>'+
+    '<span class="tx"><span class="t">'+esc(n.title)+'</span><span class="s" style="display:block">'+esc(n.sub)+'</span></span>'+
+    '<span class="go">›</span>'+
+  '</div>';
+}
+
 // ── WHAT SHOULD I EAT NOW ─────────────────────────────────────
 // The app knows what the day still owes him and what his plan allows. This
 // turns that into an answer: either a meal to eat now, or a verdict on the
@@ -5334,6 +5430,22 @@ function eatContextBlock(){
     lines.push("FOODS HIS PLAN RESTRICTS (never suggest these; flag them if he proposes one): "+nutritionPlan.restricted_foods.join(", ")+".");
   lines.push("He is "+bodyKg()+" kg. Meals must be realistic home food, not restaurant fantasy, and portions in grams or household measures.");
   return lines.join("\n");
+}
+
+function eatNowCardHTML(){
+    var _rl=remainingToday();
+    return '<div class="card" style="background-color:var(--bg2);background-image:var(--card-grad-green);border-color:var(--brand-edge);cursor:pointer" onclick="openEatNow()">'+
+      '<div style="display:flex;align-items:center;gap:12px">'+
+        '<span style="font-size:22px">\ud83c\udf7d</span>'+
+        '<div style="flex:1;min-width:0">'+
+          '<div style="font-size:14.5px;font-weight:800;letter-spacing:-.2px">What should I eat now?</div>'+
+          '<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:2px">'+
+            (_rl.left.kcal>0?_rl.left.kcal+' kcal and '+Math.max(0,_rl.left.protein_g)+' g protein still to go':
+             'You\u2019re at your calories for today')+
+            ' \u00b7 or tell Claudio what you\u2019re thinking of eating</div>'+
+        '</div>'+
+        '<span style="color:var(--brand);font-size:18px;flex-shrink:0">\u203a</span>'+
+      '</div></div>';
 }
 
 function openEatNow(){
@@ -5705,26 +5817,18 @@ function renderFood(){
         '<div style="font-size:12.5px;color:var(--t2);line-height:1.55">The targets below are reference values for your body and activity, not a prescription. Add your doctor’s plan and they become yours.</div>'+
         '<button class="meal-add" style="margin-top:10px" onclick="openNutritionModal()">Add my plan</button>'+
         '</div></div></div>';
-  }else{
-    var estKeys=MACROS.concat(["water_ml"]).filter(function(k){return t[k]&&t[k].src==="estimated";});
-    if(estKeys.length){
-      html+='<div class="card" style="border-color:rgba(59,130,246,.2)">'+
-        '<div style="display:flex;gap:10px;align-items:flex-start">'+
-          '<span style="font-size:16px">\ud83d\udd0e</span>'+
-          '<div style="flex:1"><div style="font-size:13px;font-weight:700;margin-bottom:3px">Targets read off your plan</div>'+
-          '<div style="font-size:12.5px;color:var(--t2);line-height:1.55">Your plan prescribes portions rather than numbers, so '+
-          estKeys.length+' of these targets were worked out from the meals it lists. Worth a look \u2014 and if your doctor gave you exact numbers, enter those.</div>'+
-          '<button class="meal-add" style="margin-top:10px" onclick="openNutritionModal()">Review targets</button>'+
-          '</div></div></div>';
-    }
   }
+  // What to eat is the question this tab exists to answer, so it goes first.
+  if(foodDayOffset===0)html+=eatNowCardHTML();
   html+=fuelBannerHTML(iso,t);
   // Macros
   html+='<div class="card">'+
     '<div class="card-h" style="display:flex;justify-content:space-between;align-items:center">'+
       '<span>Today’s macros</span>'+
       '<span style="font-size:10px;color:var(--t3);text-transform:none;letter-spacing:0">'+
-      (t.kcal.src==="plan"?"from your plan":t.kcal.src==="estimated"?"read off your plan":t.kcal.src==="manual"?"your numbers":"reference values")+'</span></div>'+
+      '<span style="border-bottom:1px dotted var(--t3);cursor:pointer" onclick="event.stopPropagation();openNutritionModal()">'+
+      (t.kcal.src==="plan"?"from your plan":t.kcal.src==="estimated"?"read off your plan":t.kcal.src==="manual"?"your numbers":"reference values")+
+      '</span></span></div>'+
     DAY_ROWS.map(function(k){
       var row=macroRowHTML(k,a[k]||0,t[k]);
       if(k==="carbs_g")row+=sugarRowsHTML(iso,a,t);
@@ -5734,22 +5838,6 @@ function renderFood(){
   html+=waterCardHTML(iso,t);
   html+=dayScoreHTML(iso);
   // Meals
-  // Ask before eating, not just log after.
-  if(foodDayOffset===0){
-    var _rl=remainingToday();
-    html+='<div class="card" style="background-color:var(--bg2);background-image:var(--card-grad-green);border-color:var(--brand-edge);cursor:pointer" onclick="openEatNow()">'+
-      '<div style="display:flex;align-items:center;gap:12px">'+
-        '<span style="font-size:22px">\ud83c\udf7d</span>'+
-        '<div style="flex:1;min-width:0">'+
-          '<div style="font-size:14.5px;font-weight:800;letter-spacing:-.2px">What should I eat now?</div>'+
-          '<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:2px">'+
-            (_rl.left.kcal>0?_rl.left.kcal+' kcal and '+Math.max(0,_rl.left.protein_g)+' g protein still to go':
-             'You\u2019re at your calories for today')+
-            ' \u00b7 or tell Claudio what you\u2019re thinking of eating</div>'+
-        '</div>'+
-        '<span style="color:var(--brand);font-size:18px;flex-shrink:0">\u203a</span>'+
-      '</div></div>';
-  }
   html+='<div style="font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.8px;color:var(--t3);margin:18px 0 10px">Meals</div>';
   mealSlots().forEach(function(s){html+=mealCardHTML(iso,s);});
   // Plan reference
@@ -6789,22 +6877,18 @@ function renderFoodHome(){
       '<span>Food plan</span>'+
       '<span style="font-size:10px;color:var(--t3);text-transform:none;letter-spacing:0;cursor:pointer" onclick="goFood()">Open ›</span></div>';
   // Today line
-  var ringPct=inProgress?(t.kcal.v?Math.min(100,Math.round(a.kcal/t.kcal.v*100)):0):(c?c.score:0);
-  var ringCol=inProgress?pace.color:(c?band.c:"var(--t3)");
-  html+='<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">'+
-    '<div style="width:62px;height:62px;border-radius:50%;flex-shrink:0;background:conic-gradient('+ringCol+' '+ringPct+'%,var(--bg3) 0);display:flex;align-items:center;justify-content:center">'+
-      '<div style="width:50px;height:50px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center">'+
-        '<div style="font-family:var(--mono);font-weight:800;font-size:'+(inProgress?"14px":"17px")+';color:'+ringCol+'">'+(c?(inProgress?ringPct+"%":c.score):"—")+'</div>'+
-      '</div></div>'+
-    '<div style="flex:1;min-width:0">'+
-      '<div style="font-size:13.5px;font-weight:700">'+(c?(inProgress?pace.label:band.label+" today"):"Nothing logged today")+'</div>'+
-      '<div style="font-size:12px;color:var(--t2);line-height:1.5;margin-top:2px">'+
+  // Today's headline lives in the Home pillars now, so this card carries the
+  // detail and the trend rather than repeating the same ring.
+  html+='<div style="margin-bottom:12px">'+
+      '<div style="font-size:13px;font-weight:700;margin-bottom:3px;color:'+(inProgress?pace.color:(c?band.c:"var(--t3)"))+'">'+
+        (c?(inProgress?pace.label:band.label+" today"):"Nothing logged today")+'</div>'+
+      '<div style="font-size:12px;color:var(--t2);line-height:1.5">'+
         Math.round(a.kcal)+' / '+t.kcal.v+' kcal · P '+Math.round(a.protein_g)+'/'+t.protein_g.v+' · C '+Math.round(a.carbs_g)+'/'+t.carbs_g.v+
         ' · '+(a.water_ml/1000).toFixed(1)+'/'+(t.water_ml.v/1000).toFixed(1)+' L'+
       '</div>'+
       (t._fuel.adjusted?'<div style="font-size:11px;color:var(--brand);margin-top:3px">⚡ Topped up '+t._fuel.add.kcal+' kcal for today’s training</div>':
         '<div style="font-size:11px;color:var(--t3);margin-top:3px">Baseline day — no training top-up</div>')+
-    '</div></div>';
+    '</div>';
   if(series.length>=2){
     html+='<div class="chart-sm"><canvas id="foodComplianceChart"></canvas></div>'+
       '<div style="display:flex;gap:14px;justify-content:center;font-size:11px;color:var(--t3);margin-top:8px;flex-wrap:wrap">'+
@@ -7108,7 +7192,7 @@ async function init(){
   await loadNutritionData();
   updateNutriSettingSub();renderFood();renderFoodHome();renderHealth();
   if(workouts.length)renderHome();
-  else{renderGamify();if(goals)renderGoalBanner(0,0);}
+  else{renderGamify();renderTodayStrip();renderNextUp();renderTodayHero();renderWeekProgress();}
   var hasKeys=getToken()&&localStorage.getItem("anthropic_key");
   if(!hasKeys){setTimeout(toggleSetup,600);}
   else if(!goals){

@@ -9,6 +9,12 @@ The app has five tabs: **Home** (the day and the trends), **Training** (plan and
 completed activity), **Food** (macros, meals and water), **Health** (recovery and
 the full nutrition report) and **Coach**.
 
+Home opens the way the best health apps do: a greeting, then three rings —
+**Recovery**, **Fuel**, **Training** — that say how today is going across all
+three pillars at a glance, then one card naming the single most useful thing to
+do next. Detail and trends sit below that; nothing static holds the top of the
+screen.
+
 ## Features
 
 ### Food & nutrition
