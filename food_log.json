@@ -117,10 +117,106 @@
             "fat_g": 16.8,
             "fiber_g": 5.3
           }
+        },
+        {
+          "id": "m1789577160430t5bw",
+          "slot": "pm_snack",
+          "name": "Two-flavor ice cream cone",
+          "time": "17:46",
+          "source": "photo",
+          "confidence": 0.83,
+          "ai_notes": "Image taken in what appears to be a casual dining/ice cream shop setting. Cone held at angle makes precise layer measurement difficult. Glucose Goddess context: this is a high-sugar, high-fat snack with minimal fiber—no savory/protein component, no vegetables, and rapid glucose impact expected without mitigation strategies (vinegar, fat-with-carbs timing, or movement after). Total estimated ~175 kcal, 24.7g carbs, 7.7g fat.",
+          "corrections": "item 1 (\"Chocolate ice cream\") is actually: It’s stracciatella item 2 (\"Cookies & cream ice cream (or similar speckled flavor)\") is actually: It’s not cookies and cream, it’s dark chocolate",
+          "ai_rounds": 2,
+          "note": "",
+          "items": [
+            {
+              "name": "Dark chocolate ice cream",
+              "qty": "40 g",
+              "kcal": 60,
+              "protein_g": 1,
+              "carbs_g": 6.5,
+              "fat_g": 3.5,
+              "fiber_g": 0.4
+            },
+            {
+              "name": "Stracciatella ice cream (vanilla with chocolate pieces)",
+              "qty": "45 g",
+              "kcal": 67,
+              "protein_g": 1.2,
+              "carbs_g": 7.2,
+              "fat_g": 3.6,
+              "fiber_g": 0.1
+            },
+            {
+              "name": "Waffle/sugar cone",
+              "qty": "12 g",
+              "kcal": 48,
+              "protein_g": 0.9,
+              "carbs_g": 9,
+              "fat_g": 0.6,
+              "fiber_g": 0.2
+            }
+          ],
+          "totals": {
+            "kcal": 175,
+            "protein_g": 3.1,
+            "carbs_g": 22.7,
+            "fat_g": 7.7,
+            "fiber_g": 0.7
+          }
+        },
+        {
+          "id": "m1789577342636pjlx",
+          "slot": "breakfast",
+          "name": "Whey Protein Smoothie",
+          "time": "17:49",
+          "source": "described",
+          "confidence": 0.75,
+          "ai_notes": "Glucose Goddess perspective: This is high in carbs relative to fibre (14.6g carbs, 1.1g fibre). The banana and milk sugars will spike glucose. Recommendations: add vegetables/greens to the smoothie, include a fat source (nut butter, seeds, or olive oil), and gentle movement post-meal to blunt the spike.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Whey protein powder",
+              "qty": "30 g",
+              "kcal": 120,
+              "protein_g": 24,
+              "carbs_g": 2,
+              "fat_g": 2,
+              "fiber_g": 0
+            },
+            {
+              "name": "Lactose-free milk",
+              "qty": "240 ml",
+              "kcal": 149,
+              "protein_g": 8,
+              "carbs_g": 12,
+              "fat_g": 8,
+              "fiber_g": 0
+            },
+            {
+              "name": "Banana",
+              "qty": "55 g",
+              "kcal": 49,
+              "protein_g": 0.6,
+              "carbs_g": 12.6,
+              "fat_g": 0.2,
+              "fiber_g": 1.1
+            }
+          ],
+          "totals": {
+            "kcal": 318,
+            "protein_g": 32.6,
+            "carbs_g": 26.6,
+            "fat_g": 10.2,
+            "fiber_g": 1.1
+          }
         }
       ],
-      "water_ml": 0,
-      "updated": "2026-09-16T12:11:49.062Z"
+      "water_ml": 1000,
+      "updated": "2026-09-16T16:49:02.637Z"
     }
   }
 }
