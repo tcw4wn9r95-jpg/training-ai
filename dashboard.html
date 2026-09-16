@@ -1418,7 +1418,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-25";
+const BUILD="20260916-26";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -5363,12 +5363,16 @@ async function askWhatToEat(){
   var st=document.getElementById("en-suggest-status");
   var have=(document.getElementById("en-have").value||"").trim();
   st.textContent="Claudio is looking at your day…";
-  try{
+  var brief=false;
+  for(var attempt=0;attempt<2;attempt++){
+   try{
     var r=await claudeJSON(
       "You are Coach Claudio, a sports dietitian. Diego wants to know what to eat right now. Use what the day still needs "+
       "and what his plan allows, and suggest meals he can actually make.\n\n"+
       eatContextBlock()+"\n\n"+
       (have?"WHAT HE HAS OR WANTS TO WORK WITH: "+have+"\nStick to this — do not suggest anything he hasn't got.\n\n":"")+
+      (brief?"Give exactly 2 options, each with at most 4 items, and keep why and plan_fit to one short sentence each. "+
+             "Output nothing but the JSON.\n\n":"")+
       "Give 2 or 3 options. Aim each at roughly the share of the remaining calories this meal should carry — do not try to "+
       "close the whole day's gap in one sitting unless it's the last meal. Favour protein and fibre when those are the ones "+
       "behind. If he is already over on something, say so and keep that low rather than pretending it doesn't matter.\n\n"+
@@ -5377,12 +5381,19 @@ async function askWhatToEat(){
       '{"read":"one sentence on what the day still needs","options":[{"name":"short name","why":"why this one fits, in one or two sentences",'+
       '"prep":"about 10 minutes","items":[{"name":"food","qty":"150 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0}],'+
       '"plan_fit":"how it sits with his plan"}],"notes":"anything worth adding, or empty"}',
-      null,2200);
+      null,4000);
     if(!(r.options||[]).length)throw new Error("No suggestions came back — try again, or say what you have in.");
     _eatResult={kind:"suggest",data:r};
     st.textContent="";
     renderEatResult();
-  }catch(e){st.textContent=e.message;}
+    return;
+   }catch(e){
+    // A cut-off answer is worth one automatic retry, asking for less.
+    if(e.truncated&&attempt===0){brief=true;st.textContent="That came back too long — asking for a shorter answer…";continue;}
+    st.textContent=e.message;
+    return;
+   }
+  }
 }
 
 // ── Check an idea ─────────────────────────────────────────────
@@ -5392,7 +5403,9 @@ async function checkMyIdea(){
   var have=(document.getElementById("en-idea-have").value||"").trim();
   if(idea.length<3){st.textContent="Say what you're thinking of eating first.";return;}
   st.textContent="Claudio is working it out…";
-  try{
+  var brief=false;
+  for(var attempt=0;attempt<2;attempt++){
+   try{
     var r=await claudeJSON(
       "You are Coach Claudio, a sports dietitian. Diego is about to eat something and wants to know whether it works, and what "+
       "to change. Be straight with him and stay practical — he is holding the food right now.\n\n"+
@@ -5400,6 +5413,7 @@ async function checkMyIdea(){
       "WHAT HE IS THINKING OF EATING:\n"+idea+"\n\n"+
       (have?"WHAT HE HAS AVAILABLE (only suggest additions from this list):\n"+have+"\n\n":
             "He hasn't said what else he has in, so keep additions to staples and say they depend on what he's got.\n\n")+
+      (brief?"Keep every explanation to one short sentence and output nothing but the JSON.\n\n":"")+
       "Work out what he described, then decide: does it work as is, does it need something added, or should something come off "+
       "or be cut down? Never tell him to skip the meal. If it breaks his plan's restrictions, say so plainly but without lecturing. "+
       "final_items is what you are telling him to actually eat — his idea with your additions in and your removals out, each with "+
@@ -5412,12 +5426,18 @@ async function checkMyIdea(){
       '"remove":[{"name":"food","qty":"how much to drop","why":"why"}],'+
       '"final_items":[{"name":"food","qty":"150 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0}],'+
       '"after":"what the rest of the day looks like once he eats this","notes":"anything else, or empty"}',
-      null,2200);
+      null,4000);
     if(!(r.final_items||[]).length)throw new Error("That came back empty — try describing it in a bit more detail.");
     _eatResult={kind:"check",data:r,idea:idea};
     st.textContent="";
     renderEatResult();
-  }catch(e){st.textContent=e.message;}
+    return;
+   }catch(e){
+    if(e.truncated&&attempt===0){brief=true;st.textContent="That came back too long — asking for a shorter answer…";continue;}
+    st.textContent=e.message;
+    return;
+   }
+  }
 }
 
 // ── Results ───────────────────────────────────────────────────
@@ -5790,18 +5810,51 @@ async function claudeJSON(prompt,b64,maxTokens){
   var content=[];
   if(b64)content.push({type:"image",source:{type:"base64",media_type:"image/jpeg",data:b64}});
   content.push({type:"text",text:prompt});
-  var res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
-    headers:{"x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true","Content-Type":"application/json"},
-    body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:maxTokens||1200,messages:[{role:"user",content:content}]})});
+  var res;
+  try{
+    res=await fetch("https://api.anthropic.com/v1/messages",{method:"POST",
+      headers:{"x-api-key":key,"anthropic-version":"2023-06-01","anthropic-dangerous-direct-browser-access":"true","Content-Type":"application/json"},
+      body:JSON.stringify({model:"claude-haiku-4-5-20251001",max_tokens:maxTokens||1200,messages:[{role:"user",content:content}]})});
+  }catch(netErr){
+    throw new Error("Couldn't reach Claude — check your connection and try again.");
+  }
   if(!res.ok){
-    var e=await res.text();
-    throw new Error(res.status===401?"That API key was rejected.":"Claude error "+res.status+" — "+e.slice(0,120));
+    var e=await res.text(), detail="";
+    try{var ej=JSON.parse(e);detail=(ej.error&&ej.error.message)||"";}catch(_e){}
+    throw new Error(
+      res.status===401?"That API key was rejected — check it in Settings.":
+      res.status===400?"Claude refused the request"+(detail?": "+detail.slice(0,110):"")+".":
+      res.status===429?"Claude is rate-limiting your key right now. Wait a few seconds and try again.":
+      (res.status===529||res.status===503)?"Claude is busy at the moment. Give it a few seconds and try again.":
+      res.status>=500?"Claude had a server error ("+res.status+"). Try again in a moment.":
+      "Claude error "+res.status+(detail?" — "+detail.slice(0,110):""));
   }
   var j=await res.json();
   var txt=(j.content||[]).filter(function(b){return b.type==="text";}).map(function(b){return b.text;}).join("");
   var parsed=parseJSONLoose(txt);
-  if(!parsed)throw new Error("Couldn't read a result out of that — try a clearer photo.");
+  if(!parsed){
+    // Truncation and off-format answers are different problems and deserve
+    // different advice — and neither of them is ever about a photo.
+    var err=new Error(j.stop_reason==="max_tokens"
+      ? "The answer was too long and got cut off before it finished."
+      : "Claude didn't answer in the format the app expects."+(txt?" It started: \u201c"+txt.trim().slice(0,80).replace(/\s+/g," ")+"\u2026\u201d":""));
+    err.truncated=(j.stop_reason==="max_tokens");
+    throw err;
+  }
   return parsed;
+}
+
+// One automatic retry when the answer runs past the token budget, asking for
+// a terser one. Only truncation is retried — a real error is reported as is.
+async function claudeJSONRetry(prompt,b64,tokens){
+  try{
+    return await claudeJSON(prompt,b64,tokens);
+  }catch(e){
+    if(!e.truncated)throw e;
+    return await claudeJSON(prompt+
+      "\n\nIMPORTANT: your previous answer was cut off before it finished. Keep every note, question and "+
+      "explanation to one short sentence, and output nothing except the JSON.",b64,tokens);
+  }
 }
 
 // ── Modal plumbing ────────────────────────────────────────────
@@ -5960,7 +6013,7 @@ async function estimateMealPhoto(){
   st.textContent="Coach Claudio is looking at your plate…";
   try{
     var plan=nutritionPlan&&nutritionPlan.methodology?("\nThe person's dietitian plan follows: "+nutritionPlan.methodology):"";
-    var r=await claudeJSON(
+    var r=await claudeJSONRetry(
       "You are a sports dietitian estimating what is on this plate. Identify each component, estimate its cooked portion in grams "+
       "(use the plate, cutlery and hand-sized cues for scale), and give its nutrition from standard food-composition data "+
       "(USDA FoodData Central or equivalent). Include cooking fat if the food looks fried, roasted or sautéed.\n"+
@@ -5970,7 +6023,7 @@ async function estimateMealPhoto(){
       "For sugar, give two numbers: sugar_g is TOTAL sugars, the figure a packet prints, including the sugar naturally in fruit, milk and plain yogurt; free_sugar_g is only what was added to the food plus anything from honey, syrup or fruit juice, which is what health guidance limits. Whole fruit, plain milk and plain yogurt contribute to sugar_g but NOT to free_sugar_g. If a label prints only total sugars, estimate free sugar from what the food is and say so.\n\n"+
       "Return ONLY this JSON:\n"+
       '{"meal_name":"short name for the plate","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0,"confidence":0.0,"box":[0.0,0.0,0.0,0.0],"note":"what you are unsure about for this item"}],"confidence":0.0,"questions":["anything you genuinely cannot tell from the photo"],"notes":"what you could not see and what you assumed"}',
-      _mealImages.photo,1800);
+      _mealImages.photo,2600);
     var items=(r.items||[]).map(function(i){
       var o={name:i.name||"item",qty:i.qty||""};
       ["kcal","protein_g","carbs_g","fat_g","fiber_g"].forEach(function(k){o[k]=_num(i[k])!=null?Math.round(_num(i[k])*10)/10:"";});
@@ -6023,7 +6076,7 @@ async function describeMeal(){
   st.textContent="Working out the macros…";
   try{
     var plan=nutritionPlan&&nutritionPlan.methodology?("\nThe person's dietitian plan follows: "+nutritionPlan.methodology):"";
-    var r=await claudeJSON(
+    var r=await claudeJSONRetry(
       "You are a sports dietitian working out the nutrition of something the person has described in their own words. "+
       "Break it into the individual foods, one item each, with the amount for each.\n\n"+
       "WHAT THEY ATE OR DRANK:\n"+desc+"\n\n"+
@@ -6039,7 +6092,7 @@ async function describeMeal(){
       '{"meal_name":"short name for it","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,'+
       '"fiber_g":0,"sugar_g":0,"free_sugar_g":0,"confidence":0.0,"note":"what you assumed about this one"}],'+
       '"confidence":0.0,"questions":["what you would need to ask to be sure"],"notes":"anything else you assumed"}',
-      null,1800);
+      null,2600);
     if(!(r.items||[]).length)throw new Error("Couldn\u2019t make a meal out of that — try listing the ingredients.");
     _aiGuess={mode:"text",desc:desc+(portion?" (had: "+portion+")":""),result:r,round:0};
     st.textContent="";
@@ -6204,7 +6257,7 @@ async function recalcFromCorrections(){
     var prev=(g.result.items||[]).map(function(it,i){return (i+1)+". "+(it.name||"?")+(it.qty?" ("+it.qty+")":"");}).join("\n");
     var plan=nutritionPlan&&nutritionPlan.methodology?("\nThe person's dietitian plan follows: "+nutritionPlan.methodology):"";
     var isText=(g.mode==="text");
-    var r=await claudeJSON(
+    var r=await claudeJSONRetry(
       (isText?"You are a sports dietitian re-working a meal the person described in words. You read it once and they have corrected you.\n\n"+
               "WHAT THEY ORIGINALLY WROTE:\n"+(g.desc||"")+"\n\n"
              :"You are a sports dietitian re-estimating this plate. You already guessed at it once and the person has corrected you.\n\n")+
@@ -6221,7 +6274,7 @@ async function recalcFromCorrections(){
       '{"meal_name":"short name for it","items":[{"name":"food","qty":"120 g","kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,'+
       '"fiber_g":0,"sugar_g":0,"free_sugar_g":0,"confidence":0.0,'+(isText?"":'"box":[0.0,0.0,0.0,0.0],')+'"note":"anything still assumed for this item"}],'+
       '"confidence":0.0,"questions":["anything you still cannot tell"],"notes":"what you assumed"}',
-      isText?null:g.b64,1800);
+      isText?null:g.b64,2600);
     if(!(r.items||[]).length)throw new Error("That came back empty — try describing the plate in the box below.");
     g.result=r;
     g.round=(g.round||0)+1;
