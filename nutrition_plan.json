@@ -1,6 +1,6 @@
 {
   "source": "imported_from_nutriprep",
-  "updated": "2026-06-12",
+  "updated": "2026-09-16",
   "provider": "Nutritionist plan (imported from NutriPrep)",
   "language_detected": "es",
   "methodology": "Glucose Goddess — structure meals to blunt blood-glucose spikes: eat vegetables/fibre first, keep breakfast savoury and protein-rich, add a little vinegar or fat to carbs, and move gently after eating.",
@@ -165,7 +165,7 @@
     "height_cm": null,
     "age": null,
     "sex": "male",
-    "activity": 1.375,
+    "activity": null,
     "goal": "loss"
   }
 }
