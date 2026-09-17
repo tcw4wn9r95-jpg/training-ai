@@ -213,10 +213,240 @@
             "fat_g": 10.2,
             "fiber_g": 1.1
           }
+        },
+        {
+          "id": "m178958668090923xx",
+          "slot": "dinner",
+          "name": "Chicken Fried Rice with Vegetables",
+          "time": "20:24",
+          "source": "photo",
+          "confidence": 0.82,
+          "ai_notes": "Meal totals: ~483 kcal | 31.7g protein | 57.3g carbs | 15.0g fat | 1.9g fiber | 1.4g free sugar. **Glucose Goddess alignment**: Rice (53g carbs) should ideally be eaten *after* vegetables and protein; currently protein and veg are mixed throughout. Suggest eating the 20g peas and 15g carrot first, then rice and chicken. Oil content supports fat pairing with carbs (good). No visible vinegar—could strengthen glucose response management. Gentle movement post-meal recommended given refined carb load.",
+          "corrections": "item 1 (\"Fried meatballs (appears to be pork or beef)\") is actually: These are chicken pieces, approx 80 grams; item 3 (\"Peas (green peas, cooked)\") is actually: 20grams",
+          "ai_rounds": 1,
+          "note": "",
+          "items": [
+            {
+              "name": "Chicken pieces, fried",
+              "qty": "80 g",
+              "kcal": 165,
+              "protein_g": 26,
+              "carbs_g": 0,
+              "fat_g": 6.5,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Cooked white rice (with cooking oil)",
+              "qty": "160 g",
+              "kcal": 241,
+              "protein_g": 4.3,
+              "carbs_g": 53,
+              "fat_g": 2.1,
+              "fiber_g": 0.9,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Green peas, cooked",
+              "qty": "20 g",
+              "kcal": 17,
+              "protein_g": 1.3,
+              "carbs_g": 3,
+              "fat_g": 0.2,
+              "fiber_g": 0.7,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Diced carrot, cooked",
+              "qty": "15 g",
+              "kcal": 6,
+              "protein_g": 0.1,
+              "carbs_g": 1.3,
+              "fat_g": 0.1,
+              "fiber_g": 0.3,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Cooking oil (frying fat, additional to items above)",
+              "qty": "6 g",
+              "kcal": 54,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 6,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 483,
+            "protein_g": 31.7,
+            "carbs_g": 57.3,
+            "fat_g": 14.9,
+            "fiber_g": 1.9,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
         }
       ],
-      "water_ml": 1250,
-      "updated": "2026-09-16T18:36:25.228Z"
+      "water_ml": 2000,
+      "updated": "2026-09-16T20:04:17.637Z"
+    },
+    "2026-09-17": {
+      "date": "2026-09-17",
+      "meals": [
+        {
+          "id": "m1789634320893mz11",
+          "slot": "breakfast",
+          "name": "Eggs + Oats + Greek Yogurt",
+          "time": "09:38",
+          "source": "suggested",
+          "confidence": null,
+          "ai_notes": "Suggested by Coach Claudio for this point in the day.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Eggs (2, scrambled or fried in a little oil)",
+              "qty": "100 g",
+              "kcal": 155,
+              "protein_g": 13,
+              "carbs_g": 1,
+              "fat_g": 11,
+              "fiber_g": 0,
+              "sugar_g": 1,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Greek yogurt (plain, full fat or 2%)",
+              "qty": "150 g",
+              "kcal": 110,
+              "protein_g": 10,
+              "carbs_g": 7,
+              "fat_g": 3.5,
+              "fiber_g": 0,
+              "sugar_g": 7,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Oats (rolled, whole grain)",
+              "qty": "40 g",
+              "kcal": 150,
+              "protein_g": 5,
+              "carbs_g": 27,
+              "fat_g": 3,
+              "fiber_g": 4,
+              "sugar_g": 1,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Whole wheat high-fibre bread (toasted)",
+              "qty": "30 g",
+              "kcal": 75,
+              "protein_g": 3,
+              "carbs_g": 14,
+              "fat_g": 0.5,
+              "fiber_g": 3,
+              "sugar_g": 2,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Honey",
+              "qty": "1 squirt",
+              "kcal": 21,
+              "protein_g": 0,
+              "carbs_g": 5.5,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 511,
+            "protein_g": 31,
+            "carbs_g": 54.5,
+            "fat_g": 18,
+            "fiber_g": 7,
+            "sugar_g": 11,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "m17896517321231vnb",
+          "slot": "lunch",
+          "name": "Pesto Pasta with Chicken and Mixed Vegetables",
+          "time": "14:28",
+          "source": "photo",
+          "confidence": 0.88,
+          "ai_notes": "Applied your corrections (100g pasta, 100g chicken). Pesto coating is the major unknown—traditional pesto is ~50% oil by weight, so 15-20g pesto sauce (~12-16g added fat) is reasonable estimate. Vegetables appear lightly sautéed. Glucose Goddess alignment: vegetables present as side, but ideally should be eaten first before pasta for glycemic benefit. Chicken provides good protein. The pesto-based carbs (+added oil) are moderate but not optimal for glucose blunting without fiber-first sequencing.",
+          "corrections": "item 1 (\"Penne pasta with pesto sauce\") is actually: Whole grain pasta, chicken cooked in the oven; item 3 (\"Coca-Cola (full-sugar)\") is actually: Coca Cola zero sugar item 1 (\"Whole grain pasta (cooked weight)\") is actually: 100 grams; item 2 (\"Chicken, roasted/oven-cooked (skinless breast)\") is actually: 100 grams of chicken",
+          "ai_rounds": 2,
+          "note": "",
+          "items": [
+            {
+              "name": "Penne pasta, whole grain (cooked weight)",
+              "qty": "100 g",
+              "kcal": 124,
+              "protein_g": 4.3,
+              "carbs_g": 26.2,
+              "fat_g": 0.8,
+              "fiber_g": 3.8,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Chicken breast, roasted/oven-cooked (skinless)",
+              "qty": "100 g",
+              "kcal": 165,
+              "protein_g": 31,
+              "carbs_g": 0,
+              "fat_g": 3.6,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Mixed vegetables (peas, corn, green beans, red bell pepper)",
+              "qty": "150 g",
+              "kcal": 81,
+              "protein_g": 4.5,
+              "carbs_g": 16.5,
+              "fat_g": 0.4,
+              "fiber_g": 3.8,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Coca-Cola Zero Sugar",
+              "qty": "330 mL",
+              "kcal": 0,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 370,
+            "protein_g": 39.8,
+            "carbs_g": 42.7,
+            "fat_g": 4.8,
+            "fiber_g": 7.6,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 500,
+      "updated": "2026-09-17T15:48:15.887Z"
     }
   }
 }
