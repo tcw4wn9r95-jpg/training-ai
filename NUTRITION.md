@@ -180,9 +180,11 @@ one yourself.
 
 ## What's in the pot
 
-Before serving, not after eating. **What's in the pot** is the third tab of the
-same sheet: photograph the pan, the tray or the pot, and the coach tells you how
-much of it to put on your plate to hit what's left of the day.
+Before serving, not after eating. **In the pot** is the fifth way to add food —
+it sits with *Type in*, *Describe*, *Label* and *Photo* in the **Add to…** sheet,
+behind the **+ Add** on any meal. Photograph the pan, the tray or the pot, and
+the coach tells you how much of it to put on your plate to hit what's left of
+the day.
 
 It reads the food two ways, and says which one it chose:
 
@@ -210,9 +212,11 @@ says so on the card and asks — *how much oil went into the wok?* — and the
 correction box feeds straight back into a recalculation, the same loop as the
 photo and describe inputs.
 
-**Log this serving** writes it to the diary as an ordinary meal, marked
-*Portioned from the pot*, with the grams you actually settled on rather than the
-first number suggested.
+**Serve this much** hands the portion to the same review list the other four
+inputs end in, pre-filled and carrying the grams you actually settled on rather
+than the first number suggested. Change anything the scale disagreed with, then
+**Save to my day** files it against the meal you opened the sheet on, marked
+*Portioned from the pot*.
 
 ## Opening a meal
 

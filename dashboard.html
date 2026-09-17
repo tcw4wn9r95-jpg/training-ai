@@ -1218,6 +1218,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <button id="ml-tab-describe" onclick="mealTab('describe')">💬 Describe</button>
       <button id="ml-tab-label" onclick="mealTab('label')">🏷 Label</button>
       <button id="ml-tab-photo" onclick="mealTab('photo')">📷 Photo</button>
+      <button id="ml-tab-pot" onclick="mealTab('pot')">🍲 In the pot</button>
     </div>
 
     <!-- Describe it -->
@@ -1281,7 +1282,31 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div id="ml-photo-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
     </div>
 
-    <!-- Manual / review list (all three modes end here) -->
+    <!-- What's in the pot -->
+    <div id="ml-pane-pot" style="display:none">
+      <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:12px">
+        Photograph the pot, pan or tray <b>before</b> you serve, and Claudio works out how much to put on your
+        plate to fit what’s left of today. A mixed dish comes back as one weight to spoon out; separate foods
+        come back ingredient by ingredient.
+      </div>
+      <div class="drop" onclick="document.getElementById('ml-pot-file').click()">
+        <div style="font-size:26px;margin-bottom:6px">🍲</div>
+        <div style="font-size:14px;font-weight:700">Photograph the pot</div>
+        <div style="font-size:12px;color:var(--t3);margin-top:4px">From above, with the whole pan in frame</div>
+      </div>
+      <input type="file" id="ml-pot-file" accept="image/*" style="display:none" onchange="onPotFile(this)">
+      <div id="ml-pot-preview" style="display:none;margin-top:12px"><img id="ml-pot-img" style="width:100%;border-radius:13px;border:1px solid var(--line)"></div>
+      <div class="fld" style="margin-top:12px">
+        <label>What went in? (optional, but it helps a lot)</label>
+        <textarea id="ml-pot-contents" style="min-height:74px" placeholder="300 g rice, 500 g chicken thigh, 3 eggs, 2 tbsp oil, peas and spring onion."></textarea>
+        <div class="hint">A photo can't see the oil or what's underneath. Say what you can and the weights get much closer.</div>
+      </div>
+      <button class="btn" onclick="askWhatsInThePot()" style="background:linear-gradient(135deg,#006e53,#00c896)">How much should I serve?</button>
+      <div id="ml-pot-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
+      <div id="ml-pot-result" style="margin-top:14px"></div>
+    </div>
+
+    <!-- Manual / review list (the other four modes all end here) -->
     <div id="ml-pane-manual">
       <div id="ml-review-note" style="display:none;font-size:12.5px;line-height:1.55;margin-bottom:12px;
         padding:11px 13px;border-radius:11px;background:rgba(245,158,11,.08);border:1px solid rgba(245,158,11,.2);color:var(--t2)"></div>
@@ -1345,7 +1370,6 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <div class="tabs" style="margin-top:14px">
       <button id="en-tab-suggest" class="active" onclick="eatTab('suggest')">🍽 Suggest</button>
       <button id="en-tab-check" onclick="eatTab('check')">🤔 My idea</button>
-      <button id="en-tab-pot" onclick="eatTab('pot')">🍲 In the pot</button>
     </div>
 
     <div id="en-pane-suggest">
@@ -1372,27 +1396,6 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <div id="en-check-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
     </div>
 
-
-    <div id="en-pane-pot" style="display:none">
-      <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:12px">
-        Photograph the pot, pan or tray before you serve, and Claudio works out how much to put on your plate.
-        A mixed dish comes back as one weight to spoon out; separate foods come back ingredient by ingredient.
-      </div>
-      <div class="drop" onclick="document.getElementById('en-pot-file').click()">
-        <div style="font-size:26px;margin-bottom:6px">🍲</div>
-        <div style="font-size:14px;font-weight:700">Photograph the pot</div>
-        <div style="font-size:12px;color:var(--t3);margin-top:4px">From above, with the whole pan in frame</div>
-      </div>
-      <input type="file" id="en-pot-file" accept="image/*" style="display:none" onchange="onPotFile(this)">
-      <div id="en-pot-preview" style="display:none;margin-top:12px"><img id="en-pot-img" style="width:100%;border-radius:13px;border:1px solid var(--line)"></div>
-      <div class="fld" style="margin-top:12px">
-        <label>What went in? (optional, but it helps a lot)</label>
-        <textarea id="en-pot-contents" style="min-height:74px" placeholder="300 g rice, 500 g chicken thigh, 3 eggs, 2 tbsp oil, peas and spring onion."></textarea>
-        <div class="hint">A photo can't see the oil or what's underneath. Say what you can and the weights get much closer.</div>
-      </div>
-      <button class="btn" onclick="askWhatsInThePot()" style="background:linear-gradient(135deg,#006e53,#00c896)">How much should I serve?</button>
-      <div id="en-pot-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
-    </div>
 
     <div id="en-result" style="margin-top:16px"></div>
   </div>
@@ -1483,7 +1486,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-28";
+const BUILD="20260916-29";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -5482,9 +5485,6 @@ function eatNowCardHTML(){
             (_rl.left.kcal>0?_rl.left.kcal+' kcal and '+Math.max(0,_rl.left.protein_g)+' g protein still to go':
              'You\u2019re at your calories for today')+
             ' \u00b7 or tell Claudio what you\u2019re thinking of eating</div>'+
-          '<div style="display:flex;gap:7px;margin-top:9px">'+
-            '<span class="meal-add" onclick="event.stopPropagation();openEatNow(\'pot\')">\ud83c\udf72 What\u2019s in the pot</span>'+
-          '</div>'+
         '</div>'+
         '<span style="color:var(--brand);font-size:18px;flex-shrink:0">\u203a</span>'+
       '</div></div>';
@@ -5493,8 +5493,8 @@ function eatNowCardHTML(){
 function openEatNow(tab){
   document.getElementById("en-gap").innerHTML=gapSummaryHTML();
   document.getElementById("en-result").innerHTML="";
-  ["en-suggest-status","en-check-status","en-pot-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
-  _eatResult=null;_potResult=null;
+  ["en-suggest-status","en-check-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
+  _eatResult=null;
   eatTab(tab||"suggest");
   document.getElementById("eat-now").classList.add("open");
   document.body.style.overflow="hidden";
@@ -5504,7 +5504,7 @@ function closeEatNow(){
   document.body.style.overflow=document.getElementById("meal-modal").classList.contains("open")?"hidden":"";
 }
 function eatTab(t){
-  ["suggest","check","pot"].forEach(function(k){
+  ["suggest","check"].forEach(function(k){
     var p=document.getElementById("en-pane-"+k), b=document.getElementById("en-tab-"+k);
     if(p)p.style.display=(k===t)?"":"none";
     if(b)b.classList.toggle("active",k===t);
@@ -5604,20 +5604,20 @@ var _potImage=null, _potResult=null, _potServeG=0;
 
 function onPotFile(inp){
   var f=inp.files&&inp.files[0];if(!f)return;
-  var st=document.getElementById("en-pot-status");
+  var st=document.getElementById("ml-pot-status");
   st.textContent="Preparing image…";
   fileToJpegB64(f,1200).then(function(r){
     _potImage=r.b64;
-    document.getElementById("en-pot-img").src=r.url;
-    document.getElementById("en-pot-preview").style.display="";
+    document.getElementById("ml-pot-img").src=r.url;
+    document.getElementById("ml-pot-preview").style.display="";
     st.textContent="";
   }).catch(function(e){st.textContent=e.message;});
 }
 
 async function askWhatsInThePot(correction){
-  var st=document.getElementById("en-pot-status");
+  var st=document.getElementById("ml-pot-status");
   if(!_potImage){st.textContent="Photograph the pot first.";return;}
-  var contents=(document.getElementById("en-pot-contents").value||"").trim();
+  var contents=(document.getElementById("ml-pot-contents").value||"").trim();
   st.textContent=correction?"Working it out again…":"Claudio is looking in the pot…";
   var brief=false;
   for(var attempt=0;attempt<2;attempt++){
@@ -5702,7 +5702,7 @@ function adjustServe(d){
   renderPotResult();
 }
 function renderPotResult(){
-  var box=document.getElementById("en-result"), r=_potResult;
+  var box=document.getElementById("ml-pot-result"), r=_potResult;
   if(!box||!r)return;
   var t=potServingTotals();
   var band=r.kind==="mixed"?{t:"Mixed — weigh it",c:"var(--amber)",bg:"rgba(245,158,11,.14)"}
@@ -5746,26 +5746,27 @@ function renderPotResult(){
       r.questions.filter(Boolean).map(function(q){return "• "+esc(q);}).join("<br>")+'</div>':'')+
     (r.notes?'<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:8px">'+esc(r.notes)+'</div>':'')+
     '<div class="fld" style="margin-top:12px;margin-bottom:8px">'+
-      '<input id="en-pot-fix" placeholder="Not right? e.g. it’s pork not chicken, and there’s more oil in it">'+
+      '<input id="ml-pot-fix" placeholder="Not right? e.g. it’s pork not chicken, and there’s more oil in it">'+
     '</div>'+
     '<div class="en-act">'+
       '<button class="tweak" onclick="recalcPot()">Recalculate</button>'+
-      '<button class="log" onclick="logPotServing()">Log this serving</button>'+
+      '<button class="log" onclick="logPotServing()">Serve this much</button>'+
     '</div>'+
   '</div>';
   box.innerHTML=h;
 }
 function recalcPot(){
-  var fix=((document.getElementById("en-pot-fix")||{}).value||"").trim();
-  if(!fix){document.getElementById("en-pot-status").textContent="Say what's off first, then recalculate.";return;}
+  var fix=((document.getElementById("ml-pot-fix")||{}).value||"").trim();
+  if(!fix){document.getElementById("ml-pot-status").textContent="Say what's off first, then recalculate.";return;}
   askWhatsInThePot(fix);
 }
 function logPotServing(){
+  // The sheet is already open on the meal he chose, so this fills the same
+  // draft the other four inputs fill and hands him the review list. The scale
+  // is the last word on the amount, and that happens after this button.
   var r=_potResult;if(!r)return;
   var items=potItems();
   if(!items.length)return;
-  closeEatNow();
-  openMealModal(slotForNow());
   _mealDraft.items=items;
   _mealDraft.name=r.dish||"From the pot";
   _mealDraft.source="pot";
@@ -5773,8 +5774,9 @@ function logPotServing(){
   _mealDraft.notes=(r.kind==="mixed"?"Served "+_potServeG+" g of the dish, portioned by Coach Claudio."
                                     :"Portioned by Coach Claudio from a photo of the pot.");
   renderMealItems();mealTab("manual");
-  showReviewNote("Portioned from your photo of the pot. If the scale said something different, change the amount here before saving.");
-  saveMeal();
+  showReviewNote(r.kind==="mixed"
+    ? "Portioned from your photo of the pot \u2014 "+_potServeG+" g of it. If the scale said something different, change the amount here before saving."
+    : "Portioned from your photo of the pot. If the scale said something different, change the amounts here before saving.");
 }
 
 // ── Results ───────────────────────────────────────────────────
@@ -6172,18 +6174,20 @@ async function claudeJSONRetry(prompt,b64,tokens){
 }
 
 // ── Modal plumbing ────────────────────────────────────────────
-function openMealModal(slot){
+function openMealModal(slot,tab){
   _mealDraft={slot:slot||"breakfast",name:"",source:"manual",items:[],confidence:null,notes:"",date:foodDate()};
   _mealImages={label:null,photo:null};_aiGuess=null;
+  _potImage=null;_potResult=null;_potServeG=0;
   var sel=document.getElementById("ml-slot");
   sel.innerHTML=mealSlots().map(function(s){return '<option value="'+s.id+'"'+(s.id===_mealDraft.slot?" selected":"")+'>'+esc(s.label)+'</option>';}).join("");
   sel.onchange=function(){_mealDraft.slot=sel.value;};
-  ["ml-label-name","ml-label-portion","ml-photo-note","ml-note","ml-desc","ml-desc-portion"].forEach(function(id){var e=document.getElementById(id);if(e)e.value="";});
-  ["ml-label-status","ml-photo-status","ml-save-status","ml-desc-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
-  ["ml-label-preview","ml-photo-preview"].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display="none";});
+  ["ml-label-name","ml-label-portion","ml-photo-note","ml-note","ml-desc","ml-desc-portion","ml-pot-contents"].forEach(function(id){var e=document.getElementById(id);if(e)e.value="";});
+  ["ml-label-status","ml-photo-status","ml-save-status","ml-desc-status","ml-pot-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
+  ["ml-label-preview","ml-photo-preview","ml-pot-preview"].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display="none";});
   document.getElementById("ml-review-note").style.display="none";
+  document.getElementById("ml-pot-result").innerHTML="";
   document.getElementById("meal-modal-title").textContent="Add to "+slotMeta(_mealDraft.slot).label.toLowerCase();
-  mealTab("manual");
+  mealTab(tab||"manual");
   if(!_mealDraft.items.length)addIngredientRow();
   document.getElementById("meal-modal").classList.add("open");
   document.body.style.overflow="hidden";
@@ -6193,7 +6197,7 @@ function closeMealModal(){
   document.body.style.overflow="";
 }
 function mealTab(t){
-  ["manual","describe","label","photo"].forEach(function(k){
+  ["manual","describe","label","photo","pot"].forEach(function(k){
     var pane=document.getElementById("ml-pane-"+k), tab=document.getElementById("ml-tab-"+k);
     if(pane)pane.style.display=(k===t)?"":"none";
     if(tab)tab.classList.toggle("active",k===t);
