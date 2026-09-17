@@ -681,6 +681,21 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .nextup .t{font-size:14.5px;font-weight:800;letter-spacing:-.2px;line-height:1.25}
 .nextup .s{font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:2px}
 .nextup .go{color:var(--brand);font-size:18px;flex-shrink:0}
+
+/* ── What's in the pot ──────────────────────────────────────── */
+.serve-big{display:flex;align-items:center;gap:14px;padding:14px 0 10px}
+.serve-num{font-family:var(--mono);font-size:38px;font-weight:800;line-height:1;color:var(--brand);letter-spacing:-1px}
+.serve-unit{font-size:15px;font-weight:700;color:var(--t2);margin-left:2px}
+.serve-step{display:flex;gap:8px;margin-left:auto}
+.serve-step button{width:42px;height:42px;border-radius:12px;border:1px solid var(--line);background:var(--bg3);
+  color:var(--t1);font-size:18px;font-weight:700;cursor:pointer;font-family:var(--font)}
+.serve-step button:active{background:var(--brand-dim);color:var(--brand)}
+.per100{font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:2px}
+.comp-row{display:flex;align-items:baseline;gap:10px;padding:9px 0;border-top:1px solid var(--line)}
+.comp-row .g{font-family:var(--mono);font-size:15px;font-weight:800;color:var(--brand);min-width:68px}
+.comp-row .n{flex:1;min-width:0;font-size:13px;font-weight:600;line-height:1.35}
+.comp-row .m{font-family:var(--mono);font-size:10.5px;color:var(--t3);white-space:nowrap}
+.pot-kind{font-size:9.5px;font-weight:800;letter-spacing:.4px;text-transform:uppercase;border-radius:5px;padding:2px 6px}
 </style>
 </head>
 <body>
@@ -1328,8 +1343,9 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
   <div class="modal-body">
     <div id="en-gap"></div>
     <div class="tabs" style="margin-top:14px">
-      <button id="en-tab-suggest" class="active" onclick="eatTab('suggest')">🍽 Suggest a meal</button>
-      <button id="en-tab-check" onclick="eatTab('check')">🤔 Check my idea</button>
+      <button id="en-tab-suggest" class="active" onclick="eatTab('suggest')">🍽 Suggest</button>
+      <button id="en-tab-check" onclick="eatTab('check')">🤔 My idea</button>
+      <button id="en-tab-pot" onclick="eatTab('pot')">🍲 In the pot</button>
     </div>
 
     <div id="en-pane-suggest">
@@ -1354,6 +1370,28 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       </div>
       <button class="btn" onclick="checkMyIdea()" style="background:linear-gradient(135deg,#006e53,#00c896)">Does this work?</button>
       <div id="en-check-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
+    </div>
+
+
+    <div id="en-pane-pot" style="display:none">
+      <div style="font-size:13px;color:var(--t2);line-height:1.55;margin-bottom:12px">
+        Photograph the pot, pan or tray before you serve, and Claudio works out how much to put on your plate.
+        A mixed dish comes back as one weight to spoon out; separate foods come back ingredient by ingredient.
+      </div>
+      <div class="drop" onclick="document.getElementById('en-pot-file').click()">
+        <div style="font-size:26px;margin-bottom:6px">🍲</div>
+        <div style="font-size:14px;font-weight:700">Photograph the pot</div>
+        <div style="font-size:12px;color:var(--t3);margin-top:4px">From above, with the whole pan in frame</div>
+      </div>
+      <input type="file" id="en-pot-file" accept="image/*" style="display:none" onchange="onPotFile(this)">
+      <div id="en-pot-preview" style="display:none;margin-top:12px"><img id="en-pot-img" style="width:100%;border-radius:13px;border:1px solid var(--line)"></div>
+      <div class="fld" style="margin-top:12px">
+        <label>What went in? (optional, but it helps a lot)</label>
+        <textarea id="en-pot-contents" style="min-height:74px" placeholder="300 g rice, 500 g chicken thigh, 3 eggs, 2 tbsp oil, peas and spring onion."></textarea>
+        <div class="hint">A photo can't see the oil or what's underneath. Say what you can and the weights get much closer.</div>
+      </div>
+      <button class="btn" onclick="askWhatsInThePot()" style="background:linear-gradient(135deg,#006e53,#00c896)">How much should I serve?</button>
+      <div id="en-pot-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px;line-height:1.5"></div>
     </div>
 
     <div id="en-result" style="margin-top:16px"></div>
@@ -1445,7 +1483,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-27";
+const BUILD="20260916-28";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -5179,7 +5217,8 @@ function mealCardHTML(iso,slot){
   meals.forEach(function(m){
     var mt=m.totals||sumItems(m.items);
     var corrected=!!(m.corrections&&String(m.corrections).trim());
-    var sp=m.source==="suggested"?{t:"Coach suggested",c:"var(--brand)",bg:"var(--brand-dim)"}:
+    var sp=m.source==="pot"?{t:"Portioned from the pot",c:"var(--brand)",bg:"var(--brand-dim)"}:
+           m.source==="suggested"?{t:"Coach suggested",c:"var(--brand)",bg:"var(--brand-dim)"}:
            m.source==="described"?{t:corrected?"Described, corrected":"Described",c:"var(--brand)",bg:"var(--brand-dim)"}:
            m.source==="photo"?{t:corrected?"Photo, corrected":"AI photo",c:"var(--violet)",bg:"rgba(139,92,246,.14)"}:
            m.source==="label"?{t:"Label",c:"var(--blue)",bg:"rgba(59,130,246,.14)"}:
@@ -5443,17 +5482,20 @@ function eatNowCardHTML(){
             (_rl.left.kcal>0?_rl.left.kcal+' kcal and '+Math.max(0,_rl.left.protein_g)+' g protein still to go':
              'You\u2019re at your calories for today')+
             ' \u00b7 or tell Claudio what you\u2019re thinking of eating</div>'+
+          '<div style="display:flex;gap:7px;margin-top:9px">'+
+            '<span class="meal-add" onclick="event.stopPropagation();openEatNow(\'pot\')">\ud83c\udf72 What\u2019s in the pot</span>'+
+          '</div>'+
         '</div>'+
         '<span style="color:var(--brand);font-size:18px;flex-shrink:0">\u203a</span>'+
       '</div></div>';
 }
 
-function openEatNow(){
+function openEatNow(tab){
   document.getElementById("en-gap").innerHTML=gapSummaryHTML();
   document.getElementById("en-result").innerHTML="";
-  ["en-suggest-status","en-check-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
-  _eatResult=null;
-  eatTab("suggest");
+  ["en-suggest-status","en-check-status","en-pot-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
+  _eatResult=null;_potResult=null;
+  eatTab(tab||"suggest");
   document.getElementById("eat-now").classList.add("open");
   document.body.style.overflow="hidden";
 }
@@ -5462,7 +5504,7 @@ function closeEatNow(){
   document.body.style.overflow=document.getElementById("meal-modal").classList.contains("open")?"hidden":"";
 }
 function eatTab(t){
-  ["suggest","check"].forEach(function(k){
+  ["suggest","check","pot"].forEach(function(k){
     var p=document.getElementById("en-pane-"+k), b=document.getElementById("en-tab-"+k);
     if(p)p.style.display=(k===t)?"":"none";
     if(b)b.classList.toggle("active",k===t);
@@ -5550,6 +5592,189 @@ async function checkMyIdea(){
     return;
    }
   }
+}
+
+
+// ── WHAT'S IN THE POT ─────────────────────────────────────────
+// Portioning, not logging: the food exists and the only question is how much
+// of it goes on the plate. A mixed dish can't be taken apart on a plate, so
+// the answer there is one number on the scale; separate foods get an amount
+// each. Either way the macros follow from what he actually serves.
+var _potImage=null, _potResult=null, _potServeG=0;
+
+function onPotFile(inp){
+  var f=inp.files&&inp.files[0];if(!f)return;
+  var st=document.getElementById("en-pot-status");
+  st.textContent="Preparing image…";
+  fileToJpegB64(f,1200).then(function(r){
+    _potImage=r.b64;
+    document.getElementById("en-pot-img").src=r.url;
+    document.getElementById("en-pot-preview").style.display="";
+    st.textContent="";
+  }).catch(function(e){st.textContent=e.message;});
+}
+
+async function askWhatsInThePot(correction){
+  var st=document.getElementById("en-pot-status");
+  if(!_potImage){st.textContent="Photograph the pot first.";return;}
+  var contents=(document.getElementById("en-pot-contents").value||"").trim();
+  st.textContent=correction?"Working it out again…":"Claudio is looking in the pot…";
+  var brief=false;
+  for(var attempt=0;attempt<2;attempt++){
+   try{
+    var r=await claudeJSON(
+      "You are Coach Claudio, a sports dietitian. Diego is standing over a pot, pan or tray of food about to serve "+
+      "himself, and wants to know HOW MUCH to put on his plate. This is portioning, not identification for its own sake.\n\n"+
+      eatContextBlock()+"\n\n"+
+      (contents?"WHAT HE SAYS WENT IN:\n"+contents+"\nTrust this over what the photo seems to show.\n\n":"")+
+      (correction?"HE HAS CORRECTED YOU (take this as fact):\n"+correction+"\n\n":"")+
+      "First decide what kind of food this is:\n"+
+      "• 'mixed' — the components are stirred together and cannot be separated on a plate (fried rice, stew, curry, "+
+      "pasta bake, chilli, shakshuka, soup). For these, give per100 (the nutrition of 100 g of the mixture as served) "+
+      "and serve_g, the grams to weigh out. He will put a bowl on a scale, so ONE number is the whole answer.\n"+
+      "• 'separable' — the foods are distinct and can be portioned one by one (chicken breasts in one pan, rice in "+
+      "another, a tray of roast vegetables). For these, give components, each with the grams to serve and the nutrition "+
+      "of THAT amount. Leave per100 and serve_g null.\n\n"+
+      "Size the portion to what this meal should carry of what's left in his day — not the whole remaining gap unless "+
+      "this is his last meal. Keep it a realistic serving: don't tell him to eat 700 g of stew, and don't tell him to "+
+      "eat 90 g of it either. If what's in the pot can't sensibly hit his targets, say so in notes and give the best "+
+      "portion anyway.\n\n"+
+      (brief?"Keep every explanation to one short sentence and output nothing but the JSON.\n\n":"")+
+      "For sugar, give two numbers: sugar_g is TOTAL sugars including what is naturally in fruit, milk and yogurt; "+
+      "free_sugar_g is only what was added plus honey, syrup and juice.\n\n"+
+      "Return ONLY this JSON:\n"+
+      '{"dish":"short name for what is in the pot","kind":"mixed"|"separable",'+
+      '"read":"what you can see, in one sentence",'+
+      '"per100":{"kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0},'+
+      '"serve_g":0,'+
+      '"components":[{"name":"food","serve_g":0,"kcal":0,"protein_g":0,"carbs_g":0,"fat_g":0,"fiber_g":0,"sugar_g":0,"free_sugar_g":0}],'+
+      '"why":"why this much, in one or two sentences","how":"how to measure it in practice",'+
+      '"confidence":0.0,"questions":["what you are unsure about"],"notes":"anything else"}',
+      _potImage,3000);
+    var kind=(r.kind==="separable")?"separable":"mixed";
+    if(kind==="mixed"&&!(r.per100&&_num(r.per100.kcal)>0))throw new Error("That came back without the nutrition of the mix — try again, or say what went in.");
+    if(kind==="separable"&&!(r.components||[]).length)throw new Error("That came back without any components — try again, or say what went in.");
+    r.kind=kind;
+    _potResult=r;
+    _potServeG=Math.max(0,Math.round(_num(r.serve_g)||0));
+    if(kind==="mixed"&&!_potServeG)_potServeG=250;
+    st.textContent="";
+    renderPotResult();
+    return;
+   }catch(e){
+    if(e.truncated&&attempt===0){brief=true;st.textContent="That came back too long — asking for a shorter answer…";continue;}
+    st.textContent=e.message;
+    return;
+   }
+  }
+}
+
+// Macros of the serving. For a mixed dish they scale with the grams on the
+// scale, which is the whole point of the per-100 g figure.
+function potServingTotals(){
+  var r=_potResult;if(!r)return blankTotals();
+  if(r.kind==="mixed"){
+    var t=blankTotals(), f=_potServeG/100;
+    MACROS.forEach(function(k){t[k]=Math.round(((_num(r.per100[k])||0)*f)*10)/10;});
+    return t;
+  }
+  return sumItems((r.components||[]).map(function(c){
+    var o={name:c.name,qty:(_num(c.serve_g)||0)+" g"};
+    MACROS.forEach(function(k){o[k]=_num(c[k])||0;});
+    return o;
+  }));
+}
+function potItems(){
+  var r=_potResult;if(!r)return [];
+  if(r.kind==="mixed"){
+    var t=potServingTotals(), o={name:r.dish||"From the pot",qty:_potServeG+" g"};
+    MACROS.forEach(function(k){o[k]=t[k];});
+    return [o];
+  }
+  return (r.components||[]).map(function(c){
+    var o={name:c.name||"item",qty:(_num(c.serve_g)||0)+" g"};
+    MACROS.forEach(function(k){o[k]=_num(c[k])||0;});
+    return o;
+  });
+}
+function adjustServe(d){
+  _potServeG=Math.max(0,_potServeG+d);
+  renderPotResult();
+}
+function renderPotResult(){
+  var box=document.getElementById("en-result"), r=_potResult;
+  if(!box||!r)return;
+  var t=potServingTotals();
+  var band=r.kind==="mixed"?{t:"Mixed — weigh it",c:"var(--amber)",bg:"rgba(245,158,11,.14)"}
+                           :{t:"Separate — by item",c:"var(--blue)",bg:"rgba(59,130,246,.14)"};
+  var h='<div class="en-opt best">'+
+    '<div class="en-opt-head">'+
+      '<span class="en-opt-name">'+esc(r.dish||"What’s in the pot")+'</span>'+
+      '<span class="en-tag" style="color:'+band.c+';background:'+band.bg+'">'+band.t+'</span>'+
+    '</div>'+
+    (r.read?'<div class="en-why">'+esc(r.read)+'</div>':'');
+
+  if(r.kind==="mixed"){
+    h+='<div class="serve-big">'+
+        '<div><div><span class="serve-num">'+_potServeG+'</span><span class="serve-unit">g</span></div>'+
+          '<div class="per100">per 100 g: '+Math.round(_num(r.per100.kcal)||0)+' kcal · P '+
+            (Math.round((_num(r.per100.protein_g)||0)*10)/10)+' · C '+(Math.round((_num(r.per100.carbs_g)||0)*10)/10)+
+            ' · F '+(Math.round((_num(r.per100.fat_g)||0)*10)/10)+'</div></div>'+
+        '<div class="serve-step">'+
+          '<button onclick="adjustServe(-25)" aria-label="25 g less">−</button>'+
+          '<button onclick="adjustServe(25)" aria-label="25 g more">+</button>'+
+        '</div>'+
+      '</div>'+
+      '<div style="font-size:12.5px;color:var(--t2);line-height:1.55">'+
+        esc(r.how||"Put your bowl on the scale, zero it, and spoon in until it reads that.")+'</div>';
+  }else{
+    h+='<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin:10px 0 2px">Serve</div>'+
+      (r.components||[]).map(function(c){
+        return '<div class="comp-row">'+
+          '<span class="g">'+(Math.round(_num(c.serve_g)||0))+' g</span>'+
+          '<span class="n">'+esc(c.name||"item")+'</span>'+
+          '<span class="m">'+Math.round(_num(c.kcal)||0)+' kcal</span>'+
+        '</div>';
+      }).join("")+
+      (r.how?'<div style="font-size:12px;color:var(--t2);line-height:1.5;margin-top:9px">'+esc(r.how)+'</div>':'');
+  }
+
+  h+='<div class="en-tot">'+totalsLine(potItems())+'</div>'+
+    '<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:6px">'+
+      esc(r.why||"")+(r.why?" ":"")+esc(afterLine(potItems()))+'</div>'+
+    ((r.questions||[]).length?'<div class="pc-q" style="margin-top:10px"><b>Claudio isn’t sure about:</b><br>'+
+      r.questions.filter(Boolean).map(function(q){return "• "+esc(q);}).join("<br>")+'</div>':'')+
+    (r.notes?'<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:8px">'+esc(r.notes)+'</div>':'')+
+    '<div class="fld" style="margin-top:12px;margin-bottom:8px">'+
+      '<input id="en-pot-fix" placeholder="Not right? e.g. it’s pork not chicken, and there’s more oil in it">'+
+    '</div>'+
+    '<div class="en-act">'+
+      '<button class="tweak" onclick="recalcPot()">Recalculate</button>'+
+      '<button class="log" onclick="logPotServing()">Log this serving</button>'+
+    '</div>'+
+  '</div>';
+  box.innerHTML=h;
+}
+function recalcPot(){
+  var fix=((document.getElementById("en-pot-fix")||{}).value||"").trim();
+  if(!fix){document.getElementById("en-pot-status").textContent="Say what's off first, then recalculate.";return;}
+  askWhatsInThePot(fix);
+}
+function logPotServing(){
+  var r=_potResult;if(!r)return;
+  var items=potItems();
+  if(!items.length)return;
+  closeEatNow();
+  openMealModal(slotForNow());
+  _mealDraft.items=items;
+  _mealDraft.name=r.dish||"From the pot";
+  _mealDraft.source="pot";
+  _mealDraft.confidence=_num(r.confidence);
+  _mealDraft.notes=(r.kind==="mixed"?"Served "+_potServeG+" g of the dish, portioned by Coach Claudio."
+                                    :"Portioned by Coach Claudio from a photo of the pot.");
+  renderMealItems();mealTab("manual");
+  showReviewNote("Portioned from your photo of the pot. If the scale said something different, change the amount here before saving.");
+  saveMeal();
 }
 
 // ── Results ───────────────────────────────────────────────────
@@ -5750,6 +5975,7 @@ function mealDetailHTML(m,iso){
   var prov=[];
   var srcName={photo:"a photo of the plate, read by Coach Claudio",described:"your description, worked out by Coach Claudio",
     suggested:"a suggestion from Coach Claudio, checked against your day",
+    pot:"a photo of the pot, portioned by Coach Claudio",
     label:"the packet's nutrition label",coach:"a chat with Coach Claudio",manual:"numbers you typed in"}[m.source]||"your entry";
   prov.push("<b>From:</b> "+srcName+(m.time?", logged "+esc(m.time):""));
   if(_num(m.confidence)!=null)prov.push("<b>Confidence:</b> "+Math.round(_num(m.confidence)*100)+"%"+

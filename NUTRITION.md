@@ -178,6 +178,42 @@ next, its prescribed portions for that meal, your plan's method, and its
 restricted foods — which are never suggested, and are flagged if you propose
 one yourself.
 
+## What's in the pot
+
+Before serving, not after eating. **What's in the pot** is the third tab of the
+same sheet: photograph the pan, the tray or the pot, and the coach tells you how
+much of it to put on your plate to hit what's left of the day.
+
+It reads the food two ways, and says which one it chose:
+
+- **Mixed — weigh it.** A stir-fry, a fried rice, a stew, a bake: things you
+  can't separate on the plate. You get a single number in grams — *serve 320 g* —
+  with the per-100 g macros it was derived from, and a line telling you how to
+  get there: bowl on the scale, zero it, spoon in until it reads 320 g. The
+  totals for that serving are computed by the app from the per-100 g figures and
+  the grams, so the number and the macros can never disagree.
+
+- **Separate — by item.** Chicken, rice and greens in three pans. You get a
+  weight per component, each with its own calories, plus a plain-language version
+  for when there's no scale — *one thigh and a bit, a heaped half-cup of rice*.
+
+Either way the card carries the totals for the serving, why it was portioned
+that way against today's gap, and what it leaves for the rest of the day.
+
+**− / +** step the mixed serving by 25 g and everything above rescales live, for
+when you want a bit more or you've already decided 300 is enough.
+
+A photo can't see the oil, or what's underneath. The **what went in** box is
+optional but does most of the work: say *300 g rice, 500 g chicken thigh, 3 eggs,
+2 tbsp oil* and the weights stop being guesses. When Claudio is still unsure he
+says so on the card and asks — *how much oil went into the wok?* — and the
+correction box feeds straight back into a recalculation, the same loop as the
+photo and describe inputs.
+
+**Log this serving** writes it to the diary as an ordinary meal, marked
+*Portioned from the pot*, with the grams you actually settled on rather than the
+first number suggested.
+
 ## Opening a meal
 
 Tap any logged meal and it opens into its components. Each one shows its
