@@ -376,10 +376,77 @@
             "sugar_g": 11,
             "free_sugar_g": 0
           }
+        },
+        {
+          "id": "m17896517321231vnb",
+          "slot": "lunch",
+          "name": "Pesto Pasta with Chicken and Mixed Vegetables",
+          "time": "14:28",
+          "source": "photo",
+          "confidence": 0.88,
+          "ai_notes": "Applied your corrections (100g pasta, 100g chicken). Pesto coating is the major unknown—traditional pesto is ~50% oil by weight, so 15-20g pesto sauce (~12-16g added fat) is reasonable estimate. Vegetables appear lightly sautéed. Glucose Goddess alignment: vegetables present as side, but ideally should be eaten first before pasta for glycemic benefit. Chicken provides good protein. The pesto-based carbs (+added oil) are moderate but not optimal for glucose blunting without fiber-first sequencing.",
+          "corrections": "item 1 (\"Penne pasta with pesto sauce\") is actually: Whole grain pasta, chicken cooked in the oven; item 3 (\"Coca-Cola (full-sugar)\") is actually: Coca Cola zero sugar item 1 (\"Whole grain pasta (cooked weight)\") is actually: 100 grams; item 2 (\"Chicken, roasted/oven-cooked (skinless breast)\") is actually: 100 grams of chicken",
+          "ai_rounds": 2,
+          "note": "",
+          "items": [
+            {
+              "name": "Penne pasta, whole grain (cooked weight)",
+              "qty": "100 g",
+              "kcal": 124,
+              "protein_g": 4.3,
+              "carbs_g": 26.2,
+              "fat_g": 0.8,
+              "fiber_g": 3.8,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Chicken breast, roasted/oven-cooked (skinless)",
+              "qty": "100 g",
+              "kcal": 165,
+              "protein_g": 31,
+              "carbs_g": 0,
+              "fat_g": 3.6,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Mixed vegetables (peas, corn, green beans, red bell pepper)",
+              "qty": "150 g",
+              "kcal": 81,
+              "protein_g": 4.5,
+              "carbs_g": 16.5,
+              "fat_g": 0.4,
+              "fiber_g": 3.8,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Coca-Cola Zero Sugar",
+              "qty": "330 mL",
+              "kcal": 0,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 370,
+            "protein_g": 39.8,
+            "carbs_g": 42.7,
+            "fat_g": 4.8,
+            "fiber_g": 7.6,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
         }
       ],
       "water_ml": 0,
-      "updated": "2026-09-17T08:38:40.893Z"
+      "updated": "2026-09-17T13:28:52.123Z"
     }
   }
 }
