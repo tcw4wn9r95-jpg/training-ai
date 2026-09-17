@@ -295,6 +295,91 @@
       ],
       "water_ml": 2000,
       "updated": "2026-09-16T20:04:17.637Z"
+    },
+    "2026-09-17": {
+      "date": "2026-09-17",
+      "meals": [
+        {
+          "id": "m1789634320893mz11",
+          "slot": "breakfast",
+          "name": "Eggs + Oats + Greek Yogurt",
+          "time": "09:38",
+          "source": "suggested",
+          "confidence": null,
+          "ai_notes": "Suggested by Coach Claudio for this point in the day.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Eggs (2, scrambled or fried in a little oil)",
+              "qty": "100 g",
+              "kcal": 155,
+              "protein_g": 13,
+              "carbs_g": 1,
+              "fat_g": 11,
+              "fiber_g": 0,
+              "sugar_g": 1,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Greek yogurt (plain, full fat or 2%)",
+              "qty": "150 g",
+              "kcal": 110,
+              "protein_g": 10,
+              "carbs_g": 7,
+              "fat_g": 3.5,
+              "fiber_g": 0,
+              "sugar_g": 7,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Oats (rolled, whole grain)",
+              "qty": "40 g",
+              "kcal": 150,
+              "protein_g": 5,
+              "carbs_g": 27,
+              "fat_g": 3,
+              "fiber_g": 4,
+              "sugar_g": 1,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Whole wheat high-fibre bread (toasted)",
+              "qty": "30 g",
+              "kcal": 75,
+              "protein_g": 3,
+              "carbs_g": 14,
+              "fat_g": 0.5,
+              "fiber_g": 3,
+              "sugar_g": 2,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Honey",
+              "qty": "1 squirt",
+              "kcal": 21,
+              "protein_g": 0,
+              "carbs_g": 5.5,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 511,
+            "protein_g": 31,
+            "carbs_g": 54.5,
+            "fat_g": 18,
+            "fiber_g": 7,
+            "sugar_g": 11,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-17T08:38:40.893Z"
     }
   }
 }
