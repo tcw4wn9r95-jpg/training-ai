@@ -243,6 +243,9 @@ try{var _tp=localStorage.getItem("theme_pref");
 
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{height:100%}
+/* iOS inflates text when the layout gets wider in landscape, and the inflated
+   sizes survive the rotation back to portrait. Opt out and sizes stay ours. */
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{background:var(--bg);color:var(--t1);font-family:var(--font);
   font-size:15px;line-height:1.5;overflow:hidden;
   -webkit-font-smoothing:antialiased;
@@ -516,8 +519,12 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .macro-row:first-child{border-top:none}
 .macro-name{font-size:13px;font-weight:700;width:62px;flex-shrink:0}
 .macro-bar{flex:1;height:8px;border-radius:5px;background:var(--bg3);overflow:hidden;position:relative}
-.macro-fill{height:100%;border-radius:5px;transition:width .45s ease}
-.macro-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--mark);border-radius:2px}
+.macro-target{position:absolute;top:-3px;bottom:-3px;width:2px;background:var(--mark);border-radius:2px;z-index:1}
+/* Target bars. The track clips the segments, so they carry no radius of
+   their own and the overshoot butts straight up against the target. */
+.macro-bar,.mt-row .bar,.en-gap-row .bar{display:flex;position:relative}
+.tb-seg{height:100%;flex-shrink:0;border-radius:0;transition:width .45s ease}
+.tb-over{background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.3) 0 3px,transparent 3px 7px)}
 .macro-val{font-family:var(--mono);font-size:12px;color:var(--t2);width:92px;text-align:right;flex-shrink:0}
 
 /* ── Meal cards ─────────────────────────────────────────────── */
@@ -1486,7 +1493,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-29";
+const BUILD="20260916-30";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -5022,6 +5029,7 @@ function dayPace(iso){
   return {frac:frac,expectedKcal:Math.round(expK),ratio:ratio,label:label,
     color:frac<=0.05?"var(--t3)":ratio>=1.3?"var(--amber)":ratio>=0.85?"var(--green)":ratio>=0.5?"var(--amber)":"var(--red)",
     leftKcal:Math.max(0,Math.round(t.kcal.v-a.kcal)),
+    overKcal:Math.max(0,Math.round(a.kcal-t.kcal.v)),
     leftProtein:Math.max(0,Math.round(t.protein_g.v-a.protein_g)),
     leftWater:Math.max(0,Math.round(t.water_ml.v-a.water_ml))};
 }
@@ -5088,20 +5096,46 @@ function updateFoodDayLabel(){
   if(nx)nx.disabled=(foodDayOffset>=0);
 }
 
+// What going over means depends on the macro. Passing a floor (protein, fibre,
+// water) is fine and reads as such; passing a band or a ceiling is not.
+function overMeta(kind,ratio){
+  if(kind==="atleast")return {c:"var(--brand)",word:"past your target"};
+  if(kind==="atmost")return {c:"var(--red)",word:"over the ceiling"};
+  return ratio>1.1?{c:"var(--red)",word:"over"}:{c:"var(--amber)",word:"over"};
+}
+// A bar that can go past its target. Under target the track means the target,
+// as always. Over it, the track means what he actually had: the target line
+// stays visible where it now falls and the excess is drawn beyond it, striped
+// so it reads as over without leaning on the colour alone.
+function targetBarHTML(kind,color,actual,tv,baseV){
+  var a=Math.max(0,_num(actual)||0);
+  if(!(tv>0))return '<i class="tb-seg" style="width:0"></i>';
+  if(a<=tv){
+    return '<i class="tb-seg" style="width:'+Math.round(a/tv*100)+'%;background:'+color+'"></i>'+
+      (baseV>0&&baseV<tv?'<div class="macro-target" style="left:'+Math.min(99,Math.round(baseV/tv*100))+'%" title="plan baseline"></div>':'');
+  }
+  // Floor the target segment so a wild overshoot still shows where the line was.
+  var mark=Math.max(8,Math.round(tv/a*100));
+  var o=overMeta(kind,a/tv);
+  return '<i class="tb-seg" style="width:'+mark+'%;background:'+color+'"></i>'+
+    '<i class="tb-seg tb-over" style="width:'+(100-mark)+'%;background-color:'+o.c+'"></i>'+
+    '<div class="macro-target" style="left:'+mark+'%" title="your target"></div>';
+}
+
 function macroRowHTML(key,actual,tg){
   var meta=MACRO_META[key]||{label:"Water",unit:"ml",color:"var(--blue)",kind:"atleast"};
-  var pct=tg.v?Math.min(140,Math.round(actual/tg.v*100)):0;
-  var over=tg.v&&actual>tg.v*1.1&&meta.kind==="band";
-  var col=over?"var(--amber)":meta.color;
+  var over=tg.v>0&&actual>tg.v;
+  var o=over?overMeta(meta.kind,actual/tg.v):null;
   var left=Math.max(0,Math.round(tg.v-actual));
+  var notes=[];
+  if(tg.add>0)notes.push('plan '+tg.base+' + '+tg.add+' to fuel training'+(left>0?" · "+left+" "+meta.unit+" to go":""));
+  if(over)notes.push('<b style="color:'+o.c+'">'+Math.round(actual-tg.v)+' '+meta.unit+' '+o.word+'</b>');
   return '<div class="macro-row">'+
     '<div class="macro-name">'+meta.label+'</div>'+
-    '<div class="macro-bar"><div class="macro-fill" style="width:'+Math.min(100,pct)+'%;background:'+col+'"></div>'+
-      (tg.add>0?'<div class="macro-target" style="left:'+Math.min(99,Math.round(tg.base/tg.v*100))+'%" title="plan baseline"></div>':'')+
-    '</div>'+
+    '<div class="macro-bar">'+targetBarHTML(meta.kind,meta.color,actual,tg.v,tg.add>0?tg.base:0)+'</div>'+
     '<div class="macro-val">'+Math.round(actual)+" / "+tg.v+'<span style="color:var(--t3)"> '+meta.unit+'</span></div>'+
   '</div>'+
-  (tg.add>0?'<div style="font-size:10.5px;color:var(--t3);margin:-4px 0 4px 72px">plan '+tg.base+' + '+tg.add+' to fuel training'+(left>0?" · "+left+" "+meta.unit+" to go":"")+'</div>':'');
+  (notes.length?'<div style="font-size:10.5px;color:var(--t3);margin:-4px 0 4px 72px">'+notes.join(" · ")+'</div>':'');
 }
 
 // Total sugar is context, not a target — it includes the fruit and dairy his
@@ -5124,11 +5158,10 @@ function sugarRowsHTML(iso,a,t){
   }
   if(t.free_sugar_g){
     var fv=a.free_sugar_g||0, ft=t.free_sugar_g.v;
-    var pct=ft>0?Math.min(140,Math.round(fv/ft*100)):0;
     var over=fv>ft;
     h+='<div class="macro-row" style="border-top:none;padding-top:0">'+
       '<div class="macro-name" style="font-size:12px">Free sugar</div>'+
-      '<div class="macro-bar"><div class="macro-fill" style="width:'+Math.min(100,pct)+'%;background:'+(over?"var(--red)":"var(--c-sugar)")+'"></div></div>'+
+      '<div class="macro-bar">'+targetBarHTML("atmost","var(--c-sugar)",fv,ft,0)+'</div>'+
       '<div class="macro-val">'+Math.round(fv)+' / '+ft+'<span style="color:var(--t3)"> g</span></div>'+
     '</div>'+
     '<div style="font-size:10.5px;color:'+(over?"var(--red)":"var(--t3)")+';margin:-4px 0 4px 72px">'+
@@ -5168,13 +5201,13 @@ function fuelBannerHTML(iso,t){
 
 function waterCardHTML(iso,t){
   var d=dayEntry(iso), ml=Math.round(_num(d.water_ml)||0), tgt=t.water_ml.v;
-  var pct=tgt?Math.min(100,Math.round(ml/tgt*100)):0;
+  var pct=tgt?Math.round(ml/tgt*100):0;
   var glasses=Math.round(ml/250);
   return '<div class="card">'+
     '<div class="card-h" style="display:flex;justify-content:space-between;align-items:center">'+
       '<span>Water</span><span style="font-family:var(--mono);color:'+(pct>=100?"var(--green)":"var(--blue)")+';font-size:12px">'+
       (ml/1000).toFixed(2).replace(/0$/,"")+' / '+(tgt/1000).toFixed(1)+' L</span></div>'+
-    '<div class="macro-bar" style="height:11px"><div class="macro-fill" style="width:'+pct+'%;background:linear-gradient(90deg,var(--blue),var(--blue))"></div></div>'+
+    '<div class="macro-bar" style="height:11px">'+targetBarHTML("atleast","var(--blue)",ml,tgt,0)+'</div>'+
     '<div style="font-size:12px;color:var(--t2);margin-top:8px;line-height:1.5">'+
       (pct>=100?"Hydration target met — "+glasses+" glasses.":(Math.max(0,Math.round((tgt-ml)/250)))+" more glasses to go"+
         (t.water_ml.add>0?" (includes +"+t.water_ml.add+" ml for training)":"")+".")+'</div>'+
@@ -5422,11 +5455,11 @@ function gapSummaryHTML(){
             ["carbs_g","Carbs","var(--blue)","g"],["fat_g","Fat","var(--amber)","g"],
             ["fiber_g","Fibre","var(--green)","g"],["free_sugar_g","Free sugar","var(--c-sugar)","g"]].map(function(row){
     if(!t[row[0]])return "";
-    var v=a[row[0]]||0, tgt=t[row[0]].v, pct=tgt>0?Math.min(100,Math.round(v/tgt*100)):0;
+    var v=a[row[0]]||0, tgt=t[row[0]].v;
     var left=r.left[row[0]];
     return '<div class="en-gap-row">'+
       '<span class="l">'+row[1]+'</span>'+
-      '<span class="bar"><i style="width:'+pct+'%;background:'+row[2]+'"></i></span>'+
+      '<span class="bar">'+targetBarHTML((MACRO_META[row[0]]||{}).kind,row[2],v,tgt,0)+'</span>'+
       '<span class="v">'+(left>0?left+' '+row[3]+' left':Math.abs(left)+' '+row[3]+' over')+'</span>'+
     '</div>';
   }).join("");
@@ -5964,10 +5997,10 @@ function mealDetailHTML(m,iso){
      ["carbs_g","Carbs","var(--blue)","g"],["fat_g","Fat","var(--amber)","g"],
      ["fiber_g","Fibre","var(--green)","g"],["free_sugar_g","Free sugar","var(--c-sugar)","g"]].map(function(row){
       var v=_num(mt[row[0]])||0, tgt=t[row[0]]?t[row[0]].v:0;
-      var pct=tgt>0?Math.min(100,Math.round(v/tgt*100)):0;
+      var pct=tgt>0?Math.round(v/tgt*100):0;
       return '<div class="mt-row">'+
         '<span class="l">'+row[1]+'</span>'+
-        '<span class="bar"><i style="width:'+pct+'%;background:'+row[2]+'"></i></span>'+
+        '<span class="bar">'+targetBarHTML((MACRO_META[row[0]]||{}).kind,row[2],v,tgt,0)+'</span>'+
         '<span class="v">'+Math.round(v)+' '+row[3]+(tgt>0?' · '+pct+'%':'')+'</span>'+
       '</div>';
     }).join("")+
@@ -5989,23 +6022,39 @@ function mealDetailHTML(m,iso){
   return h+'</div>';
 }
 
+// Being past the calories and still short on protein is an ordinary Tuesday,
+// so the sentence has to carry both without contradicting itself.
+function paceTail(p,rc){
+  var left=[];
+  if(p.leftKcal>0)left.push(p.leftKcal+" kcal");
+  if(p.leftProtein>0)left.push(p.leftProtein+" g protein");
+  if(p.leftWater>0)left.push(p.leftWater+" ml water");
+  if(p.overKcal>0){
+    return "You\u2019re <b style=\"color:"+rc+"\">"+p.overKcal+" kcal past</b> today\u2019s target"+
+      (left.length?", and still short "+left.join(", "):"")+".";
+  }
+  return left.length?"Still to go today: "+left.join(", ")+".":"Everything on your plan is covered.";
+}
+
 function dayScoreHTML(iso){
   var c=complianceFor(iso);
   if(c&&!c.complete){
     var p=dayPace(iso), t=targetsFor(iso), a=dayTotals(iso);
-    var pct=t.kcal.v?Math.min(100,Math.round(a.kcal/t.kcal.v*100)):0;
+    var pct=t.kcal.v?Math.round(a.kcal/t.kcal.v*100):0;
+    // A ring cannot grow past full, so past the target it changes colour and
+    // the number keeps counting.
+    var rc=p.overKcal>0?overMeta("band",a.kcal/t.kcal.v).c:p.color;
     return '<div class="card" style="padding:18px 16px">'+
       '<div style="display:flex;align-items:center;gap:14px">'+
-        '<div style="width:88px;height:88px;border-radius:50%;flex-shrink:0;background:conic-gradient('+p.color+' '+pct+'%,var(--bg3) 0);display:flex;align-items:center;justify-content:center">'+
+        '<div style="width:88px;height:88px;border-radius:50%;flex-shrink:0;background:conic-gradient('+rc+' '+Math.min(100,pct)+'%,var(--bg3) 0);display:flex;align-items:center;justify-content:center">'+
           '<div style="width:72px;height:72px;border-radius:50%;background:var(--bg2);display:flex;flex-direction:column;align-items:center;justify-content:center">'+
-            '<div style="font-size:21px;font-weight:800;color:'+p.color+';line-height:1;font-family:var(--mono)">'+pct+'%</div>'+
+            '<div style="font-size:21px;font-weight:800;color:'+rc+';line-height:1;font-family:var(--mono)">'+pct+'%</div>'+
             '<div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-top:3px">of day</div>'+
           '</div></div>'+
         '<div style="flex:1;min-width:0">'+
-          '<div style="font-size:15px;font-weight:800;color:'+p.color+'">'+p.label+'</div>'+
+          '<div style="font-size:15px;font-weight:800;color:'+rc+'">'+(p.overKcal>0?"Past your calories":p.label)+'</div>'+
           '<div style="font-size:12.5px;color:var(--t2);line-height:1.55;margin-top:4px">'+
-            'By now you’d normally be around '+p.expectedKcal+' kcal. Still to go today: '+p.leftKcal+' kcal, '+
-            p.leftProtein+' g protein'+(p.leftWater?', '+p.leftWater+' ml water':'')+'.</div>'+
+            'By now you’d normally be around '+p.expectedKcal+' kcal. '+paceTail(p,rc)+'</div>'+
           '<div style="font-size:11px;color:var(--t3);margin-top:6px">Your compliance score for the day is set once the day is done.</div>'+
         '</div>'+
       '</div></div>';

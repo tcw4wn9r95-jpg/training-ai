@@ -232,6 +232,27 @@ was logged, the confidence and how many correction rounds it took, what you
 corrected, and what Claude assumed. A meal logged with only a total and no
 breakdown says so rather than inventing components.
 
+## Going over
+
+A bar that stops at full tells you nothing about how far past you went, so it
+doesn't. Under your target the track means the target, as always. Past it, the
+track means what you actually had: the target line stays visible where it now
+falls, and the excess is drawn beyond it in stripes, so it reads as over even
+in a glance or in black and white.
+
+What "over" means depends on the number:
+
+- **Calories, carbs, fat** are a band. Past target goes amber; more than 10%
+  past goes red.
+- **Protein, fibre, water** are a floor. Passing them is fine, so the overshoot
+  is drawn in the app's own green and the line reads *60 g past your target*.
+- **Free sugar** is a ceiling. Any of it past the line is red.
+
+The same treatment runs through the day rows, the water card, the meal
+breakdown and the coach's "where the day stands" panel. The calorie ring can't
+grow past full, so instead it changes colour and the percentage keeps counting —
+118% reads as 118%, not 100%.
+
 ## Compliance
 
 Each macro is scored against the day's target: calories, carbs and fat as a
