@@ -1,6 +1,6 @@
 {
   "source": "imported_from_nutriprep",
-  "updated": "2026-09-16",
+  "updated": "2026-09-17",
   "provider": "Nutritionist plan (imported from NutriPrep)",
   "language_detected": "es",
   "methodology": "Glucose Goddess — structure meals to blunt blood-glucose spikes: eat vegetables/fibre first, keep breakfast savoury and protein-rich, add a little vinegar or fat to carbs, and move gently after eating.",
@@ -161,11 +161,11 @@
   "notes": "Imported from the NutriPrep parse of the nutritionist's sheet. The sheet lists portions rather than numbers, so the macro targets were worked out from the prescribed meals rather than stated by the clinician - check them, and re-photograph the plan in Settings if the numbers should be different. Hydration target is the sum of the water the plan asks for at each meal (2000 ml).",
   "confidence": 0.9,
   "body": {
-    "weight_kg": null,
-    "height_cm": null,
-    "age": null,
+    "weight_kg": 94,
+    "height_cm": 186,
+    "age": 38,
     "sex": "male",
-    "activity": null,
+    "activity": 1.2,
     "goal": "loss"
   }
 }
