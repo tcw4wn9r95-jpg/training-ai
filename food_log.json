@@ -443,10 +443,88 @@
             "sugar_g": 0,
             "free_sugar_g": 0
           }
+        },
+        {
+          "id": "m17896787383178ko1",
+          "slot": "dinner",
+          "name": "Domino's Pizza & Garlic Bread",
+          "time": "21:58",
+          "source": "described",
+          "confidence": 0.82,
+          "ai_notes": "Corrected: Pepperoni = 3 slices (not 2), Cheese = 2 slices (not 4). Nutrition estimates based on USDA FoodData Central pizza category and Domino's standard recipes. **Glucose Goddess alignment concern**: This meal is high in refined carbs (191g total) with limited vegetables/fiber to blunt glucose spikes. Consider adding a large salad or non-starchy vegetables first if eating again, and pair carbs with vinegar or fat. Movement after eating would help.",
+          "corrections": "item 1 (\"Domino's Pepperoni Pizza\") is actually: 3 slices; item 2 (\"Domino's Cheese Pizza\") is actually: 2 slices",
+          "ai_rounds": 1,
+          "note": "",
+          "items": [
+            {
+              "name": "Domino's Pepperoni Pizza",
+              "qty": "3 slices",
+              "kcal": 690,
+              "protein_g": 30,
+              "carbs_g": 69,
+              "fat_g": 33,
+              "fiber_g": 3,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Domino's Cheese Pizza",
+              "qty": "2 slices",
+              "kcal": 380,
+              "protein_g": 16,
+              "carbs_g": 46,
+              "fat_g": 16,
+              "fiber_g": 2,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Domino's Chicken with Pineapple Pizza",
+              "qty": "1 slice",
+              "kcal": 210,
+              "protein_g": 12,
+              "carbs_g": 22,
+              "fat_g": 8,
+              "fiber_g": 1,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Domino's Garlic Bread",
+              "qty": "3 slices",
+              "kcal": 510,
+              "protein_g": 12,
+              "carbs_g": 54,
+              "fat_g": 27,
+              "fiber_g": 2,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Coca-Cola Zero Sugar",
+              "qty": "1 can (330 mL)",
+              "kcal": 0,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 1790,
+            "protein_g": 70,
+            "carbs_g": 191,
+            "fat_g": 84,
+            "fiber_g": 8,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
         }
       ],
       "water_ml": 2000,
-      "updated": "2026-09-17T20:56:46.601Z"
+      "updated": "2026-09-17T20:58:58.317Z"
     }
   }
 }
