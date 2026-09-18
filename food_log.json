@@ -740,89 +740,10 @@
             "sugar_g": 0,
             "free_sugar_g": 0
           }
-        },
-        {
-          "id": "m1789757352592uqp3",
-          "slot": "dinner",
-          "name": "Francesinha",
-          "time": "20:00",
-          "source": "described",
-          "planned": true,
-          "confidence": 0.63,
-          "ai_notes": "Francesinha is a notoriously high-calorie Portuguese sandwich; the exact composition varies dramatically by preparation. The beer sauce is the major variable—some versions are almost a soup. This breakdown assumes a moderately-sauced version. The high fat and saturated fat from cured meats, cheese, and sauce make this challenging for glucose blunting; the refined white bread will also spike glucose. Recommend eating any vegetable side first if available, and gentle movement post-meal.",
-          "corrections": "",
-          "ai_rounds": 0,
-          "note": "",
-          "items": [
-            {
-              "name": "White bread (francesinha roll)",
-              "qty": "120 g",
-              "kcal": 310,
-              "protein_g": 9,
-              "carbs_g": 56,
-              "fat_g": 2,
-              "fiber_g": 2,
-              "sugar_g": 0,
-              "free_sugar_g": 0
-            },
-            {
-              "name": "Cold cuts (ham/mortadella/linguiça mix)",
-              "qty": "80 g",
-              "kcal": 280,
-              "protein_g": 16,
-              "carbs_g": 1,
-              "fat_g": 24,
-              "fiber_g": 0,
-              "sugar_g": 0,
-              "free_sugar_g": 0
-            },
-            {
-              "name": "Cheese (typically melted Swiss or similar)",
-              "qty": "50 g",
-              "kcal": 200,
-              "protein_g": 14,
-              "carbs_g": 1,
-              "fat_g": 16,
-              "fiber_g": 0,
-              "sugar_g": 0,
-              "free_sugar_g": 0
-            },
-            {
-              "name": "Beer sauce (gravy/sauce topping)",
-              "qty": "150 g",
-              "kcal": 180,
-              "protein_g": 8,
-              "carbs_g": 8,
-              "fat_g": 12,
-              "fiber_g": 0,
-              "sugar_g": 0,
-              "free_sugar_g": 0
-            },
-            {
-              "name": "Butter/fat in preparation",
-              "qty": "15 g",
-              "kcal": 110,
-              "protein_g": 0,
-              "carbs_g": 0,
-              "fat_g": 12,
-              "fiber_g": 0,
-              "sugar_g": 0,
-              "free_sugar_g": 0
-            }
-          ],
-          "totals": {
-            "kcal": 1080,
-            "protein_g": 47,
-            "carbs_g": 66,
-            "fat_g": 66,
-            "fiber_g": 2,
-            "sugar_g": 0,
-            "free_sugar_g": 0
-          }
         }
       ],
       "water_ml": 1500,
-      "updated": "2026-09-18T18:49:12.592Z"
+      "updated": "2026-09-18T19:48:10.631Z"
     }
   }
 }
