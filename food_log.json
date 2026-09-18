@@ -525,6 +525,69 @@
       ],
       "water_ml": 2000,
       "updated": "2026-09-17T20:58:58.317Z"
+    },
+    "2026-09-18": {
+      "date": "2026-09-18",
+      "meals": [
+        {
+          "id": "m1789721512998z4vz",
+          "slot": "breakfast",
+          "name": "Protein smoothie",
+          "time": "09:51",
+          "source": "described",
+          "confidence": 0.91,
+          "ai_notes": "Glucose Goddess context: This smoothie is protein-rich (32g) and contains good fat from peanut butter, which will help slow glucose absorption. However, it's liquid and consumed quickly, so blunting strategies suggest: (1) eating solid food (fibre/vegetables) first if possible, or (2) adding vinegar or lemon juice to the smoothie itself, and (3) gentle movement after. Whole strawberries would blunt spikes better than blended, but this is already fairly moderate at ~7.7g net carbs from fruit.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Protein powder (whey or similar)",
+              "qty": "30 g",
+              "kcal": 120,
+              "protein_g": 24,
+              "carbs_g": 2,
+              "fat_g": 2,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Strawberries, fresh",
+              "qty": "100 g",
+              "kcal": 32,
+              "protein_g": 0.8,
+              "carbs_g": 7.7,
+              "fat_g": 0.3,
+              "fiber_g": 2,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Peanut butter",
+              "qty": "30 g",
+              "kcal": 180,
+              "protein_g": 7.2,
+              "carbs_g": 6,
+              "fat_g": 15.8,
+              "fiber_g": 1.5,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 332,
+            "protein_g": 32,
+            "carbs_g": 15.7,
+            "fat_g": 18.1,
+            "fiber_g": 3.5,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-18T08:51:52.998Z"
     }
   }
 }
