@@ -584,10 +584,55 @@
             "sugar_g": 0,
             "free_sugar_g": 0
           }
+        },
+        {
+          "id": "m1789729113113m9t0",
+          "slot": "breakfast",
+          "name": "Two slices of pizza (pepperoni and four cheese)",
+          "time": "11:58",
+          "source": "described",
+          "confidence": 0.65,
+          "ai_notes": "Pizza nutrition varies significantly by crust type, cheese amount, and slice size. Used USDA data for typical frozen/takeaway pizza. For Glucose Goddess protocol: pizza is high-glycemic carb with moderate fat and protein; ideally eat vegetables/salad first, pair with vinegar-based dressing if available, and take a gentle walk after eating to blunt the glucose spike.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Pizza slice, pepperoni",
+              "qty": "1 slice",
+              "kcal": 285,
+              "protein_g": 12,
+              "carbs_g": 36,
+              "fat_g": 11,
+              "fiber_g": 2,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Pizza slice, four cheese",
+              "qty": "1 slice",
+              "kcal": 280,
+              "protein_g": 14,
+              "carbs_g": 34,
+              "fat_g": 10,
+              "fiber_g": 2,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 565,
+            "protein_g": 26,
+            "carbs_g": 70,
+            "fat_g": 21,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
         }
       ],
       "water_ml": 1000,
-      "updated": "2026-09-18T10:57:37.823Z"
+      "updated": "2026-09-18T10:58:33.113Z"
     }
   }
 }
