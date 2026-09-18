@@ -525,6 +525,23 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .macro-bar,.mt-row .bar,.en-gap-row .bar{display:flex;position:relative}
 .tb-seg{height:100%;flex-shrink:0;border-radius:0;transition:width .45s ease}
 .tb-over{background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.3) 0 3px,transparent 3px 7px)}
+.tb-res{opacity:.36}
+/* Eaten or planned: one choice, two states, no hiding which one is on. */
+.seg{display:flex;gap:6px;background:var(--bg3);border-radius:12px;padding:4px;margin-bottom:12px}
+.seg button{flex:1;border:none;background:transparent;color:var(--t3);font-family:var(--font);font-size:12.5px;
+  font-weight:700;padding:9px 6px;border-radius:9px;cursor:pointer;transition:background .15s,color .15s}
+.seg button.active{background:var(--bg2);color:var(--t1);box-shadow:var(--card-shadow)}
+.budget-note{font-size:12px;line-height:1.55;padding:10px 12px;border-radius:11px;margin-bottom:12px;
+  background:var(--brand-dim);border:1px solid var(--brand-edge);color:var(--t2)}
+.budget-note b{color:var(--brand)}
+.plan-row{display:flex;align-items:center;gap:9px;padding:7px 0;border-top:1px solid var(--line)}
+.plan-row:first-of-type{border-top:none}
+.plan-row .n{flex:1;min-width:0;font-size:12.5px;font-weight:700}
+.plan-row .b{font-family:var(--mono);font-size:11.5px;color:var(--t2);text-align:right}
+.plan-row .was{font-family:var(--mono);font-size:10.5px;color:var(--t3);text-decoration:line-through}
+.meal-entry.planned{border-left:2px dashed var(--amber);padding-left:9px;opacity:.94}
+.meal-ate{background:var(--brand-dim);color:var(--brand);border:1px solid var(--brand-edge);border-radius:9px;
+  padding:5px 9px;font-size:11px;font-weight:700;cursor:pointer;font-family:var(--font);white-space:nowrap}
 .macro-val{font-family:var(--mono);font-size:12px;color:var(--t2);width:92px;text-align:right;flex-shrink:0}
 
 /* ── Meal cards ─────────────────────────────────────────────── */
@@ -1220,6 +1237,11 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <label>Meal</label>
       <select id="ml-slot"></select>
     </div>
+    <div class="seg" id="ml-when">
+      <button id="ml-when-ate" class="active" onclick="setMealWhen(false)">✓ I ate this</button>
+      <button id="ml-when-plan" onclick="setMealWhen(true)">📅 I'm planning it</button>
+    </div>
+    <div id="ml-budget" style="display:none"></div>
     <div class="tabs">
       <button id="ml-tab-manual" class="active" onclick="mealTab('manual')">✏️ Type in</button>
       <button id="ml-tab-describe" onclick="mealTab('describe')">💬 Describe</button>
@@ -1329,7 +1351,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
         <label>Note (optional)</label>
         <input id="ml-note" placeholder="Felt heavy afterwards">
       </div>
-      <button class="btn" onclick="saveMeal()" style="background:linear-gradient(135deg,#006e53,#00c896);margin-top:4px">Save to my day</button>
+      <button class="btn" id="ml-save-btn" onclick="saveMeal()" style="background:linear-gradient(135deg,#006e53,#00c896);margin-top:4px">Save to my day</button>
       <div id="ml-save-status" style="font-size:12.5px;color:var(--t3);text-align:center;margin-top:10px;min-height:18px"></div>
     </div>
   </div>
@@ -1493,7 +1515,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260916-30";
+const BUILD="20260918-31";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -4878,9 +4900,30 @@ function sumItems(items){
   MACROS.forEach(function(k){t[k]=Math.round(t[k]*10)/10;});
   return t;
 }
+// A planned meal is food he intends to eat, not food he has eaten. It stays
+// out of every total that judges the day, and comes off the budget the meals
+// he hasn't decided on get to share.
+function splitMeals(iso){
+  var d=dayEntry(iso), eaten=[], planned=[];
+  (d.meals||[]).forEach(function(m){(m.planned?planned:eaten).push(m);});
+  return {eaten:eaten,planned:planned};
+}
+function sumMeals(list){
+  var t=blankTotals();
+  (list||[]).forEach(function(m){
+    var mt=m.totals||sumItems(m.items);
+    MACROS.forEach(function(k){t[k]+=_num(mt[k])||0;});
+  });
+  MACROS.forEach(function(k){t[k]=Math.round(t[k]*10)/10;});
+  return t;
+}
+function dayPlanned(iso){return sumMeals(splitMeals(iso).planned);}
+function hasPlanned(iso){return splitMeals(iso).planned.length>0;}
+
 function dayTotals(iso){
   var d=dayEntry(iso), t=blankTotals();
   (d.meals||[]).forEach(function(m){
+    if(m.planned)return;
     var mt=m.totals||sumItems(m.items);
     MACROS.forEach(function(k){t[k]+=_num(mt[k])||0;});
   });
@@ -4968,7 +5011,7 @@ const COMPLIANCE_WEIGHTS={kcal:.30,protein_g:.25,carbs_g:.15,fat_g:.10,fiber_g:.
 function dayHasData(iso,key){
   var d=dayEntry(iso);
   return (d.meals||[]).some(function(m){
-    return (m.items||[]).some(function(i){return _num(i[key])!=null;});
+    return !m.planned&&(m.items||[]).some(function(i){return _num(i[key])!=null;});
   });
 }
 function complianceFor(iso){
@@ -5030,6 +5073,7 @@ function dayPace(iso){
     color:frac<=0.05?"var(--t3)":ratio>=1.3?"var(--amber)":ratio>=0.85?"var(--green)":ratio>=0.5?"var(--amber)":"var(--red)",
     leftKcal:Math.max(0,Math.round(t.kcal.v-a.kcal)),
     overKcal:Math.max(0,Math.round(a.kcal-t.kcal.v)),
+    plannedKcal:Math.round(dayPlanned(iso).kcal||0),
     leftProtein:Math.max(0,Math.round(t.protein_g.v-a.protein_g)),
     leftWater:Math.max(0,Math.round(t.water_ml.v-a.water_ml))};
 }
@@ -5107,32 +5151,47 @@ function overMeta(kind,ratio){
 // as always. Over it, the track means what he actually had: the target line
 // stays visible where it now falls and the excess is drawn beyond it, striped
 // so it reads as over without leaning on the colour alone.
-function targetBarHTML(kind,color,actual,tv,baseV){
-  var a=Math.max(0,_num(actual)||0);
+// `reserved` is food he has planned but not eaten. It is drawn faded, after
+// what he has eaten, so one glance says how much of the target is already
+// spoken for and whether the plan still fits inside it.
+function targetBarHTML(kind,color,actual,tv,baseV,reserved){
+  var a=Math.max(0,_num(actual)||0), res=Math.max(0,_num(reserved)||0);
   if(!(tv>0))return '<i class="tb-seg" style="width:0"></i>';
+  var total=Math.max(tv,a+res), pc=function(x){return Math.round(x/total*1000)/10;};
+  var o=overMeta(kind,(a+res)/tv);
+  var h="";
   if(a<=tv){
-    return '<i class="tb-seg" style="width:'+Math.round(a/tv*100)+'%;background:'+color+'"></i>'+
-      (baseV>0&&baseV<tv?'<div class="macro-target" style="left:'+Math.min(99,Math.round(baseV/tv*100))+'%" title="plan baseline"></div>':'');
+    h+='<i class="tb-seg" style="width:'+pc(a)+'%;background:'+color+'"></i>';
+  }else{
+    h+='<i class="tb-seg" style="width:'+pc(tv)+'%;background:'+color+'"></i>'+
+       '<i class="tb-seg tb-over" style="width:'+pc(a-tv)+'%;background-color:'+o.c+'"></i>';
   }
-  // Floor the target segment so a wild overshoot still shows where the line was.
-  var mark=Math.max(8,Math.round(tv/a*100));
-  var o=overMeta(kind,a/tv);
-  return '<i class="tb-seg" style="width:'+mark+'%;background:'+color+'"></i>'+
-    '<i class="tb-seg tb-over" style="width:'+(100-mark)+'%;background-color:'+o.c+'"></i>'+
-    '<div class="macro-target" style="left:'+mark+'%" title="your target"></div>';
+  if(res>0){
+    var under=Math.max(0,Math.min(res,tv-a)), past=res-under;
+    if(under>0)h+='<i class="tb-seg tb-res" style="width:'+pc(under)+'%;background-color:'+color+'"></i>';
+    if(past>0)h+='<i class="tb-seg tb-res tb-over" style="width:'+pc(past)+'%;background-color:'+o.c+'"></i>';
+  }
+  // Floor the marker so a wild overshoot still shows where the line was.
+  if(total>tv)h+='<div class="macro-target" style="left:'+Math.max(8,pc(tv))+'%" title="your target"></div>';
+  else if(baseV>0&&baseV<tv)h+='<div class="macro-target" style="left:'+Math.min(99,Math.round(baseV/tv*100))+'%" title="plan baseline"></div>';
+  return h;
 }
 
-function macroRowHTML(key,actual,tg){
+function macroRowHTML(key,actual,tg,reserved){
   var meta=MACRO_META[key]||{label:"Water",unit:"ml",color:"var(--blue)",kind:"atleast"};
+  var res=Math.max(0,_num(reserved)||0);
   var over=tg.v>0&&actual>tg.v;
   var o=over?overMeta(meta.kind,actual/tg.v):null;
   var left=Math.max(0,Math.round(tg.v-actual));
   var notes=[];
   if(tg.add>0)notes.push('plan '+tg.base+' + '+tg.add+' to fuel training'+(left>0?" · "+left+" "+meta.unit+" to go":""));
   if(over)notes.push('<b style="color:'+o.c+'">'+Math.round(actual-tg.v)+' '+meta.unit+' '+o.word+'</b>');
+  if(res>0)notes.push('<b style="color:var(--amber)">'+Math.round(res)+' '+meta.unit+' planned</b>'+
+    (tg.v>0?', '+(actual+res>tg.v?Math.round(actual+res-tg.v)+' '+meta.unit+' past your target once eaten'
+                                 :Math.round(tg.v-actual-res)+' '+meta.unit+' free after it'):''));
   return '<div class="macro-row">'+
     '<div class="macro-name">'+meta.label+'</div>'+
-    '<div class="macro-bar">'+targetBarHTML(meta.kind,meta.color,actual,tg.v,tg.add>0?tg.base:0)+'</div>'+
+    '<div class="macro-bar">'+targetBarHTML(meta.kind,meta.color,actual,tg.v,tg.add>0?tg.base:0,res)+'</div>'+
     '<div class="macro-val">'+Math.round(actual)+" / "+tg.v+'<span style="color:var(--t3)"> '+meta.unit+'</span></div>'+
   '</div>'+
   (notes.length?'<div style="font-size:10.5px;color:var(--t3);margin:-4px 0 4px 72px">'+notes.join(" · ")+'</div>':'');
@@ -5228,9 +5287,9 @@ function addWater(ml){
 function mealCardHTML(iso,slot){
   var d=dayEntry(iso);
   var meals=(d.meals||[]).filter(function(m){return m.slot===slot.id;});
-  var tot=blankTotals();
-  meals.forEach(function(m){var mt=m.totals||sumItems(m.items);MACROS.forEach(function(k){tot[k]+=_num(mt[k])||0;});});
+  var tot=sumMeals(meals.filter(function(m){return !m.planned;}));
   var guide=planMealFor(slot.id);
+  var bud=(iso>=localDateStr(new Date()))?budgetForSlot(iso,slot.id):null;
   var h='<div class="meal-slot">'+
     '<div class="meal-head">'+
       '<div style="display:flex;align-items:center;gap:8px">'+
@@ -5243,6 +5302,19 @@ function mealCardHTML(iso,slot){
         '<button class="meal-add" onclick="openMealModal(\''+slot.id+'\')">+ Add</button>'+
       '</div>'+
     '</div>';
+  // An untouched slot says what it has left to spend, which is the whole point
+  // of planning the heavy meal first.
+  if(bud&&bud.budget.kcal>0){
+    var trimmed=bud.was.kcal&&bud.budget.kcal<bud.was.kcal-20;
+    var spent=["protein_g","carbs_g","fat_g"].filter(function(k){return bud.budget[k]===0;})
+      .map(function(k){return (MACRO_META[k].label||k).toLowerCase();});
+    h+='<div style="font-size:11.5px;color:var(--t3);margin-top:7px;line-height:1.5">'+
+      'Room here: <b style="color:'+(trimmed?"var(--amber)":"var(--brand)")+'">'+bud.budget.kcal+' kcal</b>'+
+      ' · P '+bud.budget.protein_g+' · C '+bud.budget.carbs_g+' · F '+bud.budget.fat_g+
+      (trimmed?' <span style="color:var(--amber)">(trimmed from '+bud.was.kcal+' to fit what you\u2019ve planned)</span>':'')+
+      (spent.length?'<br><span style="color:var(--red)">No '+spent.join(" or ")+' left \u2014 the day is already spent there.</span>':'')+
+    '</div>';
+  }
   if(guide&&guide.components&&guide.components.length){
     h+='<div style="margin-top:9px;padding:9px 11px;border-radius:10px;background:var(--tint)">'+
       '<div style="font-size:10px;font-weight:700;letter-spacing:.5px;text-transform:uppercase;color:var(--t3);margin-bottom:5px">What your plan says</div>'+
@@ -5260,7 +5332,8 @@ function mealCardHTML(iso,slot){
            m.source==="label"?{t:"Label",c:"var(--blue)",bg:"rgba(59,130,246,.14)"}:
            {t:"Manual",c:"var(--t3)",bg:"var(--tint2)"};
     var open=!!_openMeals[m.id];
-    h+='<div class="meal-entry" onclick="toggleMealDetail(\''+m.id+'\',event)" role="button" aria-expanded="'+open+'">'+
+    if(m.planned)sp={t:"Planned "+(m.time?"for "+esc(m.time):""),c:"var(--amber)",bg:"rgba(245,158,11,.14)"};
+    h+='<div class="meal-entry'+(m.planned?" planned":"")+'" onclick="toggleMealDetail(\''+m.id+'\',event)" role="button" aria-expanded="'+open+'">'+
       '<div class="meal-entry-top">'+
       '<div style="flex:1;min-width:0">'+
         '<div style="display:flex;align-items:center;gap:7px;flex-wrap:wrap">'+
@@ -5277,6 +5350,7 @@ function mealCardHTML(iso,slot){
           ' <span style="color:var(--brand)">\u00b7 tap for the breakdown</span></div>':'')+
         (!open&&m.note?'<div style="font-size:11px;color:var(--t3);margin-top:3px;font-style:italic">'+esc(m.note)+'</div>':'')+
       '</div>'+
+      (m.planned?'<button class="meal-ate" onclick="markEaten(\''+m.id+'\',event)">I ate it</button>':'')+
       '<button class="meal-x" onclick="deleteMeal(\''+m.id+'\',event)" aria-label="Remove">✕</button>'+
       '</div>'+
       (open?mealDetailHTML(m,iso):'')+
@@ -5430,6 +5504,46 @@ var _eatResult=null;
 
 // Which meal slot "now" belongs to: the one whose time is closest behind us,
 // or the next one if we're within an hour of it.
+// The point of planning ahead: what's left of the day after everything he has
+// eaten AND everything he has already committed to, shared over the meals he
+// hasn't decided on yet. Shared by the plan's own meal weights, so a heavy
+// lunch comes off breakfast and dinner in proportion rather than landing on
+// whichever one happens to be next.
+function mealBudgets(iso){
+  var t=targetsFor(iso), sp=splitMeals(iso);
+  var eaten=sumMeals(sp.eaten), planned=sumMeals(sp.planned);
+  var taken={};
+  sp.eaten.concat(sp.planned).forEach(function(m){taken[m.slot]=true;});
+  var shares=mealTimes();
+  var all=shares.reduce(function(n,m){return n+m.share;},0)||1;
+  var open=shares.filter(function(m){return !taken[m.id];});
+  var denom=open.reduce(function(n,m){return n+m.share;},0);
+  var left={}, tight=false;
+  MACROS.forEach(function(k){
+    var tv=(t[k]&&t[k].v)||0;
+    if(!tv){left[k]=null;return;}
+    left[k]=Math.round(tv-(eaten[k]||0)-(planned[k]||0));
+    if(k==="kcal"&&left[k]<0)tight=true;
+  });
+  var overspent=MACROS.filter(function(k){return left[k]!=null&&left[k]<0;})
+    .map(function(k){return {key:k,label:(MACRO_META[k]||{}).label||k,unit:(MACRO_META[k]||{}).unit||"g",by:-left[k]};});
+  return {iso:iso,targets:t,eaten:eaten,planned:planned,plannedMeals:sp.planned,
+    left:left,tight:tight,overspent:overspent,openCount:open.length,
+    open:open.map(function(m){
+      var meta=slotMeta(m.id), b={}, was={};
+      MACROS.forEach(function(k){
+        var tv=(t[k]&&t[k].v)||0;
+        b[k]=(denom>0&&left[k]!=null)?Math.max(0,Math.round(left[k]*(m.share/denom))):null;
+        was[k]=tv?Math.round(tv*(m.share/all)):null;
+      });
+      return {id:m.id,label:meta.label,icon:meta.icon,time:m.time,share:m.share/denom,budget:b,was:was};
+    })};
+}
+function budgetForSlot(iso,slotId){
+  var b=mealBudgets(iso);
+  return b.open.filter(function(o){return o.id===slotId;})[0]||null;
+}
+
 function slotForNow(){
   var ms=mealTimes(), now=minutesNow();
   if(!ms.length)return "extra";
@@ -5440,10 +5554,14 @@ function slotForNow(){
   return "extra";
 }
 function remainingToday(){
-  var iso=localDateStr(new Date()), t=targetsFor(iso), a=dayTotals(iso);
-  var out={iso:iso,targets:t,eaten:a,left:{}};
+  var iso=localDateStr(new Date()), t=targetsFor(iso), a=dayTotals(iso), pl=dayPlanned(iso);
+  var out={iso:iso,targets:t,eaten:a,planned:pl,hasPlanned:hasPlanned(iso),left:{},free:{}};
   MACROS.concat(["water_ml"]).forEach(function(k){
-    out.left[k]=Math.round(((t[k]&&t[k].v)||0)-(a[k]||0));
+    var tv=(t[k]&&t[k].v)||0;
+    out.left[k]=Math.round(tv-(a[k]||0));
+    // left is what the day still owes; free is what is still his to spend once
+    // the meals he has already committed to are taken off the top.
+    out.free[k]=Math.round(out.left[k]-(pl[k]||0));
   });
   return out;
 }
@@ -5463,11 +5581,14 @@ function gapSummaryHTML(){
       '<span class="v">'+(left>0?left+' '+row[3]+' left':Math.abs(left)+' '+row[3]+' over')+'</span>'+
     '</div>';
   }).join("");
+  var planNote=r.hasPlanned?'<div style="font-size:11.5px;color:var(--amber);line-height:1.5;margin-top:8px">'+
+    '\ud83d\udcc5 '+Math.round(r.planned.kcal)+' kcal of that is already set aside for what you\u2019ve planned \u2014 '+
+    'genuinely free right now: <b>'+r.free.kcal+' kcal</b>, '+r.free.protein_g+' g protein.</div>':'';
   return '<div class="en-gap">'+
     '<div style="font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.6px;color:var(--t3);margin-bottom:8px">'+
       'Where the day stands · '+new Date().toTimeString().slice(0,5)+'</div>'+
     '<div style="font-size:14px;font-weight:800;margin-bottom:8px">Next up: '+esc(meta.label)+'</div>'+
-    rows+
+    rows+planNote+
     '<div style="font-size:11.5px;color:var(--t3);line-height:1.5;margin-top:8px">'+
       (f.adjusted?'⚡ '+esc(f.reason):esc(f.reason))+
     '</div>'+
@@ -5475,11 +5596,14 @@ function gapSummaryHTML(){
 }
 function eatContextBlock(){
   var r=remainingToday(), slot=slotForNow(), meta=slotMeta(slot);
-  var d=dayEntry(r.iso);
-  var eaten=(d.meals||[]).map(function(m){
-    var mt=m.totals||sumItems(m.items);
-    return (slotMeta(m.slot).label||m.slot)+" — "+(m.name||"meal")+" ("+Math.round(mt.kcal)+" kcal, P"+Math.round(mt.protein_g)+")";
-  }).join("; ")||"nothing yet";
+  var sp=splitMeals(r.iso);
+  var listOf=function(arr){
+    return arr.map(function(m){
+      var mt=m.totals||sumItems(m.items);
+      return (slotMeta(m.slot).label||m.slot)+" — "+(m.name||"meal")+" ("+Math.round(mt.kcal)+" kcal, P"+Math.round(mt.protein_g)+")";
+    }).join("; ");
+  };
+  var eaten=listOf(sp.eaten)||"nothing yet";
   var guide=planMealFor(slot);
   var lines=[];
   lines.push("TIME NOW: "+new Date().toTimeString().slice(0,5)+". The meal he's about to eat is his "+meta.label+".");
@@ -5487,6 +5611,19 @@ function eatContextBlock(){
   lines.push("STILL TO GO TODAY (target minus eaten): "+r.left.kcal+" kcal, "+r.left.protein_g+"g protein, "+
     r.left.carbs_g+"g carbs, "+r.left.fat_g+"g fat, "+r.left.fiber_g+"g fibre, "+r.left.water_ml+"ml water. "+
     "A negative number means he is already over on that one.");
+  if(sp.planned.length){
+    lines.push("ALREADY PLANNED BUT NOT YET EATEN (he has committed to this food — do NOT suggest he skips it, "+
+      "and do NOT count it as eaten): "+listOf(sp.planned)+".");
+    lines.push("SO WHAT IS ACTUALLY FREE for this meal and everything after it, once those planned meals are set "+
+      "aside: "+r.free.kcal+" kcal, "+r.free.protein_g+"g protein, "+r.free.carbs_g+"g carbs, "+r.free.fat_g+
+      "g fat, "+r.free.fiber_g+"g fibre. Size what you suggest against THESE numbers, not the ones above.");
+    var bb=budgetForSlot(r.iso,slot);
+    if(bb&&bb.budget.kcal>0){
+      lines.push("HIS BUDGET FOR THIS "+meta.label.toUpperCase()+" SPECIFICALLY: about "+bb.budget.kcal+" kcal, "+
+        bb.budget.protein_g+"g protein, "+bb.budget.carbs_g+"g carbs, "+bb.budget.fat_g+"g fat — that is this meal's "+
+        "share of what is free, by his plan's own meal weights. Aim at it.");
+    }
+  }
   if(r.targets.free_sugar_g){
     lines.push("FREE SUGAR: ceiling "+r.targets.free_sugar_g.v+"g for the day (WHO, under 10% of energy), "+
       Math.round(r.eaten.free_sugar_g||0)+"g used so far. Free sugar is added sugar plus honey, syrup and juice — the sugar "+
@@ -5515,8 +5652,10 @@ function eatNowCardHTML(){
         '<div style="flex:1;min-width:0">'+
           '<div style="font-size:14.5px;font-weight:800;letter-spacing:-.2px">What should I eat now?</div>'+
           '<div style="font-size:12.5px;color:var(--t2);line-height:1.5;margin-top:2px">'+
-            (_rl.left.kcal>0?_rl.left.kcal+' kcal and '+Math.max(0,_rl.left.protein_g)+' g protein still to go':
-             'You\u2019re at your calories for today')+
+            (_rl.hasPlanned
+              ? (_rl.free.kcal>0?_rl.free.kcal+' kcal free after what you\u2019ve planned':'Your planned meals use up the day')
+              : (_rl.left.kcal>0?_rl.left.kcal+' kcal and '+Math.max(0,_rl.left.protein_g)+' g protein still to go':
+                 'You\u2019re at your calories for today'))+
             ' \u00b7 or tell Claudio what you\u2019re thinking of eating</div>'+
         '</div>'+
         '<span style="color:var(--brand);font-size:18px;flex-shrink:0">\u203a</span>'+
@@ -5827,9 +5966,11 @@ function totalsLine(items){
 }
 function afterLine(items){
   var r=remainingToday(), t=sumItems(items);
-  var k=Math.round(r.left.kcal-t.kcal), p=Math.round(r.left.protein_g-t.protein_g);
+  var base=r.hasPlanned?r.free:r.left;
+  var k=Math.round(base.kcal-t.kcal), p=Math.round(base.protein_g-t.protein_g);
   return "Leaves "+(k>=0?k+" kcal":Math.abs(k)+" kcal over")+" and "+
-         (p>=0?p+" g protein":Math.abs(p)+" g over")+" for the rest of the day.";
+         (p>=0?p+" g protein":Math.abs(p)+" g over")+" for the rest of the day"+
+         (r.hasPlanned?", on top of what you\u2019ve already planned.":".");
 }
 function renderEatResult(){
   var box=document.getElementById("en-result");if(!box||!_eatResult)return;
@@ -6025,15 +6166,15 @@ function mealDetailHTML(m,iso){
 // Being past the calories and still short on protein is an ordinary Tuesday,
 // so the sentence has to carry both without contradicting itself.
 function paceTail(p,rc){
-  var left=[];
+  var left=[], plan=p.plannedKcal>0?" "+Math.round(p.plannedKcal)+" kcal of what is left is already set aside for meals you\u2019ve planned.":"";
   if(p.leftKcal>0)left.push(p.leftKcal+" kcal");
   if(p.leftProtein>0)left.push(p.leftProtein+" g protein");
   if(p.leftWater>0)left.push(p.leftWater+" ml water");
   if(p.overKcal>0){
     return "You\u2019re <b style=\"color:"+rc+"\">"+p.overKcal+" kcal past</b> today\u2019s target"+
-      (left.length?", and still short "+left.join(", "):"")+".";
+      (left.length?", and still short "+left.join(", "):"")+"."+plan;
   }
-  return left.length?"Still to go today: "+left.join(", ")+".":"Everything on your plan is covered.";
+  return (left.length?"Still to go today: "+left.join(", ")+".":"Everything on your plan is covered.")+plan;
 }
 
 function dayScoreHTML(iso){
@@ -6081,10 +6222,48 @@ function dayScoreHTML(iso){
   '</div>';
 }
 
+// When something is set aside for later, the day stops being "what is left"
+// and becomes "what is left after that" — so the rebalance is shown, meal by
+// meal, with what each one would have had if nothing were planned.
+function plannedCardHTML(iso){
+  var b=mealBudgets(iso);
+  if(!b.plannedMeals.length)return "";
+  var names=b.plannedMeals.map(function(m){return esc(m.name||"a meal")+" ("+esc(slotMeta(m.slot).label.toLowerCase())+")";});
+  var h='<div class="card" style="border-color:rgba(245,158,11,.28);background-color:var(--bg2);background-image:var(--card-grad-amber)">'+
+    '<div class="card-h" style="display:flex;justify-content:space-between;align-items:center">'+
+      '<span>\ud83d\udcc5 Planned ahead</span>'+
+      '<span style="font-family:var(--mono);font-size:11.5px;color:var(--amber)">'+Math.round(b.planned.kcal)+' kcal set aside</span>'+
+    '</div>'+
+    '<div style="font-size:12.5px;color:var(--t2);line-height:1.55;margin-bottom:10px">'+
+      names.join(", ")+' '+(b.plannedMeals.length===1?'is':'are')+' waiting to be eaten. '+
+      (b.tight
+        ? 'That already takes you past the day on its own \u2014 the meals below have nothing left to give.'
+        : (b.openCount
+            ? 'The rest of the day has been re-cut around '+(b.plannedMeals.length===1?'it':'them')+':'
+            : 'Every meal today is now accounted for.'))+
+    '</div>'+
+    (b.overspent.length?'<div style="font-size:12px;color:var(--red);line-height:1.55;margin-bottom:10px">'+
+      'Already past the day on '+b.overspent.map(function(o){
+        return o.label.toLowerCase()+' (by '+Math.round(o.by)+' '+o.unit+')';}).join(" and ")+
+      ' once this is eaten \u2014 the splits below can\u2019t give any of it back.</div>':'');
+  b.open.forEach(function(o){
+    var trimmed=o.was.kcal&&o.budget.kcal<o.was.kcal-20;
+    h+='<div class="plan-row">'+
+      '<span style="font-size:13px">'+o.icon+'</span>'+
+      '<span class="n">'+esc(o.label)+'</span>'+
+      (trimmed?'<span class="was">'+o.was.kcal+'</span>':'')+
+      '<span class="b" style="color:'+(trimmed?"var(--amber)":"var(--t2)")+'">'+o.budget.kcal+
+        ' kcal · P '+o.budget.protein_g+'</span>'+
+    '</div>';
+  });
+  return h+'<div style="font-size:10.5px;color:var(--t3);line-height:1.5;margin-top:9px">'+
+    'Split by your plan\u2019s own meal weights. Nothing here counts as eaten \u2014 tap <b>I ate it</b> on a planned meal and it moves into the day.</div></div>';
+}
+
 function renderFood(){
   var el=document.getElementById("food-body");if(!el)return;
   updateFoodDayLabel();
-  var iso=foodDate(), t=targetsFor(iso), a=dayTotals(iso);
+  var iso=foodDate(), t=targetsFor(iso), a=dayTotals(iso), pl=dayPlanned(iso);
   var html="";
   if(!hasNutritionPlan()){
     html+='<div class="card" style="border-color:rgba(245,158,11,.22);background-color:var(--bg2);background-image:var(--card-grad-amber)">'+
@@ -6107,11 +6286,12 @@ function renderFood(){
       (t.kcal.src==="plan"?"from your plan":t.kcal.src==="estimated"?"read off your plan":t.kcal.src==="manual"?"your numbers":"reference values")+
       '</span></span></div>'+
     DAY_ROWS.map(function(k){
-      var row=macroRowHTML(k,a[k]||0,t[k]);
+      var row=macroRowHTML(k,a[k]||0,t[k],pl[k]||0);
       if(k==="carbs_g")row+=sugarRowsHTML(iso,a,t);
       return row;
     }).join("")+
   '</div>';
+  html+=plannedCardHTML(iso);
   html+=waterCardHTML(iso,t);
   html+=dayScoreHTML(iso);
   // Meals
@@ -6223,24 +6403,52 @@ async function claudeJSONRetry(prompt,b64,tokens){
 }
 
 // ── Modal plumbing ────────────────────────────────────────────
-function openMealModal(slot,tab){
-  _mealDraft={slot:slot||"breakfast",name:"",source:"manual",items:[],confidence:null,notes:"",date:foodDate()};
+function openMealModal(slot,tab,planned){
+  _mealDraft={slot:slot||"breakfast",name:"",source:"manual",items:[],confidence:null,notes:"",date:foodDate(),planned:!!planned};
   _mealImages={label:null,photo:null};_aiGuess=null;
   _potImage=null;_potResult=null;_potServeG=0;
   var sel=document.getElementById("ml-slot");
   sel.innerHTML=mealSlots().map(function(s){return '<option value="'+s.id+'"'+(s.id===_mealDraft.slot?" selected":"")+'>'+esc(s.label)+'</option>';}).join("");
-  sel.onchange=function(){_mealDraft.slot=sel.value;};
+  sel.onchange=function(){_mealDraft.slot=sel.value;renderMealWhen();};
   ["ml-label-name","ml-label-portion","ml-photo-note","ml-note","ml-desc","ml-desc-portion","ml-pot-contents"].forEach(function(id){var e=document.getElementById(id);if(e)e.value="";});
   ["ml-label-status","ml-photo-status","ml-save-status","ml-desc-status","ml-pot-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
   ["ml-label-preview","ml-photo-preview","ml-pot-preview"].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display="none";});
   document.getElementById("ml-review-note").style.display="none";
   document.getElementById("ml-pot-result").innerHTML="";
-  document.getElementById("meal-modal-title").textContent="Add to "+slotMeta(_mealDraft.slot).label.toLowerCase();
+  // Planning is only a question on a day that hasn't happened yet.
+  document.getElementById("ml-when").style.display=(foodDate()>=localDateStr(new Date()))?"":"none";
+  setMealWhen(_mealDraft.planned);
   mealTab(tab||"manual");
   if(!_mealDraft.items.length)addIngredientRow();
   document.getElementById("meal-modal").classList.add("open");
   document.body.style.overflow="hidden";
 }
+// Planning a meal doesn't change how it is entered, only what the day does
+// with it, so this is a flag on the same draft rather than a second sheet.
+function setMealWhen(planned){
+  _mealDraft.planned=!!planned;
+  var a=document.getElementById("ml-when-ate"), b=document.getElementById("ml-when-plan");
+  if(a)a.classList.toggle("active",!_mealDraft.planned);
+  if(b)b.classList.toggle("active",_mealDraft.planned);
+  renderMealWhen();
+}
+function renderMealWhen(){
+  var slot=(document.getElementById("ml-slot")||{}).value||_mealDraft.slot;
+  var meta=slotMeta(slot);
+  document.getElementById("meal-modal-title").textContent=
+    (_mealDraft.planned?"Plan ":"Add to ")+meta.label.toLowerCase();
+  var save=document.getElementById("ml-save-btn");
+  if(save)save.textContent=_mealDraft.planned?"Set it aside for later":"Save to my day";
+  var box=document.getElementById("ml-budget");
+  if(!box)return;
+  var b=budgetForSlot(_mealDraft.date,slot);
+  if(!b||!(b.budget.kcal>0)){box.style.display="none";box.innerHTML="";return;}
+  box.style.display="";
+  box.innerHTML='<div class="budget-note">What\u2019s left for '+esc(meta.label.toLowerCase())+
+    ' once everything else today is counted: <b>'+b.budget.kcal+' kcal</b>, '+
+    b.budget.protein_g+' g protein, '+b.budget.carbs_g+' g carbs, '+b.budget.fat_g+' g fat.</div>';
+}
+
 function closeMealModal(){
   document.getElementById("meal-modal").classList.remove("open");
   document.body.style.overflow="";
@@ -6716,12 +6924,16 @@ function saveMeal(){
   var iso=_mealDraft.date||foodDate();
   var d=dayEntry(iso,true);
   var name=_mealDraft.name||items[0].name||"Meal";
+  var slot=document.getElementById("ml-slot").value||_mealDraft.slot;
+  var slotTime=(mealTimes().filter(function(m){return m.id===slot;})[0]||{}).time;
   d.meals.push({
     id:"m"+Date.now()+Math.random().toString(36).slice(2,6),
-    slot:document.getElementById("ml-slot").value||_mealDraft.slot,
+    slot:slot,
     name:name,
-    time:new Date().toTimeString().slice(0,5),
+    time:_mealDraft.planned?(slotTime||new Date().toTimeString().slice(0,5))
+                           :new Date().toTimeString().slice(0,5),
     source:_mealDraft.source||"manual",
+    planned:!!_mealDraft.planned,
     confidence:_mealDraft.confidence,
     ai_notes:_mealDraft.notes||"",
     corrections:_mealDraft.corrections||"",
@@ -6732,6 +6944,18 @@ function saveMeal(){
   touchDay(iso);
   closeMealModal();
   renderFood();renderFoodHome();renderHealth();
+}
+// He ate the thing he planned. Same meal, it just stops being a reservation
+// and starts counting, stamped with when he actually had it.
+function markEaten(id,ev){
+  if(ev&&ev.stopPropagation)ev.stopPropagation();
+  var iso=foodDate(), d=dayEntry(iso,true);
+  (d.meals||[]).forEach(function(m){
+    if(m.id!==id)return;
+    m.planned=false;
+    m.time=new Date().toTimeString().slice(0,5);
+  });
+  touchDay(iso);renderFood();renderFoodHome();renderHealth();
 }
 function deleteMeal(id,ev){
   if(ev&&ev.stopPropagation)ev.stopPropagation();

@@ -232,6 +232,43 @@ was logged, the confidence and how many correction rounds it took, what you
 corrected, and what Claude assumed. A meal logged with only a total and no
 breakdown says so rather than inventing components.
 
+## Planning a meal before you eat it
+
+A heavy lunch you already know about shouldn't arrive as a surprise at 3pm.
+Any of the five inputs can log a meal as **planned** rather than eaten: the
+sheet behind **+ Add** carries a *I ate this / I'm planning it* switch, and
+planning changes nothing about how the food is entered — only what the day
+does with it.
+
+A planned meal:
+
+- **never counts as eaten.** It stays out of the day's totals, out of the
+  compliance score, out of what the coach thinks you have had. It is a
+  reservation, not a record.
+- **is held against the day anyway.** On each macro bar it shows as a faded
+  block after what you have eaten, so one glance says how much of the target
+  is already spoken for — and if the reservation runs past the target, that
+  part of it is striped like any other overshoot, before you have eaten a bite.
+- **re-cuts every meal you haven't decided on.** What is left after everything
+  eaten and everything planned is shared over the untouched meals by your
+  plan's own meal weights, so a big lunch comes off breakfast and dinner in
+  proportion rather than landing entirely on whichever is next. Each of those
+  slots then says what it has to spend — *Room here: 302 kcal · P 46 · C 37*,
+  and *trimmed from 566 to fit what you've planned* when it has been cut.
+
+The **Planned ahead** card sums it up: what is set aside, the new budget for
+each remaining meal against what it would have had, and — when the plan on its
+own already passes a target — which macro it passes and by how much, because
+a budget of zero because the day is spent is not the same as a budget of zero
+because it came out even.
+
+The coach is told all of this. Planned food is named to it as committed, never
+as eaten, it is told never to suggest you skip it, and what it suggests is
+sized against what is genuinely free and against that meal's own share of it.
+
+When you eat it, **I ate it** on the planned meal moves it into the day and
+stamps it with the time you actually had it.
+
 ## Going over
 
 A bar that stops at full tells you nothing about how far past you went, so it
