@@ -740,10 +740,100 @@
             "sugar_g": 0,
             "free_sugar_g": 0
           }
+        },
+        {
+          "id": "m1789761015661a97h",
+          "slot": "dinner",
+          "name": "Cheeseburger with Fries and Coke Zero",
+          "time": "20:50",
+          "source": "photo",
+          "planned": false,
+          "confidence": 0.82,
+          "ai_notes": "Meal aligns poorly with Glucose Goddess principles: high free sugars (ketchup, bun), refined carbs (bun, fries), eaten all mixed together rather than fibre/protein first, and no visible vegetables or healthy fats to blunt glucose response. Coke Zero removes sugar spike but the carb load from bun+fries (~66g) is significant. Recommend: eat fries+veggies first if any available, add vinegar to fries, take a 2-min walk after. Protein content (57g) is adequate.",
+          "corrections": "item 1 (\"Cheeseburger (beef patty, bun, cheese, condiments)\") is actually: 180 grams of meat; item 3 (\"Sauce (appears to be mayo or sour cream-based)\") is actually: Mayo and ketchup; item 4 (\"Coca-Cola (regular, full-sugar)\") is actually: Coke Zero",
+          "ai_rounds": 1,
+          "note": "",
+          "items": [
+            {
+              "name": "Beef patty (cooked)",
+              "qty": "180 g",
+              "kcal": 450,
+              "protein_g": 48,
+              "carbs_g": 0,
+              "fat_g": 27,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Burger bun",
+              "qty": "45 g",
+              "kcal": 120,
+              "protein_g": 4,
+              "carbs_g": 21,
+              "fat_g": 2,
+              "fiber_g": 1,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Cheese slice (cheddar)",
+              "qty": "21 g",
+              "kcal": 85,
+              "protein_g": 5,
+              "carbs_g": 0.5,
+              "fat_g": 7,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Mayo and ketchup (mixed condiments)",
+              "qty": "30 g",
+              "kcal": 90,
+              "protein_g": 0,
+              "carbs_g": 6,
+              "fat_g": 7,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Fried potato chips/fries",
+              "qty": "130 g",
+              "kcal": 385,
+              "protein_g": 4,
+              "carbs_g": 45,
+              "fat_g": 18,
+              "fiber_g": 4,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Coke Zero",
+              "qty": "330 mL",
+              "kcal": 0,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 1130,
+            "protein_g": 61,
+            "carbs_g": 72.5,
+            "fat_g": 61,
+            "fiber_g": 5,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
         }
       ],
       "water_ml": 1500,
-      "updated": "2026-09-18T19:48:10.631Z"
+      "updated": "2026-09-18T19:50:15.664Z"
     }
   }
 }
