@@ -629,10 +629,121 @@
             "sugar_g": 0,
             "free_sugar_g": 0
           }
+        },
+        {
+          "id": "m17897502881454myl",
+          "slot": "lunch",
+          "name": "Hot dog, pulled pork sandwich, and Coke Zero",
+          "time": "17:51",
+          "source": "described",
+          "confidence": 0.72,
+          "ai_notes": "Glucose Goddess notes: This meal is heavily carb-dominant (especially refined carbs from buns) and lacks vegetable fibre. There's no fibre-first eating and limited vegetables. The mayo does add some fat to the carbs. Post-meal movement is a good idea here, and consider a side salad or vegetable with future similar meals to blunt glucose response. Free sugar is low (mostly from ketchup), which is good.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Hot dog (beef frank in bun)",
+              "qty": "1 hot dog (57g frank + 43g bun)",
+              "kcal": 280,
+              "protein_g": 10,
+              "carbs_g": 22,
+              "fat_g": 17,
+              "fiber_g": 1,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Mayonnaise",
+              "qty": "1 tablespoon",
+              "kcal": 94,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 10.5,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Ketchup",
+              "qty": "1 tablespoon",
+              "kcal": 15,
+              "protein_g": 0,
+              "carbs_g": 4,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Mustard",
+              "qty": "1 teaspoon",
+              "kcal": 3,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Pulled pork",
+              "qty": "100 g (cooked, typical sandwich portion)",
+              "kcal": 180,
+              "protein_g": 26,
+              "carbs_g": 0,
+              "fat_g": 8,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Bread roll for pulled pork sandwich",
+              "qty": "1 roll (43 g)",
+              "kcal": 120,
+              "protein_g": 4,
+              "carbs_g": 21,
+              "fat_g": 2,
+              "fiber_g": 1,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Cheddar cheese",
+              "qty": "1 slice (21 g)",
+              "kcal": 85,
+              "protein_g": 5,
+              "carbs_g": 0.4,
+              "fat_g": 7,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Coca-Cola Zero Sugar",
+              "qty": "1 can (355 mL)",
+              "kcal": 4,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 781,
+            "protein_g": 45,
+            "carbs_g": 47.4,
+            "fat_g": 44.5,
+            "fiber_g": 2,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
         }
       ],
       "water_ml": 1500,
-      "updated": "2026-09-18T16:50:09.160Z"
+      "updated": "2026-09-18T16:51:28.146Z"
     }
   }
 }
