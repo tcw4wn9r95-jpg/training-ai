@@ -232,6 +232,33 @@ was logged, the confidence and how many correction rounds it took, what you
 corrected, and what Claude assumed. A meal logged with only a total and no
 breakdown says so rather than inventing components.
 
+## What the coach says when you log something
+
+The line under the meal total used to be arithmetic: *puts you at 1570 of 1980
+kcal*. It still tells you that, but it leads with what a friend who happens to
+be your coach would actually say about it — warm when the food is good, blunt
+when it isn't, and properly sarcastic when you've gone looking for trouble.
+
+It reads the meal against the whole picture: what's left of the day once
+everything eaten and everything planned is counted, protein per calorie, fibre,
+free sugar against the day's ceiling, whether today's targets were topped up for
+training and what you trained, which meal slot you're filling, and whether any
+ingredient matches something on your plan's own avoid list.
+
+The verdict it picks, in priority order: something your plan says to avoid, a
+sugar load against the day's ceiling, a day that was already past target before
+this arrived, a meal that ends the day on its own, one that nudges you just
+over, carbs that training has earned, protein doing its job, calories with
+nothing in them, half the day on one plate, a good fibre haul, something too
+small to count — and, when none of that applies, a plain nod that it fits.
+
+It is arithmetic and opinion, never a model call, so it updates as you type.
+The numbers follow every keystroke; the wording is fixed when the sheet opens,
+so the phrasing holds still while you edit and a different turn of phrase comes
+up on the next meal. The jokes are about the food and the numbers, never about
+you. Planning a meal rather than eating it changes the tense: *would put you
+at*.
+
 ## Planning a meal before you eat it
 
 A heavy lunch you already know about shouldn't arrive as a surprise at 3pm.

@@ -526,6 +526,17 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .tb-seg{height:100%;flex-shrink:0;border-radius:0;transition:width .45s ease}
 .tb-over{background-image:repeating-linear-gradient(115deg,rgba(255,255,255,.3) 0 3px,transparent 3px 7px)}
 .tb-res{opacity:.36}
+/* The coach's verdict on a meal being logged: a voice, not a readout. */
+.verdict{margin-top:10px;padding:12px 13px;border-radius:12px;border:1px solid var(--line);background:var(--bg3)}
+.verdict .v-head{display:flex;align-items:flex-start;gap:8px;font-size:13.5px;font-weight:800;
+  line-height:1.4;letter-spacing:-.15px;color:var(--t1)}
+.verdict .v-emoji{font-size:15px;line-height:1.3;flex-shrink:0}
+.verdict .v-sub{font-size:12.5px;color:var(--t2);line-height:1.55;margin:5px 0 0 23px}
+.verdict .v-math{font-family:var(--mono);font-size:11px;color:var(--t3);margin:8px 0 0 23px;
+  padding-top:7px;border-top:1px solid var(--line)}
+.verdict.v-good{border-color:var(--brand-edge);background:var(--brand-dim)}
+.verdict.v-warn{border-color:rgba(245,158,11,.28);background:rgba(245,158,11,.09)}
+.verdict.v-bad{border-color:rgba(239,68,68,.3);background:rgba(239,68,68,.09)}
 /* Eaten or planned: one choice, two states, no hiding which one is on. */
 .seg{display:flex;gap:6px;background:var(--bg3);border-radius:12px;padding:4px;margin-bottom:12px}
 .seg button{flex:1;border:none;background:transparent;color:var(--t3);font-family:var(--font);font-size:12.5px;
@@ -578,9 +589,10 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
 .modal-body{flex:1;overflow-y:auto;-webkit-overflow-scrolling:touch;
   padding:16px 16px calc(30px + env(safe-area-inset-bottom))}
 .tabs{display:flex;gap:6px;margin-bottom:16px}
-.tabs button{flex:1;background:var(--bg2);border:1px solid var(--line);color:var(--t3);
-  border-radius:11px;padding:10px 4px;font-size:11.5px;font-weight:700;cursor:pointer;
-  font-family:var(--font);line-height:1.3}
+.tabs button{flex:1;min-width:0;background:var(--bg2);border:1px solid var(--line);color:var(--t3);
+  border-radius:11px;padding:10px 3px;font-size:11.5px;font-weight:700;cursor:pointer;
+  font-family:var(--font);line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.tabs.five button{font-size:10.5px;letter-spacing:-.2px}
 .tabs button.active{background:var(--brand-dim);color:var(--brand);border-color:rgba(0,200,150,.3)}
 .fld{margin-bottom:13px}
 .fld label{display:block;font-size:11px;font-weight:700;color:var(--t2);margin-bottom:6px;
@@ -1242,7 +1254,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
       <button id="ml-when-plan" onclick="setMealWhen(true)">📅 I'm planning it</button>
     </div>
     <div id="ml-budget" style="display:none"></div>
-    <div class="tabs">
+    <div class="tabs five">
       <button id="ml-tab-manual" class="active" onclick="mealTab('manual')">✏️ Type in</button>
       <button id="ml-tab-describe" onclick="mealTab('describe')">💬 Describe</button>
       <button id="ml-tab-label" onclick="mealTab('label')">🏷 Label</button>
@@ -1515,7 +1527,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260918-31";
+const BUILD="20260919-32";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -4870,6 +4882,7 @@ function fuelFor(iso){
     adjusted:true,src:src,kcal:kcal,hours:hours,sessions:labels,
     add:{kcal:addCarb*4+addProt*4+addFat*9,protein_g:addProt,carbs_g:addCarb,fat_g:addFat,fiber_g:0,
       sugar_g:0,free_sugar_g:0,water_ml:addWater},
+    labels:labels,
     reason:(src==="planned"?"Fuelled for today's planned ":src==="measured"?"Fuelled for the ":"Fuelled for the ")+
       labels.join(" + ")+(src==="planned"?"":" you trained")+" — about "+kcal+" kcal of extra work."
   };
@@ -6407,9 +6420,10 @@ function openMealModal(slot,tab,planned){
   _mealDraft={slot:slot||"breakfast",name:"",source:"manual",items:[],confidence:null,notes:"",date:foodDate(),planned:!!planned};
   _mealImages={label:null,photo:null};_aiGuess=null;
   _potImage=null;_potResult=null;_potServeG=0;
+  _verdictSeed=Math.floor(Math.random()*997);
   var sel=document.getElementById("ml-slot");
   sel.innerHTML=mealSlots().map(function(s){return '<option value="'+s.id+'"'+(s.id===_mealDraft.slot?" selected":"")+'>'+esc(s.label)+'</option>';}).join("");
-  sel.onchange=function(){_mealDraft.slot=sel.value;renderMealWhen();};
+  sel.onchange=function(){_mealDraft.slot=sel.value;renderMealWhen();renderMealVerdict();};
   ["ml-label-name","ml-label-portion","ml-photo-note","ml-note","ml-desc","ml-desc-portion","ml-pot-contents"].forEach(function(id){var e=document.getElementById(id);if(e)e.value="";});
   ["ml-label-status","ml-photo-status","ml-save-status","ml-desc-status","ml-pot-status"].forEach(function(id){var e=document.getElementById(id);if(e)e.textContent="";});
   ["ml-label-preview","ml-photo-preview","ml-pot-preview"].forEach(function(id){var e=document.getElementById(id);if(e)e.style.display="none";});
@@ -6431,6 +6445,7 @@ function setMealWhen(planned){
   if(a)a.classList.toggle("active",!_mealDraft.planned);
   if(b)b.classList.toggle("active",_mealDraft.planned);
   renderMealWhen();
+  renderMealVerdict();
 }
 function renderMealWhen(){
   var slot=(document.getElementById("ml-slot")||{}).value||_mealDraft.slot;
@@ -6521,19 +6536,180 @@ function numFld(i,k,ph,v){
     'oninput="updItem('+i+',\''+k+'\',this.value)" '+
     'style="width:100%;background:var(--bg3);border:1px solid var(--line);border-radius:9px;padding:9px 10px;color:var(--t1);font-size:14px;font-family:var(--mono);outline:none">';
 }
+// ── The coach's read on what you're about to log ──────────────
+// This re-runs on every keystroke, so it is arithmetic and opinion, never an
+// API call. Warm by default, sharp when the food actually deserves it, and the
+// wording varies per meal so the same joke never lands twice in a day. The
+// jokes are about the food and the numbers — never about him.
+var _verdictSeed=0;
+function vPick(list,seed){return list[Math.abs(seed||0)%list.length];}
+
+// Loose match, so "fried food" on his plan's avoid list catches "fried chicken".
+function restrictedHit(items){
+  var bad=(nutritionPlan&&nutritionPlan.restricted_foods)||[];
+  if(!bad.length)return null;
+  var names=(items||[]).map(function(i){return String(i.name||"").toLowerCase();}).join(" | ");
+  var draft=String(_mealDraft.name||"").toLowerCase();
+  var hay=names+" | "+draft;
+  // "fried or breaded foods" should catch fried chicken, but "foods" on its own
+  // should catch nothing, and "juices" should still find an orange juice.
+  var generic={foods:1,food:1,beverages:1,beverage:1,drinks:1,drink:1,products:1,
+    items:1,other:1,with:1,and:1,any:1,all:1,from:1,type:1,types:1,kind:1,kinds:1};
+  for(var i=0;i<bad.length;i++){
+    var words=String(bad[i]).toLowerCase().split(/[^a-z\u00e0-\u00ff]+/)
+      .filter(function(w){return w.length>3&&!generic[w];});
+    for(var j=0;j<words.length;j++){
+      var w=words[j], stem=w.length>4&&w.charAt(w.length-1)==="s"?w.slice(0,-1):w;
+      if(hay.indexOf(w)>-1||hay.indexOf(stem)>-1)return bad[i];
+    }
+  }
+  return null;
+}
+
+function mealVerdict(t){
+  var iso=_mealDraft.date||foodDate();
+  var tg=targetsFor(iso), eaten=dayTotals(iso), plan=dayPlanned(iso);
+  var target=tg.kcal.v||0, sd=_verdictSeed;
+  var before=eaten.kcal+plan.kcal, after=before+t.kcal, left=Math.round(target-after);
+  var share=target?Math.round(t.kcal/target*100):0;
+  var over=Math.max(0,Math.round(after-target));
+  var future=!!_mealDraft.planned;
+  var slot=slotMeta((document.getElementById("ml-slot")||{}).value||_mealDraft.slot);
+  var fuel=tg._fuel||{}, sess=(fuel.labels||[])[0]||"training";
+  var pDens=t.kcal>0?t.protein_g/t.kcal*100:0;          // g protein per 100 kcal
+  var cDens=t.kcal>0?t.carbs_g*4/t.kcal*100:0;          // % of energy from carbs
+  var sugCeil=tg.free_sugar_g?tg.free_sugar_g.v:0;
+  var sugLeft=sugCeil?Math.round(sugCeil-(eaten.free_sugar_g||0)-(plan.free_sugar_g||0)):null;
+  var bad=restrictedHit(_mealDraft.items);
+  var V=function(tone,emoji,head,sub){return {tone:tone,emoji:emoji,head:head,sub:sub};};
+
+  if(bad){
+    return vPick([
+      V("bad","\ud83d\udd75\ufe0f","Your plan has “"+esc(bad)+"” on the avoid list.",
+        "And yet. Here we are. Logging it anyway, no notes. Well — some notes."),
+      V("bad","\ud83d\udc40","I see the "+esc(bad)+".",
+        "Your dietitian wrote a whole avoid list and you found the one item on it. Impressive, in a way."),
+      V("bad","\ud83e\udd28","“"+esc(bad)+"”, is it.",
+        "Not on your plan, but it is on your plate. I'll write it down and we'll never speak of it again.")
+    ],sd);
+  }
+  if(sugCeil&&t.free_sugar_g>=18&&(sugLeft==null||t.free_sugar_g>sugLeft*0.6)){
+    return vPick([
+      V("bad","\ud83c\udf6d",Math.round(t.free_sugar_g)+" g of free sugar in one sitting.",
+        "Your whole day gets "+sugCeil+" g. This is "+(sugLeft!=null&&sugLeft>0?"most of what was left":"rather more than what was left")+"."),
+      V("bad","\ud83c\udf82","Dessert has entered the chat.",
+        Math.round(t.free_sugar_g)+" g of free sugar against a "+sugCeil+" g ceiling for the entire day. Hope it was worth it. It probably was."),
+      V("bad","\ud83e\uddc1",Math.round(t.free_sugar_g)+" g of added sugar. Bold.",
+        "That is "+Math.round(t.free_sugar_g/sugCeil*100)+"% of your day's sugar allowance, spent in about four minutes.")
+    ],sd);
+  }
+  if(before>target&&t.kcal>0){
+    return vPick([
+      V("bad","\ud83c\udfac","You were already "+Math.round(before-target)+" kcal past. This is the encore.",
+        (future?"Planning ":"Adding ")+Math.round(t.kcal)+" kcal on top takes you to "+over+" over for the day."),
+      V("bad","\ud83d\ude43","The day was over before this arrived.",
+        "That makes it "+over+" kcal past target. Tomorrow is right there, and it's very forgiving.")
+    ],sd);
+  }
+  if(over>target*0.15){
+    return vPick([
+      V("bad","\ud83d\ude33","That's the day gone, plus "+over+" kcal for luck.",
+        "One meal, "+share+"% of everything you get today. I admire the commitment. I do not endorse it."),
+      V("bad","\ud83d\udea8",share+"% of your daily calories. In one meal.",
+        (future?"That would put ":"That puts ")+"you "+over+" kcal past the whole day, and it's still "+slot.label.toLowerCase()+".")
+    ],sd);
+  }
+  if(over>0){
+    return vPick([
+      V("warn","\ud83d\ude05","Nudges you "+over+" kcal over. Survivable.",
+        "Walk somewhere unnecessary later and we'll call it even."),
+      V("warn","\u2696\ufe0f",over+" kcal past target.",
+        "Nobody is calling the police. Just don't make it a habit and we're fine.")
+    ],sd);
+  }
+  if(fuel.adjusted&&cDens>=45&&t.kcal>=350){
+    return vPick([
+      V("good","\ud83d\udcaa","Carbs after "+esc(sess)+" aren't a crime — they're the point.",
+        "Today's targets are already topped up for the work you did. This has somewhere to go."),
+      V("good","\u26a1","You earned this one.",
+        Math.round(fuel.kcal)+" kcal of "+esc(sess)+" today says these carbs are fuel, not damage.")
+    ],sd);
+  }
+  if(t.kcal>=200&&pDens>=8){
+    return vPick([
+      V("good","\ud83d\udcaa",Math.round(t.protein_g)+" g of protein — the expensive part of the day, handled.",
+        "Leaves "+left+" kcal and "+Math.max(0,Math.round(tg.protein_g.v-eaten.protein_g-plan.protein_g-t.protein_g))+" g protein for the rest of today."),
+      V("good","\ud83e\udd69","Protein is doing the heavy lifting here.",
+        Math.round(t.protein_g)+" g in one meal. This is the kind of thing that makes the rest of the day easy.")
+    ],sd);
+  }
+  if(t.kcal>=350&&pDens<3&&t.fiber_g<3){
+    return vPick([
+      V("warn","\ud83d\udca8",Math.round(t.kcal)+" kcal and "+Math.round(t.protein_g)+" g of protein.",
+        "That's a lot of rent for very little tenant. Filling, not feeding — you'll be hungry in an hour."),
+      V("warn","\ud83c\udf88","Big on calories, shy on everything else.",
+        "Barely any protein or fibre in "+Math.round(t.kcal)+" kcal. Worth putting something with a job in it next time.")
+    ],sd);
+  }
+  if(share>=45){
+    return vPick([
+      V("warn","\ud83c\udf7d\ufe0f",share+"% of your day, on one plate.",
+        "It fits — just. The rest of today is going to be quiet, with "+left+" kcal to share out."),
+      V("warn","\u23f3","Half the day, right here.",
+        "Leaves "+left+" kcal for everything after "+slot.label.toLowerCase()+". Plan accordingly, or plan a salad.")
+    ],sd);
+  }
+  if(t.fiber_g>=8){
+    return vPick([
+      V("good","\ud83c\udf31",Math.round(t.fiber_g)+" g of fibre in one meal.",
+        "Your gut is drafting a thank-you note. Sits fine in the day too — "+left+" kcal left."),
+      V("good","\ud83e\udd66","Fibre: "+Math.round(t.fiber_g)+" g. Quietly excellent.",
+        "The unglamorous one that actually matters. "+left+" kcal still to go today.")
+    ],sd);
+  }
+  if(t.kcal>0&&t.kcal<60){
+    return vPick([
+      V("ok","\ud83d\udd0d",Math.round(t.kcal)+" kcal. That's not a meal, that's a rounding error.",
+        "Logged, though. Thoroughness respected."),
+      V("ok","\ud83d\udc1c","Tiny. "+Math.round(t.kcal)+" kcal.",
+        "Barely moves the needle, but it all counts. "+left+" kcal left today.")
+    ],sd);
+  }
+  if(!t.kcal)return null;
+  return vPick([
+    V("good","\ud83d\udc4d","Sits nicely in the day.",
+      "Nothing to argue about. "+left+" kcal and "+Math.max(0,Math.round(tg.protein_g.v-eaten.protein_g-plan.protein_g-t.protein_g))+" g protein still to go."),
+    V("good","\u2705","That works.",
+      left+" kcal left to play with after this. Carry on."),
+    V("good","\ud83d\ude4c","Fine by me.",
+      "Lands where it should for "+slot.label.toLowerCase()+", with "+left+" kcal left in the day.")
+  ],sd);
+}
+
 function recalcMealTotal(){
   var t=sumItems(_mealDraft.items);
   var el=document.getElementById("ml-total");
   if(el)el.innerHTML=Math.round(t.kcal)+' kcal &nbsp;·&nbsp; P '+Math.round(t.protein_g)+' g &nbsp;·&nbsp; C '+Math.round(t.carbs_g)+
     ' g &nbsp;·&nbsp; F '+Math.round(t.fat_g)+' g &nbsp;·&nbsp; fibre '+Math.round(t.fiber_g)+' g'+
     (t.sugar_g>0?' &nbsp;·&nbsp; sugar '+Math.round(t.sugar_g)+' g':'');
+  renderMealVerdict(t);
+}
+function renderMealVerdict(t){
   var vs=document.getElementById("ml-vs-target");
-  if(vs){
-    var iso=_mealDraft.date||foodDate(), tg=targetsFor(iso), a=dayTotals(iso);
-    var after=a.kcal+t.kcal, left=tg.kcal.v-after;
-    vs.textContent=t.kcal?("Puts you at "+Math.round(after)+" of "+tg.kcal.v+" kcal for the day — "+
-      (left>=0?Math.round(left)+" kcal still to go.":Math.round(-left)+" kcal over.")):"";
-  }
+  if(!vs)return;
+  t=t||sumItems(_mealDraft.items);
+  var v=mealVerdict(t);
+  if(!v){vs.innerHTML="";return;}
+  var iso=_mealDraft.date||foodDate(), tg=targetsFor(iso), a=dayTotals(iso), pl=dayPlanned(iso);
+  var after=a.kcal+pl.kcal+t.kcal, left=Math.round(tg.kcal.v-after);
+  var math=(_mealDraft.planned?"Would put you at ":"Puts you at ")+Math.round(after)+" of "+tg.kcal.v+" kcal"+
+    (pl.kcal>0?" (planned meals included)":"")+" \u00b7 "+
+    (left>=0?left+" kcal left":Math.abs(left)+" kcal over");
+  vs.innerHTML='<div class="verdict v-'+v.tone+'">'+
+    '<div class="v-head"><span class="v-emoji">'+v.emoji+'</span><span>'+v.head+'</span></div>'+
+    '<div class="v-sub">'+v.sub+'</div>'+
+    '<div class="v-math">'+math+'</div>'+
+  '</div>';
 }
 async function lookupItem(i,btn){
   var it=_mealDraft.items[i];
