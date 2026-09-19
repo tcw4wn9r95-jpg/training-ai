@@ -1072,10 +1072,78 @@
             "sugar_g": 0,
             "free_sugar_g": 0
           }
+        },
+        {
+          "id": "m17898494782274lol",
+          "slot": "dinner",
+          "name": "Cheese and vegetable plate with bread",
+          "time": "21:24",
+          "source": "suggested",
+          "planned": false,
+          "confidence": null,
+          "ai_notes": "Suggested by Coach Claudio for this point in the day.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Cheese slice",
+              "qty": "40 g",
+              "kcal": 160,
+              "protein_g": 9,
+              "carbs_g": 0,
+              "fat_g": 13,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Cream cheese",
+              "qty": "25 g",
+              "kcal": 82,
+              "protein_g": 2,
+              "carbs_g": 1,
+              "fat_g": 8,
+              "fiber_g": 0,
+              "sugar_g": 1,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Whole-grain bread (sourdough if available)",
+              "qty": "30 g (1 slice)",
+              "kcal": 80,
+              "protein_g": 3,
+              "carbs_g": 14,
+              "fat_g": 1,
+              "fiber_g": 2,
+              "sugar_g": 1,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Greek yogurt",
+              "qty": "200g",
+              "kcal": 146,
+              "protein_g": 20.2,
+              "carbs_g": 6.4,
+              "fat_g": 4.2,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 468,
+            "protein_g": 34.2,
+            "carbs_g": 21.4,
+            "fat_g": 26.2,
+            "fiber_g": 2,
+            "sugar_g": 2,
+            "free_sugar_g": 0
+          }
         }
       ],
       "water_ml": 0,
-      "updated": "2026-09-19T16:06:00.665Z"
+      "updated": "2026-09-19T20:24:38.227Z"
     }
   }
 }
