@@ -18,7 +18,8 @@ import fuel  # noqa: E402
 
 PLAN = {"body": {"weight_kg": 80, "height_cm": 180, "age": 38, "sex": "male", "activity": 1.55, "goal": "loss"},
         "targets": {"kcal": {"value": 2100, "src": "plan"}, "protein_g": 150}}
-NP = {"kcal": 1900, "protein_g": 150, "carbs_g": 180, "fat_g": 60, "fiber_g": 30}
+NP = {"kcal": 1900, "protein_g": 150, "carbs_g": 180, "fat_g": 60, "fiber_g": 30, "free_sugar_g": 24,
+      "water_ml": 2500, "body": {"weight_kg": 84, "height_cm": 180, "age": 38, "sex": "male", "activity_factor": 1.55}}
 WORKOUTS = [
     {"date": "2026-10-05", "sport": "cycling", "duration_min": 90, "tss": 80, "calories": 1000, "avg_hr": 140},
     {"date": "2026-10-06", "sport": "running", "duration_min": 45, "tss": 60, "avg_hr": 165},
@@ -35,12 +36,14 @@ class FuelTests(unittest.TestCase):
         self.assertEqual(sorted(out["days"]), ["2026-10-05", "2026-10-06", "2026-10-07", "2026-10-08"])
         d = out["days"]["2026-10-05"]
         self.assertEqual(d["src"], "measured")
-        self.assertEqual(d["session_kcal"], 1000 - 80 * 1.5)       # watch kcal net of resting
+        self.assertEqual(out["body_kg"], 84)                        # NutriPrep's body wins
+        self.assertEqual(d["session_kcal"], 1000 - 84 * 1.5)       # watch kcal net of resting
         self.assertEqual(d["add"]["water_ml"], 900)
         self.assertEqual(out["days"]["2026-10-07"]["src"], "estimated")   # mixed day
 
     def test_rest_day_and_since(self):
-        self.assertIsNone(fuel.fuel_for_day([], 80, fuel.base_targets(PLAN, NP), 173))
+        self.assertIsNone(fuel.fuel_for_day([], 84, fuel.base_targets(PLAN, NP), 173))
+        self.assertEqual(fuel.body_kg(PLAN, None), 80)                # fallback: Claudio's own plan
         self.assertEqual(list(fuel.build_fuel(WORKOUTS, PLAN, NP, 173, since="2026-10-07")["days"]),
                          ["2026-10-07", "2026-10-08"])
 
@@ -75,11 +78,11 @@ class ParityWithDashboardTests(unittest.TestCase):
     def test_python_matches_dashboard_fuelFor(self):
         html = (ROOT / "dashboard.html").read_text()
         parts = [_extract(html, n) for n in ("_num", "clamp", "sportOf", "MET_TABLE", "nutriBody", "bodyKg",
-                                             "referenceTargets", "NUTRIPREP_KEYS", "baseTargets", "sessionHours",
+                                             "referenceTargets", "NUTRIPREP_TARGET_KEYS", "baseTargets", "sessionHours",
                                              "intensityOf", "sessionKcal", "actualsOn", "fuelFor")]
         dates = sorted({w["date"] for w in WORKOUTS})
         js = "\n".join(parts) + f"""
-var nutritionPlan={json.dumps(PLAN)}, nutriprepTargets={json.dumps(NP)}, workouts={json.dumps(WORKOUTS)};
+var nutritionPlan={json.dumps(dict(PLAN, body=dict(PLAN["body"], weight_kg=NP["body"]["weight_kg"])))}, nutriprepTargets={json.dumps(NP)}, workouts={json.dumps(WORKOUTS)};
 var planPaused=false, LTHR=173; function planSessionsOn(){{return [];}}
 var out={{}}; {json.dumps(dates)}.forEach(function(d){{var f=fuelFor(d); out[d]={{add:f.add,kcal:f.kcal,src:f.src}};}});
 console.log(JSON.stringify(out));"""

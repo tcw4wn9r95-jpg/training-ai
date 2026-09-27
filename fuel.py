@@ -17,8 +17,9 @@ Rules (see NUTRITION.md → Training-day fuelling):
     strength-only days, ≤ 30 g, total ≤ 2.0 g/kg), fat takes the rest (≤ 15 g),
     water +600 ml per hour.
 
-The baseline macros come from NutriPrep (the household plan owns Diego's
-targets); Claudio's own nutrition_plan.json, then reference values, fill gaps.
+NutriPrep owns the plan: the baseline macros AND the body weight come from
+its users/diego/macro_targets.json (nutritionist plan + Diego's goals);
+Claudio's own nutrition_plan.json, then reference values, only fill gaps.
 """
 from __future__ import annotations
 
@@ -143,8 +144,9 @@ def base_targets(nutrition_plan: dict | None, nutriprep_targets: dict | None) ->
     return out
 
 
-def body_kg(nutrition_plan: dict | None) -> float:
-    return _num(((nutrition_plan or {}).get("body") or {}).get("weight_kg")) or 75
+def body_kg(nutrition_plan: dict | None, nutriprep_targets: dict | None = None) -> float:
+    np_kg = _num(((nutriprep_targets or {}).get("body") or {}).get("weight_kg"))
+    return np_kg or _num(((nutrition_plan or {}).get("body") or {}).get("weight_kg")) or 75
 
 
 def fuel_for_day(sessions: list[dict], kg: float, base: dict, lthr) -> dict | None:
@@ -174,7 +176,7 @@ def fuel_for_day(sessions: list[dict], kg: float, base: dict, lthr) -> dict | No
 def build_fuel(workouts: list[dict], nutrition_plan: dict | None, nutriprep_targets: dict | None,
                lthr, since: str | None = None) -> dict:
     """{"days": {iso: fuel}} for every date with completed sessions (optionally since a date)."""
-    kg, base = body_kg(nutrition_plan), base_targets(nutrition_plan, nutriprep_targets)
+    kg, base = body_kg(nutrition_plan, nutriprep_targets), base_targets(nutrition_plan, nutriprep_targets)
     by_day: dict[str, list] = {}
     for w in workouts or []:
         d = str(w.get("date") or "")[:10]

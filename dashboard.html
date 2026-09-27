@@ -1122,6 +1122,7 @@ textarea{width:100%;background:var(--bg2);border:1px solid var(--line);border-ra
     <span class="ttl">Nutrition plan</span>
   </div>
   <div class="modal-body">
+    <div id="nt-managed" style="display:none"></div>
     <div class="tabs">
       <button id="nt-tab-plan" class="active" onclick="nutriTab('plan')">Doctor's plan</button>
       <button id="nt-tab-targets" onclick="nutriTab('targets')">Daily targets</button>
@@ -1527,7 +1528,7 @@ function initTheme(){
 }
 
 // ── CONFIG ────────────────────────────────────────────────────
-const BUILD="20260927-01";
+const BUILD="20260927-02";
 const GITHUB_USER="tcw4wn9r95-jpg", GITHUB_REPO="training-ai";
 const REPO=GITHUB_USER+"/"+GITHUB_REPO;
 const RAW="https://raw.githubusercontent.com/"+REPO+"/main";
@@ -4769,8 +4770,12 @@ function referenceTargets(){
 }
 
 // ── NutriPrep link (the household meal planner) ────────────────
-// NutriPrep owns Diego's day macros (kcal/protein/carbs/fat/fibre) and cooks his
-// meals; this app owns training fuel and diet compliance. See SHARED_DATA.md.
+// NutriPrep OWNS the nutrition plan: it reads the nutritionist's plan and derives
+// Diego's targets from it plus his goals — calories, macros, fibre, free sugar,
+// water — and the plan's rules (meal structure, eat/avoid, method, sugar rules).
+// This app reads all of it; its own nutrition_plan.json is only a fallback when
+// NutriPrep has nothing. This app owns training fuel and diet compliance.
+// See SHARED_DATA.md.
 // Its dishes arrive here as PLANNED meals (they reserve budget, count only once
 // he taps "I ate it"); what he logs himself is never overwritten, and a NutriPrep
 // meal he removes stays removed.
@@ -4778,7 +4783,38 @@ const NUTRIPREP_REPO="tcw4wn9r95-jpg/nutriprep", NUTRIPREP_MEMBER="diego";
 const NUTRIPREP_RAW="https://raw.githubusercontent.com/"+NUTRIPREP_REPO+"/main";
 const NUTRIPREP_APP="https://tcw4wn9r95-jpg.github.io/nutriprep/dashboard.html";
 const NUTRIPREP_KEYS=["kcal","protein_g","carbs_g","fat_g","fiber_g"];
-let nutriprepTargets=null, nutriprepMenu=null;
+const NUTRIPREP_TARGET_KEYS=["kcal","protein_g","carbs_g","fat_g","fiber_g","free_sugar_g","water_ml"];
+let nutriprepTargets=null, nutriprepMenu=null, nutriprepPlan=null, ownNutritionPlan=undefined;
+function nutriprepActive(){ return !!(nutriprepTargets||(nutriprepPlan&&nutriprepPlan.source==="nutritionist_upload")); }
+// NutriPrep's plan in this app's plan shape.
+function nutriprepAsPlan(){
+  var np=nutriprepPlan||{}, t=nutriprepTargets||{}, b=t.body||{}, g=t.goal||{};
+  var targets={};
+  NUTRIPREP_TARGET_KEYS.forEach(function(k){ if(_num(t[k])>0) targets[k]={value:t[k],src:"nutriprep"}; });
+  var out={source:"nutriprep", updated:t.updated_on||np.parsed_on||"",
+    provider:"NutriPrep"+(np.client_name?" — nutritionist plan for "+np.client_name:""),
+    methodology:t.methodology||np.methodology||"", prescribed_foods:t.prescribed_foods||np.prescribed_foods||[],
+    restricted_foods:t.restricted_foods||np.restricted_foods||[], sugar_guidance:np.sugar_guidance||null,
+    sugar:t.sugar||null, basis:t.basis||"", targets:targets};
+  if((np.meals||[]).length){
+    out.meal_structure=np.meal_structure&&np.meal_structure.length?np.meal_structure:np.meals.map(function(m){return m.slot;});
+    out.meals=np.meals.map(function(m){return {slot:m.slot,label:m.label,time:m.time,
+      components:(m.components||[]).map(function(c){return {category:c.category,portion:c.portion||(c.options||[]).join(" / ")};})};});
+  }
+  if(_num(b.weight_kg)) out.body={weight_kg:b.weight_kg,height_cm:b.height_cm,age:b.age,sex:b.sex,
+    activity:b.activity_factor,goal:g.goal_type==="weight_loss"?"loss":g.goal_type==="muscle_gain"?"gain":"maintain"};
+  return out;
+}
+// Read-through: NutriPrep wins field by field; this app's own plan fills gaps
+// and is never overwritten (ownNutritionPlan is what gets saved).
+function applyNutriPrepPlan(){
+  if(ownNutritionPlan===undefined) ownNutritionPlan=nutritionPlan;
+  if(!nutriprepActive()){ nutritionPlan=ownNutritionPlan; return; }
+  var n=nutriprepAsPlan(), own=ownNutritionPlan||{}, merged=Object.assign({},own);
+  Object.keys(n).forEach(function(k){ var v=n[k]; if(v!=null&&v!==""&&!(Array.isArray(v)&&!v.length)) merged[k]=v; });
+  merged.targets=Object.assign({},own.targets||{},n.targets);
+  nutritionPlan=merged;
+}
 async function fetchNutriPrep(path){
   var tok=getToken();
   if(tok){
@@ -4792,6 +4828,9 @@ async function fetchNutriPrep(path){
 async function loadNutriPrep(){
   var t=await fetchNutriPrep("users/"+NUTRIPREP_MEMBER+"/macro_targets.json");
   nutriprepTargets=(t&&typeof t==="object"&&_num(t.kcal)>0)?t:null;
+  var p=await fetchNutriPrep("nutrition_plan.json");
+  nutriprepPlan=(p&&typeof p==="object")?p:null;
+  applyNutriPrepPlan();
   var m=await fetchNutriPrep("weekly_menu.json");
   nutriprepMenu=Array.isArray(m)?m:null;
   return importNutriPrepMeals();
@@ -4819,12 +4858,14 @@ function importNutriPrepMeals(){
       // missing figure keeps the day from being scored on sugar it can't see.
       var item={name:"Your portion",qty:""};
       NUTRIPREP_KEYS.forEach(function(k){item[k]=Math.round(_num(mac[k])||0);});
+      // NutriPrep plans sugar too: carry it when the dish has it (the day is then scored on it).
+      ["sugar_g","free_sugar_g"].forEach(function(k){ if(_num(mac[k])!=null) item[k]=Math.round(mac[k]); });
       var ings=(por.ingredients||[]).map(function(i){return i&&typeof i==="object"?((i.qty?i.qty+" ":"")+(i.item||"")):String(i);}).filter(Boolean);
       var note="From NutriPrep"+(v&&v.changes?" ("+v.changes+")":"")+(ings.length?": "+ings.join(", "):"");
       var ex=(d.meals||[]).filter(function(m){return m.nutriprep_ref===ref;})[0];
       if(ex){
         // The household swapped or re-sized the dish while it's still only planned.
-        if(ex.planned&&(ex.name!==name||Math.round((ex.totals||{}).kcal||0)!==item.kcal||ex.note!==note)){
+        if(ex.planned&&(ex.name!==name||Math.round((ex.totals||{}).kcal||0)!==item.kcal||ex.note!==note||JSON.stringify(ex.items)!==JSON.stringify([item]))){
           ex.name=name;ex.note=note;ex.items=[item];ex.totals=sumItems([item]);touchDay(day.date);changed++;
         }
         return;
@@ -4847,8 +4888,8 @@ function baseTargets(){
   var ref=referenceTargets(), out={}, t=(nutritionPlan&&nutritionPlan.targets)||{};
   var KNOWN_SRC={plan:1,estimated:1,manual:1,reference:1};
   ["kcal","protein_g","carbs_g","fat_g","fiber_g","free_sugar_g","water_ml"].forEach(function(k){
-    // NutriPrep owns the day's macros; free sugar and water stay with this plan.
-    if(nutriprepTargets&&NUTRIPREP_KEYS.indexOf(k)>-1&&_num(nutriprepTargets[k])>0){
+    // NutriPrep owns the plan's numbers (sugar and water included); this plan fills gaps.
+    if(nutriprepTargets&&NUTRIPREP_TARGET_KEYS.indexOf(k)>-1&&_num(nutriprepTargets[k])>0){
       out[k]={v:Math.round(nutriprepTargets[k]),src:"nutriprep"};return;
     }
     var raw=t[k], v=null, src="reference";
@@ -7232,10 +7273,31 @@ let _parsedPlan=null;
 function openNutritionModal(){
   document.getElementById("drawer").classList.remove("open");
   document.getElementById("drawer-bg").classList.remove("open");
-  fillNutritionForm();
   document.getElementById("nutrition-modal").classList.add("open");
   document.body.style.overflow="hidden";
+  var managed=nutriprepActive(), mv=document.getElementById("nt-managed"), tabs=document.querySelector("#nutrition-modal .tabs");
+  if(tabs)tabs.style.display=managed?"none":"";
+  if(mv){mv.style.display=managed?"":"none";if(managed)mv.innerHTML=managedPlanHTML();}
+  if(managed){["plan","targets","about"].forEach(function(k){var e=document.getElementById("nt-pane-"+k);if(e)e.style.display="none";});return;}
+  fillNutritionForm();
   nutriTab(hasNutritionPlan()?"targets":"plan");
+}
+// When NutriPrep owns the plan, this screen shows it — changes happen in NutriPrep.
+function managedPlanHTML(){
+  var base=baseTargets(), p=nutritionPlan||{}, t=nutriprepTargets||{};
+  var row=function(label,k,unit,prefix){return base[k]?'<div style="display:flex;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--line);font-size:13px"><span>'+label+'</span><b>'+(prefix||"")+base[k].v+' '+unit+'</b></div>':"";};
+  return '<div class="card" style="border-color:rgba(0,200,150,.25)">'+
+    '<div style="font-size:14px;font-weight:700;margin-bottom:4px">Managed in NutriPrep</div>'+
+    '<div style="font-size:12.5px;color:var(--t2);line-height:1.55;margin-bottom:10px">Your household meal planner reads the nutritionist’s plan and works out your targets from it and your goals. Coach Claudio uses them as they are and adds training fuel for completed sessions. '+
+    'To change the plan, your goals or body details, use <a href="'+NUTRIPREP_APP+'" target="_blank" rel="noopener" style="color:var(--brand)">NutriPrep</a>.</div>'+
+    row("Calories","kcal","kcal")+row("Protein","protein_g","g")+row("Carbs","carbs_g","g")+row("Fat","fat_g","g")+row("Fibre","fiber_g","g")+
+    row("Free sugar","free_sugar_g","g","≤ ")+row("Water","water_ml","ml")+
+    (t.basis?'<div style="font-size:11.5px;color:var(--t3);margin-top:8px;line-height:1.5">'+esc(t.basis)+'.'+(t.sugar&&t.sugar.rule?' Free sugar: '+esc(t.sugar.rule)+'.':'')+'</div>':'')+
+    ((p.sugar_guidance&&p.sugar_guidance.notes)?'<div style="font-size:12px;color:var(--t2);margin-top:8px"><b>Sugar rules:</b> '+esc(p.sugar_guidance.notes)+'</div>':'')+
+    (p.methodology?'<div style="font-size:12px;color:var(--t2);margin-top:8px"><b>Method:</b> '+esc(p.methodology)+'</div>':'')+
+    ((p.restricted_foods||[]).length?'<div style="font-size:12px;color:var(--t2);margin-top:6px"><b>Avoid:</b> '+esc(p.restricted_foods.join(", "))+'</div>':'')+
+    ((t.missing_body||[]).length?'<div style="font-size:12px;color:var(--amber);margin-top:8px">NutriPrep is missing your '+esc(t.missing_body.join(", "))+' — add them there for accurate targets.</div>':'')+
+  '</div>';
 }
 function closeNutritionModal(){
   document.getElementById("nutrition-modal").classList.remove("open");
@@ -7301,7 +7363,7 @@ function updateNutriSettingSub(){
   var el=document.getElementById("nutri-setting-sub");if(!el)return;
   if(hasNutritionPlan()){
     var b=baseTargets();
-    el.textContent="On file: "+b.kcal.v+" kcal, "+b.protein_g.v+" g protein, "+b.carbs_g.v+" g carbs, "+b.fat_g.v+" g fat, "+b.fiber_g.v+" g fibre a day.";
+    el.textContent=(nutriprepActive()?"From NutriPrep: ":"On file: ")+b.kcal.v+" kcal, "+b.protein_g.v+" g protein, "+b.carbs_g.v+" g carbs, "+b.fat_g.v+" g fat, "+b.fiber_g.v+" g fibre"+(b.free_sugar_g?", free sugar ≤ "+b.free_sugar_g.v+" g":"")+" a day.";
   }else{
     el.textContent="No plan yet — the Food tab is running on reference values for your body. Add the plan your doctor gave you.";
   }
@@ -7464,6 +7526,7 @@ async function saveBodyProfile(){
   fillNutritionForm();renderFood();renderFoodHome();
 }
 async function commitNutritionPlan(msg){
+  if(nutriprepActive())return true;   // the plan is NutriPrep's; this app never writes its view back
   try{localStorage.setItem("nutrition_plan_v1",JSON.stringify(nutritionPlan));}catch(e){}
   var token=getToken();
   if(!token)return false;

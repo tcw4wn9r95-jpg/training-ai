@@ -72,9 +72,12 @@ as `fuel.json` for NutriPrep, which shows it and never recalculates it — see
 
 ## NutriPrep (the household meal planner)
 
-- **Targets:** when NutriPrep has targets for Diego, they are the day's calories,
-  protein, carbs, fat and fibre here (labelled *from NutriPrep*). Free sugar and
-  water still come from this plan. Change the macros in NutriPrep.
+- **The plan lives in NutriPrep.** NutriPrep reads the nutritionist's plan and derives
+  Diego's targets from it and his goals — calories, protein, carbs, fat, fibre, free
+  sugar and water — plus the plan's rules (meal structure, eat/avoid, method, sugar
+  rules) and his body data. This app uses all of it (labelled *from NutriPrep*) and
+  Settings → Nutrition plan becomes a read-only "Managed in NutriPrep" view. Its own
+  plan below is only the fallback when NutriPrep has nothing.
 - **Meals:** this week's NutriPrep dishes appear in the diary as **planned meals**
   with Diego's portion (*From NutriPrep*). They reserve budget like any planned
   meal; tap **I ate it** to log it. Anything logged by hand for that meal wins,
