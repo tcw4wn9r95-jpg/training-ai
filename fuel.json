@@ -1,1 +1,15 @@
-{"version":1,"member":"diego","rule":"completed sessions only","days":{}}
+{
+  "version": 1,
+  "member": "diego",
+  "body_kg": 94,
+  "base": {
+    "kcal": 2090,
+    "protein_g": 158,
+    "carbs_g": 198,
+    "fat_g": 74,
+    "fiber_g": 34
+  },
+  "rule": "completed sessions only",
+  "days": {},
+  "updated": "2026-09-27"
+}
