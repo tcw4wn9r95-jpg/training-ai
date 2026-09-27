@@ -64,9 +64,21 @@ When there *is* a session, the app estimates its energy cost and tops the day up
 - **Fibre** is left alone — pushing fibre up around hard sessions is a gut
   problem, not a win.
 
-A completed session (real data from Garmin, calories included) always beats a
-planned one. That means a paused plan still gets you fuelled for a session you
-actually did — the pause suppresses *planned* fuel, not real work.
+**Only a completed session adds food.** A planned session shows what it will
+add ("⏳ Training planned — not topped up yet") but the targets stay at the
+baseline until it's done and synced from Garmin. The same number is published
+as `fuel.json` for NutriPrep, which shows it and never recalculates it — see
+`SHARED_DATA.md`.
+
+## NutriPrep (the household meal planner)
+
+- **Targets:** when NutriPrep has targets for Diego, they are the day's calories,
+  protein, carbs, fat and fibre here (labelled *from NutriPrep*). Free sugar and
+  water still come from this plan. Change the macros in NutriPrep.
+- **Meals:** this week's NutriPrep dishes appear in the diary as **planned meals**
+  with Diego's portion (*From NutriPrep*). They reserve budget like any planned
+  meal; tap **I ate it** to log it. Anything logged by hand for that meal wins,
+  and a NutriPrep meal you remove isn't added back.
 
 ## Logging what you eat
 

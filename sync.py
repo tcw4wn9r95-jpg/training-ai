@@ -297,6 +297,27 @@ with open("workouts.json", "w") as f:
     json.dump(workouts, f, indent=2)
 print("Workout history saved.")
 
+# ── Training fuel for completed sessions → fuel.json (read by NutriPrep) ─────
+# Claudio owns the number; NutriPrep only displays it. Best-effort: a failure
+# here must never stop the sync.
+try:
+    import fuel as _fuel
+    _np = None
+    if os.path.exists("nutrition_plan.json"):
+        with open("nutrition_plan.json") as f:
+            _np = json.load(f)
+    _fuel_out = _fuel.build_fuel(
+        workouts, _np, _fuel.load_nutriprep_targets(),
+        (profile.get("running") or {}).get("threshold_hr") or 173,
+        since=(date.today() - timedelta(days=21)).isoformat(),
+    )
+    _fuel_out["updated"] = date.today().isoformat()
+    with open("fuel.json", "w") as f:
+        json.dump(_fuel_out, f, indent=2)
+    print(f"Fuel saved for {len(_fuel_out['days'])} training day(s).")
+except Exception as _e:
+    print(f"Fuel not updated: {_e}")
+
 # ── Fetch sleep data ──────────────────────────────────────────────────────────
 sleep_data = []
 for offset in range(14):
