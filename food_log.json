@@ -1208,6 +1208,1105 @@
       ],
       "water_ml": 0,
       "updated": "2026-09-27T12:35:00.653Z"
+    },
+    "2026-09-28": {
+      "date": "2026-09-28",
+      "meals": [
+        {
+          "id": "np1790524064021fovx",
+          "slot": "breakfast",
+          "name": "Kefir & Raspberry Smoothie + Fried Eggs on Sourdough with Avocado-Style Olive Spread",
+          "time": "07:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-28|breakfast",
+          "note": "From NutriPrep: 250 ml Plain kefir (kéfir nature), 80 g Raspberries (framboises), 60 g (½ medium) Banana (banane), 2 large Eggs (œufs), 40 g (1 slice) Sourdough bread (pain au levain), 5 ml (1 tsp) Olive oil (huile d'olive), 80 g Greek yogurt (yaourt grec), 1 medium (130 g) Orange (orange)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 530,
+              "protein_g": 33,
+              "carbs_g": 52,
+              "fat_g": 18,
+              "fiber_g": 7
+            }
+          ],
+          "totals": {
+            "kcal": 530,
+            "protein_g": 33,
+            "carbs_g": 52,
+            "fat_g": 18,
+            "fiber_g": 7,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064021x5z6",
+          "slot": "extra",
+          "name": "Apple & Walnuts",
+          "time": "10:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-28|am_snack",
+          "note": "From NutriPrep: 1 medium (150 g) Apple (pomme), 25 g Walnuts (noix)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 245,
+              "protein_g": 4,
+              "carbs_g": 24,
+              "fat_g": 15,
+              "fiber_g": 4
+            }
+          ],
+          "totals": {
+            "kcal": 245,
+            "protein_g": 4,
+            "carbs_g": 24,
+            "fat_g": 15,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064021pjbz",
+          "slot": "lunch",
+          "name": "Mediterranean Beef & Lentil Bowl with Roasted Bell Peppers & Quinoa",
+          "time": "13:00",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-28|lunch",
+          "note": "From NutriPrep: 150 g Cooked ground beef (bœuf haché cuit), 100 g Cooked quinoa (quinoa cuit), 80 g Canned green lentils (lentilles en conserve), 100 g Roasted bell peppers (poivrons rôtis), 80 g Cherry tomatoes (tomates cerises), 10 ml (2 tsp) Olive oil (huile d'olive), 5 ml (1 tsp) Balsamic vinegar (vinaigre balsamique), 1 medium Orange (orange)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 620,
+              "protein_g": 48,
+              "carbs_g": 55,
+              "fat_g": 20,
+              "fiber_g": 11
+            }
+          ],
+          "totals": {
+            "kcal": 620,
+            "protein_g": 48,
+            "carbs_g": 55,
+            "fat_g": 20,
+            "fiber_g": 11,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064021br1l",
+          "slot": "pm_snack",
+          "name": "Greek Yogurt with Blueberries & Almonds",
+          "time": "16:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-28|pm_snack",
+          "note": "From NutriPrep: 150 g Greek yogurt (yaourt grec), 80 g Blueberries (myrtilles), 20 g Almonds (amandes)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 255,
+              "protein_g": 16,
+              "carbs_g": 19,
+              "fat_g": 11,
+              "fiber_g": 3
+            }
+          ],
+          "totals": {
+            "kcal": 255,
+            "protein_g": 16,
+            "carbs_g": 19,
+            "fat_g": 11,
+            "fiber_g": 3,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064021q81b",
+          "slot": "dinner",
+          "name": "Soy-Ginger Baked Salmon with Stir-Fried Zucchini & Spinach on Sourdough",
+          "time": "19:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-28|dinner",
+          "note": "From NutriPrep: 160 g raw Salmon fillet (filet de saumon), 120 g Zucchini (courgette), 60 g Spinach (épinards), 40 g Sourdough bread (pain au levain), 15 ml Soy sauce (sauce soja), 8 ml (1.5 tsp) Sesame oil (huile de sésame), 5 ml (1 tsp) Olive oil (huile d'olive), 1 g (¼ tsp) Ground ginger (gingembre en poudre), 1 g Garlic powder (ail en poudre)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 430,
+              "protein_g": 40,
+              "carbs_g": 22,
+              "fat_g": 19,
+              "fiber_g": 4
+            }
+          ],
+          "totals": {
+            "kcal": 430,
+            "protein_g": 40,
+            "carbs_g": 22,
+            "fat_g": 19,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-27T15:47:44.021Z"
+    },
+    "2026-09-29": {
+      "date": "2026-09-29",
+      "meals": [
+        {
+          "id": "np1790524064022dcgp",
+          "slot": "breakfast",
+          "name": "Kefir & Blueberry Smoothie + Fried Eggs on Sourdough with Feta",
+          "time": "07:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-29|breakfast",
+          "note": "From NutriPrep: 250 ml Plain kefir (kéfir nature), 80 g Blueberries (myrtilles), 60 g (½ medium) Banana (banane), 2 large Eggs (œufs), 40 g Sourdough bread (pain au levain), 25 g Feta cheese (fromage feta), 5 ml (1 tsp) Olive oil (huile d'olive), 1 medium Orange (orange)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 545,
+              "protein_g": 34,
+              "carbs_g": 55,
+              "fat_g": 19,
+              "fiber_g": 6
+            }
+          ],
+          "totals": {
+            "kcal": 545,
+            "protein_g": 34,
+            "carbs_g": 55,
+            "fat_g": 19,
+            "fiber_g": 6,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022nsqg",
+          "slot": "extra",
+          "name": "Banana & Almonds",
+          "time": "10:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-29|am_snack",
+          "note": "From NutriPrep: 1 medium (120 g) Banana (banane), 25 g Almonds (amandes)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 250,
+              "protein_g": 7,
+              "carbs_g": 28,
+              "fat_g": 13,
+              "fiber_g": 4
+            }
+          ],
+          "totals": {
+            "kcal": 250,
+            "protein_g": 7,
+            "carbs_g": 28,
+            "fat_g": 13,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022a5vc",
+          "slot": "lunch",
+          "name": "Asian Tilapia Bowl with Stir-Fried Broccoli, Carrots & Brown Rice",
+          "time": "13:00",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-29|lunch",
+          "note": "From NutriPrep: 170 g raw Tilapia fillet (filet de tilapia), 130 g dry Brown rice (riz complet), 80 g Broccoli (brocoli), 60 g Carrots (carottes), 60 g Cherry tomatoes (tomates cerises), 15 ml Soy sauce (sauce soja), 10 ml (2 tsp) Sesame oil (huile de sésame), 5 ml Olive oil (huile d'olive), 1 medium Apple (pomme)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 610,
+              "protein_g": 44,
+              "carbs_g": 72,
+              "fat_g": 15,
+              "fiber_g": 9
+            }
+          ],
+          "totals": {
+            "kcal": 610,
+            "protein_g": 44,
+            "carbs_g": 72,
+            "fat_g": 15,
+            "fiber_g": 9,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022pkhm",
+          "slot": "pm_snack",
+          "name": "Greek Yogurt with Raspberries",
+          "time": "16:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-29|pm_snack",
+          "note": "From NutriPrep: 150 g Greek yogurt (yaourt grec), 80 g Raspberries (framboises)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 175,
+              "protein_g": 13,
+              "carbs_g": 16,
+              "fat_g": 5,
+              "fiber_g": 5
+            }
+          ],
+          "totals": {
+            "kcal": 175,
+            "protein_g": 13,
+            "carbs_g": 16,
+            "fat_g": 5,
+            "fiber_g": 5,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022ejz9",
+          "slot": "dinner",
+          "name": "Mexican Beef & Black Bean Tacos with Roasted Bell Peppers & Zucchini",
+          "time": "19:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-29|dinner",
+          "note": "From NutriPrep: 2 (60 g) Corn tortillas (tortillas de maïs), 120 g Cooked ground beef (bœuf haché cuit), 70 g drained Canned black beans (haricots noirs en conserve), 60 g Roasted bell peppers (poivrons rôtis), 60 g Roasted zucchini (courgette rôtie), 60 g Cherry tomatoes (tomates cerises), 10 ml Lime juice (jus de citron vert), 5 ml Olive oil (huile d'olive)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 460,
+              "protein_g": 38,
+              "carbs_g": 40,
+              "fat_g": 16,
+              "fiber_g": 9
+            }
+          ],
+          "totals": {
+            "kcal": 460,
+            "protein_g": 38,
+            "carbs_g": 40,
+            "fat_g": 16,
+            "fiber_g": 9,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-27T15:47:44.022Z"
+    },
+    "2026-09-30": {
+      "date": "2026-09-30",
+      "meals": [
+        {
+          "id": "np17905240640220zpg",
+          "slot": "breakfast",
+          "name": "Kefir & Raspberry Smoothie + Fried Eggs on Sourdough with Feta",
+          "time": "07:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-30|breakfast",
+          "note": "From NutriPrep: 250 ml Plain kefir (kéfir nature), 80 g Raspberries (framboises), 60 g Banana (banane), 2 large Eggs (œufs), 40 g Sourdough bread (pain au levain), 25 g Feta cheese (fromage feta), 5 ml Olive oil (huile d'olive), 1 medium Orange (orange)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 545,
+              "protein_g": 34,
+              "carbs_g": 55,
+              "fat_g": 19,
+              "fiber_g": 6
+            }
+          ],
+          "totals": {
+            "kcal": 545,
+            "protein_g": 34,
+            "carbs_g": 55,
+            "fat_g": 19,
+            "fiber_g": 6,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022vrwh",
+          "slot": "extra",
+          "name": "Apple & Walnuts",
+          "time": "10:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-30|am_snack",
+          "note": "From NutriPrep: 1 medium (150 g) Apple (pomme), 25 g Walnuts (noix)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 245,
+              "protein_g": 4,
+              "carbs_g": 24,
+              "fat_g": 15,
+              "fiber_g": 4
+            }
+          ],
+          "totals": {
+            "kcal": 245,
+            "protein_g": 4,
+            "carbs_g": 24,
+            "fat_g": 15,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022tlfw",
+          "slot": "lunch",
+          "name": "French-Style Tilapia en Papillote with Roasted Carrots, Green Beans & Quinoa",
+          "time": "13:00",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-30|lunch",
+          "note": "From NutriPrep: 170 g raw Tilapia fillet (filet de tilapia), 100 g Cooked quinoa (quinoa cuit), 80 g Green beans (haricots verts), 70 g Carrots (carottes), 70 g Cherry tomatoes (tomates cerises), 10 ml (2 tsp) Olive oil (huile d'olive), 5 ml White wine vinegar (vinaigre de vin blanc), 1 g Dried thyme (thym séché), 1 g Dried oregano (origan séché), 1 medium (fruit) Banana (banane)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 580,
+              "protein_g": 43,
+              "carbs_g": 58,
+              "fat_g": 16,
+              "fiber_g": 10
+            }
+          ],
+          "totals": {
+            "kcal": 580,
+            "protein_g": 43,
+            "carbs_g": 58,
+            "fat_g": 16,
+            "fiber_g": 10,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022tzn0",
+          "slot": "pm_snack",
+          "name": "Greek Yogurt with Blueberries & Walnuts",
+          "time": "16:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-30|pm_snack",
+          "note": "From NutriPrep: 150 g Greek yogurt (yaourt grec), 80 g Blueberries (myrtilles), 20 g Walnuts (noix)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 265,
+              "protein_g": 14,
+              "carbs_g": 22,
+              "fat_g": 13,
+              "fiber_g": 3
+            }
+          ],
+          "totals": {
+            "kcal": 265,
+            "protein_g": 14,
+            "carbs_g": 22,
+            "fat_g": 13,
+            "fiber_g": 3,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022jerq",
+          "slot": "dinner",
+          "name": "Mediterranean Beef & Chickpea Skillet with Roasted Cherry Tomatoes, Spinach & Sourdough",
+          "time": "19:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-09-30|dinner",
+          "note": "From NutriPrep: 120 g Cooked ground beef (bœuf haché cuit), 70 g drained Canned chickpeas (pois chiches en conserve), 80 g Cherry tomatoes (tomates cerises), 60 g Spinach (épinards), 40 g Sourdough bread (pain au levain), 8 ml Olive oil (huile d'olive), 5 ml Balsamic vinegar (vinaigre balsamique), 1 g Smoked paprika (paprika fumé), 1 g Dried oregano (origan séché)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 445,
+              "protein_g": 37,
+              "carbs_g": 33,
+              "fat_g": 17,
+              "fiber_g": 8
+            }
+          ],
+          "totals": {
+            "kcal": 445,
+            "protein_g": 37,
+            "carbs_g": 33,
+            "fat_g": 17,
+            "fiber_g": 8,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-27T15:47:44.022Z"
+    },
+    "2026-10-01": {
+      "date": "2026-10-01",
+      "meals": [
+        {
+          "id": "np1790524064022jnjj",
+          "slot": "breakfast",
+          "name": "Kefir & Blueberry Smoothie + Fried Eggs on Sourdough with Avocado-Style Olive Spread",
+          "time": "07:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-01|breakfast",
+          "note": "From NutriPrep: 250 ml Plain kefir (kéfir nature), 80 g Blueberries (myrtilles), 60 g Banana (banane), 2 large Eggs (œufs), 40 g Sourdough bread (pain au levain), 5 ml Olive oil (huile d'olive), 80 g Greek yogurt (yaourt grec), 1 medium Orange (orange)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 530,
+              "protein_g": 33,
+              "carbs_g": 52,
+              "fat_g": 18,
+              "fiber_g": 7
+            }
+          ],
+          "totals": {
+            "kcal": 530,
+            "protein_g": 33,
+            "carbs_g": 52,
+            "fat_g": 18,
+            "fiber_g": 7,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064022vgt2",
+          "slot": "extra",
+          "name": "Banana & Almonds",
+          "time": "10:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-01|am_snack",
+          "note": "From NutriPrep: 1 medium (120 g) Banana (banane), 25 g Almonds (amandes)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 250,
+              "protein_g": 7,
+              "carbs_g": 28,
+              "fat_g": 13,
+              "fiber_g": 4
+            }
+          ],
+          "totals": {
+            "kcal": 250,
+            "protein_g": 7,
+            "carbs_g": 28,
+            "fat_g": 13,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np17905240640232wxf",
+          "slot": "lunch",
+          "name": "Creamy Tomato Chicken Thighs with Wilted Spinach & Wholewheat Pasta",
+          "time": "13:00",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-01|lunch",
+          "note": "From NutriPrep: 160 g raw Chicken thighs boneless (cuisses de poulet désossées), 80 g dry Wholewheat pasta (pâtes complètes), 150 ml Tomato passata (coulis de tomates), 30 ml (2 tbsp) Greek yogurt (yaourt grec), 60 g Spinach (épinards), 40 g Mixed leaf salad (salade mélangée), 8 ml Olive oil (huile d'olive), 5 ml White wine vinegar (vinaigre de vin blanc), 1 medium (fruit) Apple (pomme)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 620,
+              "protein_g": 46,
+              "carbs_g": 65,
+              "fat_g": 17,
+              "fiber_g": 10
+            }
+          ],
+          "totals": {
+            "kcal": 620,
+            "protein_g": 46,
+            "carbs_g": 65,
+            "fat_g": 17,
+            "fiber_g": 10,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np17905240640234wyr",
+          "slot": "pm_snack",
+          "name": "Greek Yogurt with Raspberries",
+          "time": "16:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-01|pm_snack",
+          "note": "From NutriPrep: 150 g Greek yogurt (yaourt grec), 80 g Raspberries (framboises)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 175,
+              "protein_g": 13,
+              "carbs_g": 16,
+              "fat_g": 5,
+              "fiber_g": 5
+            }
+          ],
+          "totals": {
+            "kcal": 175,
+            "protein_g": 13,
+            "carbs_g": 16,
+            "fat_g": 5,
+            "fiber_g": 5,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064023f6pn",
+          "slot": "dinner",
+          "name": "Cumin-Spiced Salmon with Roasted Broccoli & Sweet Potato Mash",
+          "time": "19:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-01|dinner",
+          "note": "From NutriPrep: 150 g raw Salmon fillet (filet de saumon), 200 g Sweet potato (patate douce), 100 g Broccoli (brocoli), 10 ml Olive oil (huile d'olive), 2 g Cumin (cumin moulu), 1 g Smoked paprika (paprika fumé), 10 ml Lime juice (jus de citron vert)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 480,
+              "protein_g": 38,
+              "carbs_g": 38,
+              "fat_g": 18,
+              "fiber_g": 8
+            }
+          ],
+          "totals": {
+            "kcal": 480,
+            "protein_g": 38,
+            "carbs_g": 38,
+            "fat_g": 18,
+            "fiber_g": 8,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-27T15:47:44.023Z"
+    },
+    "2026-10-02": {
+      "date": "2026-10-02",
+      "meals": [
+        {
+          "id": "np1790524064023obce",
+          "slot": "breakfast",
+          "name": "Kefir & Banana Smoothie + Fried Eggs on Sourdough with Feta",
+          "time": "07:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-02|breakfast",
+          "note": "From NutriPrep: 250 ml Plain kefir (kéfir nature), 60 g Banana (banane), 60 g Blueberries (myrtilles), 2 large Eggs (œufs), 40 g Sourdough bread (pain au levain), 25 g Feta cheese (fromage feta), 5 ml Olive oil (huile d'olive), 1 medium Apple (pomme)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 540,
+              "protein_g": 34,
+              "carbs_g": 52,
+              "fat_g": 19,
+              "fiber_g": 6
+            }
+          ],
+          "totals": {
+            "kcal": 540,
+            "protein_g": 34,
+            "carbs_g": 52,
+            "fat_g": 19,
+            "fiber_g": 6,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064023ywj7",
+          "slot": "extra",
+          "name": "Apple & Almonds",
+          "time": "10:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-02|am_snack",
+          "note": "From NutriPrep: 1 medium (150 g) Apple (pomme), 25 g Almonds (amandes)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 245,
+              "protein_g": 7,
+              "carbs_g": 24,
+              "fat_g": 14,
+              "fiber_g": 4
+            }
+          ],
+          "totals": {
+            "kcal": 245,
+            "protein_g": 7,
+            "carbs_g": 24,
+            "fat_g": 14,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064023vf83",
+          "slot": "lunch",
+          "name": "Mexican Beef, White Bean & Roasted Pepper Bowl with Brown Rice",
+          "time": "13:00",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-02|lunch",
+          "note": "From NutriPrep: 140 g raw Ground beef (bœuf haché), 130 g dry Brown rice (riz complet), 70 g drained Canned white beans (haricots blancs en conserve), 80 g Bell pepper (poivron), 70 g Cherry tomatoes (tomates cerises), 10 ml Olive oil (huile d'olive), 2 g Cumin (cumin moulu), 1 g Smoked paprika (paprika fumé), 10 ml Lime juice (jus de citron vert), 1 medium (fruit) Orange (orange)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 640,
+              "protein_g": 44,
+              "carbs_g": 72,
+              "fat_g": 18,
+              "fiber_g": 11
+            }
+          ],
+          "totals": {
+            "kcal": 640,
+            "protein_g": 44,
+            "carbs_g": 72,
+            "fat_g": 18,
+            "fiber_g": 11,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np17905240640231fj8",
+          "slot": "pm_snack",
+          "name": "Greek Yogurt with Blueberries & Almonds",
+          "time": "16:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-02|pm_snack",
+          "note": "From NutriPrep: 150 g Greek yogurt (yaourt grec), 80 g Blueberries (myrtilles), 20 g Almonds (amandes)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 255,
+              "protein_g": 16,
+              "carbs_g": 19,
+              "fat_g": 11,
+              "fiber_g": 3
+            }
+          ],
+          "totals": {
+            "kcal": 255,
+            "protein_g": 16,
+            "carbs_g": 19,
+            "fat_g": 11,
+            "fiber_g": 3,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np17905240640230rd2",
+          "slot": "dinner",
+          "name": "Asian Tilapia & Lentil Stir-Fry with Green Beans, Zucchini & Sourdough",
+          "time": "19:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-02|dinner",
+          "note": "From NutriPrep: 150 g raw Tilapia fillet (filet de tilapia), 60 g drained Canned green lentils (lentilles vertes en conserve), 80 g Green beans (haricots verts), 80 g Zucchini (courgette), 40 g Sourdough bread (pain au levain), 15 ml Soy sauce (sauce soja), 8 ml Sesame oil (huile de sésame), 10 ml Lime juice (jus de citron vert), 1 g Ground ginger (gingembre en poudre)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 415,
+              "protein_g": 38,
+              "carbs_g": 33,
+              "fat_g": 13,
+              "fiber_g": 9
+            }
+          ],
+          "totals": {
+            "kcal": 415,
+            "protein_g": 38,
+            "carbs_g": 33,
+            "fat_g": 13,
+            "fiber_g": 9,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-27T15:47:44.023Z"
+    },
+    "2026-10-03": {
+      "date": "2026-10-03",
+      "meals": [
+        {
+          "id": "np17905240640239497",
+          "slot": "breakfast",
+          "name": "Kefir & Blueberry Smoothie + Fried Eggs on Sourdough with Avocado-Style Olive Spread",
+          "time": "07:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-03|breakfast",
+          "note": "From NutriPrep: 250 ml Plain kefir (kéfir nature), 80 g Blueberries (myrtilles), 60 g Banana (banane), 2 large Eggs (œufs), 40 g Sourdough bread (pain au levain), 5 ml Olive oil (huile d'olive), 80 g Greek yogurt (yaourt grec), 1 medium Orange (orange)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 530,
+              "protein_g": 33,
+              "carbs_g": 52,
+              "fat_g": 18,
+              "fiber_g": 7
+            }
+          ],
+          "totals": {
+            "kcal": 530,
+            "protein_g": 33,
+            "carbs_g": 52,
+            "fat_g": 18,
+            "fiber_g": 7,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064023kt70",
+          "slot": "extra",
+          "name": "Apple & Walnuts",
+          "time": "10:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-03|am_snack",
+          "note": "From NutriPrep: 1 medium (150 g) Apple (pomme), 25 g Walnuts (noix)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 245,
+              "protein_g": 4,
+              "carbs_g": 24,
+              "fat_g": 15,
+              "fiber_g": 4
+            }
+          ],
+          "totals": {
+            "kcal": 245,
+            "protein_g": 4,
+            "carbs_g": 24,
+            "fat_g": 15,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064023wdbm",
+          "slot": "lunch",
+          "name": "Salmon & Chickpea Traybake with Roasted Zucchini, Bell Pepper & Quinoa",
+          "time": "13:00",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-03|lunch",
+          "note": "From NutriPrep: 160 g raw Salmon fillet (filet de saumon), 100 g dry Quinoa (quinoa), 80 g drained Canned chickpeas (pois chiches en conserve), 80 g Zucchini (courgette), 80 g Bell pepper (poivron), 12 ml Olive oil (huile d'olive), 2 g Cumin (cumin moulu), 1 g Smoked paprika (paprika fumé), 5 ml Balsamic vinegar (vinaigre balsamique), 1 medium (fruit) Banana (banane)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 680,
+              "protein_g": 49,
+              "carbs_g": 65,
+              "fat_g": 22,
+              "fiber_g": 12
+            }
+          ],
+          "totals": {
+            "kcal": 680,
+            "protein_g": 49,
+            "carbs_g": 65,
+            "fat_g": 22,
+            "fiber_g": 12,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064023sxrt",
+          "slot": "pm_snack",
+          "name": "Greek Yogurt with Raspberries & Walnuts",
+          "time": "16:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-03|pm_snack",
+          "note": "From NutriPrep: 150 g Greek yogurt (yaourt grec), 80 g Raspberries (framboises), 20 g Walnuts (noix)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 255,
+              "protein_g": 14,
+              "carbs_g": 18,
+              "fat_g": 13,
+              "fiber_g": 5
+            }
+          ],
+          "totals": {
+            "kcal": 255,
+            "protein_g": 14,
+            "carbs_g": 18,
+            "fat_g": 13,
+            "fiber_g": 5,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064024yvy5",
+          "slot": "dinner",
+          "name": "Moroccan-Spiced Beef & Lentil Bowl with Roasted Carrots, Spinach & Sweet Potato",
+          "time": "19:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-03|dinner",
+          "note": "From NutriPrep: 140 g raw Ground beef (bœuf haché), 180 g Sweet potato (patate douce), 70 g drained Canned green lentils (lentilles vertes en conserve), 80 g Carrots (carottes), 60 g Spinach (épinards), 150 ml Tomato passata (coulis de tomates), 10 ml Olive oil (huile d'olive), 2 g Ground coriander (coriandre moulue), 2 g Cumin (cumin moulu)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 540,
+              "protein_g": 40,
+              "carbs_g": 48,
+              "fat_g": 18,
+              "fiber_g": 12
+            }
+          ],
+          "totals": {
+            "kcal": 540,
+            "protein_g": 40,
+            "carbs_g": 48,
+            "fat_g": 18,
+            "fiber_g": 12,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-27T15:47:44.024Z"
+    },
+    "2026-10-04": {
+      "date": "2026-10-04",
+      "meals": [
+        {
+          "id": "np1790524064024f8pt",
+          "slot": "breakfast",
+          "name": "Kefir & Raspberry Smoothie + Fried Eggs on Sourdough with Feta",
+          "time": "07:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-04|breakfast",
+          "note": "From NutriPrep: 250 ml Plain kefir (kéfir nature), 80 g Raspberries (framboises), 60 g Banana (banane), 2 large Eggs (œufs), 40 g Sourdough bread (pain au levain), 25 g Feta cheese (fromage feta), 5 ml Olive oil (huile d'olive), 1 medium Orange (orange)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 545,
+              "protein_g": 34,
+              "carbs_g": 55,
+              "fat_g": 19,
+              "fiber_g": 6
+            }
+          ],
+          "totals": {
+            "kcal": 545,
+            "protein_g": 34,
+            "carbs_g": 55,
+            "fat_g": 19,
+            "fiber_g": 6,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064024o6qp",
+          "slot": "extra",
+          "name": "Apple & Almonds",
+          "time": "10:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-04|am_snack",
+          "note": "From NutriPrep: 1 medium (150 g) Apple (pomme), 25 g Almonds (amandes)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 245,
+              "protein_g": 7,
+              "carbs_g": 24,
+              "fat_g": 14,
+              "fiber_g": 4
+            }
+          ],
+          "totals": {
+            "kcal": 245,
+            "protein_g": 7,
+            "carbs_g": 24,
+            "fat_g": 14,
+            "fiber_g": 4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064024t3ii",
+          "slot": "lunch",
+          "name": "Mediterranean Beef & White Bean Stew with Roasted Zucchini, Cherry Tomatoes & Sourdough",
+          "time": "13:00",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-04|lunch",
+          "note": "From NutriPrep: 140 g raw Ground beef (bœuf haché), 70 g drained Canned white beans (haricots blancs en conserve), 150 ml Tomato passata (coulis de tomates), 80 g Zucchini (courgette), 70 g Cherry tomatoes (tomates cerises), 40 g Mixed leaf salad (salade mélangée), 40 g Sourdough bread (pain au levain), 8 ml Olive oil (huile d'olive), 5 ml Balsamic vinegar (vinaigre balsamique), 1 medium Banana (banane)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 600,
+              "protein_g": 44,
+              "carbs_g": 60,
+              "fat_g": 18,
+              "fiber_g": 12
+            }
+          ],
+          "totals": {
+            "kcal": 600,
+            "protein_g": 44,
+            "carbs_g": 60,
+            "fat_g": 18,
+            "fiber_g": 12,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np1790524064024c35f",
+          "slot": "pm_snack",
+          "name": "Greek Yogurt with Blueberries & Almonds",
+          "time": "16:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-04|pm_snack",
+          "note": "From NutriPrep: 150 g Greek yogurt (yaourt grec), 80 g Blueberries (myrtilles), 20 g Almonds (amandes)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 255,
+              "protein_g": 16,
+              "carbs_g": 19,
+              "fat_g": 11,
+              "fiber_g": 3
+            }
+          ],
+          "totals": {
+            "kcal": 255,
+            "protein_g": 16,
+            "carbs_g": 19,
+            "fat_g": 11,
+            "fiber_g": 3,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        },
+        {
+          "id": "np17905240640244f96",
+          "slot": "dinner",
+          "name": "Garlic-Herb Tilapia with Roasted Bell Peppers, Green Beans & Wholewheat Pasta",
+          "time": "19:30",
+          "source": "nutriprep",
+          "planned": true,
+          "nutriprep_ref": "2026-10-04|dinner",
+          "note": "From NutriPrep: 160 g raw Tilapia fillet (filet de tilapia), 80 g dry Wholewheat pasta (pâtes complètes), 80 g Bell pepper (poivron), 60 g Green beans (haricots verts), 10 ml Olive oil (huile d'olive), 5 ml White wine vinegar (vinaigre de vin blanc), 1 g Dried basil (basilic séché), 1 g Dried oregano (origan séché), 1 g Garlic powder (ail en poudre), 10 ml Lime juice (jus de citron vert)",
+          "items": [
+            {
+              "name": "Your portion",
+              "qty": "",
+              "kcal": 500,
+              "protein_g": 44,
+              "carbs_g": 47,
+              "fat_g": 14,
+              "fiber_g": 7
+            }
+          ],
+          "totals": {
+            "kcal": 500,
+            "protein_g": 44,
+            "carbs_g": 47,
+            "fat_g": 14,
+            "fiber_g": 7,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-27T15:47:44.024Z"
     }
   }
 }
