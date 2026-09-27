@@ -1144,6 +1144,70 @@
       ],
       "water_ml": 1750,
       "updated": "2026-09-19T20:25:17.124Z"
+    },
+    "2026-09-27": {
+      "date": "2026-09-27",
+      "meals": [
+        {
+          "id": "m17905125006526dtp",
+          "slot": "lunch",
+          "name": "Bolognese pasta with cheese",
+          "time": "14:35",
+          "source": "photo",
+          "planned": false,
+          "confidence": 0.68,
+          "ai_notes": "Meal structure: carbohydrate-dominant (pasta) served with protein and fat, but **does NOT follow Glucose Goddess protocol** — the refined pasta and potentially sugared sauce are served without preceding vegetables/fiber, and no mention of vinegar or movement after eating. No visible vegetables (onions/garlic in sauce are microscopic). Cooking fat in bolognese estimated at ~2 tsp olive oil or similar based on appearance; no separate added fat visible. Total meal ~710 kcal, 44g protein, 61g carbs, 32g fat, 4.4g fiber. Glycaemic load is high due to refined pasta + tomato-based sauce without buffering fiber first.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Fusilli pasta, cooked",
+              "qty": "180 g",
+              "kcal": 270,
+              "protein_g": 10,
+              "carbs_g": 52,
+              "fat_g": 1.8,
+              "fiber_g": 3.2,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Ground beef bolognese sauce",
+              "qty": "160 g",
+              "kcal": 320,
+              "protein_g": 24,
+              "carbs_g": 8,
+              "fat_g": 22,
+              "fiber_g": 1.2,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Hard cheese (appears to be Parmesan), shaved",
+              "qty": "28 g",
+              "kcal": 120,
+              "protein_g": 10,
+              "carbs_g": 1,
+              "fat_g": 8.5,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 710,
+            "protein_g": 44,
+            "carbs_g": 61,
+            "fat_g": 32.3,
+            "fiber_g": 4.4,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-09-27T12:35:00.653Z"
     }
   }
 }
