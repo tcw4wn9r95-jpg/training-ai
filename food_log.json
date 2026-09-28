@@ -1372,30 +1372,32 @@
         {
           "id": "np1790524064022dcgp",
           "slot": "breakfast",
-          "name": "Kefir & Blueberry Smoothie + Fried Eggs on Sourdough with Feta",
+          "name": "Kefir & Blueberry Smoothie + Chia Coconut Overnight Oats with Raspberries & Almonds",
           "time": "07:30",
           "source": "nutriprep",
           "planned": true,
           "nutriprep_ref": "2026-09-29|breakfast",
-          "note": "From NutriPrep: 250 ml Plain kefir (kéfir nature), 80 g Blueberries (myrtilles), 60 g (½ medium) Banana (banane), 2 large Eggs (œufs), 40 g Sourdough bread (pain au levain), 25 g Feta cheese (fromage feta), 5 ml (1 tsp) Olive oil (huile d'olive), 1 medium Orange (orange)",
+          "note": "From NutriPrep: 45 g Rolled oats (flocons d'avoine) — ADD to shopping list, 10 g Chia seeds (graines de chia) — ADD to shopping list, 150 ml Unsweetened coconut milk drink (boisson à la noix de coco) — ADD to shopping list, 60 g Greek yogurt (yaourt grec), 40 g Raspberries (framboises), 7 g Almonds (amandes), chopped, 250 ml Plain kefir (kéfir nature), 80 g Blueberries (myrtilles), 60 g (½ medium) Banana (banane)",
           "items": [
             {
               "name": "Your portion",
               "qty": "",
-              "kcal": 545,
-              "protein_g": 34,
-              "carbs_g": 55,
-              "fat_g": 19,
-              "fiber_g": 6
+              "kcal": 595,
+              "protein_g": 26,
+              "carbs_g": 75,
+              "fat_g": 21,
+              "fiber_g": 14,
+              "sugar_g": 31,
+              "free_sugar_g": 0
             }
           ],
           "totals": {
-            "kcal": 545,
-            "protein_g": 34,
-            "carbs_g": 55,
-            "fat_g": 19,
-            "fiber_g": 6,
-            "sugar_g": 0,
+            "kcal": 595,
+            "protein_g": 26,
+            "carbs_g": 75,
+            "fat_g": 21,
+            "fiber_g": 14,
+            "sugar_g": 31,
             "free_sugar_g": 0
           }
         },
@@ -1521,7 +1523,7 @@
         }
       ],
       "water_ml": 0,
-      "updated": "2026-09-27T15:47:44.022Z"
+      "updated": "2026-09-28T21:14:01.703Z"
     },
     "2026-09-30": {
       "date": "2026-09-30",
