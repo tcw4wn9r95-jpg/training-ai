@@ -1373,9 +1373,9 @@
           "id": "np1790524064022dcgp",
           "slot": "breakfast",
           "name": "Kefir & Blueberry Smoothie + Chia Coconut Overnight Oats with Raspberries & Almonds",
-          "time": "07:30",
+          "time": "08:56",
           "source": "nutriprep",
-          "planned": true,
+          "planned": false,
           "nutriprep_ref": "2026-09-29|breakfast",
           "note": "From NutriPrep: 45 g Rolled oats (flocons d'avoine) — ADD to shopping list, 10 g Chia seeds (graines de chia) — ADD to shopping list, 150 ml Unsweetened coconut milk drink (boisson à la noix de coco) — ADD to shopping list, 60 g Greek yogurt (yaourt grec), 40 g Raspberries (framboises), 7 g Almonds (amandes), chopped, 250 ml Plain kefir (kéfir nature), 80 g Blueberries (myrtilles), 60 g (½ medium) Banana (banane)",
           "items": [
@@ -1523,7 +1523,7 @@
         }
       ],
       "water_ml": 0,
-      "updated": "2026-09-28T21:14:01.703Z"
+      "updated": "2026-09-29T06:56:23.597Z"
     },
     "2026-09-30": {
       "date": "2026-09-30",
