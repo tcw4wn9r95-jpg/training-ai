@@ -3645,6 +3645,81 @@
       ],
       "water_ml": 0,
       "updated": "2026-10-18T16:10:26.534Z"
+    },
+    "2026-11-11": {
+      "date": "2026-11-11",
+      "meals": [
+        {
+          "id": "m17943792482946moe",
+          "slot": "breakfast",
+          "name": "Fried eggs, cheese, and bread breakfast with espresso",
+          "time": "07:40",
+          "source": "described",
+          "planned": false,
+          "confidence": 0.79,
+          "ai_notes": "Glucose Goddess alignment: This meal is well-structured—protein and fat-rich (eggs + cheese) should blunt glucose response. The bread provides carbs but has some fiber. Suggestion: eating the vegetables/fiber first isn't possible here, but having the eggs and cheese before or simultaneously with the bread is good. A small amount of added fat (already present in fried egg prep and cheese) helps slow carb absorption. A gentle walk after eating would further blunt any spike from the bread's 14.5g carbs.",
+          "corrections": "",
+          "ai_rounds": 0,
+          "note": "",
+          "items": [
+            {
+              "name": "Fried eggs",
+              "qty": "2 large eggs",
+              "kcal": 180,
+              "protein_g": 12.6,
+              "carbs_g": 1.1,
+              "fat_g": 14,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Cheese slice",
+              "qty": "1 slice (28 g)",
+              "kcal": 113,
+              "protein_g": 7,
+              "carbs_g": 0.4,
+              "fat_g": 9.3,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Bread (loaf slice)",
+              "qty": "1 slice (28 g)",
+              "kcal": 79,
+              "protein_g": 2.7,
+              "carbs_g": 14.5,
+              "fat_g": 1.1,
+              "fiber_g": 1.9,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Espresso",
+              "qty": "1 shot (30 mL)",
+              "kcal": 2,
+              "protein_g": 0.3,
+              "carbs_g": 0.1,
+              "fat_g": 0,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 374,
+            "protein_g": 22.6,
+            "carbs_g": 16.1,
+            "fat_g": 24.4,
+            "fiber_g": 1.9,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
+        }
+      ],
+      "water_ml": 0,
+      "updated": "2026-11-11T06:40:48.295Z"
     }
   }
 }
