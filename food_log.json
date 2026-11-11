@@ -3716,10 +3716,56 @@
             "sugar_g": 0,
             "free_sugar_g": 0
           }
+        },
+        {
+          "id": "m1794402429144j089",
+          "slot": "lunch",
+          "name": "Baked Lasagna",
+          "time": "14:07",
+          "source": "photo",
+          "planned": false,
+          "confidence": 0.65,
+          "ai_notes": "Portion estimated at ~280g based on square plate dimensions and thickness visible. Golden-brown surface suggests egg-enriched pasta or butter-based sauce. Glucose Goddess note: Lasagna is a high-carb, moderate-protein meal. Recommend pairing with a large side salad (eaten first), adding vinegar to the salad, and taking a 10-15 minute walk after eating to blunt glucose spike. The protein content will help somewhat, but the refined pasta base is glucose-spiking.",
+          "corrections": "item 1 (\"Potato (baked, as base layer)\") is actually: It’s lasagna",
+          "ai_rounds": 1,
+          "note": "",
+          "items": [
+            {
+              "name": "Lasagna (pasta sheets, meat/vegetable filling, cheese sauce)",
+              "qty": "280 g",
+              "kcal": 420,
+              "protein_g": 24,
+              "carbs_g": 28,
+              "fat_g": 22,
+              "fiber_g": 1.2,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            },
+            {
+              "name": "Butter or oil (cooking fat in lasagna preparation)",
+              "qty": "12 g",
+              "kcal": 107,
+              "protein_g": 0,
+              "carbs_g": 0,
+              "fat_g": 12,
+              "fiber_g": 0,
+              "sugar_g": 0,
+              "free_sugar_g": 0
+            }
+          ],
+          "totals": {
+            "kcal": 527,
+            "protein_g": 24,
+            "carbs_g": 28,
+            "fat_g": 34,
+            "fiber_g": 1.2,
+            "sugar_g": 0,
+            "free_sugar_g": 0
+          }
         }
       ],
       "water_ml": 0,
-      "updated": "2026-11-11T06:40:48.295Z"
+      "updated": "2026-11-11T13:07:09.146Z"
     }
   }
 }
